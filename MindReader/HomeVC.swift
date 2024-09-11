@@ -7,6 +7,8 @@
 
 import UIKit
 import Vision
+import Firebase
+import FirebaseFirestore
 
 class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
 
@@ -19,6 +21,7 @@ class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationCo
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .color
         setupActions()
     }
 
@@ -42,6 +45,13 @@ class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationCo
                     self.homeView.responseLabel.text = response
                     self.view.setNeedsLayout()
                     self.view.layoutIfNeeded()
+                    let articles = Firestore.firestore().collection("articles")
+                    let document = articles.document()
+                    let data: [String: Any] = [
+                    "createdTime": Timestamp(date: Date()),
+                    "id": document.documentID,
+                    ]
+                    document.setData(data)
                     print(response)
                 }
             } catch {
@@ -60,6 +70,7 @@ class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationCo
     }
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+
         picker.dismiss(animated: true, completion: nil)
 
         if let image = info[.originalImage] as? UIImage {
@@ -84,12 +95,6 @@ class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationCo
             for observation in observations {
                 if let topCandidate = observation.topCandidates(1).first {
                     print("識別到的文字: \(topCandidate.string)")
-//                    for (keyword, response) in self.responses {
-//                        if topCandidate.string.contains(keyword) {
-//                            self.textLabel.text = response
-//                            break
-//                        }
-//                    }
                 }
             }
         }
