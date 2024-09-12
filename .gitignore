@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=swift,xcode
 .DS_Store
 MindReader/APIKeys.swift
-GoogleService-Info.plist
+MindReader/GoogleService-Info.plist
 
 ### Swift ###
 # Xcode
