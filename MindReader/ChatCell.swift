@@ -54,8 +54,7 @@ class ChatCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-//    func configure(with message: String, isIncoming: Bool) {
-    func configure(with message: String,isIncoming: Bool) {
+    func configure(with message: String, isIncoming: Bool) {
         messageLabel.text = message
 
         leadingConstraint.isActive = false
@@ -72,6 +71,7 @@ class ChatCell: UITableViewCell {
     }
 
     override func prepareForReuse() {
+        super.prepareForReuse()
         messageLabel.textColor = .black
     }
 }

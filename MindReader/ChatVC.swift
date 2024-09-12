@@ -14,12 +14,15 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     private var messages: [String] = []
     private let textField = UITextField()
     private let sendButton = UIButton(type: .system)
+    private let inputContainer = UIView()
+
+    private let apiService = APIService()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .pink1
-        setupTableView()
+        view.backgroundColor = .white
         setupInputView()
+        setupTableView()
     }
 
     private func setupTableView() {
@@ -30,7 +33,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         tableView.allowsSelection = false
         tableView.separatorStyle = .none
-        tableView.backgroundColor = .pink1
+        tableView.backgroundColor = .white
 
         tableView.register(ChatCell.self, forCellReuseIdentifier: "ChatCell")
         view.addSubview(tableView)
@@ -39,13 +42,12 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50)
+            tableView.bottomAnchor.constraint(equalTo: inputContainer.topAnchor)
         ])
     }
 
     private func setupInputView() {
-        let inputContainer = UIView()
-        inputContainer.backgroundColor = .pink1
+        inputContainer.backgroundColor = .white
         inputContainer.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(inputContainer)
 
@@ -54,7 +56,6 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         textField.translatesAutoresizingMaskIntoConstraints = false
 
         sendButton.setImage(UIImage(systemName: "paperplane"), for: .normal)
-
         sendButton.addTarget(self, action: #selector(sendMessage), for: .touchUpInside)
         sendButton.translatesAutoresizingMaskIntoConstraints = false
 
@@ -80,12 +81,26 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @objc private func sendMessage() {
         guard let text = textField.text, !text.isEmpty else { return }
         messages.append(text)
-        messages.append(text)
         tableView.reloadData()
         textField.text = ""
 
         let indexPath = IndexPath(row: messages.count - 1, section: 0)
         tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+
+        Task {
+            do {
+                let response = try await apiService.generateTextResponse(for: text)
+                DispatchQueue.main.async {
+                    print(response)
+                    self.messages.append(response)
+                    self.tableView.reloadData()
+                    let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
+                    self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                }
+            } catch {
+                print("Failed to get response: \(error)")
+            }
+        }
     }
 
     // MARK: - UITableViewDataSource
@@ -97,6 +112,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChatCell", for: indexPath) as! ChatCell
         let message = messages[indexPath.row]
+
         if indexPath.row%2 == 1{
             cell.configure(with: message, isIncoming: true)
         } else {
@@ -105,5 +121,13 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 //        cell.configure(with: message, isIncoming: true)
 //        cell.configure(with: message, isIncoming: false)
         return cell
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
     }
 }

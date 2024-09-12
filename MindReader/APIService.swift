@@ -32,7 +32,7 @@ enum APIError: Error {
 
 class APIService {
 
-    private let apiKey = "sk-q9HBgf3NUiaYqpIOFdC7LI9qHH4oaJWpKNJgQLn6ynT3BlbkFJBTnCbsQkp2gxFhc85LnZWC-wE7-bZ34sRjUjJM-igA"
+    private let apiKey = "\(APIKeys.apiKey)"
     private let apiURL = "https://api.openai.com/v1/chat/completions"
 
     func generateTextResponse(for prompt: String) async throws -> String {

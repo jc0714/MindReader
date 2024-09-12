@@ -22,6 +22,7 @@
 		E97C16022C9189FF002B437C /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = E97C16012C9189FF002B437C /* FirebaseStorage */; };
 		E97C16042C919FFF002B437C /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C16032C919FFF002B437C /* ChatVC.swift */; };
 		E97C16062C91A0DF002B437C /* ChatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C16052C91A0DF002B437C /* ChatCell.swift */; };
+		E97C16082C92BC88002B437C /* APIKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C16072C92BC88002B437C /* APIKeys.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		E97C15F82C918944002B437C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E97C16032C919FFF002B437C /* ChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVC.swift; sourceTree = "<group>"; };
 		E97C16052C91A0DF002B437C /* ChatCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCell.swift; sourceTree = "<group>"; };
+		E97C16072C92BC88002B437C /* APIKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeys.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 				E97C15F62C91812F002B437C /* APIService.swift */,
 				E97C16032C919FFF002B437C /* ChatVC.swift */,
 				E97C16052C91A0DF002B437C /* ChatCell.swift */,
+				E97C16072C92BC88002B437C /* APIKeys.swift */,
 			);
 			path = MindReader;
 			sourceTree = "<group>";
@@ -176,6 +179,7 @@
 				E97C15F72C91812F002B437C /* APIService.swift in Sources */,
 				E97C15F52C91810A002B437C /* HomeView.swift in Sources */,
 				E97C16062C91A0DF002B437C /* ChatCell.swift in Sources */,
+				E97C16082C92BC88002B437C /* APIKeys.swift in Sources */,
 				E97C15E12C9166B5002B437C /* AppDelegate.swift in Sources */,
 				E97C15E32C9166B5002B437C /* SceneDelegate.swift in Sources */,
 			);
