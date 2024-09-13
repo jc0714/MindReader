@@ -52,6 +52,17 @@ class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationCo
         Task {
             do {
                 let response = try await apiService.generateTextResponse(for: prompt)
+
+                if let data = response.data(using: .utf8),
+                   let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                   let content = json["content"] as? [String: Any],
+                   let possibleMeanings = content["possible_meanings"] as? [String],
+                   let responseMethods = content["response_methods"] as? [String] {
+
+                   print("Possible Meanings: \(possibleMeanings)")
+                   print("Response Methods: \(responseMethods)")
+                }
+
                 DispatchQueue.main.async {
                     self.homeView.responseLabel.text = response
                     self.view.setNeedsLayout()

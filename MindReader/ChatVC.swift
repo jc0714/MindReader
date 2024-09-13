@@ -118,8 +118,6 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         } else {
             cell.configure(with: message, isIncoming: false)
         }
-//        cell.configure(with: message, isIncoming: true)
-//        cell.configure(with: message, isIncoming: false)
         return cell
     }
 

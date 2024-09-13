@@ -75,26 +75,3 @@ class ChatCell: UITableViewCell {
         messageLabel.textColor = .black
     }
 }
-
-
-
-//        // Define the constraints
-//        let constraints = [
-//            messageLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-//            messageLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
-//            messageLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 250),
-//
-//            bubbleBackgroundView.topAnchor.constraint(equalTo: messageLabel.topAnchor, constant: -8),
-//            bubbleBackgroundView.leadingAnchor.constraint(equalTo: messageLabel.leadingAnchor, constant: -16),
-//            bubbleBackgroundView.bottomAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 8),
-//            bubbleBackgroundView.trailingAnchor.constraint(equalTo: messageLabel.trailingAnchor, constant: 16),
-//            bubbleBackgroundView.widthAnchor.constraint(equalTo: messageLabel.widthAnchor, constant: 32)
-//        ]
-//
-//        // Activate the constraints
-//        NSLayoutConstraint.activate(constraints)
-//
-//        // Define and activate leading and trailing constraints if necessary
-//        leadingConstraint = messageLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32)
-//        trailingConstraint = messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32)
-//        NSLayoutConstraint.activate([leadingConstraint, trailingConstraint])

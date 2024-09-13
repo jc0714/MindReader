@@ -100,6 +100,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E97C15F12C9166B7002B437C /* Build configuration list for PBXNativeTarget "MindReader" */;
 			buildPhases = (
+				E97C160E2C948382002B437C /* ShellScript */,
 				E97C15D92C9166B5002B437C /* Sources */,
 				E97C15DA2C9166B5002B437C /* Frameworks */,
 				E97C15DB2C9166B5002B437C /* Resources */,
@@ -168,6 +169,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		E97C160E2C948382002B437C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E97C15D92C9166B5002B437C /* Sources */ = {
@@ -336,9 +357,11 @@
 				DEVELOPMENT_TEAM = 637F48P3P9;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MindReader/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "同意開啟相簿權限";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -364,9 +387,11 @@
 				DEVELOPMENT_TEAM = 637F48P3P9;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MindReader/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "同意開啟相簿權限";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -8,10 +8,10 @@
 import Foundation
 import UIKit
 
-struct Message: Codable {
-    let role: String
-    let content: String
-}
+//struct Message: Codable {
+//    let role: String
+//    let content: String
+//}
 
 struct ChatCompletionResponse: Decodable {
     let choices: [ChatChoice]
@@ -77,29 +77,21 @@ class APIService {
     private func formatPrompt(_ prompt: String) -> String {
         """
         你是一個善解人意的朋友，用輕鬆的語氣回應用戶。
-        請根據以下情況回覆，包括「possible_meanings：對方狀態」和「response_methods：回覆訊息」兩個部分，各三個。
+        請根據以下情況回覆，包括「possible_meanings：這句訊息背後意思」和「response_methods：可回覆訊息」兩個部分，各三個。
         以 JSON 格式
         用繁體中文：
         \(prompt)
 
-        {
-            "choices": [
-                {
-                    "message": {
-                        "content": {
-                            "possible_meanings": [
-                                "第一個可能意思",
-                                "第二個可能意思",
-                                "第三個可能意思"
-                            ],
-                            "response_methods": [
-                                "第一個回覆",
-                                "第二個回覆",
-                                "第三個回覆"
-                            ]
-                        }
-                    }
-                }
+        "content": {
+            "possible_meanings": [
+                "第一個可能意思",
+                "第二個可能意思",
+                "第三個可能意思"
+            ],
+            "response_methods": [
+                "第一個回覆",
+                "第二個回覆",
+                "第三個回覆"
             ]
         }
         """
