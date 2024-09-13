@@ -9,11 +9,13 @@ import UIKit
 import Vision
 import Firebase
 import FirebaseFirestore
+import FirebaseStorage
 
 class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
 
     private let homeView = HomeView()
     private let apiService = APIService()
+    private var tag = 0
 
     override func loadView() {
         view = homeView
@@ -40,25 +42,65 @@ class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationCo
 
         Task {
             do {
-                let response = try await apiService.generateTextResponse(for: prompt)
-                DispatchQueue.main.async {
-                    self.homeView.responseLabel.text = response
-                    self.view.setNeedsLayout()
-                    self.view.layoutIfNeeded()
-                    let articles = Firestore.firestore().collection("articles")
-                    let document = articles.document()
-                    let data: [String: Any] = [
-                    "createdTime": Timestamp(date: Date()),
-                    "id": document.documentID,
-                    ]
-                    document.setData(data)
-                    print(response)
+                let randomID = UUID().uuidString
+                let uploadRef = Storage.storage().reference(withPath: "memes/\(randomID).jpg")
+                guard let imageData = homeView.imageView.image?.jpegData(compressionQuality: 0.75) else { return }
+
+                uploadRef.putData(imageData, metadata: StorageMetadata()) { _, error in
+                    guard error == nil else {
+                        print("Upload error: \(error!.localizedDescription)")
+                        return
+                    }
+
+                    uploadRef.downloadURL { url, error in
+                        guard let downloadURL = url else {
+                            print("Download URL error: \(error!.localizedDescription)")
+                            return
+                        }
+
+                        Task {
+                            let documentID = UUID().uuidString
+                            try await Firestore.firestore().collection("articles").document(documentID).setData([
+                                "createdTime": Timestamp(date: Date()),
+                                "id": documentID,
+                                "imageURL": downloadURL.absoluteString
+                            ])
+                            print("Document successfully written with ID: \(documentID)")
+                        }
+                    }
                 }
             } catch {
                 print("Failed to get response: \(error)")
             }
         }
     }
+
+    // G 老師更簡潔的寫法
+//    @objc private func didTapSubmit() {
+//        guard let imageData = homeView.imageView.image?.jpegData(compressionQuality: 0.75) else {
+//            print("Prompt or image is empty")
+//            return
+//        }
+//
+//        Task {
+//            do {
+//                let uploadRef = Storage.storage().reference(withPath: "memes/\(UUID().uuidString).jpg")
+//                let downloadURL = try await uploadRef.putDataAsync(imageData).downloadURL()
+//
+//                try await Firestore.firestore().collection("articles").document().setData([
+//                    "createdTime": Timestamp(date: Date()),
+//                    "id": UUID().uuidString,
+//                    "imageURL": downloadURL.absoluteString
+//                ])
+//
+//                print("Document successfully written")
+//
+//            } catch {
+//                print("Failed: \(error.localizedDescription)")
+//            }
+//        }
+//    }
+
 
     @objc func selectImageFromAlbum(_ sender: UIButton) {
 
@@ -112,12 +154,14 @@ class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationCo
     }
 
     @objc func showImageView(_ sender: UIButton) {
+        tag = 0
 
         homeView.promptTextField.isHidden = true
         homeView.imageView.isHidden = false
     }
 
     @objc func enterText(_ sender: UIButton) {
+        tag = 1 
 
         homeView.imageView.isHidden = true
         homeView.promptTextField.isHidden = false
