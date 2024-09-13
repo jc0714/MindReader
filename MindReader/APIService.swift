@@ -64,7 +64,7 @@ class APIService {
         let jsonBody: [String: Any] = [
             "model": "gpt-3.5-turbo",
             "messages": [["role": "user", "content": formatPrompt(prompt)]],
-            "max_tokens": 200,
+            "max_tokens": 250,
             "temperature": 0.7,
 
         ]

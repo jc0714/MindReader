@@ -5,6 +5,7 @@
 //  Created by J oyce on 2024/9/11.
 //
 
+
 import UIKit
 import Vision
 import Firebase
@@ -16,6 +17,7 @@ class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationCo
     private let homeView = HomeView()
     private let apiService = APIService()
     private var tag = 0
+    private var recognizedText : String = ""
 
     override func loadView() {
         view = homeView
@@ -34,73 +36,82 @@ class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationCo
         homeView.chooseImageButton.addTarget(self, action: #selector(selectImageFromAlbum), for: .touchUpInside)
     }
 
-    @objc private func didTapSubmit() {
-        guard let prompt = homeView.promptTextField.text, !prompt.isEmpty else {
-            print("Prompt is empty")
-            return
-        }
-
-        Task {
-            do {
-                let randomID = UUID().uuidString
-                let uploadRef = Storage.storage().reference(withPath: "memes/\(randomID).jpg")
-                guard let imageData = homeView.imageView.image?.jpegData(compressionQuality: 0.75) else { return }
-
-                uploadRef.putData(imageData, metadata: StorageMetadata()) { _, error in
-                    guard error == nil else {
-                        print("Upload error: \(error!.localizedDescription)")
-                        return
-                    }
-
-                    uploadRef.downloadURL { url, error in
-                        guard let downloadURL = url else {
-                            print("Download URL error: \(error!.localizedDescription)")
-                            return
-                        }
-
+    @objc private func didTapSubmit(_ sender: UIButton) {
+        switch sender.tag {
+        case 1:
+            guard let prompt = homeView.promptTextField.text, !prompt.isEmpty else {
+                print("Prompt is empty")
+                return
+            }
+            Task {
+                do {
+                    let response = try await apiService.generateTextResponse(for: prompt)
+                    DispatchQueue.main.async {
+                        self.homeView.responseLabel.text = response
+                        self.view.setNeedsLayout()
+                        self.view.layoutIfNeeded()
+                        print(response)
                         Task {
+
                             let documentID = UUID().uuidString
                             try await Firestore.firestore().collection("articles").document(documentID).setData([
                                 "createdTime": Timestamp(date: Date()),
                                 "id": documentID,
-                                "imageURL": downloadURL.absoluteString
+                                "userInput": prompt,
+                                "reply": response
                             ])
                             print("Document successfully written with ID: \(documentID)")
                         }
                     }
+                } catch {
+                    print("Failed to get response: \(error)")
                 }
-            } catch {
-                print("Failed to get response: \(error)")
             }
+        case 0:
+            let prompt = recognizedText
+            Task {
+                do {
+                    let response = try await apiService.generateTextResponse(for: prompt)
+                    DispatchQueue.main.async {
+                        self.homeView.responseLabel.text = response
+                        self.view.setNeedsLayout()
+                        self.view.layoutIfNeeded()
+                        print(response)
+                        let uploadRef = Storage.storage().reference(withPath: "memes/\(UUID().uuidString).jpg")
+                        guard let imageData = self.homeView.imageView.image?.jpegData(compressionQuality: 0.75) else { return }
+
+                        uploadRef.putData(imageData, metadata: StorageMetadata()) { _, error in
+                           guard error == nil else {
+                               print("Upload error: \(error!.localizedDescription)")
+                               return
+                           }
+                           uploadRef.downloadURL { url, error in
+                               guard let downloadURL = url else {
+                                   print("Download URL error: \(error!.localizedDescription)")
+                                   return
+                               }
+                               Task {
+
+                                   let documentID = UUID().uuidString
+                                   try await Firestore.firestore().collection("articles").document(documentID).setData([
+                                       "createdTime": Timestamp(date: Date()),
+                                       "id": documentID,
+                                       "imageURL": downloadURL.absoluteString,
+                                       "reply": response
+                                   ])
+                                   print("Document successfully written with ID: \(documentID)")
+                               }
+                           }
+                        }
+                    }
+                } catch {
+                    print("Failed to get response: \(error)")
+                }
+            }
+        default:
+            return
         }
     }
-
-    // G 老師更簡潔的寫法
-//    @objc private func didTapSubmit() {
-//        guard let imageData = homeView.imageView.image?.jpegData(compressionQuality: 0.75) else {
-//            print("Prompt or image is empty")
-//            return
-//        }
-//
-//        Task {
-//            do {
-//                let uploadRef = Storage.storage().reference(withPath: "memes/\(UUID().uuidString).jpg")
-//                let downloadURL = try await uploadRef.putDataAsync(imageData).downloadURL()
-//
-//                try await Firestore.firestore().collection("articles").document().setData([
-//                    "createdTime": Timestamp(date: Date()),
-//                    "id": UUID().uuidString,
-//                    "imageURL": downloadURL.absoluteString
-//                ])
-//
-//                print("Document successfully written")
-//
-//            } catch {
-//                print("Failed: \(error.localizedDescription)")
-//            }
-//        }
-//    }
-
 
     @objc func selectImageFromAlbum(_ sender: UIButton) {
 
@@ -117,7 +128,7 @@ class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationCo
 
         if let image = info[.originalImage] as? UIImage {
             homeView.imageView.image = image
-            recognizeTextInImage(image: image)
+            recognizedText = recognizeTextInImage(image: image)
         }
     }
 
@@ -125,8 +136,8 @@ class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationCo
         picker.dismiss(animated: true, completion: nil)
     }
 
-    func recognizeTextInImage(image: UIImage) {
-        guard let cgImage = image.cgImage else { return }
+    func recognizeTextInImage(image: UIImage) -> String {
+        guard let cgImage = image.cgImage else { return "" }
 
         let request = VNRecognizeTextRequest { (request, error) in
             guard let observations = request.results as? [VNRecognizedTextObservation], error == nil else {
@@ -134,11 +145,8 @@ class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationCo
                 return
             }
 
-            for observation in observations {
-                if let topCandidate = observation.topCandidates(1).first {
-                    print("識別到的文字: \(topCandidate.string)")
-                }
-            }
+            self.recognizedText = observations.compactMap { $0.topCandidates(1).first?.string }.joined(separator: "")
+            print(self.recognizedText)
         }
 
         request.recognitionLanguages = ["zh-Hant"]
@@ -151,19 +159,22 @@ class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationCo
         } catch {
             print("處理圖片失敗: \(error)")
         }
+        return recognizedText
     }
 
-    @objc func showImageView(_ sender: UIButton) {
-        tag = 0
-
+    @objc func showImageView() {
+        homeView.submitButton.tag = 0
         homeView.promptTextField.isHidden = true
+        homeView.chooseImageButton.isHidden = false
         homeView.imageView.isHidden = false
+        homeView.responseLabel.text = ""
     }
 
-    @objc func enterText(_ sender: UIButton) {
-        tag = 1 
-
+    @objc func enterText() {
+        homeView.submitButton.tag = 1
         homeView.imageView.isHidden = true
+        homeView.chooseImageButton.isHidden = true
         homeView.promptTextField.isHidden = false
+        homeView.responseLabel.text = ""
     }
 }

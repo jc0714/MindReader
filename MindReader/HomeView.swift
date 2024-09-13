@@ -66,6 +66,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         field.returnKeyType = .done
         field.placeholder = "Please Enter A Prompt"
         field.contentVerticalAlignment = .top
+        field.isHidden = true
         return field
     }()
 
@@ -75,6 +76,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         button.setTitle("Generate", for: .normal)
         button.backgroundColor = .systemMint
         button.layer.cornerRadius = 10
+        button.tag = 0 // 設定在圖片
         return button
     }()
 
@@ -96,12 +98,15 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         addSubview(imageButton)
         addSubview(textButton)
-        addSubview(responseLabel)
+
+        addSubview(promptTextField)
+
         addSubview(imageView)
         addSubview(chooseImageButton)
-        addSubview(promptTextField)
+
         addSubview(submitButton)
         addSubview(indicatorView)
+        addSubview(responseLabel)
 
         indicatorView.isHidden = true
         indicatorView.frame = bounds
@@ -132,10 +137,10 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             imageView.widthAnchor.constraint(equalToConstant: 300),
             imageView.heightAnchor.constraint(equalToConstant: 150),
 
-            chooseImageButton.topAnchor.constraint(equalTo: imageButton.bottomAnchor, constant: 30),
+            chooseImageButton.topAnchor.constraint(equalTo: imageButton.bottomAnchor, constant: 10),
             chooseImageButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             chooseImageButton.widthAnchor.constraint(equalToConstant: 150),
-            chooseImageButton.heightAnchor.constraint(equalToConstant: 50),
+            chooseImageButton.heightAnchor.constraint(equalToConstant: 20),
 
             submitButton.topAnchor.constraint(equalTo: promptTextField.bottomAnchor, constant: 20),
             submitButton.centerXAnchor.constraint(equalTo: centerXAnchor),
