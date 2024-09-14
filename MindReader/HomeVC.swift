@@ -11,7 +11,7 @@ import Firebase
 import FirebaseFirestore
 import FirebaseStorage
 
-class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
+class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
 
     private let homeView = HomeView()
     private let apiService = APIService()
@@ -33,6 +33,13 @@ class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationCo
         homeView.imageButton.addTarget(self, action: #selector(showImageView), for: .touchUpInside)
         homeView.textButton.addTarget(self, action: #selector(enterText), for: .touchUpInside)
         homeView.chooseImageButton.addTarget(self, action: #selector(selectImageFromAlbum), for: .touchUpInside)
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+
+        homeView.promptTextField.delegate = self
+
+        homeView.setupLabelGestures(target: self, action: #selector(copyLabelText))
     }
 
     @objc private func didTapSubmit(_ sender: UIButton) {
@@ -61,12 +68,15 @@ class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationCo
 
                    print("Possible Meanings: \(possibleMeanings)")
                    print("Response Methods: \(responseMethods)")
-                }
 
-                DispatchQueue.main.async {
-                    self.homeView.responseLabel.text = response
-                    self.view.setNeedsLayout()
-                    self.view.layoutIfNeeded()
+                    DispatchQueue.main.async {
+                        self.homeView.responseLabel.text = "\(possibleMeanings)"
+                        self.homeView.replyLabel1.text = responseMethods[0]
+                        self.homeView.replyLabel2.text = responseMethods[1]
+                        self.homeView.replyLabel3.text = responseMethods[2]
+                        self.view.setNeedsLayout()
+                        self.view.layoutIfNeeded()
+                    }
                 }
 
                 if sender.tag == 0 {
@@ -74,6 +84,7 @@ class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationCo
                 } else {
                     try await saveToFirestore(prompt: prompt, response: response, imageURL: nil)
                 }
+
             } catch {
                 print("Failed to get response: \(error)")
             }
@@ -182,5 +193,24 @@ class HomeVC: UIViewController, UIImagePickerControllerDelegate & UINavigationCo
         homeView.chooseImageButton.isHidden = !isImageViewVisible
         homeView.imageView.image = nil
         homeView.responseLabel.text = ""
+        homeView.replyLabel1.text = ""
+        homeView.replyLabel2.text = ""
+        homeView.replyLabel3.text = ""
+    }
+
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        homeView.promptTextField.resignFirstResponder()
+        return true
+    }
+
+    @objc func copyLabelText(_ sender: UITapGestureRecognizer) {
+        if let label = sender.view as? UILabel {
+            UIPasteboard.general.string = label.text
+            print("Text copied: \(label.text ?? "")")
+        }
     }
 }

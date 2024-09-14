@@ -35,6 +35,27 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         return label
     }()
 
+    let replyLabel1: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        return label
+    }()
+
+    let replyLabel2: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        return label
+    }()
+
+    let replyLabel3: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        return label
+    }()
+
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.borderColor = UIColor.black.cgColor
@@ -65,6 +86,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         field.layer.borderColor = UIColor.secondaryLabel.cgColor
         field.returnKeyType = .done
         field.placeholder = "Please Enter A Prompt"
+        field.font = UIFont.systemFont(ofSize: 16)
         field.contentVerticalAlignment = .top
         field.isHidden = true
         return field
@@ -108,6 +130,10 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         addSubview(indicatorView)
         addSubview(responseLabel)
 
+        addSubview(replyLabel1)
+        addSubview(replyLabel2)
+        addSubview(replyLabel3)
+
         indicatorView.isHidden = true
         indicatorView.frame = bounds
         indicatorView.backgroundColor = .systemGray6
@@ -150,7 +176,29 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             responseLabel.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 30),
             responseLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             responseLabel.widthAnchor.constraint(equalToConstant: 300),
+
+            replyLabel1.topAnchor.constraint(equalTo: responseLabel.bottomAnchor, constant: 30),
+            replyLabel1.centerXAnchor.constraint(equalTo: centerXAnchor),
+            replyLabel1.widthAnchor.constraint(equalToConstant: 300),
+
+            replyLabel2.topAnchor.constraint(equalTo: replyLabel1.bottomAnchor, constant: 30),
+            replyLabel2.centerXAnchor.constraint(equalTo: centerXAnchor),
+            replyLabel2.widthAnchor.constraint(equalToConstant: 300),
+
+            replyLabel3.topAnchor.constraint(equalTo: replyLabel2.bottomAnchor, constant: 30),
+            replyLabel3.centerXAnchor.constraint(equalTo: centerXAnchor),
+            replyLabel3.widthAnchor.constraint(equalToConstant: 300),
         ])
         responseLabel.preferredMaxLayoutWidth = 300
+    }
+
+    func setupLabelGestures(target: Any, action: Selector) {
+        replyLabel1.isUserInteractionEnabled = true
+        replyLabel2.isUserInteractionEnabled = true
+        replyLabel3.isUserInteractionEnabled = true
+
+        replyLabel1.addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
+        replyLabel2.addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
+        replyLabel3.addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
     }
 }

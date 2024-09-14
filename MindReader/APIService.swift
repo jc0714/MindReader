@@ -76,9 +76,10 @@ class APIService {
     // 格式化 prompt 内容
     private func formatPrompt(_ prompt: String) -> String {
         """
-        你是一個善解人意的朋友，用輕鬆的語氣回應用戶。
+        你是一個善解人意的朋友，用溫柔的語氣回應。
         請根據以下情況回覆，包括「possible_meanings：這句訊息背後意思」和「response_methods：可回覆訊息」兩個部分，各三個。
-        以 JSON 格式
+
+        請以 JSON 格式
         用繁體中文：
         \(prompt)
 
@@ -95,5 +96,6 @@ class APIService {
             ]
         }
         """
+
     }
 }
