@@ -13,10 +13,14 @@ import FirebaseStorage
 
 class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
 
+    // MARK: - Properties
     private let homeView = HomeView()
     private let apiService = APIService()
+    private let textRecognizeService = TextRecognitionService()
+    private let firestoreService = FirestoreService()
+
     private var tag = 0
-    private var recognizedText : String = ""
+    private var recognizedText: String = ""
 
     override func loadView() {
         view = homeView
@@ -28,6 +32,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         setupActions()
     }
 
+    // MARK: - Setup Actions
+
     private func setupActions() {
         homeView.submitButton.addTarget(self, action: #selector(didTapSubmit), for: .touchUpInside)
         homeView.imageButton.addTarget(self, action: #selector(showImageView), for: .touchUpInside)
@@ -38,13 +44,13 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         view.addGestureRecognizer(tapGesture)
 
         homeView.promptTextField.delegate = self
-
         homeView.setupLabelGestures(target: self, action: #selector(copyLabelText))
     }
 
-    @objc private func didTapSubmit(_ sender: UIButton) {
+    // MARK: - Submit Action
 
-        if sender.tag == 3 {
+    @objc private func didTapSubmit(_ sender: UIButton) {
+        if sender.tag == 2 {
             showAlert(message: "請上傳有文字的訊息截圖，我來幫你解讀！")
             return
         }
@@ -66,8 +72,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                    let possibleMeanings = content["possible_meanings"] as? [String],
                    let responseMethods = content["response_methods"] as? [String] {
 
-                   print("Possible Meanings: \(possibleMeanings)")
-                   print("Response Methods: \(responseMethods)")
+                    print("Possible Meanings: \(possibleMeanings)")
+                    print("Response Methods: \(responseMethods)")
 
                     DispatchQueue.main.async {
                         self.homeView.responseLabel.text = "\(possibleMeanings)"
@@ -79,10 +85,11 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                     }
                 }
 
-                if sender.tag == 0 {
-                    await handleImageUpload(response: response)
+                if let imageData = homeView.imageView.image?.jpegData(compressionQuality: 0.75) {
+                    let imageURL = try await firestoreService.uploadImage(imageData: imageData)
+                    try await firestoreService.saveToFirestore(prompt: prompt, response: response, imageURL: imageURL)
                 } else {
-                    try await saveToFirestore(prompt: prompt, response: response, imageURL: nil)
+                    try await firestoreService.saveToFirestore(prompt: prompt, response: response, imageURL: nil)
                 }
 
             } catch {
@@ -91,43 +98,9 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         }
     }
 
-    private func handleImageUpload(response: String) async {
-        guard let imageData = homeView.imageView.image?.jpegData(compressionQuality: 0.75) else { return }
-
-        let uploadRef = Storage.storage().reference(withPath: "memes/\(UUID().uuidString).jpg")
-
-        do {
-            let _ = try await uploadRef.putDataAsync(imageData, metadata: StorageMetadata())
-            let downloadURL = try await uploadRef.downloadURL()
-            try await saveToFirestore(prompt: recognizedText, response: response, imageURL: downloadURL.absoluteString)
-        } catch {
-            print("Image upload failed: \(error.localizedDescription)")
-        }
-    }
-
-    private func saveToFirestore(prompt: String, response: String, imageURL: String?) async throws {
-        let documentID = UUID().uuidString
-        var data: [String: Any] = [
-            "createdTime": Timestamp(date: Date()),
-            "id": documentID,
-            "reply": response,
-            "userInput": prompt
-        ]
-        if let imageURL = imageURL {
-            data["imageURL"] = imageURL
-        }
-        try await Firestore.firestore().collection("articles").document(documentID).setData(data)
-        print("Document successfully written with ID: \(documentID)")
-    }
-
-    private func showAlert(message: String) {
-        let alertController = UIAlertController(title: "沒有讀到文字", message: message, preferredStyle: .actionSheet)
-        alertController.addAction(UIAlertAction(title: "OK", style: .default))
-        self.present(alertController, animated: true, completion: nil)
-    }
+    // MARK: - Image Picker
 
     @objc func selectImageFromAlbum(_ sender: UIButton) {
-
         let imagePicker = UIImagePickerController()
         imagePicker.sourceType = .photoLibrary
         imagePicker.delegate = self
@@ -135,48 +108,22 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         present(imagePicker, animated: true, completion: nil)
     }
 
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         picker.dismiss(animated: true, completion: nil)
 
         if let image = info[.originalImage] as? UIImage {
             homeView.imageView.image = image
-            recognizedText = recognizeTextInImage(image: image)
-        }
-    }
-
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
-    }
-
-    func recognizeTextInImage(image: UIImage) -> String {
-        guard let cgImage = image.cgImage else { return "" }
-
-        let request = VNRecognizeTextRequest { (request, error) in
-            guard let observations = request.results as? [VNRecognizedTextObservation], error == nil else {
-                print("文字識別失敗: \(String(describing: error))")
-                return
-            }
-
-            self.recognizedText = observations.compactMap { $0.topCandidates(1).first?.string }.joined(separator: "")
-            print(self.recognizedText)
-            if self.recognizedText == ""{
-                self.homeView.submitButton.tag = 3
+            textRecognizeService.recognizeTextInImage(image: image) { recognizedText in
+                self.recognizedText = recognizedText
+                print("Recognized Text: \(recognizedText)")
+                if self.recognizedText.isEmpty {
+                    self.homeView.submitButton.tag = 2
+                }
             }
         }
-
-        request.recognitionLanguages = ["zh-Hant"]
-        request.recognitionLevel = .accurate
-
-        let requestHandler = VNImageRequestHandler(cgImage: cgImage, options: [:])
-
-        do {
-            try requestHandler.perform([request])
-        } catch {
-            print("處理圖片失敗: \(error)")
-        }
-        return recognizedText
     }
+
+    // MARK: - View Configuration
 
     @objc func showImageView() {
         configureView(for: 0, isImageViewVisible: true)
@@ -198,6 +145,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         homeView.replyLabel3.text = ""
     }
 
+    // MARK: - Keyboard Handling
+
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
@@ -206,6 +155,16 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         homeView.promptTextField.resignFirstResponder()
         return true
     }
+
+    // MARK: - Show Alert
+
+    private func showAlert(message: String) {
+        let alertController = UIAlertController(title: "沒有讀到文字", message: message, preferredStyle: .actionSheet)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default))
+        self.present(alertController, animated: true, completion: nil)
+    }
+
+    // MARK: - Copy Label Text
 
     @objc func copyLabelText(_ sender: UITapGestureRecognizer) {
         if let label = sender.view as? UILabel {

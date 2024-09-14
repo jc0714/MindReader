@@ -23,6 +23,9 @@
 		E97C16042C919FFF002B437C /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C16032C919FFF002B437C /* ChatVC.swift */; };
 		E97C16062C91A0DF002B437C /* ChatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C16052C91A0DF002B437C /* ChatCell.swift */; };
 		E97C16082C92BC88002B437C /* APIKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C16072C92BC88002B437C /* APIKeys.swift */; };
+		E97C16152C95536B002B437C /* TextRecognition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C16142C95536B002B437C /* TextRecognition.swift */; };
+		E97C16172C955CBB002B437C /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C16162C955CBB002B437C /* FirestoreService.swift */; };
+		E97C161D2C9565CB002B437C /* KeyboardExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C161C2C9565CB002B437C /* KeyboardExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +43,9 @@
 		E97C16032C919FFF002B437C /* ChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVC.swift; sourceTree = "<group>"; };
 		E97C16052C91A0DF002B437C /* ChatCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCell.swift; sourceTree = "<group>"; };
 		E97C16072C92BC88002B437C /* APIKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeys.swift; sourceTree = "<group>"; };
+		E97C16142C95536B002B437C /* TextRecognition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextRecognition.swift; sourceTree = "<group>"; };
+		E97C16162C955CBB002B437C /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
+		E97C161C2C9565CB002B437C /* KeyboardExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,19 +84,38 @@
 			children = (
 				E97C15E02C9166B5002B437C /* AppDelegate.swift */,
 				E97C15E22C9166B5002B437C /* SceneDelegate.swift */,
-				E97C15E42C9166B5002B437C /* HomeVC.swift */,
+				E97C16072C92BC88002B437C /* APIKeys.swift */,
+				E97C161A2C956447002B437C /* Home */,
+				E97C161B2C95647F002B437C /* Chat */,
 				E97C15E62C9166B5002B437C /* Main.storyboard */,
 				E97C15E92C9166B7002B437C /* Assets.xcassets */,
 				E97C15EB2C9166B7002B437C /* LaunchScreen.storyboard */,
 				E97C15EE2C9166B7002B437C /* Info.plist */,
 				E97C15F82C918944002B437C /* GoogleService-Info.plist */,
-				E97C15F42C91810A002B437C /* HomeView.swift */,
 				E97C15F62C91812F002B437C /* APIService.swift */,
-				E97C16032C919FFF002B437C /* ChatVC.swift */,
-				E97C16052C91A0DF002B437C /* ChatCell.swift */,
-				E97C16072C92BC88002B437C /* APIKeys.swift */,
+				E97C16162C955CBB002B437C /* FirestoreService.swift */,
+				E97C16142C95536B002B437C /* TextRecognition.swift */,
+				E97C161C2C9565CB002B437C /* KeyboardExtension.swift */,
 			);
 			path = MindReader;
+			sourceTree = "<group>";
+		};
+		E97C161A2C956447002B437C /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				E97C15E42C9166B5002B437C /* HomeVC.swift */,
+				E97C15F42C91810A002B437C /* HomeView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		E97C161B2C95647F002B437C /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				E97C16032C919FFF002B437C /* ChatVC.swift */,
+				E97C16052C91A0DF002B437C /* ChatCell.swift */,
+			);
+			path = Chat;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -196,12 +221,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				E97C16042C919FFF002B437C /* ChatVC.swift in Sources */,
+				E97C16172C955CBB002B437C /* FirestoreService.swift in Sources */,
 				E97C15E52C9166B5002B437C /* HomeVC.swift in Sources */,
 				E97C15F72C91812F002B437C /* APIService.swift in Sources */,
 				E97C15F52C91810A002B437C /* HomeView.swift in Sources */,
 				E97C16062C91A0DF002B437C /* ChatCell.swift in Sources */,
 				E97C16082C92BC88002B437C /* APIKeys.swift in Sources */,
 				E97C15E12C9166B5002B437C /* AppDelegate.swift in Sources */,
+				E97C161D2C9565CB002B437C /* KeyboardExtension.swift in Sources */,
+				E97C16152C95536B002B437C /* TextRecognition.swift in Sources */,
 				E97C15E32C9166B5002B437C /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
