@@ -76,7 +76,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                     print("Response Methods: \(responseMethods)")
 
                     DispatchQueue.main.async {
-                        self.homeView.responseLabel.text = "\(possibleMeanings)"
+                        self.homeView.responseLabel.text = "可能含義\n\(possibleMeanings[0])\n\(possibleMeanings[1])\n\(possibleMeanings[2])\n\n推薦回覆"
                         self.homeView.replyLabel1.text = responseMethods[0]
                         self.homeView.replyLabel2.text = responseMethods[1]
                         self.homeView.replyLabel3.text = responseMethods[2]

@@ -177,15 +177,15 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             responseLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             responseLabel.widthAnchor.constraint(equalToConstant: 300),
 
-            replyLabel1.topAnchor.constraint(equalTo: responseLabel.bottomAnchor, constant: 30),
+            replyLabel1.topAnchor.constraint(equalTo: responseLabel.bottomAnchor, constant: 15),
             replyLabel1.centerXAnchor.constraint(equalTo: centerXAnchor),
             replyLabel1.widthAnchor.constraint(equalToConstant: 300),
 
-            replyLabel2.topAnchor.constraint(equalTo: replyLabel1.bottomAnchor, constant: 30),
+            replyLabel2.topAnchor.constraint(equalTo: replyLabel1.bottomAnchor, constant: 15),
             replyLabel2.centerXAnchor.constraint(equalTo: centerXAnchor),
             replyLabel2.widthAnchor.constraint(equalToConstant: 300),
 
-            replyLabel3.topAnchor.constraint(equalTo: replyLabel2.bottomAnchor, constant: 30),
+            replyLabel3.topAnchor.constraint(equalTo: replyLabel2.bottomAnchor, constant: 15),
             replyLabel3.centerXAnchor.constraint(equalTo: centerXAnchor),
             replyLabel3.widthAnchor.constraint(equalToConstant: 300),
         ])
