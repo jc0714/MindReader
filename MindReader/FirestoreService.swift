@@ -10,6 +10,8 @@ import FirebaseStorage
 
 class FirestoreService {
 
+    private let db = Firestore.firestore()
+
     //MARK: HomeVC
 
     func saveToFirestore(prompt: String, response: String, imageURL: String?) async throws {
@@ -35,5 +37,30 @@ class FirestoreService {
         let _ = try await uploadRef.putDataAsync(imageData, metadata: StorageMetadata())
         let downloadURL = try await uploadRef.downloadURL()
         return downloadURL.absoluteString
+    }
+
+    func saveMessage(chatRoomId: String, message: String, sender: String, completion: @escaping (Error?) -> Void) {
+        let collectionRef = db.collection("chatRooms").document(chatRoomId).collection("messages")
+        let data: [String: Any] = [
+            "content": message,
+            "sender": sender,
+            "createdTime": FieldValue.serverTimestamp()
+        ]
+
+        collectionRef.addDocument(data: data) { error in
+            completion(error)
+        }
+    }
+
+    func printAllArticles() {
+        db.collection("articles").getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                for document in querySnapshot!.documents {
+                    print("\(document.data())")
+                }
+            }
+        }
     }
 }

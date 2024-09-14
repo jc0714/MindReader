@@ -26,6 +26,8 @@
 		E97C16152C95536B002B437C /* TextRecognition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C16142C95536B002B437C /* TextRecognition.swift */; };
 		E97C16172C955CBB002B437C /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C16162C955CBB002B437C /* FirestoreService.swift */; };
 		E97C161D2C9565CB002B437C /* KeyboardExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C161C2C9565CB002B437C /* KeyboardExtension.swift */; };
+		E9F6B67E2C95800F008E9FBF /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B67D2C95800F008E9FBF /* ChatView.swift */; };
+		E9F6B6802C959396008E9FBF /* GiftProposalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B67F2C959396008E9FBF /* GiftProposalVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +48,8 @@
 		E97C16142C95536B002B437C /* TextRecognition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextRecognition.swift; sourceTree = "<group>"; };
 		E97C16162C955CBB002B437C /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		E97C161C2C9565CB002B437C /* KeyboardExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardExtension.swift; sourceTree = "<group>"; };
+		E9F6B67D2C95800F008E9FBF /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		E9F6B67F2C959396008E9FBF /* GiftProposalVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftProposalVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +100,7 @@
 				E97C16162C955CBB002B437C /* FirestoreService.swift */,
 				E97C16142C95536B002B437C /* TextRecognition.swift */,
 				E97C161C2C9565CB002B437C /* KeyboardExtension.swift */,
+				E9F6B67F2C959396008E9FBF /* GiftProposalVC.swift */,
 			);
 			path = MindReader;
 			sourceTree = "<group>";
@@ -114,6 +119,7 @@
 			children = (
 				E97C16032C919FFF002B437C /* ChatVC.swift */,
 				E97C16052C91A0DF002B437C /* ChatCell.swift */,
+				E9F6B67D2C95800F008E9FBF /* ChatView.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -198,6 +204,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		E97C160E2C948382002B437C /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -211,7 +218,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif command -v swiftlint >/dev/null 2>&1\nthen\n    swiftlint\nelse\n    echo \"warning: `swiftlint` command not found - See https://github.com/realm/SwiftLint#installation for installation instructions.\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -224,11 +231,13 @@
 				E97C16172C955CBB002B437C /* FirestoreService.swift in Sources */,
 				E97C15E52C9166B5002B437C /* HomeVC.swift in Sources */,
 				E97C15F72C91812F002B437C /* APIService.swift in Sources */,
+				E9F6B67E2C95800F008E9FBF /* ChatView.swift in Sources */,
 				E97C15F52C91810A002B437C /* HomeView.swift in Sources */,
 				E97C16062C91A0DF002B437C /* ChatCell.swift in Sources */,
 				E97C16082C92BC88002B437C /* APIKeys.swift in Sources */,
 				E97C15E12C9166B5002B437C /* AppDelegate.swift in Sources */,
 				E97C161D2C9565CB002B437C /* KeyboardExtension.swift in Sources */,
+				E9F6B6802C959396008E9FBF /* GiftProposalVC.swift in Sources */,
 				E97C16152C95536B002B437C /* TextRecognition.swift in Sources */,
 				E97C15E32C9166B5002B437C /* SceneDelegate.swift in Sources */,
 			);
