@@ -13,23 +13,6 @@ import UIKit
 //    let content: String
 //}
 
-struct ChatCompletionResponse: Decodable {
-    let choices: [ChatChoice]
-}
-
-struct ChatChoice: Decodable {
-    let message: MessageContent
-}
-
-struct MessageContent: Decodable {
-    let content: String
-}
-
-enum APIError: Error {
-    case invalidURL
-    case invalidResponseData
-}
-
 class APIService {
 
     private let apiKey = "\(APIKeys.apiKey)"
@@ -74,11 +57,12 @@ class APIService {
     }
 
     // 格式化 prompt 内容
+    
     private func formatPrompt(_ prompt: String) -> String {
         """
         請你扮演一個溫柔又帶點幽默的朋友，跟我輕鬆聊聊天。
         如果有些煩惱，希望你能給點安慰。
-        簡單的聊天，所以句子簡短即可。
+        生活化的聊天，所以句子簡短即可。
 
         \(prompt)
         """

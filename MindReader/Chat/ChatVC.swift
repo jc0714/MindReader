@@ -10,7 +10,7 @@ import UIKit
 class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
 
     private var chatView: ChatView!
-    private var messages: [String] = []
+    private var messages: [Message] = []
     private let apiService = APIService()
     private let firebaseService = FirestoreService()
 
@@ -28,6 +28,20 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         chatView.tableView.delegate = self
         chatView.tableView.dataSource = self
         setUpActions()
+        listenForMessages()
+    }
+
+    private func listenForMessages() {
+        firebaseService.listenForMessages(chatRoomId: chatRoomId) { [weak self] newMessages in
+            guard let self = self else { return }
+            self.messages = newMessages
+            self.chatView.tableView.reloadData()
+
+            if !self.messages.isEmpty {
+                let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
+                self.chatView.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            }
+        }
     }
 
     private func setUpActions() {
@@ -55,22 +69,12 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
                 return
             }
 
-            self.messages.append(text)
-            self.chatView.tableView.reloadData()
             self.chatView.textField.text = ""
 
             let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
             self.chatView.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
             sender.isUserInteractionEnabled = true
         }
-//
-//        sender.isUserInteractionEnabled = false
-//        messages.append(text)
-//        chatView.tableView.reloadData()
-//        chatView.textField.text = ""
-//
-//        let indexPath = IndexPath(row: messages.count - 1, section: 0)
-//        chatView.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
 
         Task {
             do {
@@ -79,7 +83,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
 
                     let senderName = "1"
 
-                    self.firebaseService.saveMessage(chatRoomId: self.chatRoomId, message: text, sender: senderName) { error in
+                    self.firebaseService.saveMessage(chatRoomId: self.chatRoomId, message: response, sender: senderName) { error in
                         if let error = error {
                             print("Failed to save message: \(error)")
                             return
@@ -87,8 +91,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
                     }
 
                     print(response)
-                    self.messages.append(response)
-                    self.chatView.tableView.reloadData()
+
                     let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
                     self.chatView.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
                     sender.isUserInteractionEnabled = true
@@ -110,9 +113,9 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         let message = messages[indexPath.row]
 
         if indexPath.row % 2 == 1 {
-            cell.configure(with: message, isIncoming: true)
+            cell.configure(with: message.content, isIncoming: true)
         } else {
-            cell.configure(with: message, isIncoming: false)
+            cell.configure(with: message.content, isIncoming: false)
         }
         return cell
     }

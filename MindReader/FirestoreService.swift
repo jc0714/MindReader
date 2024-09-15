@@ -7,6 +7,7 @@
 
 import FirebaseFirestore
 import FirebaseStorage
+import Foundation
 
 class FirestoreService {
 
@@ -52,15 +53,53 @@ class FirestoreService {
         }
     }
 
-    func printAllArticles() {
-        db.collection("articles").getDocuments() { (querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
+    func listenForMessages(chatRoomId: String, completion: @escaping ([Message]) -> Void) {
+
+        // 最新訊息在最下方
+
+        let collectionRef = db.collection("chatRooms").document(chatRoomId).collection("messages").order(by: "createdTime", descending: false)
+
+        collectionRef.addSnapshotListener { querySnapshot, error in
+            guard let snapshot = querySnapshot else {
+                print("Error listening for messages: \(error?.localizedDescription ?? "No error description")")
+                return
+            }
+
+            var messages = [Message]()
+            for document in snapshot.documents {
+                let data = document.data()
+                let content = data["content"] as? String ?? ""
+                let sender = data["sender"] as? String ?? ""
+                let createdTime = data["createdTime"] as? Timestamp ?? Timestamp(date: Date())
+
+                let message = Message(content: content, sender: sender, createdTime: createdTime.dateValue())
+                messages.append(message)
+            }
+            completion(messages)
+        }
+    }
+
+    func setupFirestoreListener(for collection: String, completion: @escaping () -> Void) -> ListenerRegistration? {
+        let db = Firestore.firestore()
+
+        return db.collection(collection).addSnapshotListener { (querySnapshot, error) in
+            if let error = error {
+                print("Error listening to documents: \(error)")
             } else {
-                for document in querySnapshot!.documents {
-                    print("\(document.data())")
-                }
+                completion()
             }
         }
     }
+
+//    func printAllArticles() {
+//        db.collection("articles").getDocuments() { (querySnapshot, err) in
+//            if let err = err {
+//                print("Error getting documents: \(err)")
+//            } else {
+//                for document in querySnapshot!.documents {
+//                    print("\(document.data())")
+//                }
+//            }
+//        }
+//    }
 }
