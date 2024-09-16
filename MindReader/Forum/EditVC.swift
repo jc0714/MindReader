@@ -40,17 +40,19 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
     func handleClick() async {
         if let title = editView.titleTextField.text, !title.isEmpty,
            let content = editView.contentTextView.text, !content.isEmpty,
-           let category = editView.categoryTextField.text, !category.isEmpty,
-           let image = editView.imageView.image?.jpegData(compressionQuality: 0.75) {
+           let category = editView.categoryTextField.text, !category.isEmpty {
 
             do {
-                // 使用 weak self 避免 self 被強引用
-                let imageURL = try await firestoreService.uploadImage(imageData: image)
-                print("Image URL: \(imageURL)")
-                
+                let imageURL: String? = nil
+
+                if let image = editView.imageView.image?.jpegData(compressionQuality: 0.75) {
+                    let imageURL = try await firestoreService.uploadImage(imageData: image)
+                    print("Image URL: \(imageURL)")
+                }
+
                 let articles = Firestore.firestore().collection("posts")
                 let document = articles.document()
-                let data: [String: Any] = [
+                var data: [String: Any] = [
                     "author": [
                         "email": "JJ",
                         "id": "JJCC",
@@ -58,13 +60,21 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
                     ],
                     "title": title,
                     "content": content,
-                    "image": imageURL,
                     "createdTime": Timestamp(date: Date()),
                     "id": document.documentID,
                     "category": category
                 ]
 
+                if let imageURL = imageURL {
+                    data["image"] = imageURL
+                }
+
                 try await document.setData(data)
+
+                let authorCollection = Firestore.firestore().collection("Users").document("9Y2GjnVg8TEoze0GUJSU")
+                try await authorCollection.updateData([
+                    "postIds": FieldValue.arrayUnion([document.documentID])
+                ])
 
                 DispatchQueue.main.async { [weak self] in
                     self?.navigationController?.popViewController(animated: true)
@@ -85,58 +95,6 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
             }
         }
     }
-//
-//
-//    @objc func click() async {
-//        if let title = editView.titleTextField.text, !title.isEmpty,
-//           let content = editView.contentTextView.text, !content.isEmpty,
-//           let category = editView.categoryTextField.text, !category.isEmpty,
-//           let image = editView.imageView.image?.jpegData(compressionQuality: 0.75) {
-//
-//            do {
-//                // 1. 先上傳圖片，等待上傳完成
-//                let imageURL = try await firestoreService.uploadImage(imageData: image)
-//
-//                print("Image URL: \(imageURL)") 
-//
-//                // 2. 構建 Firestore 的文章數據
-//                let articles = Firestore.firestore().collection("posts")
-//                let document = articles.document()
-//                let data: [String: Any] = [
-//                    "author": [
-//                        "email": "JJ",
-//                        "id": "JJCC",
-//                        "name": "JC"
-//                    ],
-//                    "title": title,
-//                    "content": content,
-//                    "image": imageURL,
-//                    "createdTime": Timestamp(date: Date()),
-//                    "id": document.documentID,
-//                    "category": category
-//                ]
-//
-//                // 3. 將數據存入 Firestore
-//                try await document.setData(data)
-//
-//                // 4. 成功後再返回頁面
-//                DispatchQueue.main.async {
-//                    self.navigationController?.popViewController(animated: true)
-//                }
-//
-//            } catch {
-//                // 錯誤處理，例如圖片上傳失敗或 Firestore 操作失敗
-//                let alert = UIAlertController(title: "錯誤", message: "圖片上傳或儲存過程中發生錯誤", preferredStyle: .alert)
-//                alert.addAction(UIAlertAction(title: "確定", style: .default))
-//                present(alert, animated: true, completion: nil)
-//            }
-//        } else {
-//            // 資料不完整的提醒
-//            let alert = UIAlertController(title: "資料不足😭", message: "填好以後再按下送出", preferredStyle: .alert)
-//            alert.addAction(UIAlertAction(title: "OKKKKK", style: .default))
-//            present(alert, animated: true, completion: nil)
-//        }
-//    }
 
     @objc func imageViewTapped() {
         let imagePicker = UIImagePickerController()

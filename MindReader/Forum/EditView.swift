@@ -41,7 +41,7 @@ class EditView: UIView {
 
         imageView.backgroundColor = .pink3
         imageView.isUserInteractionEnabled = true
-        
+
         publishButton.setTitle("Publish", for: .normal)
         publishButton.backgroundColor = .pink3
 

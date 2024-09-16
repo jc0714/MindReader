@@ -13,7 +13,7 @@ import FirebaseFirestore
 class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var tableView: UITableView!
-    
+
     private let firebaseService = FirestoreService()
     var listener: ListenerRegistration?
 
@@ -23,7 +23,6 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
 
         view.backgroundColor = .color
 
@@ -63,11 +62,12 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                        let id = data["id"] as? String,
                        let category = data["category"] as? String,
                        let content = data["content"] as? String,
-                       let image = data["image"] as? String,
                        let authorData = data["author"] as? [String: Any],
                        let authorEmail = authorData["email"] as? String,
                        let authorId = authorData["id"] as? String,
                        let authorName = authorData["name"] as? String {
+
+                        let image = data["image"] as? String
 
                         let createdTimeString = DateFormatter.localizedString(
                             from: timestamp.dateValue(),
@@ -103,12 +103,12 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         cell.categoryLabel.text = post.category
         cell.contentLabel.text = post.content
 
-        loadImage(from: post.image ?? "", into: cell.postImageView)
+        cell.configure(with: post.image)
 
         return cell
     }
 
-    func setUI(){
+    func setUI() {
         goEditButton.backgroundColor = UIColor.white
         goEditButton.setTitle("➕", for: .normal)
         goEditButton.layer.cornerRadius = 30
@@ -131,26 +131,26 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         performSegue(withIdentifier: "toEditPage", sender: self)
     }
 
-    func loadImage(from url: String, into imageView: UIImageView) {
-        guard let imageURL = URL(string: url) else {
-            print("Invalid URL string")
-            return
-        }
-
-        URLSession.shared.dataTask(with: imageURL) { data, response, error in
-            if let error = error {
-                print("Failed to download image: \(error)")
-                return
-            }
-
-            guard let data = data, let image = UIImage(data: data) else {
-                print("Failed to convert data to image")
-                return
-            }
-
-            DispatchQueue.main.async {
-                imageView.image = image
-            }
-        }.resume()
-    }
+//    func loadImage(from url: String, into imageView: UIImageView) {
+//        guard let imageURL = URL(string: url) else {
+//            print("Invalid URL string")
+//            return
+//        }
+//
+//        URLSession.shared.dataTask(with: imageURL) { data, response, error in
+//            if let error = error {
+//                print("Failed to download image: \(error)")
+//                return
+//            }
+//
+//            guard let data = data, let image = UIImage(data: data) else {
+//                print("Failed to convert data to image")
+//                return
+//            }
+//
+//            DispatchQueue.main.async {
+//                imageView.image = image
+//            }
+//        }.resume()
+//    }
 }

@@ -16,8 +16,6 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
 
     private var inputContainerBottomConstraint: NSLayoutConstraint!
 
-    private let chatRoomId = "your_chat_room_id"
-
     override func loadView() {
         chatView = ChatView()
         view = chatView
@@ -35,7 +33,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     }
 
     private func listenForMessages() {
-        firebaseService.listenForMessages(chatRoomId: chatRoomId) { [weak self] newMessages in
+        firebaseService.listenForMessages() { [weak self] newMessages in
             guard let self = self else { return }
             self.messages = newMessages
             self.chatView.tableView.reloadData()
@@ -66,7 +64,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         guard var text = chatView.textField.text, !text.isEmpty else { return }
         let senderName = "0"
 
-        firebaseService.saveMessage(chatRoomId: chatRoomId, message: text, sender: senderName) { error in
+        firebaseService.saveMessage(message: text, sender: senderName) { error in
             if let error = error {
                 print("Failed to save message: \(error)")
                 return
@@ -87,7 +85,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
 
                     let senderName = "1"
 
-                    self.firebaseService.saveMessage(chatRoomId: self.chatRoomId, message: response, sender: senderName) { error in
+                    self.firebaseService.saveMessage(message: response, sender: senderName) { error in
                         if let error = error {
                             print("Failed to save message: \(error)")
                             return

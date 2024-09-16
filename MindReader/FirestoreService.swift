@@ -40,26 +40,31 @@ class FirestoreService {
         return downloadURL.absoluteString
     }
 
-    func saveMessage(chatRoomId: String, message: String, sender: String, completion: @escaping (Error?) -> Void) {
-        let collectionRef = db.collection("chatRooms").document(chatRoomId).collection("messages")
+    func saveMessage(message: String, sender: String, completion: @escaping (Error?) -> Void) {
+        let userId = "9Y2GjnVg8TEoze0GUJSU"
+        let chatId = "7jAWex6b1RUsAwKCswGD"
+
+        let messageRef = db.collection("Users") .document(userId).collection("Chat").document(chatId).collection("msg")
+
         let data: [String: Any] = [
             "content": message,
             "sender": sender,
             "createdTime": FieldValue.serverTimestamp()
         ]
 
-        collectionRef.addDocument(data: data) { error in
+        messageRef.addDocument(data: data) { error in
             completion(error)
         }
     }
 
-    func listenForMessages(chatRoomId: String, completion: @escaping ([Message]) -> Void) {
+    func listenForMessages(completion: @escaping ([Message]) -> Void) {
 
-        // 最新訊息在最下方
+        let userId = "9Y2GjnVg8TEoze0GUJSU"
+        let chatId = "7jAWex6b1RUsAwKCswGD"
 
-        let collectionRef = db.collection("chatRooms").document(chatRoomId).collection("messages").order(by: "createdTime", descending: false)
+        let messageRef = db.collection("Users") .document(userId).collection("Chat").document(chatId).collection("msg").order(by: "createdTime", descending: false)
 
-        collectionRef.addSnapshotListener { querySnapshot, error in
+        messageRef.addSnapshotListener { querySnapshot, error in
             guard let snapshot = querySnapshot else {
                 print("Error listening for messages: \(error?.localizedDescription ?? "No error description")")
                 return

@@ -13,7 +13,7 @@ class PostCell: UITableViewCell {
     let articleTitle: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.font = UIFont.systemFont(ofSize: 18)
+        label.font = UIFont.systemFont(ofSize: 20)
         label.backgroundColor = .yellow
         return label
     }()
@@ -104,11 +104,23 @@ class PostCell: UITableViewCell {
             contentLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
 
             postImageView.topAnchor.constraint(equalTo: contentLabel.bottomAnchor, constant: 10),
-            postImageView.heightAnchor.constraint(equalToConstant: 100),
-            postImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            postImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-            postImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10)
+            postImageView.heightAnchor.constraint(equalToConstant: 200),
+            postImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
+            postImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
+            postImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50)
         ])
+    }
+
+    func configure(with imageUrl: String?) {
+        if let imageUrl = imageUrl, !imageUrl.isEmpty {
+            postImageView.isHidden = false
+//            postImageHeightConstraint.isActive = true  // 激活圖片的高度約束
+            loadImage(from: imageUrl)
+        } else {
+            // 沒有圖片 URL，隱藏圖片
+            postImageView.isHidden = true
+//            postImageHeightConstraint.isActive = false // 移除圖片高度約束
+        }
     }
 
     override func prepareForReuse() {
@@ -119,5 +131,28 @@ class PostCell: UITableViewCell {
         createdTimeLabel.text = ""
         contentLabel.text = ""
         postImageView.image = nil
+    }
+
+    private func loadImage(from url: String) {
+        guard let imageURL = URL(string: url) else {
+            print("Invalid URL string")
+            return
+        }
+
+        URLSession.shared.dataTask(with: imageURL) { data, response, error in
+            if let error = error {
+                print("Failed to download image: \(error)")
+                return
+            }
+
+            guard let data = data, let image = UIImage(data: data) else {
+                print("Failed to convert data to image")
+                return
+            }
+
+            DispatchQueue.main.async {
+                self.postImageView.image = image
+            }
+        }.resume()
     }
 }
