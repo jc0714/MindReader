@@ -13,14 +13,14 @@ class FirestoreService {
 
     private let db = Firestore.firestore()
 
-    //MARK: HomeVC
+    // MARK: HomeVC
 
     func saveToFirestore(prompt: String, response: String, imageURL: String?) async throws {
         let documentID = UUID().uuidString
         var data: [String: Any] = [
             "createdTime": Timestamp(date: Date()),
             "id": documentID,
-            "reply": response,
+            "reply": response
         ]
         if let imageURL = imageURL {
             data["imageURL"] = imageURL
@@ -80,7 +80,6 @@ class FirestoreService {
     }
 
     func setupFirestoreListener(for collection: String, completion: @escaping () -> Void) -> ListenerRegistration? {
-        let db = Firestore.firestore()
 
         return db.collection(collection).addSnapshotListener { (querySnapshot, error) in
             if let error = error {

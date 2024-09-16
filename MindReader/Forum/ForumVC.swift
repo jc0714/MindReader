@@ -44,7 +44,7 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
 
     func fetchPosts() {
-        posts.removeAll()  // 确保重新加载时清空旧数据
+        posts.removeAll()
         let db = Firestore.firestore()
 
         db.collection("posts")
@@ -55,7 +55,6 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     return
                 }
 
-                // 使用 forEach 简化循环
                 documents.forEach { document in
                     let data = document.data()
 
@@ -64,26 +63,24 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                        let id = data["id"] as? String,
                        let category = data["category"] as? String,
                        let content = data["content"] as? String,
+                       let image = data["image"] as? String,
                        let authorData = data["author"] as? [String: Any],
                        let authorEmail = authorData["email"] as? String,
                        let authorId = authorData["id"] as? String,
                        let authorName = authorData["name"] as? String {
 
-                        // 创建日期字符串
                         let createdTimeString = DateFormatter.localizedString(
                             from: timestamp.dateValue(),
                             dateStyle: .medium,
                             timeStyle: .none
                         )
 
-                        // 创建 Author 和 Post 实例并添加到 posts 数组
                         let author = Author(email: authorEmail, id: authorId, name: authorName)
-                        let post = Post(title: title, createdTime: createdTimeString, id: id, category: category, content: content, author: author)
+                        let post = Post(title: title, createdTime: createdTimeString, id: id, category: category, content: content, image: image, author: author)
                         self.posts.append(post)
                     }
                 }
 
-                // 刷新表格视图
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
@@ -106,11 +103,12 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         cell.categoryLabel.text = post.category
         cell.contentLabel.text = post.content
 
+        loadImage(from: post.image ?? "", into: cell.postImageView)
+
         return cell
     }
 
     func setUI(){
-
         goEditButton.backgroundColor = UIColor.white
         goEditButton.setTitle("➕", for: .normal)
         goEditButton.layer.cornerRadius = 30
@@ -129,8 +127,30 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         goEditButton.addTarget(self, action: #selector(click), for: .touchUpInside)
     }
 
-    @objc func click(_ sender: UIButton){
+    @objc func click(_ sender: UIButton) {
         performSegue(withIdentifier: "toEditPage", sender: self)
     }
-}
 
+    func loadImage(from url: String, into imageView: UIImageView) {
+        guard let imageURL = URL(string: url) else {
+            print("Invalid URL string")
+            return
+        }
+
+        URLSession.shared.dataTask(with: imageURL) { data, response, error in
+            if let error = error {
+                print("Failed to download image: \(error)")
+                return
+            }
+
+            guard let data = data, let image = UIImage(data: data) else {
+                print("Failed to convert data to image")
+                return
+            }
+
+            DispatchQueue.main.async {
+                imageView.image = image
+            }
+        }.resume()
+    }
+}

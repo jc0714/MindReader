@@ -34,6 +34,7 @@ struct Post {
     var id: String
     var category: String
     var content: String
+    var image: String?
     var author: Author
 }
 
@@ -50,5 +51,3 @@ struct Message {
     let sender: String
     let createdTime: Date
 }
-
-

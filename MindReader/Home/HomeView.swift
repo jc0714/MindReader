@@ -144,12 +144,12 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         NSLayoutConstraint.activate([
             imageButton.topAnchor.constraint(equalTo: topAnchor, constant: 100),
-            imageButton.leadingAnchor.constraint(equalTo: centerXAnchor,constant: -120),
+            imageButton.leadingAnchor.constraint(equalTo: centerXAnchor, constant: -120),
             imageButton.widthAnchor.constraint(equalToConstant: 100),
             imageButton.heightAnchor.constraint(equalToConstant: 30),
 
             textButton.topAnchor.constraint(equalTo: topAnchor, constant: 100),
-            textButton.leadingAnchor.constraint(equalTo: centerXAnchor,constant: 20),
+            textButton.leadingAnchor.constraint(equalTo: centerXAnchor, constant: 20),
             textButton.widthAnchor.constraint(equalToConstant: 100),
             textButton.heightAnchor.constraint(equalToConstant: 30),
 
@@ -187,7 +187,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
             replyLabel3.topAnchor.constraint(equalTo: replyLabel2.bottomAnchor, constant: 15),
             replyLabel3.centerXAnchor.constraint(equalTo: centerXAnchor),
-            replyLabel3.widthAnchor.constraint(equalToConstant: 300),
+            replyLabel3.widthAnchor.constraint(equalToConstant: 300)
         ])
         responseLabel.preferredMaxLayoutWidth = 300
     }

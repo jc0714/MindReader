@@ -30,7 +30,6 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
 
         chatView.tableView.delegate = self
         chatView.tableView.dataSource = self
-        
         setUpActions()
         listenForMessages()
     }

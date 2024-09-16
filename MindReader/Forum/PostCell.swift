@@ -48,6 +48,8 @@ class PostCell: UITableViewCell {
         return label
     }()
 
+    let postImageView = UIImageView()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
@@ -58,11 +60,16 @@ class PostCell: UITableViewCell {
     }
 
     private func setupViews() {
+
+        postImageView.contentMode = .scaleAspectFill
+        postImageView.clipsToBounds = true
+
         addSubview(articleTitle)
         addSubview(authorName)
         addSubview(categoryLabel)
         addSubview(createdTimeLabel)
         addSubview(contentLabel)
+        addSubview(postImageView)
 
         setupConstraints()
     }
@@ -73,6 +80,7 @@ class PostCell: UITableViewCell {
         categoryLabel.translatesAutoresizingMaskIntoConstraints = false
         createdTimeLabel.translatesAutoresizingMaskIntoConstraints = false
         contentLabel.translatesAutoresizingMaskIntoConstraints = false
+        postImageView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             articleTitle.topAnchor.constraint(equalTo: topAnchor, constant: 10),
@@ -94,7 +102,12 @@ class PostCell: UITableViewCell {
             contentLabel.topAnchor.constraint(equalTo: categoryLabel.bottomAnchor, constant: 10),
             contentLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
             contentLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
-            contentLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10)
+
+            postImageView.topAnchor.constraint(equalTo: contentLabel.bottomAnchor, constant: 10),
+            postImageView.heightAnchor.constraint(equalToConstant: 100),
+            postImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            postImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+            postImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10)
         ])
     }
 
@@ -105,5 +118,6 @@ class PostCell: UITableViewCell {
         categoryLabel.backgroundColor = UIColor.lightGray
         createdTimeLabel.text = ""
         contentLabel.text = ""
+        postImageView.image = nil
     }
 }

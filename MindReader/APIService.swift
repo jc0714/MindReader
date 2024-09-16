@@ -8,11 +8,6 @@
 import Foundation
 import UIKit
 
-//struct Message: Codable {
-//    let role: String
-//    let content: String
-//}
-
 class APIService {
 
     private let apiKey = "\(APIKeys.apiKey)"
@@ -48,8 +43,7 @@ class APIService {
             "model": "gpt-3.5-turbo",
             "messages": [["role": "user", "content": prompt]],
             "max_tokens": 250,
-            "temperature": 0.7,
-
+            "temperature": 0.7
         ]
 
         urlRequest.httpBody = try JSONSerialization.data(withJSONObject: jsonBody)
