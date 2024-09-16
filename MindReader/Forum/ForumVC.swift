@@ -15,6 +15,7 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
     
     private let firebaseService = FirestoreService()
+    var listener: ListenerRegistration?
 
     let goEditButton = UIButton()
 
@@ -24,7 +25,9 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
 
-        firebaseService.setupFirestoreListener(for: "posts") {
+        view.backgroundColor = .color
+
+        listener = firebaseService.setupFirestoreListener(for: "posts") {
             self.fetchPosts()
         }
 
@@ -40,20 +43,24 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         setUI()
     }
 
-    func fetchPosts(){
-        posts = []
+    func fetchPosts() {
+        posts.removeAll()  // 确保重新加载时清空旧数据
         let db = Firestore.firestore()
 
-        db.collection("posts").order(by: "createdTime", descending: true).getDocuments() { (querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
-            } else {
-                for document in querySnapshot!.documents {
+        db.collection("posts")
+            .order(by: "createdTime", descending: true)
+            .getDocuments { (querySnapshot, error) in
+                guard let documents = querySnapshot?.documents, error == nil else {
+                    print("Error getting documents: \(String(describing: error))")
+                    return
+                }
+
+                // 使用 forEach 简化循环
+                documents.forEach { document in
                     let data = document.data()
-                    print("\(document.data())")
 
                     if let title = data["title"] as? String,
-                       let createdTime = data["createdTime"] as? TimeInterval,
+                       let timestamp = data["createdTime"] as? Timestamp,
                        let id = data["id"] as? String,
                        let category = data["category"] as? String,
                        let content = data["content"] as? String,
@@ -62,15 +69,25 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                        let authorId = authorData["id"] as? String,
                        let authorName = authorData["name"] as? String {
 
-                       let author = Author(email: authorEmail, id: authorId, name: authorName)
-                       let post = Post(title: title, createdTime: createdTime, id: id, category: category, content: content, author: author)
+                        // 创建日期字符串
+                        let createdTimeString = DateFormatter.localizedString(
+                            from: timestamp.dateValue(),
+                            dateStyle: .medium,
+                            timeStyle: .none
+                        )
 
-                       self.posts.append(post)
+                        // 创建 Author 和 Post 实例并添加到 posts 数组
+                        let author = Author(email: authorEmail, id: authorId, name: authorName)
+                        let post = Post(title: title, createdTime: createdTimeString, id: id, category: category, content: content, author: author)
+                        self.posts.append(post)
                     }
                 }
-                self.tableView.reloadData()
+
+                // 刷新表格视图
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
             }
-        }
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -78,20 +95,15 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as? PostCell else {
+            fatalError("Unable to dequeue PostCell")
+        }
 
         let post = posts[indexPath.row]
         cell.articleTitle.text = post.title
         cell.authorName.text = post.author.name
-        cell.createdTimeLabel.text = String(post.createdTime)
+        cell.createdTimeLabel.text = post.createdTime
         cell.categoryLabel.text = post.category
-
-        if post.category == "Beauty"{
-            cell.categoryLabel.backgroundColor = UIColor.systemPink
-        } else if post.category == "Gossip"{
-            cell.categoryLabel.backgroundColor = UIColor.orange
-        }
-
         cell.contentLabel.text = post.content
 
         return cell

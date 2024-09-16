@@ -56,11 +56,6 @@
             value = "YES"
             isEnabled = "YES">
          </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "CG_NUMERICS_SHOW_BACKTRACE"
-            value = "NO"
-            isEnabled = "YES">
-         </EnvironmentVariable>
       </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction

@@ -14,7 +14,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Image", for: .normal)
-        button.backgroundColor = .systemMint
+        button.backgroundColor = .pink2
         button.layer.cornerRadius = 10
         return button
     }()
@@ -23,7 +23,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Text", for: .normal)
-        button.backgroundColor = .systemMint
+        button.backgroundColor = .pink2
         button.layer.cornerRadius = 10
         return button
     }()
@@ -67,7 +67,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Choose Image", for: .normal)
-        button.backgroundColor = .systemMint
+        button.backgroundColor = .pink2
         button.layer.cornerRadius = 10
         return button
     }()
@@ -96,7 +96,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Generate", for: .normal)
-        button.backgroundColor = .systemMint
+        button.backgroundColor = .pink2
         button.layer.cornerRadius = 10
         button.tag = 0 // 設定在圖片
         return button
@@ -146,12 +146,12 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             imageButton.topAnchor.constraint(equalTo: topAnchor, constant: 100),
             imageButton.leadingAnchor.constraint(equalTo: centerXAnchor,constant: -120),
             imageButton.widthAnchor.constraint(equalToConstant: 100),
-            imageButton.heightAnchor.constraint(equalToConstant: 50),
+            imageButton.heightAnchor.constraint(equalToConstant: 30),
 
             textButton.topAnchor.constraint(equalTo: topAnchor, constant: 100),
             textButton.leadingAnchor.constraint(equalTo: centerXAnchor,constant: 20),
             textButton.widthAnchor.constraint(equalToConstant: 100),
-            textButton.heightAnchor.constraint(equalToConstant: 50),
+            textButton.heightAnchor.constraint(equalToConstant: 30),
 
             promptTextField.topAnchor.constraint(equalTo: imageButton.bottomAnchor, constant: 30),
             promptTextField.centerXAnchor.constraint(equalTo: centerXAnchor),

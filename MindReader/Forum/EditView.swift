@@ -35,7 +35,7 @@ class EditView: UIView {
         categoryTextField.borderStyle = .roundedRect
 
         publishButton.setTitle("Publish", for: .normal)
-        publishButton.backgroundColor = .blue
+        publishButton.backgroundColor = .pink3
 
         contentTextView.font = UIFont.systemFont(ofSize: 18)
         contentTextView.layer.borderColor = UIColor.lightGray.cgColor

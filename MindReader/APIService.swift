@@ -46,7 +46,7 @@ class APIService {
 
         let jsonBody: [String: Any] = [
             "model": "gpt-3.5-turbo",
-            "messages": [["role": "user", "content": formatPrompt(prompt)]],
+            "messages": [["role": "user", "content": prompt]],
             "max_tokens": 250,
             "temperature": 0.7,
 
@@ -56,36 +56,36 @@ class APIService {
         return urlRequest
     }
 
-    // 格式化 prompt 内容
-    
-    private func formatPrompt(_ prompt: String) -> String {
-        """
-        請你扮演一個溫柔又帶點幽默的朋友，跟我輕鬆聊聊天。
-        如果有些煩惱，希望你能給點安慰。
-        生活化的聊天，所以句子簡短即可。
-
-        \(prompt)
-        """
-//        你是一個善解人意的朋友，用溫柔的語氣回應。
-//        請根據以下情況回覆，包括「possible_meanings：這句訊息背後意思」和「response_methods：可回覆訊息」兩個部分，各三個。
-//
-//        請以 JSON 格式
-//        用繁體中文：
-//        \(prompt)
-//
-//        "content": {
-//            "possible_meanings": [
-//                "第一個可能意思",
-//                "第二個可能意思",
-//                "第三個可能意思"
-//            ],
-//            "response_methods": [
-//                "第一個回覆",
-//                "第二個回覆",
-//                "第三個回覆"
-//            ]
-//        }
+//    // 格式化 prompt 内容
+//    
+//    func formatPrompt(_ prompt: String) -> String {
 //        """
-
-    }
+//        請你扮演一個溫柔又帶點幽默的朋友，跟我輕鬆聊聊天。
+//        如果有些煩惱，希望你能給點安慰。
+//        生活化的聊天，所以句子簡短即可。
+//
+//        \(prompt)
+//        """
+////        你是一個善解人意的朋友，用溫柔的語氣回應。
+////        請根據以下情況回覆，包括「possible_meanings：這句訊息背後意思」和「response_methods：可回覆訊息」兩個部分，各三個。
+////
+////        請以 JSON 格式
+////        用繁體中文：
+////        \(prompt)
+////
+////        "content": {
+////            "possible_meanings": [
+////                "第一個可能意思",
+////                "第二個可能意思",
+////                "第三個可能意思"
+////            ],
+////            "response_methods": [
+////                "第一個回覆",
+////                "第二個回覆",
+////                "第三個回覆"
+////            ]
+////        }
+////        """
+//
+//    }
 }

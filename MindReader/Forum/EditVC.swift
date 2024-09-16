@@ -21,7 +21,9 @@ class EditVC: UIViewController {
   
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        view.backgroundColor = .color
+        
         editView.publishButton.addTarget(self, action: #selector(click), for: .touchUpInside)
     }
 
@@ -42,7 +44,7 @@ class EditVC: UIViewController {
                 ],
                 "title": title,
                 "content": content,
-                "createdTime": Date().timeIntervalSince1970,
+                "createdTime": Timestamp(date: Date()),
                 "id": document.documentID,
                 "category": category
             ]

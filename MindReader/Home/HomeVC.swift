@@ -57,13 +57,14 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         let prompt = sender.tag == 1 ? homeView.promptTextField.text : recognizedText
 
-        guard let prompt = prompt, !prompt.isEmpty else {
+        guard var prompt = prompt, !prompt.isEmpty else {
             print("Prompt is empty")
             return
         }
 
         Task {
             do {
+                prompt = formatPrompt(prompt)
                 let response = try await apiService.generateTextResponse(for: prompt)
 
                 if let data = response.data(using: .utf8),
@@ -76,7 +77,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                     print("Response Methods: \(responseMethods)")
 
                     DispatchQueue.main.async {
-                        self.homeView.responseLabel.text = "可能含義\n\(possibleMeanings[0])\n\(possibleMeanings[1])\n\(possibleMeanings[2])\n\n推薦回覆"
+                        self.homeView.responseLabel.text = "可能含義\n1.\(possibleMeanings[0])\n2.\(possibleMeanings[1])\n3.\(possibleMeanings[2])\n\n推薦回覆"
                         self.homeView.replyLabel1.text = responseMethods[0]
                         self.homeView.replyLabel2.text = responseMethods[1]
                         self.homeView.replyLabel3.text = responseMethods[2]
@@ -171,5 +172,28 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
             UIPasteboard.general.string = label.text
             print("Text copied: \(label.text ?? "")")
         }
+    }
+
+    private func formatPrompt(_ prompt: String) -> String {
+        """
+        你是一個善解人意的朋友，用溫柔的語氣回應。
+        請根據以下情況回覆，包括「possible_meanings：這句訊息背後意思」和「response_methods：可回覆訊息」兩個部分，各三個。
+
+        \(prompt)
+
+        用繁體中文，以 JSON 格式：
+        "content": {
+            "possible_meanings": [
+                "第一個可能意思",
+                "第二個可能意思",
+                "第三個可能意思"
+            ],
+            "response_methods": [
+                "第一個回覆",
+                "第二個回覆",
+                "第三個回覆"
+            ]
+        }
+        """
     }
 }

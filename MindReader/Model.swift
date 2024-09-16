@@ -30,7 +30,7 @@ enum APIError: Error {
 
 struct Post {
     var title: String
-    var createdTime: TimeInterval
+    var createdTime: String
     var id: String
     var category: String
     var content: String
