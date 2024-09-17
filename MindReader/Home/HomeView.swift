@@ -14,7 +14,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Image", for: .normal)
-        button.backgroundColor = .systemMint
+        button.backgroundColor = .pink2
         button.layer.cornerRadius = 10
         return button
     }()
@@ -23,12 +23,33 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Text", for: .normal)
-        button.backgroundColor = .systemMint
+        button.backgroundColor = .pink2
         button.layer.cornerRadius = 10
         return button
     }()
 
     let responseLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        return label
+    }()
+
+    let replyLabel1: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        return label
+    }()
+
+    let replyLabel2: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        return label
+    }()
+
+    let replyLabel3: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
@@ -46,7 +67,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Choose Image", for: .normal)
-        button.backgroundColor = .systemMint
+        button.backgroundColor = .pink2
         button.layer.cornerRadius = 10
         return button
     }()
@@ -65,7 +86,9 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         field.layer.borderColor = UIColor.secondaryLabel.cgColor
         field.returnKeyType = .done
         field.placeholder = "Please Enter A Prompt"
+        field.font = UIFont.systemFont(ofSize: 16)
         field.contentVerticalAlignment = .top
+        field.isHidden = true
         return field
     }()
 
@@ -73,7 +96,17 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Generate", for: .normal)
-        button.backgroundColor = .systemMint
+        button.backgroundColor = .pink2
+        button.layer.cornerRadius = 10
+        button.tag = 0 // 初始設定在圖片
+        return button
+    }()
+
+    let generateImageButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(systemName: "photo.artframe"), for: .normal)
+        button.backgroundColor = .pink2
         button.layer.cornerRadius = 10
         return button
     }()
@@ -96,12 +129,21 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         addSubview(imageButton)
         addSubview(textButton)
-        addSubview(responseLabel)
+
+        addSubview(promptTextField)
+
         addSubview(imageView)
         addSubview(chooseImageButton)
-        addSubview(promptTextField)
+
         addSubview(submitButton)
         addSubview(indicatorView)
+        addSubview(responseLabel)
+
+        addSubview(replyLabel1)
+        addSubview(replyLabel2)
+        addSubview(replyLabel3)
+
+        addSubview(generateImageButton)
 
         indicatorView.isHidden = true
         indicatorView.frame = bounds
@@ -111,16 +153,18 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         indicatorView.addSubview(activityIndicator)
         activityIndicator.center = center
 
+        generateImageButton.isHidden = true
+
         NSLayoutConstraint.activate([
             imageButton.topAnchor.constraint(equalTo: topAnchor, constant: 100),
-            imageButton.leadingAnchor.constraint(equalTo: centerXAnchor,constant: -120),
+            imageButton.leadingAnchor.constraint(equalTo: centerXAnchor, constant: -120),
             imageButton.widthAnchor.constraint(equalToConstant: 100),
-            imageButton.heightAnchor.constraint(equalToConstant: 50),
+            imageButton.heightAnchor.constraint(equalToConstant: 30),
 
             textButton.topAnchor.constraint(equalTo: topAnchor, constant: 100),
-            textButton.leadingAnchor.constraint(equalTo: centerXAnchor,constant: 20),
+            textButton.leadingAnchor.constraint(equalTo: centerXAnchor, constant: 20),
             textButton.widthAnchor.constraint(equalToConstant: 100),
-            textButton.heightAnchor.constraint(equalToConstant: 50),
+            textButton.heightAnchor.constraint(equalToConstant: 30),
 
             promptTextField.topAnchor.constraint(equalTo: imageButton.bottomAnchor, constant: 30),
             promptTextField.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -132,10 +176,10 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             imageView.widthAnchor.constraint(equalToConstant: 300),
             imageView.heightAnchor.constraint(equalToConstant: 150),
 
-            chooseImageButton.topAnchor.constraint(equalTo: imageButton.bottomAnchor, constant: 30),
+            chooseImageButton.topAnchor.constraint(equalTo: imageButton.bottomAnchor, constant: 10),
             chooseImageButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             chooseImageButton.widthAnchor.constraint(equalToConstant: 150),
-            chooseImageButton.heightAnchor.constraint(equalToConstant: 50),
+            chooseImageButton.heightAnchor.constraint(equalToConstant: 20),
 
             submitButton.topAnchor.constraint(equalTo: promptTextField.bottomAnchor, constant: 20),
             submitButton.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -145,7 +189,32 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             responseLabel.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 30),
             responseLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             responseLabel.widthAnchor.constraint(equalToConstant: 300),
+
+            replyLabel1.topAnchor.constraint(equalTo: responseLabel.bottomAnchor, constant: 15),
+            replyLabel1.centerXAnchor.constraint(equalTo: centerXAnchor),
+            replyLabel1.widthAnchor.constraint(equalToConstant: 300),
+
+            replyLabel2.topAnchor.constraint(equalTo: replyLabel1.bottomAnchor, constant: 15),
+            replyLabel2.centerXAnchor.constraint(equalTo: centerXAnchor),
+            replyLabel2.widthAnchor.constraint(equalToConstant: 300),
+
+            replyLabel3.topAnchor.constraint(equalTo: replyLabel2.bottomAnchor, constant: 15),
+            replyLabel3.centerXAnchor.constraint(equalTo: centerXAnchor),
+            replyLabel3.widthAnchor.constraint(equalToConstant: 300),
+
+            generateImageButton.topAnchor.constraint(equalTo: replyLabel3.bottomAnchor, constant: 15),
+            generateImageButton.centerXAnchor.constraint(equalTo: centerXAnchor),
         ])
         responseLabel.preferredMaxLayoutWidth = 300
+    }
+
+    func setupLabelGestures(target: Any, action: Selector) {
+        replyLabel1.isUserInteractionEnabled = true
+        replyLabel2.isUserInteractionEnabled = true
+        replyLabel3.isUserInteractionEnabled = true
+
+        replyLabel1.addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
+        replyLabel2.addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
+        replyLabel3.addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
     }
 }
