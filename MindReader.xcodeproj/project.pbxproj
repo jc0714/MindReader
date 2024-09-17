@@ -27,7 +27,6 @@
 		E97C16172C955CBB002B437C /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C16162C955CBB002B437C /* FirestoreService.swift */; };
 		E97C161D2C9565CB002B437C /* KeyboardExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C161C2C9565CB002B437C /* KeyboardExtension.swift */; };
 		E9F6B67E2C95800F008E9FBF /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B67D2C95800F008E9FBF /* ChatView.swift */; };
-		E9F6B6802C959396008E9FBF /* GiftProposalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B67F2C959396008E9FBF /* GiftProposalVC.swift */; };
 		E9F6B6832C968743008E9FBF /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6822C968743008E9FBF /* Model.swift */; };
 		E9F6B6862C96EB14008E9FBF /* ForumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6852C96EB14008E9FBF /* ForumVC.swift */; };
 		E9F6B6882C96EFC9008E9FBF /* PostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6872C96EFC9008E9FBF /* PostCell.swift */; };
@@ -55,7 +54,6 @@
 		E97C16162C955CBB002B437C /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		E97C161C2C9565CB002B437C /* KeyboardExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardExtension.swift; sourceTree = "<group>"; };
 		E9F6B67D2C95800F008E9FBF /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
-		E9F6B67F2C959396008E9FBF /* GiftProposalVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftProposalVC.swift; sourceTree = "<group>"; };
 		E9F6B6822C968743008E9FBF /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		E9F6B6852C96EB14008E9FBF /* ForumVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForumVC.swift; sourceTree = "<group>"; };
 		E9F6B6872C96EFC9008E9FBF /* PostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCell.swift; sourceTree = "<group>"; };
@@ -114,7 +112,6 @@
 				E97C16162C955CBB002B437C /* FirestoreService.swift */,
 				E97C16142C95536B002B437C /* TextRecognition.swift */,
 				E97C161C2C9565CB002B437C /* KeyboardExtension.swift */,
-				E9F6B67F2C959396008E9FBF /* GiftProposalVC.swift */,
 			);
 			path = MindReader;
 			sourceTree = "<group>";
@@ -267,7 +264,6 @@
 				E9F6B6862C96EB14008E9FBF /* ForumVC.swift in Sources */,
 				E97C15E12C9166B5002B437C /* AppDelegate.swift in Sources */,
 				E97C161D2C9565CB002B437C /* KeyboardExtension.swift in Sources */,
-				E9F6B6802C959396008E9FBF /* GiftProposalVC.swift in Sources */,
 				E9F6B68C2C9717A9008E9FBF /* EditView.swift in Sources */,
 				E97C16152C95536B002B437C /* TextRecognition.swift in Sources */,
 				E97C15E32C9166B5002B437C /* SceneDelegate.swift in Sources */,
