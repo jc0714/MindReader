@@ -22,6 +22,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     private var tag = 0
     private var recognizedText: String = ""
 
+    private var copiedText: String = ""
+
     override func loadView() {
         view = homeView
     }
@@ -45,6 +47,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         homeView.promptTextField.delegate = self
         homeView.setupLabelGestures(target: self, action: #selector(copyLabelText))
+
+        homeView.generateImageButton.addTarget(self, action: #selector(toGenerateButtonTapped), for: .touchUpInside)
     }
 
     // MARK: - Submit Action
@@ -127,10 +131,12 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - View Configuration
 
     @objc func showImageView() {
+        homeView.generateImageButton.isHidden = true
         configureView(for: 0, isImageViewVisible: true)
     }
 
     @objc func enterText() {
+        homeView.generateImageButton.isHidden = true
         configureView(for: 1, isImageViewVisible: false)
     }
 
@@ -139,6 +145,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         homeView.promptTextField.isHidden = isImageViewVisible
         homeView.imageView.isHidden = !isImageViewVisible
         homeView.chooseImageButton.isHidden = !isImageViewVisible
+        homeView.promptTextField.text = nil
         homeView.imageView.image = nil
         homeView.responseLabel.text = ""
         homeView.replyLabel1.text = ""
@@ -170,7 +177,21 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     @objc func copyLabelText(_ sender: UITapGestureRecognizer) {
         if let label = sender.view as? UILabel {
             UIPasteboard.general.string = label.text
+            copiedText = label.text ?? "早安"
             print("Text copied: \(label.text ?? "")")
+        }
+        homeView.generateImageButton.isHidden = false
+    }
+
+    @objc func toGenerateButtonTapped(_ sender: UIButton) {
+        performSegue(withIdentifier: "toGenerateImage", sender: copiedText)
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toGenerateImage",
+           let destinationVC = segue.destination as? ImageVC,
+           let text = sender as? String {
+            destinationVC.copiedText = text
         }
     }
 

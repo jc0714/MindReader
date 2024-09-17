@@ -33,6 +33,7 @@
 		E9F6B6882C96EFC9008E9FBF /* PostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6872C96EFC9008E9FBF /* PostCell.swift */; };
 		E9F6B68A2C971788008E9FBF /* EditVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6892C971788008E9FBF /* EditVC.swift */; };
 		E9F6B68C2C9717A9008E9FBF /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B68B2C9717A9008E9FBF /* EditView.swift */; };
+		E9F6B6B22C997482008E9FBF /* ImageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6B12C997482008E9FBF /* ImageVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,7 @@
 		E9F6B6872C96EFC9008E9FBF /* PostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCell.swift; sourceTree = "<group>"; };
 		E9F6B6892C971788008E9FBF /* EditVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditVC.swift; sourceTree = "<group>"; };
 		E9F6B68B2C9717A9008E9FBF /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
+		E9F6B6B12C997482008E9FBF /* ImageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +124,7 @@
 			children = (
 				E97C15E42C9166B5002B437C /* HomeVC.swift */,
 				E97C15F42C91810A002B437C /* HomeView.swift */,
+				E9F6B6B12C997482008E9FBF /* ImageVC.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -254,6 +257,7 @@
 				E97C16172C955CBB002B437C /* FirestoreService.swift in Sources */,
 				E97C15E52C9166B5002B437C /* HomeVC.swift in Sources */,
 				E97C15F72C91812F002B437C /* APIService.swift in Sources */,
+				E9F6B6B22C997482008E9FBF /* ImageVC.swift in Sources */,
 				E9F6B67E2C95800F008E9FBF /* ChatView.swift in Sources */,
 				E9F6B68A2C971788008E9FBF /* EditVC.swift in Sources */,
 				E97C15F52C91810A002B437C /* HomeView.swift in Sources */,

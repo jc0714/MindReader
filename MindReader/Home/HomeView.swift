@@ -98,7 +98,16 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         button.setTitle("Generate", for: .normal)
         button.backgroundColor = .pink2
         button.layer.cornerRadius = 10
-        button.tag = 0 // 設定在圖片
+        button.tag = 0 // 初始設定在圖片
+        return button
+    }()
+
+    let generateImageButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(systemName: "photo.artframe"), for: .normal)
+        button.backgroundColor = .pink2
+        button.layer.cornerRadius = 10
         return button
     }()
 
@@ -134,6 +143,8 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         addSubview(replyLabel2)
         addSubview(replyLabel3)
 
+        addSubview(generateImageButton)
+
         indicatorView.isHidden = true
         indicatorView.frame = bounds
         indicatorView.backgroundColor = .systemGray6
@@ -141,6 +152,8 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         indicatorView.addSubview(activityIndicator)
         activityIndicator.center = center
+
+        generateImageButton.isHidden = true
 
         NSLayoutConstraint.activate([
             imageButton.topAnchor.constraint(equalTo: topAnchor, constant: 100),
@@ -187,7 +200,10 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
             replyLabel3.topAnchor.constraint(equalTo: replyLabel2.bottomAnchor, constant: 15),
             replyLabel3.centerXAnchor.constraint(equalTo: centerXAnchor),
-            replyLabel3.widthAnchor.constraint(equalToConstant: 300)
+            replyLabel3.widthAnchor.constraint(equalToConstant: 300),
+
+            generateImageButton.topAnchor.constraint(equalTo: replyLabel3.bottomAnchor, constant: 15),
+            generateImageButton.centerXAnchor.constraint(equalTo: centerXAnchor),
         ])
         responseLabel.preferredMaxLayoutWidth = 300
     }

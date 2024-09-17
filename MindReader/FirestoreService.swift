@@ -85,7 +85,6 @@ class FirestoreService {
     }
 
     func setupFirestoreListener(for collection: String, completion: @escaping () -> Void) -> ListenerRegistration? {
-
         return db.collection(collection).addSnapshotListener { (querySnapshot, error) in
             if let error = error {
                 print("Error listening to documents: \(error)")
