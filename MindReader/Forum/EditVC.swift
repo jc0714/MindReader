@@ -103,7 +103,7 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
         present(imagePicker, animated: true, completion: nil)
     }
 
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         if let selectedImage = info[.originalImage] as? UIImage {
             editView.imageView.image = selectedImage
         }

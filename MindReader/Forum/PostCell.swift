@@ -10,6 +10,8 @@ import UIKit
 
 class PostCell: UITableViewCell {
 
+    private var isHeartSelected: Bool = false
+
     let articleTitle: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
@@ -50,6 +52,20 @@ class PostCell: UITableViewCell {
 
     let postImageView = UIImageView()
 
+    let heartButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(systemName: "heart"), for: .normal)
+        button.tintColor = .red
+        return button
+    }()
+
+    let commentButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(systemName: "bubble"), for: .normal)
+        button.tintColor = .systemMint
+        return button
+    }()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
@@ -64,12 +80,16 @@ class PostCell: UITableViewCell {
         postImageView.contentMode = .scaleAspectFill
         postImageView.clipsToBounds = true
 
-        addSubview(articleTitle)
-        addSubview(authorName)
-        addSubview(categoryLabel)
-        addSubview(createdTimeLabel)
-        addSubview(contentLabel)
-        addSubview(postImageView)
+        heartButton.isUserInteractionEnabled = true
+
+        contentView.addSubview(articleTitle)
+        contentView.addSubview(authorName)
+        contentView.addSubview(categoryLabel)
+        contentView.addSubview(createdTimeLabel)
+        contentView.addSubview(contentLabel)
+        contentView.addSubview(postImageView)
+        contentView.addSubview(heartButton)
+        contentView.addSubview(commentButton)
 
         setupConstraints()
     }
@@ -81,18 +101,20 @@ class PostCell: UITableViewCell {
         createdTimeLabel.translatesAutoresizingMaskIntoConstraints = false
         contentLabel.translatesAutoresizingMaskIntoConstraints = false
         postImageView.translatesAutoresizingMaskIntoConstraints = false
+        heartButton.translatesAutoresizingMaskIntoConstraints = false
+        commentButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            articleTitle.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            articleTitle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
-            articleTitle.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
+            articleTitle.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            articleTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+            articleTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
 
             authorName.topAnchor.constraint(equalTo: articleTitle.bottomAnchor, constant: 5),
-            authorName.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
-            authorName.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
+            authorName.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+            authorName.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
 
             categoryLabel.topAnchor.constraint(equalTo: authorName.bottomAnchor, constant: 5),
-            categoryLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
+            categoryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
             categoryLabel.widthAnchor.constraint(equalToConstant: 80),
             categoryLabel.heightAnchor.constraint(equalToConstant: 25),
 
@@ -100,26 +122,35 @@ class PostCell: UITableViewCell {
             createdTimeLabel.leadingAnchor.constraint(equalTo: categoryLabel.trailingAnchor, constant: 10),
 
             contentLabel.topAnchor.constraint(equalTo: categoryLabel.bottomAnchor, constant: 10),
-            contentLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
-            contentLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
+            contentLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+            contentLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
 
             postImageView.topAnchor.constraint(equalTo: contentLabel.bottomAnchor, constant: 10),
             postImageView.heightAnchor.constraint(equalToConstant: 200),
-            postImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
-            postImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
-            postImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50)
+            postImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            postImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
+            postImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -80),
+
+            heartButton.heightAnchor.constraint(equalToConstant: 50),
+            heartButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            heartButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
+
+            commentButton.heightAnchor.constraint(equalToConstant: 50),
+            commentButton.leadingAnchor.constraint(equalTo: heartButton.trailingAnchor, constant: 30),
+            commentButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15)
         ])
+        heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
     }
 
     func configure(with imageUrl: String?) {
         if let imageUrl = imageUrl, !imageUrl.isEmpty {
             postImageView.isHidden = false
-//            postImageHeightConstraint.isActive = true  // 激活圖片的高度約束
+//            postImageHeightConstraint.isActive = true
             loadImage(from: imageUrl)
         } else {
             // 沒有圖片 URL，隱藏圖片
             postImageView.isHidden = true
-//            postImageHeightConstraint.isActive = false // 移除圖片高度約束
+//            postImageHeightConstraint.isActive = false
         }
     }
 
@@ -131,6 +162,7 @@ class PostCell: UITableViewCell {
         createdTimeLabel.text = ""
         contentLabel.text = ""
         postImageView.image = nil
+        isHeartSelected = false
     }
 
     private func loadImage(from url: String) {
@@ -139,7 +171,7 @@ class PostCell: UITableViewCell {
             return
         }
 
-        URLSession.shared.dataTask(with: imageURL) { data, response, error in
+        URLSession.shared.dataTask(with: imageURL) {data, response, error in
             if let error = error {
                 print("Failed to download image: \(error)")
                 return
@@ -154,5 +186,15 @@ class PostCell: UITableViewCell {
                 self.postImageView.image = image
             }
         }.resume()
+    }
+
+    private func updateHeartButtonImage() {
+        let symbolName = isHeartSelected ? "heart.fill" : "heart"
+        heartButton.setImage((UIImage(systemName: symbolName)), for: .normal)
+    }
+
+    @objc func heartButtonTapped() {
+        isHeartSelected.toggle()
+        updateHeartButtonImage()
     }
 }
