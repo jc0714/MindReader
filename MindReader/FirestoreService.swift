@@ -13,9 +13,15 @@ class FirestoreService {
 
     private let db = Firestore.firestore()
 
+    private let userId = "9Y2GjnVg8TEoze0GUJSU"
+    private let chatId = "7jAWex6b1RUsAwKCswGD"
+
     // MARK: HomeVC
 
     func saveToFirestore(prompt: String, response: String, imageURL: String?) async throws {
+
+        let translateRef = db.collection("Users") .document(userId).collection("Translate")
+
         let documentID = UUID().uuidString
         var data: [String: Any] = [
             "createdTime": Timestamp(date: Date()),
@@ -29,20 +35,17 @@ class FirestoreService {
             data["userInput"] = prompt
             data["tag"] = 2
         }
-        try await Firestore.firestore().collection("articles").document(documentID).setData(data)
-        print("Document successfully written with ID: \(documentID)")
+        try await translateRef.addDocument(data: data)
     }
 
     func uploadImage(imageData: Data) async throws -> String {
-        let uploadRef = Storage.storage().reference(withPath: "memes/\(UUID().uuidString).jpg")
+        let uploadRef = Storage.storage().reference(withPath: "images/\(UUID().uuidString).jpg")
         let _ = try await uploadRef.putDataAsync(imageData, metadata: StorageMetadata())
         let downloadURL = try await uploadRef.downloadURL()
         return downloadURL.absoluteString
     }
 
     func saveMessage(message: String, sender: String, completion: @escaping (Error?) -> Void) {
-        let userId = "9Y2GjnVg8TEoze0GUJSU"
-        let chatId = "7jAWex6b1RUsAwKCswGD"
 
         let messageRef = db.collection("Users") .document(userId).collection("Chat").document(chatId).collection("msg")
 
@@ -58,9 +61,6 @@ class FirestoreService {
     }
 
     func listenForMessages(completion: @escaping ([Message]) -> Void) {
-
-        let userId = "9Y2GjnVg8TEoze0GUJSU"
-        let chatId = "7jAWex6b1RUsAwKCswGD"
 
         let messageRef = db.collection("Users") .document(userId).collection("Chat").document(chatId).collection("msg").order(by: "createdTime", descending: false)
 
@@ -94,16 +94,4 @@ class FirestoreService {
             }
         }
     }
-
-//    func printAllArticles() {
-//        db.collection("articles").getDocuments() { (querySnapshot, err) in
-//            if let err = err {
-//                print("Error getting documents: \(err)")
-//            } else {
-//                for document in querySnapshot!.documents {
-//                    print("\(document.data())")
-//                }
-//            }
-//        }
-//    }
 }
