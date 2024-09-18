@@ -33,7 +33,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     }
 
     private func listenForMessages() {
-        firebaseService.listenForMessages(){ [weak self] newMessages in
+        firebaseService.listenForMessages() { [weak self] newMessages in
             guard let self = self else { return }
             self.messages = newMessages
             self.chatView.tableView.reloadData()

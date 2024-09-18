@@ -12,11 +12,14 @@ class PostCell: UITableViewCell {
 
     private var isHeartSelected: Bool = false
 
+    var commentButtonTappedClosure: (() -> Void)?
+    var commentButtonLongPressClosure: (() -> Void)?
+
     let articleTitle: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 20)
-        label.backgroundColor = .yellow
+        label.backgroundColor = .pink3
         return label
     }()
 
@@ -140,6 +143,9 @@ class PostCell: UITableViewCell {
             commentButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15)
         ])
         heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
+        commentButton.addTarget(self, action: #selector(commentButtonTapped), for: .touchUpInside)
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        commentButton.addGestureRecognizer(longPressGesture)
     }
 
     func configure(with imageUrl: String?) {
@@ -170,8 +176,7 @@ class PostCell: UITableViewCell {
             print("Invalid URL string")
             return
         }
-
-        URLSession.shared.dataTask(with: imageURL) {data, response, error in
+        URLSession.shared.dataTask(with: imageURL) { data, _, error in
             if let error = error {
                 print("Failed to download image: \(error)")
                 return
@@ -196,5 +201,15 @@ class PostCell: UITableViewCell {
     @objc func heartButtonTapped() {
         isHeartSelected.toggle()
         updateHeartButtonImage()
+    }
+
+    @objc private func commentButtonTapped() {
+        commentButtonTappedClosure?()
+    }
+
+    @objc private func handleLongPress(gesture: UILongPressGestureRecognizer) {
+        if gesture.state == .began {
+            commentButtonLongPressClosure?()
+        }
     }
 }

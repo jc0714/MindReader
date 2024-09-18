@@ -13,80 +13,66 @@ import FirebaseFirestore
 class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var tableView: UITableView!
-
     private let firebaseService = FirestoreService()
     var listener: ListenerRegistration?
-
-    let goEditButton = UIButton()
-
     var posts: [Post] = []
 
+    // MARK: - UI Components
+    let goEditButton = UIButton()
+
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view.backgroundColor = .color
-
-        listener = firebaseService.setupFirestoreListener(for: "posts") {
-            self.fetchPosts()
-        }
-
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.allowsSelection = false
-
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 100
-
-        tableView.register(PostCell.self, forCellReuseIdentifier: "PostCell")
-
-        setUI()
+        setupUI()
+        setupFirestoreListener()
+        configureTableView()
     }
 
-    func fetchPosts() {
-        posts.removeAll()
-        let db = Firestore.firestore()
+    // MARK: - Firestore
+    private func setupFirestoreListener() {
+        listener = firebaseService.setupFirestoreListener(for: "posts") { [weak self] in
+            self?.fetchPosts()
+        }
+    }
 
-        db.collection("posts")
+    private func fetchPosts() {
+        posts.removeAll()
+        Firestore.firestore().collection("posts")
             .order(by: "createdTime", descending: true)
-            .getDocuments { (querySnapshot, error) in
+            .getDocuments { [weak self] (querySnapshot, error) in
                 guard let documents = querySnapshot?.documents, error == nil else {
                     print("Error getting documents: \(String(describing: error))")
                     return
                 }
 
-                documents.forEach { document in
+                self?.posts = documents.compactMap { document in
                     let data = document.data()
+                    guard let title = data["title"] as? String,
+                          let timestamp = data["createdTime"] as? Timestamp,
+                          let id = data["id"] as? String,
+                          let category = data["category"] as? String,
+                          let content = data["content"] as? String,
+                          let authorData = data["author"] as? [String: Any],
+                          let authorEmail = authorData["email"] as? String,
+                          let authorId = authorData["id"] as? String,
+                          let authorName = authorData["name"] as? String else { return nil }
 
-                    if let title = data["title"] as? String,
-                       let timestamp = data["createdTime"] as? Timestamp,
-                       let id = data["id"] as? String,
-                       let category = data["category"] as? String,
-                       let content = data["content"] as? String,
-                       let authorData = data["author"] as? [String: Any],
-                       let authorEmail = authorData["email"] as? String,
-                       let authorId = authorData["id"] as? String,
-                       let authorName = authorData["name"] as? String {
-
-                        let image = data["image"] as? String
-
-                        let createdTimeString = DateFormatter.localizedString(
-                            from: timestamp.dateValue(),
-                            dateStyle: .medium,
-                            timeStyle: .none
-                        )
-
-                        let author = Author(email: authorEmail, id: authorId, name: authorName)
-                        let post = Post(title: title, createdTime: createdTimeString, id: id, category: category, content: content, image: image, author: author)
-                        self.posts.append(post)
-                    }
+                    let image = data["image"] as? String
+                    let createdTimeString = DateFormatter.localizedString(
+                        from: timestamp.dateValue(),
+                        dateStyle: .medium, timeStyle: .none
+                    )
+                    let author = Author(email: authorEmail, id: authorId, name: authorName)
+                    return Post(title: title, createdTime: createdTimeString, id: id, category: category, content: content, image: image, author: author)
                 }
 
                 DispatchQueue.main.async {
-                    self.tableView.reloadData()
+                    self?.tableView.reloadData()
                 }
             }
     }
 
+    // MARK: - UITableView DataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return posts.count
     }
@@ -97,6 +83,7 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
 
         let post = posts[indexPath.row]
+
         cell.articleTitle.text = post.title
         cell.authorName.text = post.author.name
         cell.createdTimeLabel.text = post.createdTime
@@ -105,10 +92,31 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
         cell.configure(with: post.image)
 
+        cell.commentButtonTappedClosure = { [weak self] in
+            self?.showCommentsForPost(at: indexPath)
+        }
+        cell.commentButtonLongPressClosure = { [weak self] in
+            self?.showTextFieldForComment(at: indexPath)
+        }
         return cell
     }
 
-    func setUI() {
+    // MARK: - UI Setup
+    private func setupUI() {
+        view.backgroundColor = .color
+        setupEditButton()
+    }
+
+    private func configureTableView() {
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.allowsSelection = false
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 100
+        tableView.register(PostCell.self, forCellReuseIdentifier: "PostCell")
+    }
+
+    private func setupEditButton() {
         goEditButton.backgroundColor = UIColor.white
         goEditButton.setTitle("➕", for: .normal)
         goEditButton.layer.cornerRadius = 30
@@ -124,10 +132,62 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             goEditButton.widthAnchor.constraint(equalToConstant: 60),
             goEditButton.heightAnchor.constraint(equalToConstant: 60)
         ])
-        goEditButton.addTarget(self, action: #selector(click), for: .touchUpInside)
+
+        goEditButton.addTarget(self, action: #selector(navigateToEditPage), for: .touchUpInside)
     }
 
-    @objc func click(_ sender: UIButton) {
+    // MARK: - Actions
+    @objc func navigateToEditPage() {
         performSegue(withIdentifier: "toEditPage", sender: self)
+    }
+
+    private func showCommentsForPost(at indexPath: IndexPath) {
+        let commentsVC = CommentsVC(postId: posts[indexPath.row].id)
+
+        if let sheet = commentsVC.sheetPresentationController {
+            sheet.detents = [.medium(), .large()]
+            sheet.prefersGrabberVisible = true
+        }
+        present(commentsVC, animated: true, completion: nil)
+    }
+
+    private func showTextFieldForComment(at indexPath: IndexPath) {
+        let postId = posts[indexPath.row].id
+
+        let alert = UIAlertController(title: "新增留言", message: nil, preferredStyle: .alert)
+        alert.addTextField { textField in
+            textField.placeholder = "請輸入留言"
+        }
+
+        let submitAction = UIAlertAction(title: "送出", style: .default) { [weak self] _ in
+            guard let textField = alert.textFields?.first, let commentText = textField.text, !commentText.isEmpty else {
+                print("留言不能為空")
+                return
+            }
+
+            Task {
+                let postRef = Firestore.firestore().collection("posts").document(postId)
+                let newComment: [String: Any] = [
+                    "id": UUID().uuidString,
+                    "author": "JJ",
+                    "authorId": "JJCC",
+                    "content": commentText,
+                    "timestamp": Timestamp(date: Date())
+                ]
+
+                do {
+                    try await postRef.updateData([
+                        "Comments": FieldValue.arrayUnion([newComment])
+                    ])
+                    print("留言已成功提交")
+                } catch {
+                    print("留言提交失敗: \(error.localizedDescription)")
+                }
+            }
+        }
+
+        alert.addAction(submitAction)
+        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 }

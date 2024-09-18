@@ -44,6 +44,15 @@ struct Author {
     var name: String
 }
 
+// MARK: Comment
+
+struct Comment {
+    let author: String
+    let authorId: String
+    let content: String
+    let timestamp: Date
+}
+
 // MARK: Chat
 
 struct Message {
