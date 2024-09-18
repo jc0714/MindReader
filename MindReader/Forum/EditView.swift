@@ -39,11 +39,11 @@ class EditView: UIView {
         contentTextView.layer.borderColor = UIColor.lightGray.cgColor
         contentTextView.layer.borderWidth = 1.0
 
-        imageView.backgroundColor = .pink3
+        imageView.backgroundColor = .pink1
         imageView.isUserInteractionEnabled = true
 
         publishButton.setTitle("Publish", for: .normal)
-        publishButton.backgroundColor = .pink3
+        publishButton.backgroundColor = .pink1
 
         addSubview(titleTextField)
         addSubview(categoryTextField)

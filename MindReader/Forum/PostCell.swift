@@ -23,14 +23,14 @@ class PostCell: UITableViewCell {
     let authorName: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .darkGray
+        label.textColor = .pink1
         return label
     }()
 
     let categoryLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
-        label.backgroundColor = UIColor.lightGray
+        label.backgroundColor = .pink2
         label.textAlignment = .center
         return label
     }()
@@ -158,7 +158,7 @@ class PostCell: UITableViewCell {
         articleTitle.text = ""
         authorName.text = ""
         categoryLabel.text = ""
-        categoryLabel.backgroundColor = UIColor.lightGray
+        categoryLabel.backgroundColor = .color
         createdTimeLabel.text = ""
         contentLabel.text = ""
         postImageView.image = nil

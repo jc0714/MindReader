@@ -14,7 +14,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Image", for: .normal)
-        button.backgroundColor = .pink2
+        button.backgroundColor = .pink1
         button.layer.cornerRadius = 10
         return button
     }()
@@ -23,7 +23,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Text", for: .normal)
-        button.backgroundColor = .pink2
+        button.backgroundColor = .pink1
         button.layer.cornerRadius = 10
         return button
     }()
@@ -67,7 +67,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Choose Image", for: .normal)
-        button.backgroundColor = .pink2
+        button.backgroundColor = .pink1
         button.layer.cornerRadius = 10
         return button
     }()
@@ -81,7 +81,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         field.autocorrectionType = .no
         field.layer.cornerRadius = 10
         field.clipsToBounds = true
-        field.backgroundColor = .systemGray6
+        field.backgroundColor = .color
         field.layer.borderWidth = 1
         field.layer.borderColor = UIColor.secondaryLabel.cgColor
         field.returnKeyType = .done
@@ -96,7 +96,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Generate", for: .normal)
-        button.backgroundColor = .pink2
+        button.backgroundColor = .pink1
         button.layer.cornerRadius = 10
         button.tag = 0 // 初始設定在圖片
         return button
@@ -106,7 +106,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "photo.artframe"), for: .normal)
-        button.backgroundColor = .pink2
+        button.backgroundColor = .pink1
         button.layer.cornerRadius = 10
         return button
     }()
@@ -147,7 +147,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         indicatorView.isHidden = true
         indicatorView.frame = bounds
-        indicatorView.backgroundColor = .systemGray6
+        indicatorView.backgroundColor = .color
         indicatorView.alpha = 0.95
 
         indicatorView.addSubview(activityIndicator)
