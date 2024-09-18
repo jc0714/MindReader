@@ -72,11 +72,9 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         return button
     }()
 
-    let promptTextField: UITextField = {
-        let field = UITextField()
+    let promptTextField: UITextView = {
+        let field = UITextView()
         field.translatesAutoresizingMaskIntoConstraints = false
-        field.leftViewMode = .always
-        field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         field.autocapitalizationType = .none
         field.autocorrectionType = .no
         field.layer.cornerRadius = 10
@@ -85,9 +83,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         field.layer.borderWidth = 1
         field.layer.borderColor = UIColor.secondaryLabel.cgColor
         field.returnKeyType = .done
-        field.placeholder = "Please Enter A Prompt"
         field.font = UIFont.systemFont(ofSize: 16)
-        field.contentVerticalAlignment = .top
         field.isHidden = true
         return field
     }()
