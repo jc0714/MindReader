@@ -3,7 +3,6 @@
 //  MindReader
 //
 //  Created by J oyce on 2024/9/11.
-//
 
 import UIKit
 import Vision
@@ -114,10 +113,14 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     }
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+
+        configureView(for: 0, isImageViewVisible: true)
+
         picker.dismiss(animated: true, completion: nil)
 
         if let image = info[.originalImage] as? UIImage {
             homeView.imageView.image = image
+            homeView.submitButton.tag = 0
             textRecognizeService.recognizeTextInImage(image: image) { recognizedText in
                 self.recognizedText = recognizedText
                 print("Recognized Text: \(recognizedText)")
@@ -151,6 +154,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         homeView.replyLabel1.text = ""
         homeView.replyLabel2.text = ""
         homeView.replyLabel3.text = ""
+        homeView.generateImageButton.isHidden = true
     }
 
     // MARK: - Keyboard Handling
