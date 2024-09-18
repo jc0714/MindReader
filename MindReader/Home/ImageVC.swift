@@ -51,24 +51,24 @@ class ImageVC: UIViewController {
         NSLayoutConstraint.activate([
             photo1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             photo1.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            photo1.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.28),
-            photo1.heightAnchor.constraint(equalTo: photo1.widthAnchor),
+            photo1.widthAnchor.constraint(equalToConstant: 90),
+            photo1.heightAnchor.constraint(equalToConstant: 90),
 
             photo2.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             photo2.topAnchor.constraint(equalTo: photo1.topAnchor),
-            photo2.widthAnchor.constraint(equalTo: photo1.widthAnchor),
-            photo2.heightAnchor.constraint(equalTo: photo1.heightAnchor),
+            photo2.widthAnchor.constraint(equalToConstant: 90),
+            photo2.heightAnchor.constraint(equalToConstant: 90),
 
             photo3.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             photo3.topAnchor.constraint(equalTo: photo1.topAnchor),
-            photo3.widthAnchor.constraint(equalTo: photo1.widthAnchor),
-            photo3.heightAnchor.constraint(equalTo: photo1.heightAnchor),
+            photo3.widthAnchor.constraint(equalToConstant: 90),
+            photo3.heightAnchor.constraint(equalToConstant: 90),
 
             finalImageView.topAnchor.constraint(equalTo: photo1.bottomAnchor, constant: 40),
             finalImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             finalImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            finalImageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            finalImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.4),
+            finalImageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
+            finalImageView.heightAnchor.constraint(equalToConstant: 300),
 
             saveButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             saveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
@@ -118,7 +118,6 @@ class ImageVC: UIViewController {
             let textRect = CGRect(x: 20, y: 20, width: backgroundImage.size.width - 40, height: backgroundImage.size.height - 40)
             text.draw(in: textRect, withAttributes: textAttributes)
         }
-
         finalImageView.image = generatedImage
     }
 }
