@@ -203,7 +203,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             replyLabel3.widthAnchor.constraint(equalToConstant: 300),
 
             generateImageButton.topAnchor.constraint(equalTo: replyLabel3.bottomAnchor, constant: 15),
-            generateImageButton.centerXAnchor.constraint(equalTo: centerXAnchor),
+            generateImageButton.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
         responseLabel.preferredMaxLayoutWidth = 300
     }

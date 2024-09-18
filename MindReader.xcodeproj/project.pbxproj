@@ -25,7 +25,6 @@
 		E97C16082C92BC88002B437C /* APIKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C16072C92BC88002B437C /* APIKeys.swift */; };
 		E97C16152C95536B002B437C /* TextRecognition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C16142C95536B002B437C /* TextRecognition.swift */; };
 		E97C16172C955CBB002B437C /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C16162C955CBB002B437C /* FirestoreService.swift */; };
-		E97C161D2C9565CB002B437C /* KeyboardExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C161C2C9565CB002B437C /* KeyboardExtension.swift */; };
 		E9F6B67E2C95800F008E9FBF /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B67D2C95800F008E9FBF /* ChatView.swift */; };
 		E9F6B6832C968743008E9FBF /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6822C968743008E9FBF /* Model.swift */; };
 		E9F6B6862C96EB14008E9FBF /* ForumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6852C96EB14008E9FBF /* ForumVC.swift */; };
@@ -33,6 +32,8 @@
 		E9F6B68A2C971788008E9FBF /* EditVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6892C971788008E9FBF /* EditVC.swift */; };
 		E9F6B68C2C9717A9008E9FBF /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B68B2C9717A9008E9FBF /* EditView.swift */; };
 		E9F6B6B22C997482008E9FBF /* ImageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6B12C997482008E9FBF /* ImageVC.swift */; };
+		E9F6B6B62C9AA030008E9FBF /* ButtonExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6B52C9AA030008E9FBF /* ButtonExtension.swift */; };
+		E9F6B6B82C9AA291008E9FBF /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6B72C9AA291008E9FBF /* ImageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,7 +53,6 @@
 		E97C16072C92BC88002B437C /* APIKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeys.swift; sourceTree = "<group>"; };
 		E97C16142C95536B002B437C /* TextRecognition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextRecognition.swift; sourceTree = "<group>"; };
 		E97C16162C955CBB002B437C /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
-		E97C161C2C9565CB002B437C /* KeyboardExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardExtension.swift; sourceTree = "<group>"; };
 		E9F6B67D2C95800F008E9FBF /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		E9F6B6822C968743008E9FBF /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		E9F6B6852C96EB14008E9FBF /* ForumVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForumVC.swift; sourceTree = "<group>"; };
@@ -60,6 +60,8 @@
 		E9F6B6892C971788008E9FBF /* EditVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditVC.swift; sourceTree = "<group>"; };
 		E9F6B68B2C9717A9008E9FBF /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
 		E9F6B6B12C997482008E9FBF /* ImageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageVC.swift; sourceTree = "<group>"; };
+		E9F6B6B52C9AA030008E9FBF /* ButtonExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonExtension.swift; sourceTree = "<group>"; };
+		E9F6B6B72C9AA291008E9FBF /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,7 +113,7 @@
 				E97C15F62C91812F002B437C /* APIService.swift */,
 				E97C16162C955CBB002B437C /* FirestoreService.swift */,
 				E97C16142C95536B002B437C /* TextRecognition.swift */,
-				E97C161C2C9565CB002B437C /* KeyboardExtension.swift */,
+				E9F6B6B52C9AA030008E9FBF /* ButtonExtension.swift */,
 			);
 			path = MindReader;
 			sourceTree = "<group>";
@@ -122,6 +124,7 @@
 				E97C15E42C9166B5002B437C /* HomeVC.swift */,
 				E97C15F42C91810A002B437C /* HomeView.swift */,
 				E9F6B6B12C997482008E9FBF /* ImageVC.swift */,
+				E9F6B6B72C9AA291008E9FBF /* ImageView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -251,6 +254,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E97C16042C919FFF002B437C /* ChatVC.swift in Sources */,
+				E9F6B6B82C9AA291008E9FBF /* ImageView.swift in Sources */,
 				E97C16172C955CBB002B437C /* FirestoreService.swift in Sources */,
 				E97C15E52C9166B5002B437C /* HomeVC.swift in Sources */,
 				E97C15F72C91812F002B437C /* APIService.swift in Sources */,
@@ -259,11 +263,11 @@
 				E9F6B68A2C971788008E9FBF /* EditVC.swift in Sources */,
 				E97C15F52C91810A002B437C /* HomeView.swift in Sources */,
 				E97C16062C91A0DF002B437C /* ChatCell.swift in Sources */,
+				E9F6B6B62C9AA030008E9FBF /* ButtonExtension.swift in Sources */,
 				E9F6B6832C968743008E9FBF /* Model.swift in Sources */,
 				E97C16082C92BC88002B437C /* APIKeys.swift in Sources */,
 				E9F6B6862C96EB14008E9FBF /* ForumVC.swift in Sources */,
 				E97C15E12C9166B5002B437C /* AppDelegate.swift in Sources */,
-				E97C161D2C9565CB002B437C /* KeyboardExtension.swift in Sources */,
 				E9F6B68C2C9717A9008E9FBF /* EditView.swift in Sources */,
 				E97C16152C95536B002B437C /* TextRecognition.swift in Sources */,
 				E97C15E32C9166B5002B437C /* SceneDelegate.swift in Sources */,
