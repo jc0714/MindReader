@@ -44,7 +44,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
 
-//        homeView.promptTextField.delegate = self
         homeView.setupLabelGestures(target: self, action: #selector(copyLabelText))
 
         homeView.generateImageButton.addTarget(self, action: #selector(toGenerateButtonTapped), for: .touchUpInside)

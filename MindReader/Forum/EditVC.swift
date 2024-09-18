@@ -43,11 +43,11 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
            let category = editView.categoryTextField.text, !category.isEmpty {
 
             do {
-                let imageURL: String? = nil
+                var imageURL: String?
 
                 if let image = editView.imageView.image?.jpegData(compressionQuality: 0.75) {
-                    let imageURL = try await firestoreService.uploadImage(imageData: image)
-                    print("Image URL: \(imageURL)")
+                    imageURL = try await firestoreService.uploadImage(imageData: image)
+                    print("Image URL: \(imageURL ?? "")")
                 }
 
                 let articles = Firestore.firestore().collection("posts")
