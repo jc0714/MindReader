@@ -36,6 +36,8 @@ struct Post {
     var content: String
     var image: String?
     var author: Author
+//    var like: Array<Any>
+//    var comment: Array<Any>
 }
 
 struct Author {

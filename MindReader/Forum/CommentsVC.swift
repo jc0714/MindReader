@@ -56,11 +56,6 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                           let timestamp = comment["timestamp"] as? Timestamp else {
                         return nil
                     }
-//
-//                    let createdTimeString = DateFormatter.localizedString(
-//                        from: timestamp.dateValue(),
-//                        dateStyle: .medium, timeStyle: .none
-//                    )
 
                     return Comment(author: author, authorId: authorId, content: content, timestamp: timestamp.dateValue())
                 }

@@ -31,7 +31,7 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
         editView.imageView.addGestureRecognizer(tapGesture)
 
         let keyboardTapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        editView.imageView.addGestureRecognizer(keyboardTapGesture)
+        view.addGestureRecognizer(keyboardTapGesture)
     }
 
     @objc func click() {
@@ -64,7 +64,8 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
                     "content": content,
                     "createdTime": Timestamp(date: Date()),
                     "id": document.documentID,
-                    "category": category
+                    "category": category,
+                    "like": []
                 ]
 
                 if let imageURL = imageURL {

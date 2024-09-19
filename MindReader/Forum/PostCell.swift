@@ -12,6 +12,8 @@ class PostCell: UITableViewCell {
 
     private var isHeartSelected: Bool = false
 
+    var heartButtonTappedClosure: (() -> Void)?
+
     var commentButtonTappedClosure: (() -> Void)?
     var commentButtonLongPressClosure: (() -> Void)?
 
@@ -220,17 +222,13 @@ class PostCell: UITableViewCell {
         }.resume()
     }
 
-    private func updateHeartButtonImage() {
-        let symbolName = isHeartSelected ? "heart.fill" : "heart"
-        heartButton.setImage((UIImage(systemName: symbolName)), for: .normal)
-    }
-
     @objc func heartButtonTapped() {
-        isHeartSelected.toggle()
-        updateHeartButtonImage()
+        // 通知 VC
+        heartButtonTappedClosure?()
     }
 
     @objc private func commentButtonTapped() {
+        // 通知 VC
         commentButtonTappedClosure?()
     }
 

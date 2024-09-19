@@ -24,7 +24,8 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        setupFirestoreListener()
+//        setupFirestoreListener()
+        fetchPosts()
         configureTableView()
 
         NotificationCenter.default.addObserver(self, selector: #selector(handleCommentCountUpdate(_:)), name: NSNotification.Name("CommentCountUpdated"), object: nil)
@@ -94,6 +95,10 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
         cell.configure(with: post.image)
 
+        cell.heartButtonTappedClosure = { [weak self] in
+            self?.updateHeartLabel(at: indexPath)
+        }
+
         cell.commentButtonTappedClosure = { [weak self] in
             self?.showCommentsForPost(at: indexPath)
         }
@@ -143,6 +148,42 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         performSegue(withIdentifier: "toEditPage", sender: self)
     }
 
+    private func updateHeartLabel(at indexPath: IndexPath) {
+        let postId = posts[indexPath.row].id
+        let currentUser = "JJ"
+
+        let cell = tableView.cellForRow(at: indexPath) as? PostCell
+
+        Task {
+            let postRef = Firestore.firestore().collection("posts").document(postId)
+
+            do {
+                // 先獲取當前的貼文資料，檢查 "Likes" 陣列是否包含當前用戶
+                let documentSnapshot = try await postRef.getDocument()
+                if let data = documentSnapshot.data(), let likes = data["like"] as? [String] {
+                    if likes.contains(currentUser) {
+                        // 如果當前用戶已經點過讚，則從陣列中移除
+                        try await postRef.updateData([
+                            "like": FieldValue.arrayRemove([currentUser])
+                        ])
+                        cell?.heartButton.setImage((UIImage(systemName: "heart")), for: .normal)
+                        cell?.heartCount.text = String(likes.count - 1);                      print("已經取消喜歡！")
+                    } else {
+                        // 如果當前用戶未點過讚，則添加到陣列中
+                        try await postRef.updateData([
+                            "like": FieldValue.arrayUnion([currentUser])
+                        ])
+                        cell?.heartButton.setImage((UIImage(systemName: "heart.fill")), for: .normal)
+                        cell?.heartCount.text = String(likes.count + 1)
+                        print("喜歡！！")
+                    }
+                }
+            } catch {
+                print("不給喜歡: \(error.localizedDescription)")
+            }
+        }
+    }
+
     private func showCommentsForPost(at indexPath: IndexPath) {
         let commentsVC = CommentsVC(postId: posts[indexPath.row].id)
 
@@ -187,7 +228,6 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 }
             }
         }
-
         alert.addAction(submitAction)
         alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
@@ -200,7 +240,6 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             return
         }
 
-        // 更新對應的 postCell
         if let index = posts.firstIndex(where: { $0.id == postId }),
            let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? PostCell {
             cell.commentCount.text = "\(count)"
