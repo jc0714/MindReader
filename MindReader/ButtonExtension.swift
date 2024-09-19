@@ -10,7 +10,7 @@ import UIKit
 
 extension UIViewController {
     func createButton(title: String, backgroundColor: UIColor, titleColor: UIColor = .white, action: Selector) -> UIButton {
-        var button = UIButton(type: .system)
+        let button = UIButton(type: .system)
         button.setTitle(title, for: .normal)
         button.setTitleColor(titleColor, for: .normal)
         button.backgroundColor = backgroundColor

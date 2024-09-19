@@ -52,10 +52,16 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - Submit Action
 
     @objc private func didTapSubmit(_ sender: UIButton) {
+
         if sender.tag == 2 {
             showAlert(message: "請上傳有文字的訊息截圖，我來幫你解讀！")
             return
         }
+
+        // 可設置等待回應動畫
+
+        sender.isUserInteractionEnabled = false
+        sender.backgroundColor = .color
 
         let prompt = sender.tag == 1 ? homeView.promptTextField.text : recognizedText
 
@@ -94,6 +100,9 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                 } else {
                     try await firestoreService.saveToFirestore(prompt: prompt, response: response, imageURL: nil)
                 }
+
+                sender.isUserInteractionEnabled = true
+                sender.backgroundColor = .pink1
 
             } catch {
                 print("Failed to get response: \(error)")
@@ -160,11 +169,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     @objc func dismissKeyboard() {
         view.endEditing(true)
-    }
-
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        homeView.promptTextField.resignFirstResponder()
-        return true
     }
 
     // MARK: - Show Alert

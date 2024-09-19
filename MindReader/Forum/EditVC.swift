@@ -29,6 +29,9 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
         editView.imageView.addGestureRecognizer(tapGesture)
+
+        let keyboardTapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        editView.imageView.addGestureRecognizer(keyboardTapGesture)
     }
 
     @objc func click() {
@@ -44,7 +47,6 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
 
             do {
                 var imageURL: String?
-
                 if let image = editView.imageView.image?.jpegData(compressionQuality: 0.75) {
                     imageURL = try await firestoreService.uploadImage(imageData: image)
                     print("Image URL: \(imageURL ?? "")")
@@ -112,5 +114,9 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
 
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
+    }
+
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 }
