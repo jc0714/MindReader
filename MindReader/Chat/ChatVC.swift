@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import IQKeyboardManagerSwift
 
 class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
 
@@ -30,6 +31,40 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         chatView.tableView.dataSource = self
         setUpActions()
         listenForMessages()
+
+        setupKeyboardObservers()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // 禁用 IQKeyboardManager
+         IQKeyboardManager.shared.enable = false
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        // 啟用 IQKeyboardManager，確保其他視圖控制器不受影響
+        IQKeyboardManager.shared.enable = true
+    }
+
+    private func setupKeyboardObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+            let keyboardHeight = keyboardFrame.height
+            chatView.updateInputContainerBottomConstraint(by: -keyboardHeight + view.safeAreaInsets.bottom)
+        }
+    }
+
+    @objc func keyboardWillHide(_ notification: Notification) {
+        chatView.updateInputContainerBottomConstraint(by: 0)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     private func listenForMessages() {

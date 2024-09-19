@@ -15,6 +15,8 @@ class ChatView: UIView {
     let sendButton = UIButton(type: .system)
     let inputContainer = UIView()
 
+    var inputContainerBottomConstraint: NSLayoutConstraint!
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
@@ -57,10 +59,14 @@ class ChatView: UIView {
         inputContainer.addSubview(textField)
         inputContainer.addSubview(sendButton)
 
+        inputContainerBottomConstraint = inputContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+        inputContainerBottomConstraint.isActive = true
+
         NSLayoutConstraint.activate([
             inputContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
             inputContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
             inputContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            inputContainer.heightAnchor.constraint(equalToConstant: 100),
 
             textField.leadingAnchor.constraint(equalTo: inputContainer.leadingAnchor, constant: 8),
             textField.topAnchor.constraint(equalTo: inputContainer.topAnchor, constant: 8),
@@ -71,5 +77,12 @@ class ChatView: UIView {
             sendButton.trailingAnchor.constraint(equalTo: inputContainer.trailingAnchor, constant: -8),
             sendButton.centerYAnchor.constraint(equalTo: inputContainer.centerYAnchor)
         ])
+    }
+    
+    func updateInputContainerBottomConstraint(by constant: CGFloat) {
+        inputContainerBottomConstraint.constant = constant
+        UIView.animate(withDuration: 0.3) {
+            self.layoutIfNeeded()
+        }
     }
 }
