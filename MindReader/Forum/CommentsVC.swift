@@ -12,7 +12,7 @@ import FirebaseFirestore
 class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     private let tableView = UITableView()
-    private var comments: [String] = [] // 儲存留言的內容
+    private var comments: [Comment] = [] // 儲存留言的內容
     private var postId: String // 需要傳入 postId 來監聽特定的貼文
     private var listener: ListenerRegistration?
 
@@ -29,6 +29,7 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.register(CommentCell.self, forCellReuseIdentifier: "CommentCell")
 
         view.backgroundColor = UIColor.white.withAlphaComponent(0.9)
 
@@ -49,9 +50,22 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
             if let data = document.data(), let commentsData = data["Comments"] as? [[String: Any]] {
                 self.comments = commentsData.compactMap { comment in
-                    return comment["content"] as? String // 提取每則留言的內容
+                    guard let author = comment["author"] as? String,
+                          let content = comment["content"] as? String,
+                          let authorId = comment["authorId"] as? String,
+                          let timestamp = comment["timestamp"] as? Timestamp else {
+                        return nil
+                    }
+//
+//                    let createdTimeString = DateFormatter.localizedString(
+//                        from: timestamp.dateValue(),
+//                        dateStyle: .medium, timeStyle: .none
+//                    )
+
+                    return Comment(author: author, authorId: authorId, content: content, timestamp: timestamp.dateValue())
                 }
 
+                // 更新留言數量
                 let commentCount = commentsData.count
                 NotificationCenter.default.post(name: NSNotification.Name("CommentCountUpdated"), object: nil, userInfo: ["postId": self.postId, "count": commentCount])
 
@@ -103,8 +117,12 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
-        cell.textLabel?.text = comments[indexPath.row]
-        return cell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CommentCell", for: indexPath) as? CommentCell
+
+        let comment = comments[indexPath.row]
+
+        cell?.configure(author: comment.author, content: comment.content, timestamp: comment.timestamp)
+
+        return cell!
     }
 }
