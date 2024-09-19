@@ -62,11 +62,35 @@ class PostCell: UITableViewCell {
         return button
     }()
 
+    let heartCount: UILabel = {
+        let label = UILabel()
+        label.text = "0"
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = .red
+        return label
+    }()
+
     let commentButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(systemName: "bubble"), for: .normal)
         button.tintColor = .systemMint
         return button
+    }()
+
+    let commentCount: UILabel = {
+        let label = UILabel()
+        label.text = "0"
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = .systemMint
+        return label
+    }()
+
+    lazy var commentView: UIView = {
+        return createStackedView(button: commentButton, label: commentCount)
+    }()
+
+    lazy var heartView: UIView = {
+        return createStackedView(button: heartButton, label: heartCount)
     }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -92,7 +116,8 @@ class PostCell: UITableViewCell {
         contentView.addSubview(contentLabel)
         contentView.addSubview(postImageView)
         contentView.addSubview(heartButton)
-        contentView.addSubview(commentButton)
+        contentView.addSubview(heartView)
+        contentView.addSubview(commentView)
 
         setupConstraints()
     }
@@ -106,6 +131,8 @@ class PostCell: UITableViewCell {
         postImageView.translatesAutoresizingMaskIntoConstraints = false
         heartButton.translatesAutoresizingMaskIntoConstraints = false
         commentButton.translatesAutoresizingMaskIntoConstraints = false
+        heartView.translatesAutoresizingMaskIntoConstraints = false
+        commentView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             articleTitle.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
@@ -134,13 +161,13 @@ class PostCell: UITableViewCell {
             postImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             postImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -80),
 
-            heartButton.heightAnchor.constraint(equalToConstant: 50),
-            heartButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            heartButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
+            heartView.heightAnchor.constraint(equalToConstant: 50),
+            heartView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            heartView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
 
-            commentButton.heightAnchor.constraint(equalToConstant: 50),
-            commentButton.leadingAnchor.constraint(equalTo: heartButton.trailingAnchor, constant: 30),
-            commentButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15)
+            commentView.heightAnchor.constraint(equalToConstant: 50),
+            commentView.leadingAnchor.constraint(equalTo: heartView.trailingAnchor, constant: 30),
+            commentView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15)
         ])
         heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
         commentButton.addTarget(self, action: #selector(commentButtonTapped), for: .touchUpInside)
@@ -211,5 +238,25 @@ class PostCell: UITableViewCell {
         if gesture.state == .began {
             commentButtonLongPressClosure?()
         }
+    }
+
+    func createStackedView(button: UIButton, label: UILabel) -> UIView {
+        let view = UIView()
+        let stackView = UIStackView(arrangedSubviews: [button, label])
+        stackView.axis = .horizontal
+        stackView.spacing = 5
+        stackView.alignment = .center
+
+        view.addSubview(stackView)
+
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: view.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+
+        return view
     }
 }

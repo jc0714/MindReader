@@ -26,6 +26,8 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         setupUI()
         setupFirestoreListener()
         configureTableView()
+
+        NotificationCenter.default.addObserver(self, selector: #selector(handleCommentCountUpdate(_:)), name: NSNotification.Name("CommentCountUpdated"), object: nil)
     }
 
     // MARK: - Firestore
@@ -154,7 +156,7 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     private func showTextFieldForComment(at indexPath: IndexPath) {
         let postId = posts[indexPath.row].id
 
-        let alert = UIAlertController(title: "新增留言", message: nil, preferredStyle: .alert)
+        let alert = UIAlertController(title: "歡迎留言", message: nil, preferredStyle: .alert)
         alert.addTextField { textField in
             textField.placeholder = "請輸入留言"
         }
@@ -189,5 +191,19 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         alert.addAction(submitAction)
         alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
+    }
+
+    @objc private func handleCommentCountUpdate(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let postId = userInfo["postId"] as? String,
+              let count = userInfo["count"] as? Int else {
+            return
+        }
+
+        // 更新對應的 postCell
+        if let index = posts.firstIndex(where: { $0.id == postId }),
+           let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? PostCell {
+            cell.commentCount.text = "\(count)"
+        }
     }
 }

@@ -34,7 +34,7 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
         setupTableView()
         setupCloseButton()
-        setupFirestoreListener()  // 開始監聽 Firestore
+        setupFirestoreListener()
     }
 
     // MARK: - Firestore Listener
@@ -47,11 +47,13 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 return
             }
 
-            // 獲取最新的 comments 陣列
             if let data = document.data(), let commentsData = data["Comments"] as? [[String: Any]] {
                 self.comments = commentsData.compactMap { comment in
                     return comment["content"] as? String // 提取每則留言的內容
                 }
+
+                let commentCount = commentsData.count
+                NotificationCenter.default.post(name: NSNotification.Name("CommentCountUpdated"), object: nil, userInfo: ["postId": self.postId, "count": commentCount])
 
                 // 更新 UI
                 DispatchQueue.main.async {

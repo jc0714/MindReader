@@ -120,6 +120,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         configureUI()
     }
 
+    // swiftlint:disable:next function_body_length
     private func configureUI() {
         backgroundColor = .systemBackground
 

@@ -40,7 +40,7 @@ class FirestoreService {
 
     func uploadImage(imageData: Data) async throws -> String {
         let uploadRef = Storage.storage().reference(withPath: "images/\(UUID().uuidString).jpg")
-        let _ = try await uploadRef.putDataAsync(imageData, metadata: StorageMetadata())
+        _ = try await uploadRef.putDataAsync(imageData, metadata: StorageMetadata())
         let downloadURL = try await uploadRef.downloadURL()
         return downloadURL.absoluteString
     }
@@ -85,7 +85,7 @@ class FirestoreService {
     }
 
     func setupFirestoreListener(for collection: String, completion: @escaping () -> Void) -> ListenerRegistration? {
-        return db.collection(collection).addSnapshotListener { (querySnapshot, error) in
+        return db.collection(collection).addSnapshotListener { (_, error) in
             if let error = error {
                 print("Error listening to documents: \(error)")
             } else {
