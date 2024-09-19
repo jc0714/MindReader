@@ -19,7 +19,7 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     var posts: [Post] = []
 
-    var refreshControl:UIRefreshControl!
+    var refreshControl: UIRefreshControl!
 
     // MARK: - UI Components
     let goEditButton = UIButton()

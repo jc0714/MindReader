@@ -40,12 +40,14 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
         }
     }
 
+    // swiftlint:disable function_body_length
     func handleClick() async {
         if let title = editView.titleTextField.text, !title.isEmpty,
            let content = editView.contentTextView.text, !content.isEmpty,
            let category = editView.categoryTextField.text, !category.isEmpty {
 
             do {
+                editView.publishButton.isUserInteractionEnabled = false
                 var imageURL: String?
                 if let image = editView.imageView.image?.jpegData(compressionQuality: 0.75) {
                     imageURL = try await firestoreService.uploadImage(imageData: image)
@@ -84,7 +86,7 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
                 DispatchQueue.main.async { [weak self] in
                     self?.navigationController?.popViewController(animated: true)
                 }
-
+                editView.publishButton.isUserInteractionEnabled = true
             } catch {
                 DispatchQueue.main.async { [weak self] in
                     let alert = UIAlertController(title: "錯誤", message: "圖片上傳或儲存過程中發生錯誤", preferredStyle: .alert)
@@ -100,6 +102,7 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
             }
         }
     }
+    // swiftlint:enable function_body_length
 
     @objc func imageViewTapped() {
         let imagePicker = UIImagePickerController()

@@ -48,13 +48,13 @@ class EditView: UIView {
         addSubview(titleTextField)
         addSubview(categoryTextField)
         addSubview(contentTextView)
-//        addSubview(imageView)
+        addSubview(imageView)
         addSubview(publishButton)
 
         titleTextField.translatesAutoresizingMaskIntoConstraints = false
         categoryTextField.translatesAutoresizingMaskIntoConstraints = false
         contentTextView.translatesAutoresizingMaskIntoConstraints = false
-//        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         publishButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
@@ -71,14 +71,14 @@ class EditView: UIView {
             contentTextView.topAnchor.constraint(equalTo: categoryTextField.bottomAnchor, constant: margin),
             contentTextView.leftAnchor.constraint(equalTo: leftAnchor, constant: margin),
             contentTextView.rightAnchor.constraint(equalTo: rightAnchor, constant: -margin),
-            contentTextView.heightAnchor.constraint(equalToConstant: 500),
+            contentTextView.heightAnchor.constraint(equalToConstant: 200),
 
-//            imageView.topAnchor.constraint(equalTo: contentTextView.bottomAnchor, constant: margin),
-//            imageView.leftAnchor.constraint(equalTo: leftAnchor, constant: margin),
-//            imageView.rightAnchor.constraint(equalTo: rightAnchor, constant: -margin),
-//            imageView.heightAnchor.constraint(equalToConstant: 200),
+            imageView.topAnchor.constraint(equalTo: contentTextView.bottomAnchor, constant: margin),
+            imageView.leftAnchor.constraint(equalTo: leftAnchor, constant: margin),
+            imageView.rightAnchor.constraint(equalTo: rightAnchor, constant: -margin),
+            imageView.heightAnchor.constraint(equalToConstant: 200),
 
-            publishButton.topAnchor.constraint(equalTo: contentTextView.bottomAnchor, constant: margin),
+            publishButton.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: margin),
             publishButton.leftAnchor.constraint(equalTo: leftAnchor, constant: margin),
             publishButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -margin),
             publishButton.heightAnchor.constraint(equalToConstant: 50)

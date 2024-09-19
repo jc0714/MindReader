@@ -39,7 +39,15 @@ class FirestoreService {
     }
 
     func uploadImage(imageData: Data) async throws -> String {
-        let uploadRef = Storage.storage().reference(withPath: "images/\(UUID().uuidString).jpg")
+        let uploadRef = Storage.storage().reference(withPath: "images/\(userId)/\(UUID().uuidString).jpg")
+        _ = try await uploadRef.putDataAsync(imageData, metadata: StorageMetadata())
+        let downloadURL = try await uploadRef.downloadURL()
+        return downloadURL.absoluteString
+    }
+
+    // MARK: 早安圖
+    func uploadMorningImage(imageData: Data) async throws -> String {
+        let uploadRef = Storage.storage().reference(withPath: "MorningImages/\(userId)/\(UUID().uuidString).jpg")
         _ = try await uploadRef.putDataAsync(imageData, metadata: StorageMetadata())
         let downloadURL = try await uploadRef.downloadURL()
         return downloadURL.absoluteString

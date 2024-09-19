@@ -8,6 +8,8 @@
 import UIKit
 
 class ImageVC: UIViewController {
+
+    private let firestoreService = FirestoreService()
     // MARK: - Properties
     private let photo1 = UIImageView(image: UIImage(named: "photo1"))
     private let photo2 = UIImageView(image: UIImage(named: "photo2"))
@@ -18,6 +20,7 @@ class ImageVC: UIViewController {
 
     private var saveButton = UIButton()
     private var shareButton = UIButton()
+    private var saveToFireBaseButton = UIButton()
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -39,14 +42,16 @@ class ImageVC: UIViewController {
 
         saveButton = createButton(title: "存到相簿去！", backgroundColor: .darkGray, action: #selector(saveImageToAlbum))
         shareButton = createButton(title: "分享", backgroundColor: .darkGray, action: #selector(shareImage))
+        saveToFireBaseButton = createButton(title: "貼到相片牆", backgroundColor: .darkGray, action: #selector(saveToFireBase))
 
         view.addSubview(saveButton)
         view.addSubview(shareButton)
+        view.addSubview(saveToFireBaseButton)
     }
 
     // MARK: - UI 之後寫在 view
     private func setupConstraints() {
-        [photo1, photo2, photo3, finalImageView, saveButton, shareButton].forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
+        [photo1, photo2, photo3, finalImageView, saveButton, shareButton, saveToFireBaseButton].forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
 
         NSLayoutConstraint.activate([
             photo1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -73,8 +78,11 @@ class ImageVC: UIViewController {
             saveButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             saveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
 
-            shareButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            shareButton.bottomAnchor.constraint(equalTo: saveButton.bottomAnchor)
+            shareButton.leadingAnchor.constraint(equalTo: saveButton.trailingAnchor, constant: 30),
+            shareButton.bottomAnchor.constraint(equalTo: saveButton.bottomAnchor),
+
+            saveToFireBaseButton.leadingAnchor.constraint(equalTo: shareButton.trailingAnchor, constant: 30),
+            saveToFireBaseButton.bottomAnchor.constraint(equalTo: saveButton.bottomAnchor)
         ])
     }
 
@@ -97,6 +105,20 @@ class ImageVC: UIViewController {
         guard let imageToShare = finalImageView.image else { return }
         let activityViewController = UIActivityViewController(activityItems: [imageToShare], applicationActivities: nil)
         present(activityViewController, animated: true, completion: nil)
+    }
+
+    // MARK: - 丟到相片牆
+    @objc private func saveToFireBase() {
+        guard let imageData = finalImageView.image?.jpegData(compressionQuality: 0.75) else { return }
+
+        Task {
+            do {
+                let imageURL = try await firestoreService.uploadMorningImage(imageData: imageData)
+                print("Image uploaded successfully, URL: \(imageURL)")
+            } catch {
+                print("Failed to upload image: \(error)")
+            }
+        }
     }
 
     // MARK: - Actions

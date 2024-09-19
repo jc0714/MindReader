@@ -5,6 +5,7 @@
 //  Created by J oyce on 2024/9/19.
 //
 
+
 import Foundation
 import UIKit
 import FirebaseStorage
@@ -12,8 +13,10 @@ import FirebaseStorage
 class PhotoAlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     var collectionView: UICollectionView!
-    var imageUrls: [URL] = [] // 存儲圖片的下載 URL
+    var imageUrls: [URL] = []
     let storageRef = Storage.storage().reference()
+
+    let layout = UICollectionViewFlowLayout()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,25 +25,20 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDataSource, UICollectionVi
         fetchImagesFromFirebase()
     }
 
-    // 設置 UICollectionView 並顯示圖片
     func setupCollectionView() {
-        // 設置 UICollectionViewFlowLayout
-        let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: 100, height: 100)
         layout.minimumInteritemSpacing = 10
         layout.minimumLineSpacing = 10
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15)
 
-        // 創建 UICollectionView
         collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(PhotoCell.self, forCellWithReuseIdentifier: "PhotoCell")
         collectionView.backgroundColor = .white
 
-        // 將 UICollectionView 添加到主視圖
         view.addSubview(collectionView)
 
-        // 設置自動佈局
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -50,18 +48,18 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDataSource, UICollectionVi
         ])
     }
 
-    // 從 Firebase Storage 獲取圖片 URL
     func fetchImagesFromFirebase() {
-        let imagesRef = storageRef.child("images/")
 
-        // 列出圖片
+        let userId = "9Y2GjnVg8TEoze0GUJSU"
+
+        let imagesRef = storageRef.child("MorningImages/\(userId)/")
+
         imagesRef.listAll { (result, error) in
             if let error = error {
                 print("Error listing images: \(error.localizedDescription)")
                 return
             }
 
-            // 獲取所有圖片的下載 URL
             for item in result!.items {
                 item.downloadURL { url, error in
                     if let error = error {
@@ -77,7 +75,6 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDataSource, UICollectionVi
         }
     }
 
-    // UICollectionViewDataSource 方法
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return imageUrls.count
     }
@@ -86,15 +83,16 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDataSource, UICollectionVi
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as? PhotoCell
         let imageUrl = imageUrls[indexPath.row]
 
-        // 使用 URL 加載圖片
         cell?.configure(with: imageUrl)
 
         return cell!
     }
 
-    // 設置 Cell 大小
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let side = (view.frame.width - 30) / 3 // 設置每個 Cell 為三分之一寬度，並考慮間距
+        let padding: CGFloat = 30
+        let totalSpacing: CGFloat = layout.minimumInteritemSpacing * 2
+        let availableWidth = view.frame.width - padding - totalSpacing
+        let side = availableWidth / 3 // 每个 Cell 的宽度为可用宽度的三分之一
         return CGSize(width: side, height: side)
     }
 }
@@ -114,8 +112,8 @@ class PhotoCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // swiftlint:disable nused_closure_parameter
     func configure(with url: URL) {
-        // 這裡可以使用 Kingfisher 或 URLSession 加載圖片
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let data = data, let image = UIImage(data: data) {
                 DispatchQueue.main.async {
@@ -124,4 +122,5 @@ class PhotoCell: UICollectionViewCell {
             }
         }.resume()
     }
+    // swiftlint:enable nused_closure_parameter
 }

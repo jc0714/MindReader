@@ -78,7 +78,7 @@ class ChatView: UIView {
             sendButton.centerYAnchor.constraint(equalTo: inputContainer.centerYAnchor)
         ])
     }
-    
+
     func updateInputContainerBottomConstraint(by constant: CGFloat) {
         inputContainerBottomConstraint.constant = constant
         UIView.animate(withDuration: 0.3) {
