@@ -52,12 +52,6 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         view.addGestureRecognizer(tapGesture)
 
         chatView.textField.delegate = self
-
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-
-        inputContainerBottomConstraint = chatView.inputContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        inputContainerBottomConstraint.isActive = true
     }
 
     @objc private func sendMessage(_ sender: UIButton) {
@@ -138,24 +132,6 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         chatView.textField.resignFirstResponder()
         return true
-    }
-
-    @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardHeight = keyboardFrame.cgRectValue.height
-
-            inputContainerBottomConstraint.constant = -keyboardHeight
-            UIView.animate(withDuration: 0.3) {
-                self.view.layoutIfNeeded()
-            }
-        }
-    }
-
-    @objc func keyboardWillHide(notification: NSNotification) {
-        inputContainerBottomConstraint.constant = 0
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-        }
     }
 
     private func formatPrompt(_ prompt: String) -> String {

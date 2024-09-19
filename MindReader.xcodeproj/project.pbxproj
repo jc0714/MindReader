@@ -36,6 +36,8 @@
 		E9F6B6B82C9AA291008E9FBF /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6B72C9AA291008E9FBF /* ImageView.swift */; };
 		E9F6B6BA2C9AC4D2008E9FBF /* CommentsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6B92C9AC4D2008E9FBF /* CommentsVC.swift */; };
 		E9F6B6BE2C9BCF7C008E9FBF /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6BD2C9BCF7C008E9FBF /* CommentCell.swift */; };
+		E9F6B6C02C9C194F008E9FBF /* PhotoAlbumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6BF2C9C194E008E9FBF /* PhotoAlbumVC.swift */; };
+		E9F6B6C32C9C247B008E9FBF /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E9F6B6C22C9C247B008E9FBF /* IQKeyboardManagerSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +68,7 @@
 		E9F6B6B72C9AA291008E9FBF /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		E9F6B6B92C9AC4D2008E9FBF /* CommentsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsVC.swift; sourceTree = "<group>"; };
 		E9F6B6BD2C9BCF7C008E9FBF /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
+		E9F6B6BF2C9C194E008E9FBF /* PhotoAlbumVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9F6B6C32C9C247B008E9FBF /* IQKeyboardManagerSwift in Frameworks */,
 				E97C15FE2C9189FF002B437C /* FirebaseDatabase in Frameworks */,
 				E97C16022C9189FF002B437C /* FirebaseStorage in Frameworks */,
 				E97C15FC2C9189FF002B437C /* FirebaseAuth in Frameworks */,
@@ -161,6 +165,7 @@
 		E9F6B6BB2C9B1C3B008E9FBF /* Record */ = {
 			isa = PBXGroup;
 			children = (
+				E9F6B6BF2C9C194E008E9FBF /* PhotoAlbumVC.swift */,
 			);
 			path = Record;
 			sourceTree = "<group>";
@@ -194,6 +199,7 @@
 				E97C15FD2C9189FF002B437C /* FirebaseDatabase */,
 				E97C15FF2C9189FF002B437C /* FirebaseFirestore */,
 				E97C16012C9189FF002B437C /* FirebaseStorage */,
+				E9F6B6C22C9C247B008E9FBF /* IQKeyboardManagerSwift */,
 			);
 			productName = MindReader;
 			productReference = E97C15DD2C9166B5002B437C /* MindReader.app */;
@@ -225,6 +231,7 @@
 			mainGroup = E97C15D42C9166B4002B437C;
 			packageReferences = (
 				E97C15FA2C9189FF002B437C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				E9F6B6C12C9C247B008E9FBF /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 			);
 			productRefGroup = E97C15DE2C9166B5002B437C /* Products */;
 			projectDirPath = "";
@@ -290,6 +297,7 @@
 				E97C16082C92BC88002B437C /* APIKeys.swift in Sources */,
 				E9F6B6862C96EB14008E9FBF /* ForumVC.swift in Sources */,
 				E9F6B6BA2C9AC4D2008E9FBF /* CommentsVC.swift in Sources */,
+				E9F6B6C02C9C194F008E9FBF /* PhotoAlbumVC.swift in Sources */,
 				E97C15E12C9166B5002B437C /* AppDelegate.swift in Sources */,
 				E9F6B68C2C9717A9008E9FBF /* EditView.swift in Sources */,
 				E97C16152C95536B002B437C /* TextRecognition.swift in Sources */,
@@ -532,6 +540,14 @@
 				minimumVersion = 11.2.0;
 			};
 		};
+		E9F6B6C12C9C247B008E9FBF /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.1.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -554,6 +570,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E97C15FA2C9189FF002B437C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		E9F6B6C22C9C247B008E9FBF /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E9F6B6C12C9C247B008E9FBF /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

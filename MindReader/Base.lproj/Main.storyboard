@@ -129,10 +129,10 @@
             </objects>
             <point key="canvasLocation" x="723" y="711"/>
         </scene>
-        <!--View Controller-->
+        <!--Photo AlbumVC-->
         <scene sceneID="Fu6-Vb-wcH">
             <objects>
-                <viewController id="4Rq-UE-0S6" sceneMemberID="viewController">
+                <viewController id="4Rq-UE-0S6" customClass="PhotoAlbumVC" customModule="MindReader" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="m4L-J0-VkY">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
