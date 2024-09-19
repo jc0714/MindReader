@@ -37,13 +37,11 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // 禁用 IQKeyboardManager
          IQKeyboardManager.shared.enable = false
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        // 啟用 IQKeyboardManager，確保其他視圖控制器不受影響
         IQKeyboardManager.shared.enable = true
     }
 
