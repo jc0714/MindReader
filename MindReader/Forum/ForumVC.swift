@@ -13,9 +13,13 @@ import FirebaseFirestore
 class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var tableView: UITableView!
+
     private let firebaseService = FirestoreService()
     var listener: ListenerRegistration?
+
     var posts: [Post] = []
+
+    var refreshControl:UIRefreshControl!
 
     // MARK: - UI Components
     let goEditButton = UIButton()
@@ -24,11 +28,27 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+
 //        setupFirestoreListener()
         fetchPosts()
         configureTableView()
 
+        refreshControl = UIRefreshControl()
+        tableView.addSubview(refreshControl)
+
         NotificationCenter.default.addObserver(self, selector: #selector(handleCommentCountUpdate(_:)), name: NSNotification.Name("CommentCountUpdated"), object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadTableData), name: NSNotification.Name("DataUpdated"), object: nil)
+
+        refreshControl.addTarget(self, action: #selector(fetchPosts), for: UIControl.Event.valueChanged)
+    }
+
+    @objc func reloadTableData() {
+        fetchPosts()
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     // MARK: - Firestore
@@ -38,7 +58,7 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
 
-    private func fetchPosts() {
+    @objc private func fetchPosts() {
         posts.removeAll()
         Firestore.firestore().collection("posts")
             .order(by: "createdTime", descending: true)

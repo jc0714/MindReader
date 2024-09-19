@@ -136,20 +136,8 @@
                     <view key="view" contentMode="scaleToFill" id="m4L-J0-VkY">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CCg-Bn-Q9p">
-                                <rect key="frame" x="159" y="248" width="75" height="35"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
-                            </button>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="4gj-1s-Pu3"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="4gj-1s-Pu3" firstAttribute="trailing" secondItem="CCg-Bn-Q9p" secondAttribute="trailing" constant="159" id="BUd-fG-mgm"/>
-                            <constraint firstItem="CCg-Bn-Q9p" firstAttribute="leading" secondItem="4gj-1s-Pu3" secondAttribute="leading" constant="159" id="EU1-Qh-b9R"/>
-                            <constraint firstItem="CCg-Bn-Q9p" firstAttribute="top" secondItem="4gj-1s-Pu3" secondAttribute="top" constant="189" id="HMD-dC-ARC"/>
-                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="cloud.fill" catalog="system" id="lqD-Rt-2l5"/>
                 </viewController>
@@ -164,21 +152,8 @@
                     <view key="view" contentMode="scaleToFill" id="1Xx-tE-u8n">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="登出" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3pM-J4-4rH">
-                                <rect key="frame" x="157" y="222" width="79" height="47"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="39"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="Vkg-lo-MuG"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="3pM-J4-4rH" firstAttribute="top" secondItem="Vkg-lo-MuG" secondAttribute="top" constant="163" id="LcF-5G-NWq"/>
-                            <constraint firstItem="3pM-J4-4rH" firstAttribute="leading" secondItem="Vkg-lo-MuG" secondAttribute="leading" constant="157" id="PII-Fs-BwJ"/>
-                            <constraint firstItem="Vkg-lo-MuG" firstAttribute="trailing" secondItem="3pM-J4-4rH" secondAttribute="trailing" constant="157" id="lSb-Sy-HQX"/>
-                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="gearshape.fill" catalog="system" id="Ik8-W1-h68"/>
                 </viewController>

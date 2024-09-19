@@ -79,6 +79,8 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
                     "postIds": FieldValue.arrayUnion([document.documentID])
                 ])
 
+                NotificationCenter.default.post(name: NSNotification.Name("DataUpdated"), object: nil)
+
                 DispatchQueue.main.async { [weak self] in
                     self?.navigationController?.popViewController(animated: true)
                 }
