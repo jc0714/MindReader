@@ -222,7 +222,7 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             textField.placeholder = "請輸入留言"
         }
 
-        let submitAction = UIAlertAction(title: "送出", style: .default) { [weak self] _ in
+       let submitAction = UIAlertAction(title: "送出", style: .default) {_ in 
             guard let textField = alert.textFields?.first, let commentText = textField.text, !commentText.isEmpty else {
                 print("留言不能為空")
                 return

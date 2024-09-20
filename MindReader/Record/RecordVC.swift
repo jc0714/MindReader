@@ -12,21 +12,19 @@ import FirebaseFirestore
 
 class RecordVC: UIViewController {
 
-    private let firebaseService = FirestoreService()
-    var listener: ListenerRegistration?
-
-    private var posts: [Post] = []
+    private let albumVC = AlbumVC()
+    private let myPostVC = MyPostVC()
 
     private let RView = RecordView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupRecoedView()
-//        setUpUI()
+        setupRecordView()
+        setupInitialViewController()
     }
 
-    private func setupRecoedView() {
+    private func setupRecordView() {
         RView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(RView)
 
@@ -36,122 +34,90 @@ class RecordVC: UIViewController {
             RView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             RView.heightAnchor.constraint(equalToConstant: 50)
         ])
-
-        // 設置數據
         RView.setData()
-    }
 
-    private func setUpUI() {
-        // 創建一個按鈕
-        let toAlbumutton = UIButton(type: .system)
-        toAlbumutton.setTitle("Go to Album", for: .normal)
-        toAlbumutton.addTarget(self, action: #selector(fetchPosts), for: .touchUpInside)
-
-        // 按下時的縮放動畫
-        toAlbumutton.addTarget(self, action: #selector(buttonTouchDown), for: .touchDown)
-        toAlbumutton.addTarget(self, action: #selector(buttonTouchUp), for: [.touchUpInside, .touchUpOutside])
-
-        // 設置按鈕的外觀
-        toAlbumutton.backgroundColor = .pink3
-        toAlbumutton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(toAlbumutton)
-
-        // 使用 Auto Layout 設置按鈕位置
-        NSLayoutConstraint.activate([
-            toAlbumutton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            toAlbumutton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            toAlbumutton.heightAnchor.constraint(equalToConstant: 50),
-            toAlbumutton.widthAnchor.constraint(equalToConstant: 200)
-        ])
-    }
-
-    @objc func buttonTapped() {
-        // 觸發 segue
-        performSegue(withIdentifier: "toAlbum", sender: self)
-    }
-
-    @objc func buttonTouchDown(sender: UIButton) {
-        // 按下時縮放效果
-        UIView.animate(withDuration: 0.1) {
-            sender.transform = CGAffineTransform(scaleX: 0.95, y: 0.95) // 稍微縮小
+        RView.buttons.forEach { button in
+            button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
         }
     }
 
-    @objc func buttonTouchUp(sender: UIButton) {
-        // 鬆開時恢復原始大小
-        UIView.animate(withDuration: 0.1) {
-            sender.transform = CGAffineTransform.identity // 恢復到原始大小
+    // 初始化時加載相簿頁面
+    private func setupInitialViewController() {
+        addChild(albumVC) // 預設顯示相簿頁面
+    }
+
+    @objc private func buttonTapped(_ sender: UIButton) {
+        switch sender.tag {
+        case 0:
+            // 顯示相簿頁面
+            removeContentController(myPostVC)
+            addContentController(albumVC)
+        case 1:
+            // 顯示我的POST頁面
+            removeContentController(albumVC)
+            addContentController(myPostVC)
+        default:
+            break
         }
     }
 
-    @objc private func fetchPosts() {
-        posts.removeAll()
-
-        // 該 user 的文章
-        Firestore.firestore().collection("Users").document("9Y2GjnVg8TEoze0GUJSU").getDocument { (documentSnapshot, error) in
-            guard let document = documentSnapshot, document.exists, error == nil else {
-                print("Error getting document: \(String(describing: error))")
-                return
-            }
-            // 到 posts collection 撈文章
-            if let postIds = document.data()?["postIds"] as? [String] {
-
-                Firestore.firestore().collection("posts")
-                    .whereField(FieldPath.documentID(), in: postIds)
-                    .order(by: "createdTime", descending: true)
-                    .getDocuments { (snapshot, error) in
-                        if let error = error {
-                            print("Error getting documents: \(error)")
-                        } else {
-                            for document in snapshot!.documents {
-                                print("\(document.documentID) => \(document.data())")
-                            }
-                        }
-                    }
-                print("Post IDs: \(postIds)")
-            } else {
-                print("No postIds found")
-            }
-        }
+    // 新的自定義方法來添加子 ViewController
+    private func addContentController(_ childVC: UIViewController) {
+       addChild(childVC)
+       childVC.view.frame = CGRect(x: 0, y: RView.frame.maxY, width: view.bounds.width, height: view.bounds.height - RView.frame.maxY)
+       view.addSubview(childVC.view)
+       childVC.didMove(toParent: self)
     }
 
-
-//    @objc private func fetchPosts() {
-
-//        posts.removeAll()
-//        Firestore.firestore().collection("posts")
-//            .order(by: "createdTime", descending: true)
-//            .getDocuments { [weak self] (querySnapshot, error) in
-//                guard let documents = querySnapshot?.documents, error == nil else {
-//                    print("Error getting documents: \(String(describing: error))")
-//                    return
-//                }
-//
-//                self?.posts = documents.compactMap { document in
-//                    let data = document.data()
-//                    guard let title = data["title"] as? String,
-//                          let timestamp = data["createdTime"] as? Timestamp,
-//                          let id = data["id"] as? String,
-//                          let category = data["category"] as? String,
-//                          let content = data["content"] as? String,
-//                          let authorData = data["author"] as? [String: Any],
-//                          let authorEmail = authorData["email"] as? String,
-//                          let authorId = authorData["id"] as? String,
-//                          let authorName = authorData["name"] as? String else { return nil }
-//
-//                    let image = data["image"] as? String
-//                    let createdTimeString = DateFormatter.localizedString(
-//                        from: timestamp.dateValue(),
-//                        dateStyle: .medium, timeStyle: .none
-//                    )
-//                    let author = Author(email: authorEmail, id: authorId, name: authorName)
-//                    return Post(title: title, createdTime: createdTimeString, id: id, category: category, content: content, image: image, author: author)
-//                }
-//
-//                DispatchQueue.main.async {
-//                    print(self!.posts)
-//                    self?.tableView.reloadData()
-//                }
-//            }
-//    }
+    // 新的自定義方法來移除子 ViewController
+    private func removeContentController(_ childVC: UIViewController) {
+       childVC.willMove(toParent: nil)
+       childVC.view.removeFromSuperview()
+       childVC.removeFromParent()
+    }
 }
+
+// 按鈕
+//
+// private func setUpUI() {
+//    // 創建一個按鈕
+//    let toAlbumutton = UIButton(type: .system)
+//    toAlbumutton.setTitle("Go to Album", for: .normal)
+//    toAlbumutton.addTarget(self, action: #selector(fetchPosts), for: .touchUpInside)
+//
+//    // 按下時的縮放動畫
+//    toAlbumutton.addTarget(self, action: #selector(buttonTouchDown), for: .touchDown)
+//    toAlbumutton.addTarget(self, action: #selector(buttonTouchUp), for: [.touchUpInside, .touchUpOutside])
+//
+//    // 設置按鈕的外觀
+//    toAlbumutton.backgroundColor = .pink3
+//    toAlbumutton.translatesAutoresizingMaskIntoConstraints = false
+//    view.addSubview(toAlbumutton)
+//
+//    // 使用 Auto Layout 設置按鈕位置
+//    NSLayoutConstraint.activate([
+//        toAlbumutton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+//        toAlbumutton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+//        toAlbumutton.heightAnchor.constraint(equalToConstant: 50),
+//        toAlbumutton.widthAnchor.constraint(equalToConstant: 200)
+//    ])
+// }
+//
+// @objc func buttonTapped() {
+//    // 觸發 segue
+//    performSegue(withIdentifier: "toAlbum", sender: self)
+// }
+//
+// @objc func buttonTouchDown(sender: UIButton) {
+//    // 按下時縮放效果
+//    UIView.animate(withDuration: 0.1) {
+//        sender.transform = CGAffineTransform(scaleX: 0.95, y: 0.95) // 稍微縮小
+//    }
+// }
+//
+// @objc func buttonTouchUp(sender: UIButton) {
+//    // 鬆開時恢復原始大小
+//    UIView.animate(withDuration: 0.1) {
+//        sender.transform = CGAffineTransform.identity // 恢復到原始大小
+//    }
+// }

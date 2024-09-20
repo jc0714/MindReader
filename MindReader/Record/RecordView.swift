@@ -9,11 +9,11 @@ import Foundation
 import UIKit
 
 class RecordView: UIView {
-//
+
 //    weak var dataSource: SelectionDataSource?
 //    weak var delegate: SelectionViewDelegate?
 
-    private var buttons: [UIButton] = []
+    var buttons: [UIButton] = []
     private var views: [UIView] = []
     private let indicatorView = UIView()
     private var selectedButton: UIButton?
@@ -44,9 +44,11 @@ class RecordView: UIView {
     }
 
     func setData() {
-        for index in 0..<2 {
+        let titles = ["相片牆", "我的POSTs"]
+
+        for (index, title) in titles.enumerated() {
             let button = UIButton(type: .system)
-            button.setTitle("BBBBB", for: .normal)
+            button.setTitle(title, for: .normal)
             button.tag = index
             button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
 
@@ -54,7 +56,7 @@ class RecordView: UIView {
             buttons.append(button)
         }
 
-        indicatorView.backgroundColor = .blue
+        indicatorView.backgroundColor = .pink3
         addSubview(indicatorView)
 
         selectedButton = buttons.first
@@ -68,8 +70,11 @@ class RecordView: UIView {
 
     private func moveIndicator(to button: UIButton?) {
         guard let button = button else { return }
+        let indicatorWidth: CGFloat = 120
+        let indicatorX = button.frame.origin.x + (button.frame.width - indicatorWidth) / 2
+
         UIView.animate(withDuration: 0.3) {
-            self.indicatorView.frame = CGRect(x: button.frame.origin.x, y: self.bounds.height - 2, width: button.frame.width, height: 2)
+            self.indicatorView.frame = CGRect(x: indicatorX, y: self.bounds.height - 2, width: indicatorWidth, height: 2)
         }
     }
 }
