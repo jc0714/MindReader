@@ -15,11 +15,33 @@ class RecordVC: UIViewController {
     private let firebaseService = FirestoreService()
     var listener: ListenerRegistration?
 
-    var posts: [Post] = []
+    private var posts: [Post] = []
+
+    private let RView = RecordView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setupRecoedView()
+//        setUpUI()
+    }
+
+    private func setupRecoedView() {
+        RView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(RView)
+
+        NSLayoutConstraint.activate([
+            RView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            RView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+            RView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
+            RView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+
+        // 設置數據
+        RView.setData()
+    }
+
+    private func setUpUI() {
         // 創建一個按鈕
         let toAlbumutton = UIButton(type: .system)
         toAlbumutton.setTitle("Go to Album", for: .normal)
@@ -64,20 +86,36 @@ class RecordVC: UIViewController {
 
     @objc private func fetchPosts() {
         posts.removeAll()
+
+        // 該 user 的文章
         Firestore.firestore().collection("Users").document("9Y2GjnVg8TEoze0GUJSU").getDocument { (documentSnapshot, error) in
             guard let document = documentSnapshot, document.exists, error == nil else {
                 print("Error getting document: \(String(describing: error))")
                 return
             }
-
+            // 到 posts collection 撈文章
             if let postIds = document.data()?["postIds"] as? [String] {
+
+                Firestore.firestore().collection("posts")
+                    .whereField(FieldPath.documentID(), in: postIds)
+                    .order(by: "createdTime", descending: true)
+                    .getDocuments { (snapshot, error) in
+                        if let error = error {
+                            print("Error getting documents: \(error)")
+                        } else {
+                            for document in snapshot!.documents {
+                                print("\(document.documentID) => \(document.data())")
+                            }
+                        }
+                    }
                 print("Post IDs: \(postIds)")
             } else {
                 print("No postIds found")
             }
         }
     }
-    // 先到 User -> post
+
+
 //    @objc private func fetchPosts() {
 
 //        posts.removeAll()

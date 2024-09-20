@@ -1,16 +1,15 @@
 //
-//  PhotoAlbumVC.swift
+//  AlbumVC.swift
 //  MindReader
 //
 //  Created by J oyce on 2024/9/19.
 //
 
-
 import Foundation
 import UIKit
 import FirebaseStorage
 
-class PhotoAlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     var collectionView: UICollectionView!
     var imageUrls: [URL] = []
@@ -34,7 +33,7 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDataSource, UICollectionVi
         collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout)
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.register(PhotoCell.self, forCellWithReuseIdentifier: "PhotoCell")
+        collectionView.register(AlbumCell.self, forCellWithReuseIdentifier: "AlbumCell")
         collectionView.backgroundColor = .white
 
         view.addSubview(collectionView)
@@ -80,7 +79,7 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDataSource, UICollectionVi
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as? PhotoCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumCell", for: indexPath) as? AlbumCell
         let imageUrl = imageUrls[indexPath.row]
 
         cell?.configure(with: imageUrl)
@@ -92,35 +91,7 @@ class PhotoAlbumVC: UIViewController, UICollectionViewDataSource, UICollectionVi
         let padding: CGFloat = 30
         let totalSpacing: CGFloat = layout.minimumInteritemSpacing * 2
         let availableWidth = view.frame.width - padding - totalSpacing
-        let side = availableWidth / 3 // 每个 Cell 的宽度为可用宽度的三分之一
+        let side = availableWidth / 3
         return CGSize(width: side, height: side)
     }
-}
-
-class PhotoCell: UICollectionViewCell {
-    let imageView = UIImageView()
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        imageView.frame = self.contentView.bounds
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        self.contentView.addSubview(imageView)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    // swiftlint:disable nused_closure_parameter
-    func configure(with url: URL) {
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let data = data, let image = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    self.imageView.image = image
-                }
-            }
-        }.resume()
-    }
-    // swiftlint:enable nused_closure_parameter
 }

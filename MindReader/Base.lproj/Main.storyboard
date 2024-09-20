@@ -148,10 +148,10 @@
             </objects>
             <point key="canvasLocation" x="1589" y="1451"/>
         </scene>
-        <!--Photo AlbumVC-->
+        <!--AlbumVC-->
         <scene sceneID="c5u-mo-ssM">
             <objects>
-                <viewController id="Bq4-Qr-QYo" customClass="PhotoAlbumVC" customModule="MindReader" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Bq4-Qr-QYo" customClass="AlbumVC" customModule="MindReader" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8Gu-wy-RKd">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -162,7 +162,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IF9-aH-uAf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1589" y="2162"/>
+            <point key="canvasLocation" x="1138" y="2162"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="TAv-hp-YGV">
@@ -178,7 +178,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1ef-Jj-xhF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3457.2519083969464" y="710.56338028169023"/>
+            <point key="canvasLocation" x="2569" y="711"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="h20-1y-x2k">
