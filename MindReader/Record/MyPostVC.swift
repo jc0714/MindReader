@@ -78,9 +78,12 @@ class MyPostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                                   let authorData = data["author"] as? [String: Any],
                                   let authorEmail = authorData["email"] as? String,
                                   let authorId = authorData["id"] as? String,
-                                  let authorName = authorData["name"] as? String else {
-                                    continue  // 使用 continue 以繼續處理其他文檔
-                            }
+                                  let authorName = authorData["name"] as? String
+                            else {
+                                    continue                            }
+
+                            let like = (data["like"] as? [String])?.count ?? 0
+                            let commentCount = (data["Comments"] as? [[String: Any]])?.count ?? 0
 
                             let image = data["image"] as? String
 
@@ -91,7 +94,7 @@ class MyPostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
                             let author = Author(email: authorEmail, id: authorId, name: authorName)
 
-                            let post = Post(title: title, createdTime: createdTimeString, id: document.documentID, category: category, content: content, image: image, author: author)
+                            let post = Post(title: title, createdTime: createdTimeString, id: document.documentID, category: category, content: content, image: image, author: author, like: like, comment: commentCount)
 
                             self.posts.append(post)
                         }

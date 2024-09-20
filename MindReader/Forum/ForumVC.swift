@@ -77,7 +77,11 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                           let authorData = data["author"] as? [String: Any],
                           let authorEmail = authorData["email"] as? String,
                           let authorId = authorData["id"] as? String,
-                          let authorName = authorData["name"] as? String else { return nil }
+                          let authorName = authorData["name"] as? String
+                    else { return nil }
+
+                    let like = (data["like"] as? [String])?.count ?? 0
+                    let commentCount = (data["Comments"] as? [[String: Any]])?.count ?? 0
 
                     let image = data["image"] as? String
                     let createdTimeString = DateFormatter.localizedString(
@@ -85,7 +89,7 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                         dateStyle: .medium, timeStyle: .none
                     )
                     let author = Author(email: authorEmail, id: authorId, name: authorName)
-                    return Post(title: title, createdTime: createdTimeString, id: id, category: category, content: content, image: image, author: author)
+                    return Post(title: title, createdTime: createdTimeString, id: id, category: category, content: content, image: image, author: author, like: like, comment: commentCount)
                 }
 
                 DispatchQueue.main.async {
@@ -128,6 +132,9 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         cell.createdTimeLabel.text = post.createdTime
         cell.categoryLabel.text = post.category
         cell.contentLabel.text = post.content
+
+        cell.heartCount.text = String(post.like)
+        cell.commentCount.text = String(post.comment)
 
         cell.configure(with: post.image)
 
