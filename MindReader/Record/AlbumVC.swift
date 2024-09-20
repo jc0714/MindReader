@@ -24,6 +24,13 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
         fetchImagesFromFirebase()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if imageUrls.isEmpty {
+            fetchImagesFromFirebase()
+        }
+    }
+
     func setupCollectionView() {
         layout.itemSize = CGSize(width: 100, height: 100)
         layout.minimumInteritemSpacing = 10

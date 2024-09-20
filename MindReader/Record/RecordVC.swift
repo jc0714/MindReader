@@ -61,7 +61,7 @@ class RecordVC: UIViewController {
         }
     }
 
-    // 新的自定義方法來添加子 ViewController
+    // 新的自定義方法來添加子VC
     private func addContentController(_ childVC: UIViewController) {
        addChild(childVC)
        childVC.view.frame = CGRect(x: 0, y: RView.frame.maxY, width: view.bounds.width, height: view.bounds.height - RView.frame.maxY)
@@ -69,7 +69,7 @@ class RecordVC: UIViewController {
        childVC.didMove(toParent: self)
     }
 
-    // 新的自定義方法來移除子 ViewController
+    // 新的自定義方法來移除子VC
     private func removeContentController(_ childVC: UIViewController) {
        childVC.willMove(toParent: nil)
        childVC.view.removeFromSuperview()

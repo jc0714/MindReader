@@ -170,8 +170,8 @@
 		E9F6B6BB2C9B1C3B008E9FBF /* Record */ = {
 			isa = PBXGroup;
 			children = (
-				E9240AD02C9D216A00A47944 /* MyPostVC.swift */,
 				E9F6B6C42C9C694D008E9FBF /* RecordVC.swift */,
+				E9240AD02C9D216A00A47944 /* MyPostVC.swift */,
 				E9F6B6BF2C9C194E008E9FBF /* AlbumVC.swift */,
 				E9240ACE2C9D209F00A47944 /* AlbumCell.swift */,
 				E9240AD22C9D442F00A47944 /* RecordView.swift */,

@@ -204,7 +204,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     private func formatPrompt(_ prompt: String) -> String {
         """
-        你是一個善解人意的朋友，用幽默的語氣回應。
+        用幽默的語氣回應。
         請根據以下情況回覆，包括「possible_meanings：這句訊息背後意思」和「response_methods：可回覆訊息」兩個部分，各三個。
 
         \(prompt)

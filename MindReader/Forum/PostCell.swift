@@ -173,8 +173,6 @@ class PostCell: UITableViewCell {
         ])
         heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
         commentButton.addTarget(self, action: #selector(commentButtonTapped), for: .touchUpInside)
-        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
-        commentButton.addGestureRecognizer(longPressGesture)
     }
 
     func configure(with imageUrl: String?) {
@@ -230,12 +228,6 @@ class PostCell: UITableViewCell {
     @objc private func commentButtonTapped() {
         // 通知 VC
         commentButtonTappedClosure?()
-    }
-
-    @objc private func handleLongPress(gesture: UILongPressGestureRecognizer) {
-        if gesture.state == .began {
-            commentButtonLongPressClosure?()
-        }
     }
 
     func createStackedView(button: UIButton, label: UILabel) -> UIView {

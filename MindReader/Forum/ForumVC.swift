@@ -18,8 +18,13 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var listener: ListenerRegistration?
 
     var posts: [Post] = []
+    private var likedPosts: Set<String> = []
+
+    private let userRef = Firestore.firestore().collection("Users").document("9Y2GjnVg8TEoze0GUJSU")
 
     var refreshControl: UIRefreshControl!
+
+    private let userId = "9Y2GjnVg8TEoze0GUJSU"
 
     // MARK: - UI Components
     let goEditButton = UIButton()
@@ -29,9 +34,10 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewDidLoad()
         setupUI()
 
-//        setupFirestoreListener()
         fetchPosts()
         configureTableView()
+
+        loadLikedPosts()
 
         refreshControl = UIRefreshControl()
         tableView.addSubview(refreshControl)
@@ -49,13 +55,6 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     deinit {
         NotificationCenter.default.removeObserver(self)
-    }
-
-    // MARK: - Firestore
-    private func setupFirestoreListener() {
-        listener = firebaseService.setupFirestoreListener(for: "posts") { [weak self] in
-            self?.fetchPosts()
-        }
     }
 
     @objc private func fetchPosts() {
@@ -95,6 +94,23 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             }
     }
 
+    private func loadLikedPosts() {
+        userRef.getDocument { [weak self] (document, error) in
+            guard let self = self, let document = document, document.exists, let data = document.data() else {
+                print("Error fetching liked posts: \(String(describing: error))")
+                return
+            }
+
+            if let likePosts = data["likePosts"] as? [String] {
+                self.likedPosts = Set(likePosts)
+            }
+
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+
     // MARK: - UITableView DataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return posts.count
@@ -115,15 +131,18 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
         cell.configure(with: post.image)
 
+        if likedPosts.contains(post.id) {
+            cell.heartButton.setImage((UIImage(systemName: "heart.fill")), for: .normal)
+        } else {
+            cell.heartButton.setImage(UIImage(systemName: "heart"), for: .normal)
+        }
+
         cell.heartButtonTappedClosure = { [weak self] in
             self?.updateHeartLabel(at: indexPath)
         }
 
         cell.commentButtonTappedClosure = { [weak self] in
             self?.showCommentsForPost(at: indexPath)
-        }
-        cell.commentButtonLongPressClosure = { [weak self] in
-            self?.showTextFieldForComment(at: indexPath)
         }
         return cell
     }
@@ -186,16 +205,22 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                         try await postRef.updateData([
                             "like": FieldValue.arrayRemove([currentUser])
                         ])
+                        try await userRef.updateData([
+                            "likePosts": FieldValue.arrayRemove([postId])
+                        ])
+
                         cell?.heartButton.setImage((UIImage(systemName: "heart")), for: .normal)
-                        cell?.heartCount.text = String(likes.count - 1);                      print("已經取消喜歡！")
+                        cell?.heartCount.text = String(likes.count - 1)
                     } else {
                         // 如果當前用戶未點過讚，則添加到陣列中
                         try await postRef.updateData([
                             "like": FieldValue.arrayUnion([currentUser])
                         ])
+                        try await userRef.updateData([
+                            "likePosts": FieldValue.arrayUnion([postId])
+                        ])
                         cell?.heartButton.setImage((UIImage(systemName: "heart.fill")), for: .normal)
                         cell?.heartCount.text = String(likes.count + 1)
-                        print("喜歡！！")
                     }
                 }
             } catch {
@@ -212,45 +237,6 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             sheet.prefersGrabberVisible = true
         }
         present(commentsVC, animated: true, completion: nil)
-    }
-
-    private func showTextFieldForComment(at indexPath: IndexPath) {
-        let postId = posts[indexPath.row].id
-
-        let alert = UIAlertController(title: "歡迎留言", message: nil, preferredStyle: .alert)
-        alert.addTextField { textField in
-            textField.placeholder = "請輸入留言"
-        }
-
-       let submitAction = UIAlertAction(title: "送出", style: .default) {_ in 
-            guard let textField = alert.textFields?.first, let commentText = textField.text, !commentText.isEmpty else {
-                print("留言不能為空")
-                return
-            }
-
-            Task {
-                let postRef = Firestore.firestore().collection("posts").document(postId)
-                let newComment: [String: Any] = [
-                    "id": UUID().uuidString,
-                    "author": "JJ",
-                    "authorId": "JJCC",
-                    "content": commentText,
-                    "timestamp": Timestamp(date: Date())
-                ]
-
-                do {
-                    try await postRef.updateData([
-                        "Comments": FieldValue.arrayUnion([newComment])
-                    ])
-                    print("留言已成功提交")
-                } catch {
-                    print("留言提交失敗: \(error.localizedDescription)")
-                }
-            }
-        }
-        alert.addAction(submitAction)
-        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
-        present(alert, animated: true, completion: nil)
     }
 
     @objc private func handleCommentCountUpdate(_ notification: Notification) {

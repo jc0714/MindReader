@@ -12,9 +12,12 @@ import FirebaseFirestore
 class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     private let tableView = UITableView()
-    private var comments: [Comment] = [] // 儲存留言的內容
-    private var postId: String // 需要傳入 postId 來監聽特定的貼文
+    private var comments: [Comment] = []
+    private var postId: String
     private var listener: ListenerRegistration?
+
+    private let commentTextField = UITextField()
+    private let sendButton = UIButton(type: .system)
 
     // MARK: - Initializer
     init(postId: String) {
@@ -35,6 +38,7 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
         setupTableView()
         setupCloseButton()
+        setupInputArea()
         setupFirestoreListener()
     }
 
@@ -84,7 +88,7 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 60),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -60) // 留出空间给输入区域
         ])
     }
 
@@ -99,6 +103,60 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
+    }
+
+    private func setupInputArea() {
+        // 设置输入区域
+        commentTextField.placeholder = "輸入留言..."
+        commentTextField.borderStyle = .roundedRect
+        sendButton.setTitle("送出", for: .normal)
+
+        view.addSubview(commentTextField)
+        view.addSubview(sendButton)
+
+        commentTextField.translatesAutoresizingMaskIntoConstraints = false
+        sendButton.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            commentTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            commentTextField.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
+            commentTextField.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -10),
+            commentTextField.heightAnchor.constraint(equalToConstant: 40),
+
+            sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+            sendButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
+            sendButton.widthAnchor.constraint(equalToConstant: 60),
+            sendButton.heightAnchor.constraint(equalToConstant: 40)
+        ])
+
+        // 添加送出留言的目标方法
+        sendButton.addTarget(self, action: #selector(sendComment), for: .touchUpInside)
+    }
+
+    @objc private func sendComment() {
+        guard let commentText = commentTextField.text, !commentText.isEmpty else { return }
+
+        // 添加留言到 Firestore
+        let newComment: [String: Any] = [
+            "author": "CurrentUser", // 可以替换为当前登录用户
+            "authorId": "CurrentUserId", // 当前用户的 ID
+            "content": commentText,
+            "timestamp": Timestamp(date: Date())
+        ]
+
+        let postRef = Firestore.firestore().collection("posts").document(postId)
+        postRef.updateData([
+            "Comments": FieldValue.arrayUnion([newComment])
+        ]) { error in
+            if let error = error {
+                print("Error adding comment: \(error)")
+            } else {
+                print("Comment successfully added!")
+                DispatchQueue.main.async {
+                    self.commentTextField.text = "" // 清空输入框
+                }
+            }
+        }
     }
 
     @objc private func closeButtonTapped() {
