@@ -31,6 +31,16 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
         setupConstraints()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = true
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
+
     // MARK: - Setup
     private func setupViews() {
         finalImageView.contentMode = .scaleAspectFit
@@ -78,7 +88,8 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
     }
 
     func didSelectImage(named imageName: String) {
-        finalImageView.image = UIImage(named: imageName)
+        guard let selectedImage = UIImage(named: imageName) else { return }
+        generateImage(with: selectedImage)
     }
 
     // MARK: - 存到相簿
@@ -116,23 +127,18 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
         }
     }
 
-    // MARK: - Actions
-    @objc private func imageTapped(_ sender: UITapGestureRecognizer) {
-        guard let selectedImage = (sender.view as? UIImageView)?.image else { return }
-        generateImage(with: selectedImage)
-    }
-
     private func generateImage(with backgroundImage: UIImage) {
         let renderer = UIGraphicsImageRenderer(size: backgroundImage.size)
         let generatedImage = renderer.image { _ in
             backgroundImage.draw(at: .zero)
 
+            let fontSize = backgroundImage.size.height / 10
             let text = copiedText ?? ""
             let textAttributes: [NSAttributedString.Key: Any] = [
-                .font: UIFont.systemFont(ofSize: 80),
+                .font: UIFont.systemFont(ofSize: fontSize),
                 .foregroundColor: UIColor.white
             ]
-            let textRect = CGRect(x: 20, y: 20, width: backgroundImage.size.width - 40, height: backgroundImage.size.height - 40)
+            let textRect = CGRect(x: 30, y: 30, width: backgroundImage.size.width - 40, height: backgroundImage.size.height - 40)
             text.draw(in: textRect, withAttributes: textAttributes)
         }
         finalImageView.image = generatedImage
