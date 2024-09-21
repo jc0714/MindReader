@@ -201,7 +201,6 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     private func updateHeartLabel(at indexPath: IndexPath) {
         let postId = posts[indexPath.row].id
-        let currentUser = "JJ"
 
         let cell = tableView.cellForRow(at: indexPath) as? PostCell
 
@@ -209,13 +208,13 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             let postRef = Firestore.firestore().collection("posts").document(postId)
 
             do {
-                // 先獲取當前的貼文資料，檢查 "Likes" 陣列是否包含當前用戶
+                // 先獲取當前的貼文資料，檢查 "Likes" 陣列是否包含用戶
                 let documentSnapshot = try await postRef.getDocument()
                 if let data = documentSnapshot.data(), let likes = data["like"] as? [String] {
-                    if likes.contains(currentUser) {
-                        // 如果當前用戶已經點過讚，則從陣列中移除
+                    if likes.contains(userId) {
+                        // 如果用戶讚過，把它移除
                         try await postRef.updateData([
-                            "like": FieldValue.arrayRemove([currentUser])
+                            "like": FieldValue.arrayRemove([userId])
                         ])
                         try await userRef.updateData([
                             "likePosts": FieldValue.arrayRemove([postId])
@@ -224,9 +223,9 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                         cell?.heartButton.setImage((UIImage(systemName: "heart")), for: .normal)
                         cell?.heartCount.text = String(likes.count - 1)
                     } else {
-                        // 如果當前用戶未點過讚，則添加到陣列中
+                        // 如果用戶沒讚，加進去
                         try await postRef.updateData([
-                            "like": FieldValue.arrayUnion([currentUser])
+                            "like": FieldValue.arrayUnion([userId])
                         ])
                         try await userRef.updateData([
                             "likePosts": FieldValue.arrayUnion([postId])
