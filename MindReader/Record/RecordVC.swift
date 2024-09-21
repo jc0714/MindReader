@@ -43,7 +43,7 @@ class RecordVC: UIViewController {
 
     // 初始化時加載相簿頁面
     private func setupInitialViewController() {
-        addChild(albumVC) // 預設顯示相簿頁面
+        addContentController(albumVC) // 預設顯示相簿頁面
     }
 
     @objc private func buttonTapped(_ sender: UIButton) {
@@ -63,10 +63,17 @@ class RecordVC: UIViewController {
 
     // 新的自定義方法來添加子VC
     private func addContentController(_ childVC: UIViewController) {
-       addChild(childVC)
-       childVC.view.frame = CGRect(x: 0, y: RView.frame.maxY, width: view.bounds.width, height: view.bounds.height - RView.frame.maxY)
-       view.addSubview(childVC.view)
-       childVC.didMove(toParent: self)
+        addChild(childVC)
+        childVC.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(childVC.view)
+
+        NSLayoutConstraint.activate([
+           childVC.view.topAnchor.constraint(equalTo: RView.bottomAnchor),
+           childVC.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+           childVC.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+           childVC.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        childVC.didMove(toParent: self)
     }
 
     // 新的自定義方法來移除子VC

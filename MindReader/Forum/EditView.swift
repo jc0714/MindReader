@@ -17,9 +17,6 @@ class EditView: UIView {
     let imageView = UIImageView()
     let publishButton = UIButton()
 
-    private let imageNames = ["photo4", "photo5", "photo6", "photo7"]
-    var selectedAvatarIndex = 0
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -34,8 +31,7 @@ class EditView: UIView {
         let margin = CGFloat(standardMargin / 4)
 
         avatarImage.backgroundColor = .pink3
-        avatarImage.image = UIImage(named: imageNames[selectedAvatarIndex])
-        avatarImage.layer.cornerRadius = 50
+                avatarImage.layer.cornerRadius = 50
         avatarImage.layer.masksToBounds = true
         avatarImage.isUserInteractionEnabled = true
 
@@ -101,13 +97,5 @@ class EditView: UIView {
             publishButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -margin),
             publishButton.heightAnchor.constraint(equalToConstant: 50)
         ])
-
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(changeAvatar))
-        avatarImage.addGestureRecognizer(tapGesture)
-    }
-
-    @objc func changeAvatar() {
-        selectedAvatarIndex = (selectedAvatarIndex + 1) % imageNames.count
-        avatarImage.image = UIImage(named: imageNames[selectedAvatarIndex])
     }
 }

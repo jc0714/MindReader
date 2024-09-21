@@ -18,6 +18,9 @@ class MyPostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     private let firebaseService = FirestoreService()
 
+    private let imageNames = ["photo4", "photo5", "photo6", "photo7"]
+    var selectedAvatarIndex = 0
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .color
@@ -71,7 +74,8 @@ class MyPostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
                         for document in snapshot.documents {
                             let data = document.data()
-                            guard let title = data["title"] as? String,
+                            guard let avatar = data["avatar"] as? Int,
+                                  let title = data["title"] as? String,
                                   let timestamp = data["createdTime"] as? Timestamp,
                                   let category = data["category"] as? String,
                                   let content = data["content"] as? String,
@@ -95,7 +99,7 @@ class MyPostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
                             let author = Author(email: authorEmail, id: authorId, name: authorName)
 
-                            let post = Post(title: title, createdTime: createdTimeString, id: document.documentID, category: category, content: content, image: image, author: author, like: like, comment: commentCount)
+                            let post = Post(avatar: avatar, title: title, createdTime: createdTimeString, id: document.documentID, category: category, content: content, image: image, author: author, like: like, comment: commentCount)
 
                             self.posts.append(post)
                         }
@@ -122,6 +126,7 @@ class MyPostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
         let post = posts[indexPath.row]
 
+        cell.avatarImageView.image = UIImage(named: imageNames[post.avatar])
         cell.articleTitle.text = post.title
         cell.authorName.text = post.author.name
         cell.createdTimeLabel.text = post.createdTime

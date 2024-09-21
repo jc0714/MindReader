@@ -152,7 +152,7 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             } else {
                 print("Comment successfully added!")
                 DispatchQueue.main.async {
-                    self.commentTextField.text = "" 
+                    self.commentTextField.text = ""
                 }
             }
         }

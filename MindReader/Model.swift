@@ -29,6 +29,7 @@ enum APIError: Error {
 // MARK: Forum
 
 struct Post {
+    var avatar: Int
     var title: String
     var createdTime: String
     var id: String

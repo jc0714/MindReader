@@ -20,6 +20,9 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var posts: [Post] = []
     private var likedPosts: Set<String> = []
 
+    private let imageNames = ["photo4", "photo5", "photo6", "photo7"]
+    var selectedAvatarIndex = 0
+
     private let userRef = Firestore.firestore().collection("Users").document("9Y2GjnVg8TEoze0GUJSU")
 
     var refreshControl: UIRefreshControl!
@@ -69,7 +72,8 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
                 self?.posts = documents.compactMap { document in
                     let data = document.data()
-                    guard let title = data["title"] as? String,
+                    guard let avatar = data["avatar"] as? Int,
+                          let title = data["title"] as? String,
                           let timestamp = data["createdTime"] as? Timestamp,
                           let id = data["id"] as? String,
                           let category = data["category"] as? String,
@@ -89,7 +93,7 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                         dateStyle: .medium, timeStyle: .none
                     )
                     let author = Author(email: authorEmail, id: authorId, name: authorName)
-                    return Post(title: title, createdTime: createdTimeString, id: id, category: category, content: content, image: image, author: author, like: like, comment: commentCount)
+                    return Post(avatar: avatar, title: title, createdTime: createdTimeString, id: id, category: category, content: content, image: image, author: author, like: like, comment: commentCount)
                 }
 
                 DispatchQueue.main.async {
@@ -127,6 +131,7 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
         let post = posts[indexPath.row]
 
+        cell.avatarImageView.image = UIImage(named: imageNames[post.avatar])
         cell.articleTitle.text = post.title
         cell.authorName.text = post.author.name
         cell.createdTimeLabel.text = post.createdTime

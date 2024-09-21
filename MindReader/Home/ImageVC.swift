@@ -7,13 +7,12 @@
 
 import UIKit
 
-class ImageVC: UIViewController {
+class ImageVC: UIViewController, ImageCollectionViewDelegate {
 
     private let firestoreService = FirestoreService()
-    // MARK: - Properties
-    private let photo1 = UIImageView(image: UIImage(named: "photo1"))
-    private let photo2 = UIImageView(image: UIImage(named: "photo2"))
-    private let photo3 = UIImageView(image: UIImage(named: "photo3"))
+
+    private let imageCollectionView = ImageCollectionView()
+
     private let finalImageView = UIImageView()
 
     var copiedText: String?
@@ -25,19 +24,17 @@ class ImageVC: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        imageCollectionView.delegate = self
+
         setupViews()
         setupConstraints()
     }
 
     // MARK: - Setup
     private func setupViews() {
-        [photo1, photo2, photo3].forEach {
-            $0.contentMode = .scaleAspectFit
-            $0.isUserInteractionEnabled = true
-            $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:))))
-            view.addSubview($0)
-        }
         finalImageView.contentMode = .scaleAspectFit
+        view.addSubview(imageCollectionView)
         view.addSubview(finalImageView)
 
         saveButton = createButton(title: "存到相簿去！", backgroundColor: .darkGray, action: #selector(saveImageToAlbum))
@@ -51,25 +48,19 @@ class ImageVC: UIViewController {
 
     // MARK: - UI 之後寫在 view
     private func setupConstraints() {
-        [photo1, photo2, photo3, finalImageView, saveButton, shareButton, saveToFireBaseButton].forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
+        imageCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        finalImageView.translatesAutoresizingMaskIntoConstraints = false
+        saveButton.translatesAutoresizingMaskIntoConstraints = false
+        shareButton.translatesAutoresizingMaskIntoConstraints = false
+        saveToFireBaseButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            photo1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            photo1.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            photo1.widthAnchor.constraint(equalToConstant: 90),
-            photo1.heightAnchor.constraint(equalToConstant: 90),
+            imageCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            imageCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            imageCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            imageCollectionView.heightAnchor.constraint(equalToConstant: 120),
 
-            photo2.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            photo2.topAnchor.constraint(equalTo: photo1.topAnchor),
-            photo2.widthAnchor.constraint(equalToConstant: 90),
-            photo2.heightAnchor.constraint(equalToConstant: 90),
-
-            photo3.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            photo3.topAnchor.constraint(equalTo: photo1.topAnchor),
-            photo3.widthAnchor.constraint(equalToConstant: 90),
-            photo3.heightAnchor.constraint(equalToConstant: 90),
-
-            finalImageView.topAnchor.constraint(equalTo: photo1.bottomAnchor, constant: 40),
+            finalImageView.topAnchor.constraint(equalTo: imageCollectionView.bottomAnchor, constant: 40),
             finalImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             finalImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             finalImageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
@@ -84,6 +75,10 @@ class ImageVC: UIViewController {
             saveToFireBaseButton.leadingAnchor.constraint(equalTo: shareButton.trailingAnchor, constant: 30),
             saveToFireBaseButton.bottomAnchor.constraint(equalTo: saveButton.bottomAnchor)
         ])
+    }
+
+    func didSelectImage(named imageName: String) {
+        finalImageView.image = UIImage(named: imageName)
     }
 
     // MARK: - 存到相簿

@@ -19,6 +19,8 @@ class PostCell: UITableViewCell {
 
     var postImageHeightConstraint: NSLayoutConstraint!
 
+    let avatarImageView = UIImageView()
+
     let articleTitle: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
@@ -37,7 +39,7 @@ class PostCell: UITableViewCell {
     let categoryLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
-        label.backgroundColor = .pink2
+        label.backgroundColor = .color
         label.textAlignment = .center
         return label
     }()
@@ -108,11 +110,16 @@ class PostCell: UITableViewCell {
 
     private func setupViews() {
 
+        avatarImageView.contentMode = .scaleAspectFill
+        avatarImageView.clipsToBounds = true
+        avatarImageView.layer.cornerRadius = 35
+
         postImageView.contentMode = .scaleAspectFill
         postImageView.clipsToBounds = true
 
         heartButton.isUserInteractionEnabled = true
 
+        contentView.addSubview(avatarImageView)
         contentView.addSubview(articleTitle)
         contentView.addSubview(authorName)
         contentView.addSubview(categoryLabel)
@@ -127,6 +134,7 @@ class PostCell: UITableViewCell {
     }
 
     private func setupConstraints() {
+        avatarImageView.translatesAutoresizingMaskIntoConstraints = false
         articleTitle.translatesAutoresizingMaskIntoConstraints = false
         authorName.translatesAutoresizingMaskIntoConstraints = false
         categoryLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -141,24 +149,29 @@ class PostCell: UITableViewCell {
         postImageHeightConstraint = postImageView.heightAnchor.constraint(equalToConstant: 200)
 
         NSLayoutConstraint.activate([
+            avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
+            avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+            avatarImageView.widthAnchor.constraint(equalToConstant: 70),
+            avatarImageView.heightAnchor.constraint(equalToConstant: 70),
+
             articleTitle.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            articleTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+            articleTitle.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
             articleTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
 
             authorName.topAnchor.constraint(equalTo: articleTitle.bottomAnchor, constant: 5),
-            authorName.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+            authorName.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
             authorName.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
 
             categoryLabel.topAnchor.constraint(equalTo: authorName.bottomAnchor, constant: 5),
-            categoryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+            categoryLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
             categoryLabel.widthAnchor.constraint(equalToConstant: 80),
             categoryLabel.heightAnchor.constraint(equalToConstant: 25),
 
             createdTimeLabel.centerYAnchor.constraint(equalTo: categoryLabel.centerYAnchor),
             createdTimeLabel.leadingAnchor.constraint(equalTo: categoryLabel.trailingAnchor, constant: 10),
 
-            contentLabel.topAnchor.constraint(equalTo: categoryLabel.bottomAnchor, constant: 10),
-            contentLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+            contentLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 15),
+            contentLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             contentLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
 
             postImageView.topAnchor.constraint(equalTo: contentLabel.bottomAnchor, constant: 10),
@@ -251,7 +264,6 @@ class PostCell: UITableViewCell {
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
-
         return view
     }
 }

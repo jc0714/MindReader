@@ -24,13 +24,6 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
         fetchImagesFromFirebase()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if imageUrls.isEmpty {
-            fetchImagesFromFirebase()
-        }
-    }
-
     func setupCollectionView() {
         layout.itemSize = CGSize(width: 100, height: 100)
         layout.minimumInteritemSpacing = 10
@@ -55,28 +48,39 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
     }
 
     func fetchImagesFromFirebase() {
-
         let userId = "9Y2GjnVg8TEoze0GUJSU"
 
         let imagesRef = storageRef.child("MorningImages/\(userId)/")
 
-        imagesRef.listAll { (result, error) in
+        imagesRef.listAll { [weak self] (result, error) in
+            guard let self = self else { return }
             if let error = error {
                 print("Error listing images: \(error.localizedDescription)")
                 return
             }
 
-            for item in result!.items {
+            guard let items = result?.items, !items.isEmpty else {
+                print("No images found.")
+                return
+            }
+
+            self.imageUrls.removeAll()
+
+            let dispatchGroup = DispatchGroup()
+
+            for item in items {
+                dispatchGroup.enter()
                 item.downloadURL { url, error in
                     if let error = error {
                         print("Error getting download URL: \(error.localizedDescription)")
                     } else if let url = url {
                         self.imageUrls.append(url)
-                        DispatchQueue.main.async {
-                            self.collectionView.reloadData()
-                        }
                     }
+                    dispatchGroup.leave()
                 }
+            }
+            dispatchGroup.notify(queue: .main) {
+                self.collectionView.reloadData()
             }
         }
     }
