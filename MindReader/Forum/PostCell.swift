@@ -17,6 +17,8 @@ class PostCell: UITableViewCell {
     var commentButtonTappedClosure: (() -> Void)?
     var commentButtonLongPressClosure: (() -> Void)?
 
+    var postImageHeightConstraint: NSLayoutConstraint!
+
     let articleTitle: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
@@ -136,6 +138,8 @@ class PostCell: UITableViewCell {
         heartView.translatesAutoresizingMaskIntoConstraints = false
         commentView.translatesAutoresizingMaskIntoConstraints = false
 
+        postImageHeightConstraint = postImageView.heightAnchor.constraint(equalToConstant: 200)
+
         NSLayoutConstraint.activate([
             articleTitle.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             articleTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
@@ -158,7 +162,6 @@ class PostCell: UITableViewCell {
             contentLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
 
             postImageView.topAnchor.constraint(equalTo: contentLabel.bottomAnchor, constant: 10),
-            postImageView.heightAnchor.constraint(equalToConstant: 200),
             postImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             postImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             postImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -80),
@@ -171,6 +174,9 @@ class PostCell: UITableViewCell {
             commentView.leadingAnchor.constraint(equalTo: heartView.trailingAnchor, constant: 30),
             commentView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15)
         ])
+
+        postImageHeightConstraint.isActive = true
+
         heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
         commentButton.addTarget(self, action: #selector(commentButtonTapped), for: .touchUpInside)
     }
@@ -178,12 +184,11 @@ class PostCell: UITableViewCell {
     func configure(with imageUrl: String?) {
         if let imageUrl = imageUrl, !imageUrl.isEmpty {
             postImageView.isHidden = false
-//            postImageHeightConstraint.isActive = true
+            postImageHeightConstraint.isActive = true
             loadImage(from: imageUrl)
         } else {
-            // 沒有圖片 URL，隱藏圖片
             postImageView.isHidden = true
-//            postImageHeightConstraint.isActive = false
+            postImageHeightConstraint.isActive = false
         }
     }
 

@@ -60,8 +60,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         // 可設置等待回應動畫
 
-        sender.isUserInteractionEnabled = false
-        sender.backgroundColor = .color
+//        sender.isUserInteractionEnabled = false
+//        sender.backgroundColor = .color
 
         let prompt = sender.tag == 1 ? homeView.promptTextField.text : recognizedText
 
@@ -204,22 +204,22 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     private func formatPrompt(_ prompt: String) -> String {
         """
-        用幽默的語氣回應。
-        請根據以下情況回覆，包括「possible_meanings：這句訊息背後意思」和「response_methods：可回覆訊息」兩個部分，各三個。
+        你現在是「另一半翻譯機」，盡量要顯得體貼和理解對方的潛在意圖，以及可以直接複製去用的回覆訊息。
+        用下方訊息內容分析「possible_meanings：訊息背後隱含意義」和「response_methods：推薦回覆訊息」兩個部分，各三個。
 
-        \(prompt)
+        訊息內容：\(prompt)
 
         用繁體中文，以 JSON 格式：
         "content": {
             "possible_meanings": [
-                "第一個可能意思",
-                "第二個可能意思",
-                "第三個可能意思"
+                "",
+                "",
+                ""
             ],
             "response_methods": [
-                "第一個回覆",
-                "第二個回覆",
-                "第三個回覆"
+                "可回覆訊息1",
+                "可回覆訊息2",
+                "可回覆訊息3"
             ]
         }
         """
