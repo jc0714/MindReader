@@ -80,7 +80,8 @@ class MyPostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                                   let authorId = authorData["id"] as? String,
                                   let authorName = authorData["name"] as? String
                             else {
-                                    continue                            }
+                                    continue
+                            }
 
                             let like = (data["like"] as? [String])?.count ?? 0
                             let commentCount = (data["Comments"] as? [[String: Any]])?.count ?? 0
@@ -99,7 +100,6 @@ class MyPostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                             self.posts.append(post)
                         }
 
-                        // 在主線程中刷新表格視圖
                         DispatchQueue.main.async {
                             print("Post IDs: \(postIds)")
                             self.tableView.reloadData()
@@ -131,5 +131,58 @@ class MyPostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         cell.configure(with: post.image)
 
         return cell
+    }
+
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+
+        // 刪除動作
+        let deleteAction = UIContextualAction(style: .destructive, title: "刪除") { (action, view, completionHandler) in
+            // 執行刪除操作
+            self.deletePost(at: indexPath)
+            completionHandler(true)
+            self.fetchPosts()
+        }
+        deleteAction.backgroundColor = .pink2
+
+        // 分享動作
+        let shareAction = UIContextualAction(style: .normal, title: "分享") { (action, view, completionHandler) in
+            // 執行分享操作
+            self.sharePost(at: indexPath)
+            completionHandler(true)
+        }
+        shareAction.backgroundColor = .pink3
+
+        // 將兩個動作加到 swipe action configuration 中
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction, shareAction])
+        return configuration
+    }
+
+    func deletePost(at indexPath: IndexPath) {
+        print("刪除第 \(indexPath.row) 行")
+
+        let postId = posts[indexPath.row].id
+
+        Firestore.firestore().collection("posts").document(postId).delete()
+
+        Firestore.firestore().collection("Users").document("9Y2GjnVg8TEoze0GUJSU").updateData([
+            "postIds": FieldValue.arrayRemove([postId])
+        ])
+    }
+
+    // 分享操作
+    func sharePost(at indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath)
+
+        UIGraphicsBeginImageContextWithOptions(cell!.bounds.size, false, 0.0)
+        if let context = UIGraphicsGetCurrentContext() {
+            cell?.layer.render(in: context)
+        }
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        guard let screenshot = image else { return }
+
+        let activityViewController = UIActivityViewController(activityItems: [screenshot], applicationActivities: nil)
+        present(activityViewController, animated: true, completion: nil)
     }
 }

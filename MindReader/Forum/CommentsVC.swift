@@ -106,7 +106,6 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     }
 
     private func setupInputArea() {
-        // 设置输入区域
         commentTextField.placeholder = "輸入留言..."
         commentTextField.borderStyle = .roundedRect
         sendButton.setTitle("送出", for: .normal)
@@ -129,17 +128,17 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             sendButton.heightAnchor.constraint(equalToConstant: 40)
         ])
 
-        // 添加送出留言的目标方法
         sendButton.addTarget(self, action: #selector(sendComment), for: .touchUpInside)
     }
 
     @objc private func sendComment() {
         guard let commentText = commentTextField.text, !commentText.isEmpty else { return }
 
-        // 添加留言到 Firestore
+        let userId = "9Y2GjnVg8TEoze0GUJSU"
+
         let newComment: [String: Any] = [
-            "author": "CurrentUser", // 可以替换为当前登录用户
-            "authorId": "CurrentUserId", // 当前用户的 ID
+            "author": "@0714JC",
+            "authorId": userId,
             "content": commentText,
             "timestamp": Timestamp(date: Date())
         ]
@@ -153,7 +152,7 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             } else {
                 print("Comment successfully added!")
                 DispatchQueue.main.async {
-                    self.commentTextField.text = "" // 清空输入框
+                    self.commentTextField.text = "" 
                 }
             }
         }
