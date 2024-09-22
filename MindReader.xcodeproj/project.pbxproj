@@ -30,6 +30,7 @@
 		E97C16172C955CBB002B437C /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C16162C955CBB002B437C /* FirestoreService.swift */; };
 		E99142272C9EEDCE00016C90 /* ImageCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99142262C9EEDCE00016C90 /* ImageCollectionView.swift */; };
 		E991422B2C9F24C300016C90 /* PostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E991422A2C9F24C300016C90 /* PostVC.swift */; };
+		E99142302C9FF8F200016C90 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = E991422F2C9FF8F200016C90 /* Kingfisher */; };
 		E9F6B67E2C95800F008E9FBF /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B67D2C95800F008E9FBF /* ChatView.swift */; };
 		E9F6B6832C968743008E9FBF /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6822C968743008E9FBF /* Model.swift */; };
 		E9F6B6862C96EB14008E9FBF /* ForumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6852C96EB14008E9FBF /* ForumVC.swift */; };
@@ -86,6 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E99142302C9FF8F200016C90 /* Kingfisher in Frameworks */,
 				E9F6B6C32C9C247B008E9FBF /* IQKeyboardManagerSwift in Frameworks */,
 				E97C15FE2C9189FF002B437C /* FirebaseDatabase in Frameworks */,
 				E97C16022C9189FF002B437C /* FirebaseStorage in Frameworks */,
@@ -215,6 +217,7 @@
 				E97C15FF2C9189FF002B437C /* FirebaseFirestore */,
 				E97C16012C9189FF002B437C /* FirebaseStorage */,
 				E9F6B6C22C9C247B008E9FBF /* IQKeyboardManagerSwift */,
+				E991422F2C9FF8F200016C90 /* Kingfisher */,
 			);
 			productName = MindReader;
 			productReference = E97C15DD2C9166B5002B437C /* MindReader.app */;
@@ -247,6 +250,7 @@
 			packageReferences = (
 				E97C15FA2C9189FF002B437C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				E9F6B6C12C9C247B008E9FBF /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
+				E991422E2C9FF8F200016C90 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = E97C15DE2C9166B5002B437C /* Products */;
 			projectDirPath = "";
@@ -560,6 +564,14 @@
 				minimumVersion = 11.2.0;
 			};
 		};
+		E991422E2C9FF8F200016C90 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.3;
+			};
+		};
 		E9F6B6C12C9C247B008E9FBF /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager";
@@ -590,6 +602,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E97C15FA2C9189FF002B437C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		E991422F2C9FF8F200016C90 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E991422E2C9FF8F200016C90 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 		E9F6B6C22C9C247B008E9FBF /* IQKeyboardManagerSwift */ = {
 			isa = XCSwiftPackageProductDependency;

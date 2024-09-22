@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import Kingfisher
 
 class PostCell: UITableViewCell {
 
@@ -221,21 +222,12 @@ class PostCell: UITableViewCell {
             print("Invalid URL string")
             return
         }
-        URLSession.shared.dataTask(with: imageURL) { data, _, error in
-            if let error = error {
-                print("Failed to download image: \(error)")
-                return
-            }
 
-            guard let data = data, let image = UIImage(data: data) else {
-                print("Failed to convert data to image")
-                return
-            }
-
-            DispatchQueue.main.async {
-                self.postImageView.image = image
-            }
-        }.resume()
+        // 使用 Kingfisher 加載圖片，無需 placeholder
+        postImageView.kf.setImage(with: imageURL, options: [
+            .transition(.fade(0.2)), // 圖片加載時淡入效果
+            .cacheOriginalImage      // 自動緩存圖片
+        ])
     }
 
     @objc func heartButtonTapped() {
