@@ -105,4 +105,14 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
         let side = availableWidth / 3
         return CGSize(width: side, height: side)
     }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let fullScreenVC = AlbumFullScreenVC()
+        fullScreenVC.imageUrls = imageUrls // 傳遞所有圖片的 URL 列表
+        fullScreenVC.currentIndex = indexPath.row // 傳遞當前選中的圖片
+//        fullScreenVC.imageUrl = imageUrls[indexPath.row] // 傳遞當前選中的圖片的 URL
+        fullScreenVC.modalPresentationStyle = .fullScreen
+
+        present(fullScreenVC, animated: true, completion: nil) // 顯示全螢幕圖片檢視
+    }
 }

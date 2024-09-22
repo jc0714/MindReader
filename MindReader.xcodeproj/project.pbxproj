@@ -31,6 +31,8 @@
 		E99142272C9EEDCE00016C90 /* ImageCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99142262C9EEDCE00016C90 /* ImageCollectionView.swift */; };
 		E991422B2C9F24C300016C90 /* PostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E991422A2C9F24C300016C90 /* PostVC.swift */; };
 		E99142302C9FF8F200016C90 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = E991422F2C9FF8F200016C90 /* Kingfisher */; };
+		E99142322C9FFABA00016C90 /* AlbumFullScreenVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99142312C9FFABA00016C90 /* AlbumFullScreenVC.swift */; };
+		E99142342CA0042200016C90 /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99142332CA0042200016C90 /* ImageCell.swift */; };
 		E9F6B67E2C95800F008E9FBF /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B67D2C95800F008E9FBF /* ChatView.swift */; };
 		E9F6B6832C968743008E9FBF /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6822C968743008E9FBF /* Model.swift */; };
 		E9F6B6862C96EB14008E9FBF /* ForumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6852C96EB14008E9FBF /* ForumVC.swift */; };
@@ -68,6 +70,8 @@
 		E97C16162C955CBB002B437C /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		E99142262C9EEDCE00016C90 /* ImageCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionView.swift; sourceTree = "<group>"; };
 		E991422A2C9F24C300016C90 /* PostVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostVC.swift; sourceTree = "<group>"; };
+		E99142312C9FFABA00016C90 /* AlbumFullScreenVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumFullScreenVC.swift; sourceTree = "<group>"; };
+		E99142332CA0042200016C90 /* ImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
 		E9F6B67D2C95800F008E9FBF /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		E9F6B6822C968743008E9FBF /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		E9F6B6852C96EB14008E9FBF /* ForumVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForumVC.swift; sourceTree = "<group>"; };
@@ -183,6 +187,8 @@
 				E9F6B6BF2C9C194E008E9FBF /* AlbumVC.swift */,
 				E9240ACE2C9D209F00A47944 /* AlbumCell.swift */,
 				E9240AD22C9D442F00A47944 /* RecordView.swift */,
+				E99142312C9FFABA00016C90 /* AlbumFullScreenVC.swift */,
+				E99142332CA0042200016C90 /* ImageCell.swift */,
 			);
 			path = Record;
 			sourceTree = "<group>";
@@ -312,9 +318,11 @@
 				E97C15F52C91810A002B437C /* HomeView.swift in Sources */,
 				E9240ACF2C9D209F00A47944 /* AlbumCell.swift in Sources */,
 				E97C16062C91A0DF002B437C /* ChatCell.swift in Sources */,
+				E99142322C9FFABA00016C90 /* AlbumFullScreenVC.swift in Sources */,
 				E9F6B6B62C9AA030008E9FBF /* ButtonExtension.swift in Sources */,
 				E9F6B6832C968743008E9FBF /* Model.swift in Sources */,
 				E97C16082C92BC88002B437C /* APIKeys.swift in Sources */,
+				E99142342CA0042200016C90 /* ImageCell.swift in Sources */,
 				E9F6B6862C96EB14008E9FBF /* ForumVC.swift in Sources */,
 				E9F6B6BA2C9AC4D2008E9FBF /* CommentsVC.swift in Sources */,
 				E9F6B6C02C9C194F008E9FBF /* AlbumVC.swift in Sources */,
