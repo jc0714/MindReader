@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class EditView: UIView {
+class PostEditView: UIView {
 
     let avatarImage = UIImageView()
     let titleTextField = UITextField()

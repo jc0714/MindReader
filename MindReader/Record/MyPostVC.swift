@@ -10,48 +10,37 @@ import UIKit
 import Firebase
 import FirebaseFirestore
 
-class MyPostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MyPostVC: BasePostVC {
 
-    private let tableView = UITableView()
-
-    private var posts: [Post] = []
-
-    private let firebaseService = FirestoreService()
-
-    private let imageNames = ["photo4", "photo5", "photo6", "photo7"]
-    var selectedAvatarIndex = 0
+    private var refreshControl: UIRefreshControl!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .color
 
-        setupTableView()
+        fetchPosts()
+
+        refreshControl = UIRefreshControl()
+        tableView.addSubview(refreshControl)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadTableData), name: NSNotification.Name("DataUpdated"), object: nil)
+
+        refreshControl.addTarget(self, action: #selector(fetchPosts), for: UIControl.Event.valueChanged)
+    }
+
+    @objc func reloadTableData() {
         fetchPosts()
     }
 
-    private func setupTableView() {
-        view.addSubview(tableView)
-
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
-
-        tableView.register(PostCell.self, forCellReuseIdentifier: "PostCell")
-
-        tableView.delegate = self
-        tableView.dataSource = self
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
-    private func fetchPosts() {
+    @objc private func fetchPosts() {
         // 該用戶的文章
         Firestore.firestore().collection("Users").document("9Y2GjnVg8TEoze0GUJSU").getDocument { (documentSnapshot, error) in
             guard let document = documentSnapshot, document.exists, error == nil else {
                 print("Error getting document: \(String(describing: error))")
+                self.refreshControl.endRefreshing()
                 return
             }
             // 從 posts collection 撈文章
@@ -107,35 +96,14 @@ class MyPostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                         DispatchQueue.main.async {
                             print("Post IDs: \(postIds)")
                             self.tableView.reloadData()
+                            self.refreshControl.endRefreshing()
+
                         }
                     }
             } else {
                 print("No postIds found")
             }
         }
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return posts.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as? PostCell else {
-            fatalError("Unable to dequeue PostCell")
-        }
-
-        let post = posts[indexPath.row]
-
-        cell.avatarImageView.image = UIImage(named: imageNames[post.avatar])
-        cell.articleTitle.text = post.title
-        cell.authorName.text = post.author.name
-        cell.createdTimeLabel.text = post.createdTime
-        cell.categoryLabel.text = post.category
-        cell.contentLabel.text = post.content
-
-        cell.configure(with: post.image)
-
-        return cell
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

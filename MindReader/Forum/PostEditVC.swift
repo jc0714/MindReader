@@ -1,5 +1,5 @@
 //
-//  EditVC.swift
+//  PostEditVC.swift
 //  MindReader
 //
 //  Created by J oyce on 2024/9/15.
@@ -10,9 +10,9 @@ import UIKit
 import Firebase
 import FirebaseFirestore
 
-class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
-    private var editView: EditView!
+    private var editView: PostEditView!
 
     private let firestoreService = FirestoreService()
 
@@ -20,7 +20,7 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
     var selectedAvatarIndex = 0
 
     override func loadView() {
-        editView = EditView()
+        editView = PostEditView()
         view = editView
     }
 

@@ -29,12 +29,13 @@
 		E97C16152C95536B002B437C /* TextRecognition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C16142C95536B002B437C /* TextRecognition.swift */; };
 		E97C16172C955CBB002B437C /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C16162C955CBB002B437C /* FirestoreService.swift */; };
 		E99142272C9EEDCE00016C90 /* ImageCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99142262C9EEDCE00016C90 /* ImageCollectionView.swift */; };
+		E991422B2C9F24C300016C90 /* PostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E991422A2C9F24C300016C90 /* PostVC.swift */; };
 		E9F6B67E2C95800F008E9FBF /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B67D2C95800F008E9FBF /* ChatView.swift */; };
 		E9F6B6832C968743008E9FBF /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6822C968743008E9FBF /* Model.swift */; };
 		E9F6B6862C96EB14008E9FBF /* ForumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6852C96EB14008E9FBF /* ForumVC.swift */; };
 		E9F6B6882C96EFC9008E9FBF /* PostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6872C96EFC9008E9FBF /* PostCell.swift */; };
-		E9F6B68A2C971788008E9FBF /* EditVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6892C971788008E9FBF /* EditVC.swift */; };
-		E9F6B68C2C9717A9008E9FBF /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B68B2C9717A9008E9FBF /* EditView.swift */; };
+		E9F6B68A2C971788008E9FBF /* PostEditVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6892C971788008E9FBF /* PostEditVC.swift */; };
+		E9F6B68C2C9717A9008E9FBF /* PostEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B68B2C9717A9008E9FBF /* PostEditView.swift */; };
 		E9F6B6B22C997482008E9FBF /* ImageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6B12C997482008E9FBF /* ImageVC.swift */; };
 		E9F6B6B62C9AA030008E9FBF /* ButtonExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6B52C9AA030008E9FBF /* ButtonExtension.swift */; };
 		E9F6B6BA2C9AC4D2008E9FBF /* CommentsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6B92C9AC4D2008E9FBF /* CommentsVC.swift */; };
@@ -65,12 +66,13 @@
 		E97C16142C95536B002B437C /* TextRecognition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextRecognition.swift; sourceTree = "<group>"; };
 		E97C16162C955CBB002B437C /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		E99142262C9EEDCE00016C90 /* ImageCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionView.swift; sourceTree = "<group>"; };
+		E991422A2C9F24C300016C90 /* PostVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostVC.swift; sourceTree = "<group>"; };
 		E9F6B67D2C95800F008E9FBF /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		E9F6B6822C968743008E9FBF /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		E9F6B6852C96EB14008E9FBF /* ForumVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForumVC.swift; sourceTree = "<group>"; };
 		E9F6B6872C96EFC9008E9FBF /* PostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCell.swift; sourceTree = "<group>"; };
-		E9F6B6892C971788008E9FBF /* EditVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditVC.swift; sourceTree = "<group>"; };
-		E9F6B68B2C9717A9008E9FBF /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
+		E9F6B6892C971788008E9FBF /* PostEditVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostEditVC.swift; sourceTree = "<group>"; };
+		E9F6B68B2C9717A9008E9FBF /* PostEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostEditView.swift; sourceTree = "<group>"; };
 		E9F6B6B12C997482008E9FBF /* ImageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageVC.swift; sourceTree = "<group>"; };
 		E9F6B6B52C9AA030008E9FBF /* ButtonExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonExtension.swift; sourceTree = "<group>"; };
 		E9F6B6B92C9AC4D2008E9FBF /* CommentsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsVC.swift; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 				E97C16162C955CBB002B437C /* FirestoreService.swift */,
 				E97C16142C95536B002B437C /* TextRecognition.swift */,
 				E9F6B6B52C9AA030008E9FBF /* ButtonExtension.swift */,
+				E991422A2C9F24C300016C90 /* PostVC.swift */,
 			);
 			path = MindReader;
 			sourceTree = "<group>";
@@ -162,8 +165,8 @@
 			children = (
 				E9F6B6852C96EB14008E9FBF /* ForumVC.swift */,
 				E9F6B6872C96EFC9008E9FBF /* PostCell.swift */,
-				E9F6B6892C971788008E9FBF /* EditVC.swift */,
-				E9F6B68B2C9717A9008E9FBF /* EditView.swift */,
+				E9F6B6892C971788008E9FBF /* PostEditVC.swift */,
+				E9F6B68B2C9717A9008E9FBF /* PostEditView.swift */,
 				E9F6B6B92C9AC4D2008E9FBF /* CommentsVC.swift */,
 				E9F6B6BD2C9BCF7C008E9FBF /* CommentCell.swift */,
 			);
@@ -300,7 +303,8 @@
 				E97C15F72C91812F002B437C /* APIService.swift in Sources */,
 				E9F6B6B22C997482008E9FBF /* ImageVC.swift in Sources */,
 				E9F6B67E2C95800F008E9FBF /* ChatView.swift in Sources */,
-				E9F6B68A2C971788008E9FBF /* EditVC.swift in Sources */,
+				E991422B2C9F24C300016C90 /* PostVC.swift in Sources */,
+				E9F6B68A2C971788008E9FBF /* PostEditVC.swift in Sources */,
 				E97C15F52C91810A002B437C /* HomeView.swift in Sources */,
 				E9240ACF2C9D209F00A47944 /* AlbumCell.swift in Sources */,
 				E97C16062C91A0DF002B437C /* ChatCell.swift in Sources */,
@@ -311,7 +315,7 @@
 				E9F6B6BA2C9AC4D2008E9FBF /* CommentsVC.swift in Sources */,
 				E9F6B6C02C9C194F008E9FBF /* AlbumVC.swift in Sources */,
 				E97C15E12C9166B5002B437C /* AppDelegate.swift in Sources */,
-				E9F6B68C2C9717A9008E9FBF /* EditView.swift in Sources */,
+				E9F6B68C2C9717A9008E9FBF /* PostEditView.swift in Sources */,
 				E99142272C9EEDCE00016C90 /* ImageCollectionView.swift in Sources */,
 				E97C16152C95536B002B437C /* TextRecognition.swift in Sources */,
 				E97C15E32C9166B5002B437C /* SceneDelegate.swift in Sources */,

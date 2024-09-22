@@ -50,24 +50,11 @@
                     <view key="view" contentMode="scaleToFill" id="zGc-A5-Ww2">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Ukk-6T-2kR">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="769"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            </tableView>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="hfh-cL-lc1"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="hfh-cL-lc1" firstAttribute="trailing" secondItem="Ukk-6T-2kR" secondAttribute="trailing" id="3n9-v7-dMX"/>
-                            <constraint firstItem="Ukk-6T-2kR" firstAttribute="top" secondItem="zGc-A5-Ww2" secondAttribute="top" id="TJf-p5-bA5"/>
-                            <constraint firstItem="hfh-cL-lc1" firstAttribute="bottom" secondItem="Ukk-6T-2kR" secondAttribute="bottom" id="wCQ-5E-Tcb"/>
-                            <constraint firstItem="Ukk-6T-2kR" firstAttribute="leading" secondItem="hfh-cL-lc1" secondAttribute="leading" id="yWO-Rv-DJf"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="l9l-gC-U7i"/>
                     <connections>
-                        <outlet property="tableView" destination="Ukk-6T-2kR" id="b6u-KN-Qm3"/>
                         <segue destination="TJ5-mf-gqy" kind="show" identifier="toEditPage" id="wun-hw-xQj"/>
                     </connections>
                 </viewController>
@@ -75,10 +62,10 @@
             </objects>
             <point key="canvasLocation" x="-103" y="1451"/>
         </scene>
-        <!--EditVC-->
+        <!--Post EditVC-->
         <scene sceneID="XQc-Kj-bmk">
             <objects>
-                <viewController id="TJ5-mf-gqy" customClass="EditVC" customModule="MindReader" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="TJ5-mf-gqy" customClass="PostEditVC" customModule="MindReader" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Xgp-KX-bzG">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
