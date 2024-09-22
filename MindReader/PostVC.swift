@@ -134,6 +134,8 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         Task {
             do {
                 try await batch.commit()
+                NotificationCenter.default.post(name: NSNotification.Name("RefreshDataNotification"), object: nil)
+
             } catch {
                 print("Error updating likes: \(error.localizedDescription)")
             }

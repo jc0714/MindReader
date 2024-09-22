@@ -24,6 +24,8 @@ class MyPostVC: BasePostVC {
 
         NotificationCenter.default.addObserver(self, selector: #selector(reloadTableData), name: NSNotification.Name("DataUpdated"), object: nil)
 
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadTableData), name: NSNotification.Name("RefreshDataNotification"), object: nil)
+
         refreshControl.addTarget(self, action: #selector(fetchPosts), for: UIControl.Event.valueChanged)
     }
 
@@ -97,7 +99,6 @@ class MyPostVC: BasePostVC {
                             print("Post IDs: \(postIds)")
                             self.tableView.reloadData()
                             self.refreshControl.endRefreshing()
-
                         }
                     }
             } else {

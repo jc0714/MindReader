@@ -28,6 +28,8 @@ class ForumVC: BasePostVC {
 
         NotificationCenter.default.addObserver(self, selector: #selector(reloadTableData), name: NSNotification.Name("DataUpdated"), object: nil)
 
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadTableData), name: NSNotification.Name("RefreshDataNotification"), object: nil)
+
         refreshControl.addTarget(self, action: #selector(fetchPosts), for: UIControl.Event.valueChanged)
     }
 
