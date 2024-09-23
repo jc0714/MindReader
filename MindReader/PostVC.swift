@@ -96,7 +96,15 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         cell.commentButtonTappedClosure = { [weak self] in
             self?.showCommentsForPost(at: indexPath)
         }
+
+        cell.authorTapAction = { [weak self] in
+            self?.fetchPostsByAuthor(authorId: post.author.id)
+        }   
         return cell
+    }
+
+    func fetchPostsByAuthor(authorId: String) {
+        print("Author TAPPEDDD")
     }
 
     // 更新愛心實心空心狀態

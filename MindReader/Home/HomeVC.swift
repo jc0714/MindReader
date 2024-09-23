@@ -142,12 +142,13 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - View Configuration
 
     @objc func showImageView() {
-        homeView.generateImageButton.isHidden = true
+        // 先顯示長輩圖按鈕
+        homeView.generateImageButton.isHidden = false
         configureView(for: 0, isImageViewVisible: true)
     }
 
     @objc func enterText() {
-        homeView.generateImageButton.isHidden = true
+//        homeView.generateImageButton.isHidden = true
         configureView(for: 1, isImageViewVisible: false)
     }
 
@@ -162,7 +163,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         homeView.replyLabel1.text = ""
         homeView.replyLabel2.text = ""
         homeView.replyLabel3.text = ""
-        homeView.generateImageButton.isHidden = true
+//        homeView.generateImageButton.isHidden = true
     }
 
     // MARK: - Keyboard Handling

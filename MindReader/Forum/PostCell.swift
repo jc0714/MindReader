@@ -18,6 +18,8 @@ class PostCell: UITableViewCell {
     var commentButtonTappedClosure: (() -> Void)?
     var commentButtonLongPressClosure: (() -> Void)?
 
+    var authorTapAction: (() -> Void)?
+
     var postImageHeightConstraint: NSLayoutConstraint!
 
     let avatarImageView = UIImageView()
@@ -103,6 +105,9 @@ class PostCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(authorTapped))
+        authorName.addGestureRecognizer(tapGesture)
     }
 
     required init?(coder: NSCoder) {
@@ -205,6 +210,8 @@ class PostCell: UITableViewCell {
             postImageView.isHidden = true
             postImageHeightConstraint.isActive = false
         }
+        setNeedsLayout()
+        layoutIfNeeded()
     }
 
     override func prepareForReuse() {
@@ -239,6 +246,10 @@ class PostCell: UITableViewCell {
     @objc private func commentButtonTapped() {
         // 通知 VC
         commentButtonTappedClosure?()
+    }
+
+    @objc private func authorTapped() {
+        authorTapAction?()
     }
 
     func createStackedView(button: UIButton, label: UILabel) -> UIView {

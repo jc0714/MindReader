@@ -59,6 +59,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.borderColor = UIColor.black.cgColor
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -149,7 +150,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         indicatorView.addSubview(activityIndicator)
         activityIndicator.center = center
 
-        generateImageButton.isHidden = true
+//        generateImageButton.isHidden = true
 
         NSLayoutConstraint.activate([
             imageButton.topAnchor.constraint(equalTo: topAnchor, constant: 100),
