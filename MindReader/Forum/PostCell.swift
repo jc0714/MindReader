@@ -147,7 +147,8 @@ class PostCell: UITableViewCell {
         heartView.translatesAutoresizingMaskIntoConstraints = false
         commentView.translatesAutoresizingMaskIntoConstraints = false
 
-        postImageHeightConstraint = postImageView.heightAnchor.constraint(equalToConstant: 200)
+        postImageHeightConstraint = postImageView.heightAnchor.constraint(lessThanOrEqualToConstant: 300)
+        postImageHeightConstraint.isActive = true
 
         NSLayoutConstraint.activate([
             avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
@@ -178,7 +179,7 @@ class PostCell: UITableViewCell {
             postImageView.topAnchor.constraint(equalTo: contentLabel.bottomAnchor, constant: 10),
             postImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             postImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
-            postImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -80),
+            postImageView.bottomAnchor.constraint(equalTo: heartView.topAnchor, constant: -10),
 
             heartView.heightAnchor.constraint(equalToConstant: 50),
             heartView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
@@ -189,7 +190,7 @@ class PostCell: UITableViewCell {
             commentView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15)
         ])
 
-        postImageHeightConstraint.isActive = true
+        postImageHeightConstraint.isActive = false
 
         heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
         commentButton.addTarget(self, action: #selector(commentButtonTapped), for: .touchUpInside)

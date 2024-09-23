@@ -41,6 +41,9 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.register(PostCell.self, forCellReuseIdentifier: "PostCell")
         tableView.delegate = self
         tableView.dataSource = self
+
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 100
     }
 
     // 初始化的時候把按過讚的愛心填滿

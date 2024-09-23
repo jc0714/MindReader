@@ -117,8 +117,8 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
             }
         }
     }
-    // swiftlint:enable function_body_length
 
+    // swiftlint:enable function_body_length
     @objc func imageViewTapped() {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
