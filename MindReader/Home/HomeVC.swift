@@ -196,12 +196,31 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - Copy Label Text
 
     @objc func copyLabelText(_ sender: UITapGestureRecognizer) {
+        showCopySuccessWithScaleAnimation()
         if let label = sender.view as? UILabel {
             UIPasteboard.general.string = label.text
             copiedText = label.text ?? "早安"
             print("Text copied: \(label.text ?? "")")
         }
         homeView.generateImageButton.isHidden = false
+    }
+
+    func showCopySuccessWithScaleAnimation() {
+        let copySuccessLabel = UILabel()
+        copySuccessLabel.text = "Copied✅"
+        copySuccessLabel.textColor = .white
+        copySuccessLabel.backgroundColor = .lightGray
+        copySuccessLabel.textAlignment = .center
+        copySuccessLabel.layer.cornerRadius = 8
+        copySuccessLabel.layer.masksToBounds = true
+        copySuccessLabel.frame = CGRect(x: 0, y: 0, width: 150, height: 40)
+        copySuccessLabel.center = CGPoint(x: self.view.center.x, y: self.view.frame.height - 150)
+        view.addSubview(copySuccessLabel)
+
+//        copySuccessLabel.transform = CGAffineTransform(scaleX: 1, y: 1)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            copySuccessLabel.removeFromSuperview()
+        }
     }
 
     @objc func toGenerateButtonTapped(_ sender: UIButton) {

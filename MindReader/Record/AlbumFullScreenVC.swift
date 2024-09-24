@@ -7,6 +7,8 @@
 
 import UIKit
 import Kingfisher
+import Firebase
+import FirebaseStorage
 
 class AlbumFullScreenVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
@@ -120,8 +122,38 @@ class AlbumFullScreenVC: UIViewController, UICollectionViewDelegate, UICollectio
     @objc func deleteImage() {
         let indexPath = collectionView.indexPathsForVisibleItems.first
         if let index = indexPath?.item {
-            imageUrls.remove(at: index)
-            collectionView.reloadData()
+            let imageUrl = imageUrls[index]
+
+            let storageRef = Storage.storage().reference(forURL: imageUrl.absoluteString)
+
+            storageRef.delete { error in
+                if let error = error {
+                    print("Error deleting image: \(error.localizedDescription)")
+                    return
+                }
+
+                let userId = "9Y2GjnVg8TEoze0GUJSU"
+                let db = Firestore.firestore()
+                let morningImageRef = db.collection("Users").document(userId).collection("MorningImage")
+
+                morningImageRef.whereField("imageURL", isEqualTo: imageUrl.absoluteString).getDocuments { snapshot, error in
+                    if let error = error {
+                        print("Error fetching documents: \(error.localizedDescription)")
+                        return
+                    }
+
+                    snapshot?.documents.first?.reference.delete { error in
+                        if let error = error {
+                            print("Error deleting Firestore document: \(error.localizedDescription)")
+                        } else {
+                            DispatchQueue.main.async { [self] in
+                                self.imageUrls.remove(at: index)
+                                collectionView.reloadData()
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
