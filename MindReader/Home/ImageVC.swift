@@ -7,81 +7,185 @@
 
 import UIKit
 
-class ImageVC: UIViewController {
+class ImageVC: UIViewController, ImageCollectionViewDelegate {
 
-    // MARK: - Properties
-    private let photo1 = UIImageView(image: UIImage(named: "photo1"))
-    private let photo2 = UIImageView(image: UIImage(named: "photo2"))
-    private let photo3 = UIImageView(image: UIImage(named: "photo3"))
+    private let firestoreService = FirestoreService()
+    private let imageCollectionView = ImageCollectionView()
     private let finalImageView = UIImageView()
     var copiedText: String?
 
-    // MARK: - Lifecycle
+    private var saveButton = UIButton()
+    private var shareButton = UIButton()
+    private var saveToFireBaseButton = UIButton()
+
+    private var textColor: UIColor = .white
+
+    private var colorButtons = [UIButton]()
+    var stackView = UIStackView()
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        imageCollectionView.delegate = self
+
         setupViews()
         setupConstraints()
+
+        generateImage(with: UIImage(named: "photo1")!)
     }
 
-    // MARK: - Setup
-    private func setupViews() {
-        [photo1, photo2, photo3].forEach {
-            $0.contentMode = .scaleAspectFit
-            $0.isUserInteractionEnabled = true
-            $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:))))
-            view.addSubview($0)
-        }
-        finalImageView.contentMode = .scaleAspectFit
-        view.addSubview(finalImageView)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = true
     }
 
-    // MARK: - UI 之後寫在 view
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
+
     private func setupConstraints() {
-        [photo1, photo2, photo3, finalImageView].forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
+        imageCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        finalImageView.translatesAutoresizingMaskIntoConstraints = false
+        saveButton.translatesAutoresizingMaskIntoConstraints = false
+        shareButton.translatesAutoresizingMaskIntoConstraints = false
+        saveToFireBaseButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            photo1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            photo1.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            photo1.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.28),
-            photo1.heightAnchor.constraint(equalTo: photo1.widthAnchor),
+            // imageCollectionView constraints
+            imageCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            imageCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            imageCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            imageCollectionView.heightAnchor.constraint(equalToConstant: 120),
 
-            photo2.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            photo2.topAnchor.constraint(equalTo: photo1.topAnchor),
-            photo2.widthAnchor.constraint(equalTo: photo1.widthAnchor),
-            photo2.heightAnchor.constraint(equalTo: photo1.heightAnchor),
-
-            photo3.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            photo3.topAnchor.constraint(equalTo: photo1.topAnchor),
-            photo3.widthAnchor.constraint(equalTo: photo1.widthAnchor),
-            photo3.heightAnchor.constraint(equalTo: photo1.heightAnchor),
-
-            finalImageView.topAnchor.constraint(equalTo: photo1.bottomAnchor, constant: 40),
+            // finalImageView constraints
+            finalImageView.topAnchor.constraint(equalTo: imageCollectionView.bottomAnchor, constant: 40),
             finalImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             finalImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            finalImageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            finalImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.4)
+            finalImageView.heightAnchor.constraint(equalToConstant: 300),
+
+            stackView.bottomAnchor.constraint(equalTo: finalImageView.topAnchor, constant: -20),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -20),
+            stackView.heightAnchor.constraint(equalToConstant: 30),
+
+            // saveButton constraints
+            saveButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            saveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+
+            // shareButton constraints
+            shareButton.leadingAnchor.constraint(equalTo: saveButton.trailingAnchor, constant: 30),
+            shareButton.bottomAnchor.constraint(equalTo: saveButton.bottomAnchor),
+
+            // saveToFireBaseButton constraints
+            saveToFireBaseButton.leadingAnchor.constraint(equalTo: shareButton.trailingAnchor, constant: 30),
+            saveToFireBaseButton.bottomAnchor.constraint(equalTo: saveButton.bottomAnchor)
         ])
     }
 
-    // MARK: - Actions
-    @objc private func imageTapped(_ sender: UITapGestureRecognizer) {
-        guard let selectedImage = (sender.view as? UIImageView)?.image else { return }
+    func didSelectImage(named imageName: String) {
+        guard let selectedImage = UIImage(named: imageName) else { return }
         generateImage(with: selectedImage)
+    }
+    private func setupViews() {
+        finalImageView.contentMode = .scaleAspectFit
+        view.addSubview(imageCollectionView)
+        view.addSubview(finalImageView)
+
+        // 設置顏色按鈕
+        let colors: [UIColor] = [.white, .black, .red, .blue, .green]
+
+        for color in colors {
+            let button = createColorButton(color: color)
+            colorButtons.append(button)
+        }
+
+        stackView = UIStackView(arrangedSubviews: colorButtons)
+        stackView.axis = .horizontal
+        stackView.spacing = 10
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        saveButton = createButton(title: "存到相簿去！", backgroundColor: .darkGray, action: #selector(saveImageToAlbum))
+        shareButton = createButton(title: "分享", backgroundColor: .darkGray, action: #selector(shareImage))
+        saveToFireBaseButton = createButton(title: "貼到相片牆", backgroundColor: .darkGray, action: #selector(saveToFireBase))
+
+        view.addSubview(saveButton)
+        view.addSubview(shareButton)
+        view.addSubview(saveToFireBaseButton)
+        view.addSubview(stackView)
+    }
+
+    private func createColorButton(color: UIColor) -> UIButton {
+        let button = UIButton()
+        button.backgroundColor = color
+        button.layer.cornerRadius = 15
+        button.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        button.addTarget(self, action: #selector(colorButtonTapped(_:)), for: .touchUpInside)
+        return button
+    }
+
+    // 改變文字顏色
+    @objc private func colorButtonTapped(_ sender: UIButton) {
+        textColor = sender.backgroundColor ?? .white
+        regenerateImage()
+    }
+
+    private func regenerateImage() {
+        guard let backgroundImage = finalImageView.image else { return }
+        generateImage(with: backgroundImage)
     }
 
     private func generateImage(with backgroundImage: UIImage) {
-        UIGraphicsBeginImageContext(backgroundImage.size)
-        backgroundImage.draw(at: .zero)
+        let renderer = UIGraphicsImageRenderer(size: backgroundImage.size)
+        let generatedImage = renderer.image { _ in
+            backgroundImage.draw(at: .zero)
 
-        let text = copiedText ?? ""
-        let textAttributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: 80),
-            .foregroundColor: UIColor.white
-        ]
-        let textRect = CGRect(x: 20, y: 20, width: backgroundImage.size.width - 40, height: backgroundImage.size.height - 40)
-        text.draw(in: textRect, withAttributes: textAttributes)
+            let fontSize = 80
+            let text = copiedText ?? ""
+            let textAttributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: CGFloat(fontSize)),
+                .foregroundColor: textColor
+            ]
+            let textRect = CGRect(x: 30, y: 30, width: backgroundImage.size.width - 40, height: backgroundImage.size.height - 40)
+            text.draw(in: textRect, withAttributes: textAttributes)
+        }
+        finalImageView.image = generatedImage
+    }
 
-        finalImageView.image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
+    // MARK: - 存到相簿
+    @objc private func saveImageToAlbum() {
+        guard let imageToSave = finalImageView.image else { return }
+        UIImageWriteToSavedPhotosAlbum(imageToSave, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+    }
+
+    @objc private func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        if let error = error {
+            print("儲存失敗: \(error.localizedDescription)")
+        } else {
+            print("儲存成功")
+        }
+    }
+
+    // MARK: - 分享圖片
+    @objc private func shareImage() {
+        guard let imageToShare = finalImageView.image else { return }
+        let activityViewController = UIActivityViewController(activityItems: [imageToShare], applicationActivities: nil)
+        present(activityViewController, animated: true, completion: nil)
+    }
+
+    // MARK: - 丟到相片牆
+    @objc private func saveToFireBase() {
+        guard let imageData = finalImageView.image?.jpegData(compressionQuality: 0.75) else { return }
+
+        Task {
+            do {
+                let imageURL = try await firestoreService.uploadMorningImage(imageData: imageData)
+                try await firestoreService.saveToMorningImageToDatabase(imageURL: imageURL)
+                print("Image uploaded successfully, URL: \(imageURL)")
+            } catch {
+                print("Failed to upload image: \(error)")
+            }
+        }
     }
 }

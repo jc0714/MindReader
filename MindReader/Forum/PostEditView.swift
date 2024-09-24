@@ -8,8 +8,9 @@
 import Foundation
 import UIKit
 
-class EditView: UIView {
+class PostEditView: UIView {
 
+    let avatarImage = UIImageView()
     let titleTextField = UITextField()
     let categoryTextField = UITextField()
     let contentTextView = UITextView()
@@ -29,6 +30,11 @@ class EditView: UIView {
         let standardMargin = 16
         let margin = CGFloat(standardMargin / 4)
 
+        avatarImage.backgroundColor = .pink3
+                avatarImage.layer.cornerRadius = 50
+        avatarImage.layer.masksToBounds = true
+        avatarImage.isUserInteractionEnabled = true
+
         titleTextField.placeholder = "文章主題"
         categoryTextField.placeholder = "你覺得他是什麼類別？"
 
@@ -39,18 +45,21 @@ class EditView: UIView {
         contentTextView.layer.borderColor = UIColor.lightGray.cgColor
         contentTextView.layer.borderWidth = 1.0
 
-        imageView.backgroundColor = .pink3
+        imageView.backgroundColor = .pink1
         imageView.isUserInteractionEnabled = true
+        imageView.contentMode = .scaleAspectFit
 
         publishButton.setTitle("Publish", for: .normal)
-        publishButton.backgroundColor = .pink3
+        publishButton.backgroundColor = .pink1
 
+        addSubview(avatarImage)
         addSubview(titleTextField)
         addSubview(categoryTextField)
         addSubview(contentTextView)
         addSubview(imageView)
         addSubview(publishButton)
 
+        avatarImage.translatesAutoresizingMaskIntoConstraints = false
         titleTextField.translatesAutoresizingMaskIntoConstraints = false
         categoryTextField.translatesAutoresizingMaskIntoConstraints = false
         contentTextView.translatesAutoresizingMaskIntoConstraints = false
@@ -58,20 +67,25 @@ class EditView: UIView {
         publishButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
+            avatarImage.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: margin),
+            avatarImage.leftAnchor.constraint(equalTo: leftAnchor, constant: margin),
+            avatarImage.heightAnchor.constraint(equalToConstant: 100),
+            avatarImage.widthAnchor.constraint(equalToConstant: 100),
+
             titleTextField.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: margin),
-            titleTextField.leftAnchor.constraint(equalTo: leftAnchor, constant: margin),
+            titleTextField.leadingAnchor.constraint(equalTo: avatarImage.trailingAnchor, constant: margin),
             titleTextField.rightAnchor.constraint(equalTo: rightAnchor, constant: -margin),
             titleTextField.heightAnchor.constraint(equalToConstant: 50),
 
             categoryTextField.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: margin),
-            categoryTextField.leftAnchor.constraint(equalTo: leftAnchor, constant: margin),
+            categoryTextField.leadingAnchor.constraint(equalTo: avatarImage.trailingAnchor, constant: margin),
             categoryTextField.rightAnchor.constraint(equalTo: rightAnchor, constant: -margin),
             categoryTextField.heightAnchor.constraint(equalToConstant: 50),
 
             contentTextView.topAnchor.constraint(equalTo: categoryTextField.bottomAnchor, constant: margin),
             contentTextView.leftAnchor.constraint(equalTo: leftAnchor, constant: margin),
             contentTextView.rightAnchor.constraint(equalTo: rightAnchor, constant: -margin),
-            contentTextView.heightAnchor.constraint(equalToConstant: 300),
+            contentTextView.heightAnchor.constraint(equalToConstant: 200),
 
             imageView.topAnchor.constraint(equalTo: contentTextView.bottomAnchor, constant: margin),
             imageView.leftAnchor.constraint(equalTo: leftAnchor, constant: margin),

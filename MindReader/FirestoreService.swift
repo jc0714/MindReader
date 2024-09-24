@@ -39,10 +39,29 @@ class FirestoreService {
     }
 
     func uploadImage(imageData: Data) async throws -> String {
-        let uploadRef = Storage.storage().reference(withPath: "images/\(UUID().uuidString).jpg")
-        let _ = try await uploadRef.putDataAsync(imageData, metadata: StorageMetadata())
+        let uploadRef = Storage.storage().reference(withPath: "images/\(userId)/\(UUID().uuidString).jpg")
+        _ = try await uploadRef.putDataAsync(imageData, metadata: StorageMetadata())
         let downloadURL = try await uploadRef.downloadURL()
         return downloadURL.absoluteString
+    }
+
+    // MARK: 早安圖
+    func uploadMorningImage(imageData: Data) async throws -> String {
+        let uploadRef = Storage.storage().reference(withPath: "MorningImages/\(userId)/\(UUID().uuidString).jpg")
+        _ = try await uploadRef.putDataAsync(imageData, metadata: StorageMetadata())
+        let downloadURL = try await uploadRef.downloadURL()
+        return downloadURL.absoluteString
+    }
+
+    func saveToMorningImageToDatabase(imageURL: String) async throws {
+
+        let translateRef = db.collection("Users") .document(userId).collection("MorningImage")
+
+        let data: [String: Any] = [
+            "createdTime": Timestamp(date: Date()),
+            "imageURL": imageURL
+        ]
+        try await translateRef.addDocument(data: data)
     }
 
     func saveMessage(message: String, sender: String, completion: @escaping (Error?) -> Void) {
@@ -76,8 +95,11 @@ class FirestoreService {
                 let content = data["content"] as? String ?? ""
                 let sender = data["sender"] as? String ?? ""
                 let createdTime = data["createdTime"] as? Timestamp ?? Timestamp(date: Date())
+                
+                let date = createdTime.dateValue()
+                let timeString = DateFormatter.sharedFormatter.string(from: date)
 
-                let message = Message(content: content, sender: sender, createdTime: createdTime.dateValue())
+                let message = Message(content: content, sender: sender, createdTime: timeString)
                 messages.append(message)
             }
             completion(messages)
@@ -85,7 +107,7 @@ class FirestoreService {
     }
 
     func setupFirestoreListener(for collection: String, completion: @escaping () -> Void) -> ListenerRegistration? {
-        return db.collection(collection).addSnapshotListener { (querySnapshot, error) in
+        return db.collection(collection).addSnapshotListener { (_, error) in
             if let error = error {
                 print("Error listening to documents: \(error)")
             } else {

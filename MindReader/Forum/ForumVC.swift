@@ -10,105 +10,88 @@ import UIKit
 import Firebase
 import FirebaseFirestore
 
-class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
-    @IBOutlet weak var tableView: UITableView!
-
-    private let firebaseService = FirestoreService()
-    var listener: ListenerRegistration?
+class ForumVC: BasePostVC {
 
     let goEditButton = UIButton()
 
-    var posts: [Post] = []
+    private var refreshControl: UIRefreshControl!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .color
+//        setupUI()
 
-        listener = firebaseService.setupFirestoreListener(for: "posts") {
-            self.fetchPosts()
-        }
+        fetchPosts()
 
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.allowsSelection = false
+        refreshControl = UIRefreshControl()
+        tableView.addSubview(refreshControl)
 
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 100
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadTableData), name: NSNotification.Name("DataUpdated"), object: nil)
 
-        tableView.register(PostCell.self, forCellReuseIdentifier: "PostCell")
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadTableData), name: NSNotification.Name("RefreshDataNotification"), object: nil)
 
-        setUI()
+        refreshControl.addTarget(self, action: #selector(fetchPosts), for: UIControl.Event.valueChanged)
     }
 
-    func fetchPosts() {
+    @objc func reloadTableData() {
+        fetchPosts()
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    @objc private func fetchPosts() {
         posts.removeAll()
-        let db = Firestore.firestore()
-
-        db.collection("posts")
+        Firestore.firestore().collection("posts")
             .order(by: "createdTime", descending: true)
-            .getDocuments { (querySnapshot, error) in
-                guard let documents = querySnapshot?.documents, error == nil else {
-                    print("Error getting documents: \(String(describing: error))")
-                    return
-                }
-
-                documents.forEach { document in
-                    let data = document.data()
-
-                    if let title = data["title"] as? String,
-                       let timestamp = data["createdTime"] as? Timestamp,
-                       let id = data["id"] as? String,
-                       let category = data["category"] as? String,
-                       let content = data["content"] as? String,
-                       let authorData = data["author"] as? [String: Any],
-                       let authorEmail = authorData["email"] as? String,
-                       let authorId = authorData["id"] as? String,
-                       let authorName = authorData["name"] as? String {
-
-                        let image = data["image"] as? String
-
-                        let createdTimeString = DateFormatter.localizedString(
-                            from: timestamp.dateValue(),
-                            dateStyle: .medium,
-                            timeStyle: .none
-                        )
-
-                        let author = Author(email: authorEmail, id: authorId, name: authorName)
-                        let post = Post(title: title, createdTime: createdTimeString, id: id, category: category, content: content, image: image, author: author)
-                        self.posts.append(post)
-                    }
-                }
-
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
+            .getDocuments { [weak self] (querySnapshot, error) in
+            guard let documents = querySnapshot?.documents, error == nil else {
+                print("Error getting documents: \(String(describing: error))")
+                self?.refreshControl.endRefreshing()
+                return
             }
-    }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return posts.count
-    }
+            self?.posts = documents.compactMap { document in
+                let data = document.data()
+                guard let avatar = data["avatar"] as? Int,
+                      let title = data["title"] as? String,
+                      let timestamp = data["createdTime"] as? Timestamp,
+                      let id = data["id"] as? String,
+                      let category = data["category"] as? String,
+                      let content = data["content"] as? String,
+                      let authorData = data["author"] as? [String: Any],
+                      let authorEmail = authorData["email"] as? String,
+                      let authorId = authorData["id"] as? String,
+                      let authorName = authorData["name"] as? String
+                else { return nil }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as? PostCell else {
-            fatalError("Unable to dequeue PostCell")
+                let like = (data["like"] as? [String])?.count ?? 0
+                let commentCount = (data["Comments"] as? [[String: Any]])?.count ?? 0
+
+                let image = data["image"] as? String
+                let createdTimeString = DateFormatter.localizedString(
+                    from: timestamp.dateValue(),
+                    dateStyle: .medium, timeStyle: .none
+                )
+                let author = Author(email: authorEmail, id: authorId, name: authorName)
+                return Post(avatar: avatar, title: title, createdTime: createdTimeString, id: id, category: category, content: content, image: image, author: author, like: like, comment: commentCount)
+            }
+
+            DispatchQueue.main.async {
+                self?.setupUI()
+                self?.tableView.reloadData()
+                self?.refreshControl.endRefreshing()
+            }
         }
-
-        let post = posts[indexPath.row]
-        cell.articleTitle.text = post.title
-        cell.authorName.text = post.author.name
-        cell.createdTimeLabel.text = post.createdTime
-        cell.categoryLabel.text = post.category
-        cell.contentLabel.text = post.content
-
-        cell.configure(with: post.image)
-
-        return cell
     }
 
-    func setUI() {
+    private func setupUI() {
+        view.backgroundColor = .color
+        setupEditButton()
+    }
+
+    private func setupEditButton() {
         goEditButton.backgroundColor = UIColor.white
         goEditButton.setTitle("➕", for: .normal)
         goEditButton.layer.cornerRadius = 30
@@ -124,10 +107,11 @@ class ForumVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             goEditButton.widthAnchor.constraint(equalToConstant: 60),
             goEditButton.heightAnchor.constraint(equalToConstant: 60)
         ])
-        goEditButton.addTarget(self, action: #selector(click), for: .touchUpInside)
+
+        goEditButton.addTarget(self, action: #selector(navigateToEditPage), for: .touchUpInside)
     }
 
-    @objc func click(_ sender: UIButton) {
+    @objc func navigateToEditPage() {
         performSegue(withIdentifier: "toEditPage", sender: self)
     }
 }

@@ -6,8 +6,9 @@
 //
 
 import UIKit
+import IQKeyboardManagerSwift
 
-class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
+class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UITextViewDelegate {
 
     private var chatView: ChatView!
     private var messages: [Message] = []
@@ -30,12 +31,48 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         chatView.tableView.dataSource = self
         setUpActions()
         listenForMessages()
+
+        setupKeyboardObservers()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+         IQKeyboardManager.shared.enable = false
+        tabBarController?.tabBar.isHidden = true
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enable = true
+        tabBarController?.tabBar.isHidden = false
+    }
+
+    private func setupKeyboardObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+            let keyboardHeight = keyboardFrame.height
+            chatView.updateInputContainerBottomConstraint(by: -keyboardHeight + view.safeAreaInsets.bottom)
+        }
+    }
+
+    @objc func keyboardWillHide(_ notification: Notification) {
+        chatView.updateInputContainerBottomConstraint(by: 0)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     private func listenForMessages() {
-        firebaseService.listenForMessages(){ [weak self] newMessages in
+        firebaseService.listenForMessages { [weak self] newMessages in
             guard let self = self else { return }
             self.messages = newMessages
+            print(self.messages)
+
             self.chatView.tableView.reloadData()
 
             if !self.messages.isEmpty {
@@ -51,17 +88,11 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
 
-        chatView.textField.delegate = self
-
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-
-        inputContainerBottomConstraint = chatView.inputContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        inputContainerBottomConstraint.isActive = true
+        chatView.textView.delegate = self
     }
 
     @objc private func sendMessage(_ sender: UIButton) {
-        guard var text = chatView.textField.text, !text.isEmpty else { return }
+        guard var text = chatView.textView.text, !text.isEmpty else { return }
         let senderName = "0"
 
         firebaseService.saveMessage(message: text, sender: senderName) { error in
@@ -70,7 +101,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
                 return
             }
 
-            self.chatView.textField.text = ""
+            self.chatView.textView.text = ""
 
             let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
             self.chatView.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
@@ -118,7 +149,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         let message = messages[indexPath.row]
 
         let isIncoming = indexPath.row % 2 == 1
-        cell.configure(with: message.content, isIncoming: isIncoming)
+        cell.configure(with: message.content, time: message.createdTime, isIncoming: isIncoming)
 
         return cell
     }
@@ -136,35 +167,15 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        chatView.textField.resignFirstResponder()
+        chatView.textView.resignFirstResponder()
         return true
-    }
-
-    @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardHeight = keyboardFrame.cgRectValue.height
-
-            inputContainerBottomConstraint.constant = -keyboardHeight
-            UIView.animate(withDuration: 0.3) {
-                self.view.layoutIfNeeded()
-            }
-        }
-    }
-
-    @objc func keyboardWillHide(notification: NSNotification) {
-        inputContainerBottomConstraint.constant = 0
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-        }
     }
 
     private func formatPrompt(_ prompt: String) -> String {
         """
-        請你扮演一個溫柔又帶點幽默的朋友，跟我輕鬆聊聊天。
-        如果有些煩惱，希望你能給點安慰。
-        生活化的聊天，所以句子簡短即可。
-
-        \(prompt)
+        你是善解人意又帶點幽默的朋友。
+        請回覆訊息：
+        「\(prompt)」
         """
     }
 }

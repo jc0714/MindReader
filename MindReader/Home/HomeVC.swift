@@ -3,7 +3,6 @@
 //  MindReader
 //
 //  Created by J oyce on 2024/9/11.
-//
 
 import UIKit
 import Vision
@@ -14,12 +13,15 @@ import FirebaseStorage
 class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
 
     // MARK: - Properties
+
     private let homeView = HomeView()
+
     private let apiService = APIService()
-    private let textRecognizeService = TextRecognitionService()
     private let firestoreService = FirestoreService()
 
-    private var tag = 0
+    private let textRecognizeService = TextRecognitionService()
+
+    private var tag = 0 // 選擇傳圖片
     private var recognizedText: String = ""
 
     private var copiedText: String = ""
@@ -37,27 +39,42 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - Setup Actions
 
     private func setupActions() {
-        homeView.submitButton.addTarget(self, action: #selector(didTapSubmit), for: .touchUpInside)
+        homeView.chatButton.addTarget(self, action: #selector(toChatButtonTapped), for: .touchUpInside)
+ 
         homeView.imageButton.addTarget(self, action: #selector(showImageView), for: .touchUpInside)
         homeView.textButton.addTarget(self, action: #selector(enterText), for: .touchUpInside)
+
         homeView.chooseImageButton.addTarget(self, action: #selector(selectImageFromAlbum), for: .touchUpInside)
+
+        homeView.submitButton.addTarget(self, action: #selector(didTapSubmit), for: .touchUpInside)
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
 
-        homeView.promptTextField.delegate = self
         homeView.setupLabelGestures(target: self, action: #selector(copyLabelText))
 
         homeView.generateImageButton.addTarget(self, action: #selector(toGenerateButtonTapped), for: .touchUpInside)
     }
 
+    @objc func toChatButtonTapped(_ sender: UIButton) {
+        print("TAPPPPPED")
+        let chatVC = ChatVC()
+        navigationController?.pushViewController(chatVC, animated: true)
+    }
+
     // MARK: - Submit Action
 
     @objc private func didTapSubmit(_ sender: UIButton) {
+
         if sender.tag == 2 {
             showAlert(message: "請上傳有文字的訊息截圖，我來幫你解讀！")
             return
         }
+
+        // 可設置等待回應動畫
+
+//        sender.isUserInteractionEnabled = false
+//        sender.backgroundColor = .color
 
         let prompt = sender.tag == 1 ? homeView.promptTextField.text : recognizedText
 
@@ -97,6 +114,9 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                     try await firestoreService.saveToFirestore(prompt: prompt, response: response, imageURL: nil)
                 }
 
+                sender.isUserInteractionEnabled = true
+                sender.backgroundColor = .pink1
+
             } catch {
                 print("Failed to get response: \(error)")
             }
@@ -114,10 +134,14 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     }
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+
+        configureView(for: 0, isImageViewVisible: true)
+
         picker.dismiss(animated: true, completion: nil)
 
         if let image = info[.originalImage] as? UIImage {
             homeView.imageView.image = image
+            homeView.submitButton.tag = 0
             textRecognizeService.recognizeTextInImage(image: image) { recognizedText in
                 self.recognizedText = recognizedText
                 print("Recognized Text: \(recognizedText)")
@@ -131,12 +155,13 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - View Configuration
 
     @objc func showImageView() {
-        homeView.generateImageButton.isHidden = true
+        // 先顯示長輩圖按鈕
+        homeView.generateImageButton.isHidden = false
         configureView(for: 0, isImageViewVisible: true)
     }
 
     @objc func enterText() {
-        homeView.generateImageButton.isHidden = true
+//        homeView.generateImageButton.isHidden = true
         configureView(for: 1, isImageViewVisible: false)
     }
 
@@ -151,17 +176,13 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         homeView.replyLabel1.text = ""
         homeView.replyLabel2.text = ""
         homeView.replyLabel3.text = ""
+//        homeView.generateImageButton.isHidden = true
     }
 
     // MARK: - Keyboard Handling
 
     @objc func dismissKeyboard() {
         view.endEditing(true)
-    }
-
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        homeView.promptTextField.resignFirstResponder()
-        return true
     }
 
     // MARK: - Show Alert
@@ -175,12 +196,31 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - Copy Label Text
 
     @objc func copyLabelText(_ sender: UITapGestureRecognizer) {
+        showCopySuccessWithScaleAnimation()
         if let label = sender.view as? UILabel {
             UIPasteboard.general.string = label.text
             copiedText = label.text ?? "早安"
             print("Text copied: \(label.text ?? "")")
         }
         homeView.generateImageButton.isHidden = false
+    }
+
+    func showCopySuccessWithScaleAnimation() {
+        let copySuccessLabel = UILabel()
+        copySuccessLabel.text = "Copied✅"
+        copySuccessLabel.textColor = .white
+        copySuccessLabel.backgroundColor = .lightGray
+        copySuccessLabel.textAlignment = .center
+        copySuccessLabel.layer.cornerRadius = 8
+        copySuccessLabel.layer.masksToBounds = true
+        copySuccessLabel.frame = CGRect(x: 0, y: 0, width: 150, height: 40)
+        copySuccessLabel.center = CGPoint(x: self.view.center.x, y: self.view.frame.height - 150)
+        view.addSubview(copySuccessLabel)
+
+//        copySuccessLabel.transform = CGAffineTransform(scaleX: 1, y: 1)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            copySuccessLabel.removeFromSuperview()
+        }
     }
 
     @objc func toGenerateButtonTapped(_ sender: UIButton) {
@@ -197,22 +237,22 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     private func formatPrompt(_ prompt: String) -> String {
         """
-        你是一個善解人意的朋友，用溫柔的語氣回應。
-        請根據以下情況回覆，包括「possible_meanings：這句訊息背後意思」和「response_methods：可回覆訊息」兩個部分，各三個。
+        你現在是「另一半翻譯機」，盡量要顯得體貼。理解對方的潛在意圖，並提供可以複製去用的回覆訊息。
+        用下方訊息內容分析「possible_meanings：訊息背後隱含意義」和「response_methods：推薦回覆訊息」兩個部分，各三個。
 
-        \(prompt)
+        訊息內容：\(prompt)
 
         用繁體中文，以 JSON 格式：
         "content": {
             "possible_meanings": [
-                "第一個可能意思",
-                "第二個可能意思",
-                "第三個可能意思"
+                "",
+                "",
+                ""
             ],
             "response_methods": [
-                "第一個回覆",
-                "第二個回覆",
-                "第三個回覆"
+                "可回覆訊息1",
+                "可回覆訊息2",
+                "可回覆訊息3"
             ]
         }
         """

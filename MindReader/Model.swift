@@ -29,6 +29,7 @@ enum APIError: Error {
 // MARK: Forum
 
 struct Post {
+    var avatar: Int
     var title: String
     var createdTime: String
     var id: String
@@ -36,6 +37,8 @@ struct Post {
     var content: String
     var image: String?
     var author: Author
+    var like: Int
+    var comment: Int
 }
 
 struct Author {
@@ -44,10 +47,19 @@ struct Author {
     var name: String
 }
 
+// MARK: Comment
+
+struct Comment {
+    let author: String
+    let authorId: String
+    let content: String
+    let timestamp: Date
+}
+
 // MARK: Chat
 
 struct Message {
     let content: String
     let sender: String
-    let createdTime: Date
+    let createdTime: String
 }

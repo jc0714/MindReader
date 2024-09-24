@@ -7,30 +7,42 @@
 
 import Foundation
 import UIKit
+import Kingfisher
 
 class PostCell: UITableViewCell {
 
     private var isHeartSelected: Bool = false
 
+    var heartButtonTappedClosure: (() -> Void)?
+
+    var commentButtonTappedClosure: (() -> Void)?
+    var commentButtonLongPressClosure: (() -> Void)?
+
+    var authorTapAction: (() -> Void)?
+
+    var postImageHeightConstraint: NSLayoutConstraint!
+
+    let avatarImageView = UIImageView()
+
     let articleTitle: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 20)
-        label.backgroundColor = .yellow
+        label.backgroundColor = .color
         return label
     }()
 
     let authorName: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .darkGray
+        label.textColor = .pink1
         return label
     }()
 
     let categoryLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
-        label.backgroundColor = UIColor.lightGray
+        label.backgroundColor = .color
         label.textAlignment = .center
         return label
     }()
@@ -59,6 +71,14 @@ class PostCell: UITableViewCell {
         return button
     }()
 
+    let heartCount: UILabel = {
+        let label = UILabel()
+        label.text = "0"
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = .red
+        return label
+    }()
+
     let commentButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(systemName: "bubble"), for: .normal)
@@ -66,9 +86,28 @@ class PostCell: UITableViewCell {
         return button
     }()
 
+    let commentCount: UILabel = {
+        let label = UILabel()
+        label.text = "0"
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = .systemMint
+        return label
+    }()
+
+    lazy var commentView: UIView = {
+        return createStackedView(button: commentButton, label: commentCount)
+    }()
+
+    lazy var heartView: UIView = {
+        return createStackedView(button: heartButton, label: heartCount)
+    }()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(authorTapped))
+        authorName.addGestureRecognizer(tapGesture)
     }
 
     required init?(coder: NSCoder) {
@@ -77,11 +116,16 @@ class PostCell: UITableViewCell {
 
     private func setupViews() {
 
+        avatarImageView.contentMode = .scaleAspectFill
+        avatarImageView.clipsToBounds = true
+        avatarImageView.layer.cornerRadius = 35
+
         postImageView.contentMode = .scaleAspectFill
         postImageView.clipsToBounds = true
 
         heartButton.isUserInteractionEnabled = true
 
+        contentView.addSubview(avatarImageView)
         contentView.addSubview(articleTitle)
         contentView.addSubview(authorName)
         contentView.addSubview(categoryLabel)
@@ -89,12 +133,14 @@ class PostCell: UITableViewCell {
         contentView.addSubview(contentLabel)
         contentView.addSubview(postImageView)
         contentView.addSubview(heartButton)
-        contentView.addSubview(commentButton)
+        contentView.addSubview(heartView)
+        contentView.addSubview(commentView)
 
         setupConstraints()
     }
 
     private func setupConstraints() {
+        avatarImageView.translatesAutoresizingMaskIntoConstraints = false
         articleTitle.translatesAutoresizingMaskIntoConstraints = false
         authorName.translatesAutoresizingMaskIntoConstraints = false
         categoryLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -103,62 +149,75 @@ class PostCell: UITableViewCell {
         postImageView.translatesAutoresizingMaskIntoConstraints = false
         heartButton.translatesAutoresizingMaskIntoConstraints = false
         commentButton.translatesAutoresizingMaskIntoConstraints = false
+        heartView.translatesAutoresizingMaskIntoConstraints = false
+        commentView.translatesAutoresizingMaskIntoConstraints = false
+
+        postImageHeightConstraint = postImageView.heightAnchor.constraint(equalToConstant: 300)
+
+//        postImageHeightConstraint = postImageView.heightAnchor.constraint(lessThanOrEqualToConstant: 300)
+        postImageHeightConstraint.isActive = true
 
         NSLayoutConstraint.activate([
+            avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
+            avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+            avatarImageView.widthAnchor.constraint(equalToConstant: 70),
+            avatarImageView.heightAnchor.constraint(equalToConstant: 70),
+
             articleTitle.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            articleTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+            articleTitle.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
             articleTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
 
             authorName.topAnchor.constraint(equalTo: articleTitle.bottomAnchor, constant: 5),
-            authorName.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+            authorName.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
             authorName.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
 
             categoryLabel.topAnchor.constraint(equalTo: authorName.bottomAnchor, constant: 5),
-            categoryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+            categoryLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
             categoryLabel.widthAnchor.constraint(equalToConstant: 80),
-            categoryLabel.heightAnchor.constraint(equalToConstant: 25),
+//            categoryLabel.heightAnchor.constraint(equalToConstant: 25),
 
-            createdTimeLabel.centerYAnchor.constraint(equalTo: categoryLabel.centerYAnchor),
+            createdTimeLabel.topAnchor.constraint(equalTo: authorName.bottomAnchor),
             createdTimeLabel.leadingAnchor.constraint(equalTo: categoryLabel.trailingAnchor, constant: 10),
 
-            contentLabel.topAnchor.constraint(equalTo: categoryLabel.bottomAnchor, constant: 10),
-            contentLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
-            contentLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
+            contentLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 15),
+            contentLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            contentLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
 
             postImageView.topAnchor.constraint(equalTo: contentLabel.bottomAnchor, constant: 10),
-            postImageView.heightAnchor.constraint(equalToConstant: 200),
             postImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             postImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
-            postImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -80),
+            postImageView.bottomAnchor.constraint(equalTo: heartView.topAnchor, constant: -10),
 
-            heartButton.heightAnchor.constraint(equalToConstant: 50),
-            heartButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            heartButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
+            heartView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            heartView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
 
-            commentButton.heightAnchor.constraint(equalToConstant: 50),
-            commentButton.leadingAnchor.constraint(equalTo: heartButton.trailingAnchor, constant: 30),
-            commentButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15)
+            commentView.leadingAnchor.constraint(equalTo: heartView.trailingAnchor, constant: 30),
+            commentView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15)
         ])
+
+//        postImageHeightConstraint.isActive = false
+
         heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
+        commentButton.addTarget(self, action: #selector(commentButtonTapped), for: .touchUpInside)
     }
 
     func configure(with imageUrl: String?) {
         if let imageUrl = imageUrl, !imageUrl.isEmpty {
             postImageView.isHidden = false
-//            postImageHeightConstraint.isActive = true
+            postImageHeightConstraint.isActive = true
             loadImage(from: imageUrl)
         } else {
-            // 沒有圖片 URL，隱藏圖片
             postImageView.isHidden = true
-//            postImageHeightConstraint.isActive = false
+            postImageHeightConstraint.isActive = false
         }
+        layoutIfNeeded()
     }
 
     override func prepareForReuse() {
         articleTitle.text = ""
         authorName.text = ""
         categoryLabel.text = ""
-        categoryLabel.backgroundColor = UIColor.lightGray
+        categoryLabel.backgroundColor = .color
         createdTimeLabel.text = ""
         contentLabel.text = ""
         postImageView.image = nil
@@ -171,30 +230,50 @@ class PostCell: UITableViewCell {
             return
         }
 
-        URLSession.shared.dataTask(with: imageURL) {data, response, error in
-            if let error = error {
-                print("Failed to download image: \(error)")
-                return
+        postImageView.kf.setImage(with: imageURL, options: [
+            .transition(.fade(0.2)), // 圖片加載時淡入效果
+            .cacheOriginalImage      // 自動緩存圖片
+        ]) { [weak self] result in
+            switch result {
+            case .success(_):
+                self?.setNeedsLayout()
+                self?.layoutIfNeeded() // 如果需要立即更新佈局
+            case .failure(let error):
+                print("Image load failed: \(error)")
             }
-
-            guard let data = data, let image = UIImage(data: data) else {
-                print("Failed to convert data to image")
-                return
-            }
-
-            DispatchQueue.main.async {
-                self.postImageView.image = image
-            }
-        }.resume()
-    }
-
-    private func updateHeartButtonImage() {
-        let symbolName = isHeartSelected ? "heart.fill" : "heart"
-        heartButton.setImage((UIImage(systemName: symbolName)), for: .normal)
+        }
     }
 
     @objc func heartButtonTapped() {
-        isHeartSelected.toggle()
-        updateHeartButtonImage()
+        // 通知 VC
+        heartButtonTappedClosure?()
+    }
+
+    @objc private func commentButtonTapped() {
+        // 通知 VC
+        commentButtonTappedClosure?()
+    }
+
+    @objc private func authorTapped() {
+        authorTapAction?()
+    }
+
+    func createStackedView(button: UIButton, label: UILabel) -> UIView {
+        let view = UIView()
+        let stackView = UIStackView(arrangedSubviews: [button, label])
+        stackView.axis = .horizontal
+        stackView.spacing = 5
+        stackView.alignment = .center
+
+        view.addSubview(stackView)
+
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: view.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+        return view
     }
 }

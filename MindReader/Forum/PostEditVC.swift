@@ -1,5 +1,5 @@
 //
-//  EditVC.swift
+//  PostEditVC.swift
 //  MindReader
 //
 //  Created by J oyce on 2024/9/15.
@@ -10,14 +10,17 @@ import UIKit
 import Firebase
 import FirebaseFirestore
 
-class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
-    private var editView: EditView!
+    private var editView: PostEditView!
 
     private let firestoreService = FirestoreService()
 
+    private let imageNames = ["photo4", "photo5", "photo6", "photo7"]
+    var selectedAvatarIndex = 0
+
     override func loadView() {
-        editView = EditView()
+        editView = PostEditView()
         view = editView
     }
 
@@ -25,10 +28,25 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
         super.viewDidLoad()
         view.backgroundColor = .color
 
+        editView.avatarImage.image = UIImage(named: imageNames[selectedAvatarIndex])
+
         editView.publishButton.addTarget(self, action: #selector(click), for: .touchUpInside)
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
         editView.imageView.addGestureRecognizer(tapGesture)
+
+        let avatarTapGesture = UITapGestureRecognizer(target: self, action: #selector(changeAvatar))
+        editView.avatarImage.addGestureRecognizer(avatarTapGesture)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = true
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.tabBar.isHidden = false
     }
 
     @objc func click() {
@@ -43,11 +61,11 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
            let category = editView.categoryTextField.text, !category.isEmpty {
 
             do {
-                let imageURL: String? = nil
-
+                editView.publishButton.isUserInteractionEnabled = false
+                var imageURL: String?
                 if let image = editView.imageView.image?.jpegData(compressionQuality: 0.75) {
-                    let imageURL = try await firestoreService.uploadImage(imageData: image)
-                    print("Image URL: \(imageURL)")
+                    imageURL = try await firestoreService.uploadImage(imageData: image)
+                    print("Image URL: \(imageURL ?? "")")
                 }
 
                 let articles = Firestore.firestore().collection("posts")
@@ -58,11 +76,13 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
                         "id": "JJCC",
                         "name": "JC"
                     ],
+                    "avatar": selectedAvatarIndex,
                     "title": title,
                     "content": content,
                     "createdTime": Timestamp(date: Date()),
                     "id": document.documentID,
-                    "category": category
+                    "category": category,
+                    "like": []
                 ]
 
                 if let imageURL = imageURL {
@@ -76,10 +96,12 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
                     "postIds": FieldValue.arrayUnion([document.documentID])
                 ])
 
+                NotificationCenter.default.post(name: NSNotification.Name("DataUpdated"), object: nil)
+
                 DispatchQueue.main.async { [weak self] in
                     self?.navigationController?.popViewController(animated: true)
                 }
-
+                editView.publishButton.isUserInteractionEnabled = true
             } catch {
                 DispatchQueue.main.async { [weak self] in
                     let alert = UIAlertController(title: "錯誤", message: "圖片上傳或儲存過程中發生錯誤", preferredStyle: .alert)
@@ -112,5 +134,14 @@ class EditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationCon
 
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
+    }
+
+    @objc func changeAvatar() {
+        selectedAvatarIndex = (selectedAvatarIndex + 1) % imageNames.count
+        editView.avatarImage.image = UIImage(named: imageNames[selectedAvatarIndex])
+    }
+
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 }
