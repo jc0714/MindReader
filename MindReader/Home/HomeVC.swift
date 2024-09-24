@@ -116,7 +116,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
                 sender.isUserInteractionEnabled = true
                 sender.backgroundColor = .pink1
-
             } catch {
                 print("Failed to get response: \(error)")
             }
