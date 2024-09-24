@@ -19,7 +19,7 @@ class ForumVC: BasePostVC {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupUI()
+//        setupUI()
 
         fetchPosts()
 
@@ -79,6 +79,7 @@ class ForumVC: BasePostVC {
             }
 
             DispatchQueue.main.async {
+                self?.setupUI()
                 self?.tableView.reloadData()
                 self?.refreshControl.endRefreshing()
             }

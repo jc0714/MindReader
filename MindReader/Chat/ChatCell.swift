@@ -25,6 +25,23 @@ class ChatCell: UITableViewCell {
         return view
     }()
 
+    let readLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Reed"
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.textColor = .gray
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    let timeLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.textColor = .gray
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
     var leadingConstraint: NSLayoutConstraint!
     var trailingConstraint: NSLayoutConstraint!
 
@@ -33,6 +50,8 @@ class ChatCell: UITableViewCell {
 
         addSubview(bubbleBackgroundView)
         addSubview(messageLabel)
+        addSubview(readLabel)
+        addSubview(timeLabel)
 
         let constraints = [
             messageLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),
@@ -42,7 +61,13 @@ class ChatCell: UITableViewCell {
             bubbleBackgroundView.topAnchor.constraint(equalTo: messageLabel.topAnchor, constant: -8),
             bubbleBackgroundView.leadingAnchor.constraint(equalTo: messageLabel.leadingAnchor, constant: -16),
             bubbleBackgroundView.bottomAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 8),
-            bubbleBackgroundView.trailingAnchor.constraint(equalTo: messageLabel.trailingAnchor, constant: 16)
+            bubbleBackgroundView.trailingAnchor.constraint(equalTo: messageLabel.trailingAnchor, constant: 16),
+
+            readLabel.trailingAnchor.constraint(equalTo: bubbleBackgroundView.leadingAnchor, constant: -8),
+            readLabel.bottomAnchor.constraint(equalTo: bubbleBackgroundView.bottomAnchor, constant: -14),
+
+            timeLabel.trailingAnchor.constraint(equalTo: bubbleBackgroundView.leadingAnchor, constant: -8),
+            timeLabel.bottomAnchor.constraint(equalTo: bubbleBackgroundView.bottomAnchor)
         ]
         NSLayoutConstraint.activate(constraints)
 
@@ -54,16 +79,20 @@ class ChatCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with message: String, isIncoming: Bool) {
+    func configure(with message: String, time: String, isIncoming: Bool) {
         messageLabel.text = message
 
         leadingConstraint.isActive = false
         trailingConstraint.isActive = false
 
         if isIncoming {
+            readLabel.text = nil
+            timeLabel.text = nil
             leadingConstraint.isActive = true
             bubbleBackgroundView.backgroundColor = UIColor(white: 0.9, alpha: 1)
         } else {
+            readLabel.text = "Read"
+            timeLabel.text = time
             trailingConstraint.isActive = true
             bubbleBackgroundView.backgroundColor = UIColor.black
             messageLabel.textColor = .white

@@ -25,6 +25,12 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         setupTableView()
         loadLikedPosts()
 
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 300
+
+        print("Estimated Row Height: \(tableView.estimatedRowHeight)")
+        print("Row Height: \(tableView.rowHeight)")
+
         NotificationCenter.default.addObserver(self, selector: #selector(handleCommentCountUpdate(_:)), name: NSNotification.Name("CommentCountUpdated"), object: nil)
     }
 
@@ -41,9 +47,12 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.register(PostCell.self, forCellReuseIdentifier: "PostCell")
         tableView.delegate = self
         tableView.dataSource = self
-
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 100
+//
+//        tableView.rowHeight = UITableView.automaticDimension
+//        tableView.estimatedRowHeight = 100
+//
+//        print("Estimated Row Height: \(tableView.estimatedRowHeight)")
+//        print("Row Height: \(tableView.rowHeight)")
     }
 
     // 初始化的時候把按過讚的愛心填滿
@@ -99,10 +108,19 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
         cell.authorTapAction = { [weak self] in
             self?.fetchPostsByAuthor(authorId: post.author.id)
-        }   
+        }
+
+        cell.setNeedsLayout()
+        cell.layoutIfNeeded()
+
         return cell
     }
 
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        // 如果有這個方法，應避免返回固定高度，否則會覆蓋自動行高
+        return UITableView.automaticDimension
+    }
+ 
     func fetchPostsByAuthor(authorId: String) {
         print("Author TAPPEDDD")
     }

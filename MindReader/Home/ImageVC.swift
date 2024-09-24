@@ -34,13 +34,22 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
         generateImage(with: UIImage(named: "photo1")!)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = true
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
+
     private func setupConstraints() {
         imageCollectionView.translatesAutoresizingMaskIntoConstraints = false
         finalImageView.translatesAutoresizingMaskIntoConstraints = false
         saveButton.translatesAutoresizingMaskIntoConstraints = false
         shareButton.translatesAutoresizingMaskIntoConstraints = false
         saveToFireBaseButton.translatesAutoresizingMaskIntoConstraints = false
-
 
         NSLayoutConstraint.activate([
             // imageCollectionView constraints
@@ -172,6 +181,7 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
         Task {
             do {
                 let imageURL = try await firestoreService.uploadMorningImage(imageData: imageData)
+                try await firestoreService.saveToMorningImageToDatabase(imageURL: imageURL)
                 print("Image uploaded successfully, URL: \(imageURL)")
             } catch {
                 print("Failed to upload image: \(error)")

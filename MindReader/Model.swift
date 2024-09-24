@@ -61,5 +61,5 @@ struct Comment {
 struct Message {
     let content: String
     let sender: String
-    let createdTime: Date
+    let createdTime: String
 }

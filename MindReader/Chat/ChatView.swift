@@ -8,14 +8,15 @@
 import Foundation
 import UIKit
 
-class ChatView: UIView {
+class ChatView: UIView, UITextViewDelegate {
 
     let tableView = UITableView(frame: .zero, style: .plain)
-    let textField = UITextField()
+    let textView = UITextView()
     let sendButton = UIButton(type: .system)
     let inputContainer = UIView()
 
     var inputContainerBottomConstraint: NSLayoutConstraint!
+    var textViewHeightConstraint: NSLayoutConstraint!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -45,18 +46,23 @@ class ChatView: UIView {
     }
 
     private func setupInputView() {
-        inputContainer.backgroundColor = .white
+        inputContainer.backgroundColor = .color
         inputContainer.translatesAutoresizingMaskIntoConstraints = false
         addSubview(inputContainer)
 
-        textField.borderStyle = .roundedRect
-        textField.placeholder = "Enter message"
-        textField.translatesAutoresizingMaskIntoConstraints = false
+        textView.isScrollEnabled = false
+        textView.layer.borderWidth = 1.0
+        textView.layer.borderColor = UIColor.lightGray.cgColor
+        textView.layer.cornerRadius = 16
+        textView.font = UIFont.systemFont(ofSize: 16)
+        textView.delegate = self
+        textView.translatesAutoresizingMaskIntoConstraints = false
 
-        sendButton.setImage(UIImage(systemName: "paperplane"), for: .normal)
+        sendButton.setImage(UIImage(systemName: "paperplane.fill"), for: .normal)
+        sendButton.tintColor = .systemBlue
         sendButton.translatesAutoresizingMaskIntoConstraints = false
 
-        inputContainer.addSubview(textField)
+        inputContainer.addSubview(textView)
         inputContainer.addSubview(sendButton)
 
         inputContainerBottomConstraint = inputContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
@@ -65,17 +71,18 @@ class ChatView: UIView {
         NSLayoutConstraint.activate([
             inputContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
             inputContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            inputContainer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-            inputContainer.heightAnchor.constraint(equalToConstant: 100),
 
-            textField.leadingAnchor.constraint(equalTo: inputContainer.leadingAnchor, constant: 8),
-            textField.topAnchor.constraint(equalTo: inputContainer.topAnchor, constant: 8),
-            textField.bottomAnchor.constraint(equalTo: inputContainer.bottomAnchor, constant: -8),
-            textField.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -8),
-            textField.widthAnchor.constraint(equalToConstant: 300),
-
+            // Send Button Constraints
             sendButton.trailingAnchor.constraint(equalTo: inputContainer.trailingAnchor, constant: -8),
-            sendButton.centerYAnchor.constraint(equalTo: inputContainer.centerYAnchor)
+            sendButton.bottomAnchor.constraint(equalTo: inputContainer.bottomAnchor, constant: -8),
+            sendButton.widthAnchor.constraint(equalToConstant: 40),
+            sendButton.heightAnchor.constraint(equalToConstant: 40),
+
+            // TextView Constraints
+            textView.topAnchor.constraint(equalTo: inputContainer.topAnchor, constant: 8),
+            textView.leadingAnchor.constraint(equalTo: inputContainer.leadingAnchor, constant: 8),
+            textView.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -8),
+            textView.bottomAnchor.constraint(equalTo: inputContainer.bottomAnchor, constant: -8)
         ])
     }
 
@@ -84,5 +91,20 @@ class ChatView: UIView {
         UIView.animate(withDuration: 0.3) {
             self.layoutIfNeeded()
         }
+    }
+
+    // MARK: - UITextViewDelegate
+
+    func textViewDidChange(_ textView: UITextView) {
+//        let size = CGSize(width: 200, height: 50)
+//        let estimatedSize = textView.sizeThatFits(size)
+//
+//        let maxHeight: CGFloat = 150
+//        textView.isScrollEnabled = estimatedSize.height > maxHeight
+//        textViewHeightConstraint.constant = min(estimatedSize.height, maxHeight)
+//
+//        UIView.animate(withDuration: 0.2) {
+//            self.layoutIfNeeded()
+//        }
     }
 }

@@ -91,7 +91,6 @@
                     <connections>
                         <segue destination="mDq-pZ-rK6" kind="relationship" relationship="viewControllers" id="RDF-rK-BMK"/>
                         <segue destination="ylS-MV-piL" kind="relationship" relationship="viewControllers" id="UUr-YL-Lel"/>
-                        <segue destination="gyd-UF-umF" kind="relationship" relationship="viewControllers" id="7ce-eS-NKN"/>
                         <segue destination="4Rq-UE-0S6" kind="relationship" relationship="viewControllers" id="AWx-1H-txb"/>
                         <segue destination="aEz-Tn-fhf" kind="relationship" relationship="viewControllers" id="bc5-9R-wTi"/>
                     </connections>
@@ -111,10 +110,11 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="ellipsis.message.fill" catalog="system" id="v53-Lb-JUH"/>
+                    <navigationItem key="navigationItem" id="BP0-xC-8mn"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ouN-TC-FgO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="723" y="711"/>
+            <point key="canvasLocation" x="-2010" y="2162"/>
         </scene>
         <!--RecordVC-->
         <scene sceneID="Fu6-Vb-wcH">

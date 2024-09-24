@@ -13,12 +13,15 @@ import FirebaseStorage
 class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
 
     // MARK: - Properties
+
     private let homeView = HomeView()
+
     private let apiService = APIService()
-    private let textRecognizeService = TextRecognitionService()
     private let firestoreService = FirestoreService()
 
-    private var tag = 0
+    private let textRecognizeService = TextRecognitionService()
+
+    private var tag = 0 // 選擇傳圖片
     private var recognizedText: String = ""
 
     private var copiedText: String = ""
@@ -36,10 +39,14 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - Setup Actions
 
     private func setupActions() {
-        homeView.submitButton.addTarget(self, action: #selector(didTapSubmit), for: .touchUpInside)
+        homeView.chatButton.addTarget(self, action: #selector(toChatButtonTapped), for: .touchUpInside)
+ 
         homeView.imageButton.addTarget(self, action: #selector(showImageView), for: .touchUpInside)
         homeView.textButton.addTarget(self, action: #selector(enterText), for: .touchUpInside)
+
         homeView.chooseImageButton.addTarget(self, action: #selector(selectImageFromAlbum), for: .touchUpInside)
+
+        homeView.submitButton.addTarget(self, action: #selector(didTapSubmit), for: .touchUpInside)
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
@@ -47,6 +54,12 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         homeView.setupLabelGestures(target: self, action: #selector(copyLabelText))
 
         homeView.generateImageButton.addTarget(self, action: #selector(toGenerateButtonTapped), for: .touchUpInside)
+    }
+
+    @objc func toChatButtonTapped(_ sender: UIButton) {
+        print("TAPPPPPED")
+        let chatVC = ChatVC()
+        navigationController?.pushViewController(chatVC, animated: true)
     }
 
     // MARK: - Submit Action

@@ -34,4 +34,12 @@ class AlbumCell: UICollectionViewCell {
         }.resume()
     }
     // swiftlint:enable unused_closure_parameter
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        // 重置 imageView 的圖片，避免顯示舊圖片
+        imageView.image = nil
+    }
+
 }

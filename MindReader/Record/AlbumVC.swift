@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import Firebase
 import FirebaseStorage
 
 class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -17,11 +18,23 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
 
     let layout = UICollectionViewFlowLayout()
 
+    var refreshControl = UIRefreshControl()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .pink3
+
         setupCollectionView()
+
+        setUpAction()
         fetchImagesFromFirebase()
+    }
+
+    func setUpAction() {
+        refreshControl = UIRefreshControl()
+        collectionView.refreshControl = refreshControl
+
+        refreshControl.addTarget(self, action: #selector(fetchImagesFromFirebase), for: UIControl.Event.valueChanged)
     }
 
     func setupCollectionView() {
@@ -47,43 +60,90 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
         ])
     }
 
-    func fetchImagesFromFirebase() {
+    @objc func fetchImagesFromFirebase() {
+        var newImageUrls: [URL] = []
+
         let userId = "9Y2GjnVg8TEoze0GUJSU"
+        let db = Firestore.firestore()
 
-        let imagesRef = storageRef.child("MorningImages/\(userId)/")
+        let translateRef = db.collection("Users").document(userId).collection("MorningImage")
 
-        imagesRef.listAll { [weak self] (result, error) in
-            guard let self = self else { return }
+        // 按 createdTime 排序
+        translateRef.order(by: "createdTime", descending: true).getDocuments { snapshot, error in
             if let error = error {
-                print("Error listing images: \(error.localizedDescription)")
+                print("Error fetching documents: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    self.refreshControl.endRefreshing()  // 確保失敗時停止刷新動畫
+                }
                 return
             }
 
-            guard let items = result?.items, !items.isEmpty else {
-                print("No images found.")
+            guard let documents = snapshot?.documents else {
+                print("No documents found")
+                DispatchQueue.main.async {
+                    self.refreshControl.endRefreshing()  // 當沒有文件時也停止刷新動畫
+                }
                 return
             }
 
-            self.imageUrls.removeAll()
-
-            let dispatchGroup = DispatchGroup()
-
-            for item in items {
-                dispatchGroup.enter()
-                item.downloadURL { url, error in
-                    if let error = error {
-                        print("Error getting download URL: \(error.localizedDescription)")
-                    } else if let url = url {
-                        self.imageUrls.append(url)
-                    }
-                    dispatchGroup.leave()
+            // 遍歷每個文檔，並從中提取圖片 URL
+            for document in documents {
+                let data = document.data()
+                if let imageURLString = data["imageURL"] as? String, let imageURL = URL(string: imageURLString) {
+                    newImageUrls.append(imageURL)
                 }
             }
-            dispatchGroup.notify(queue: .main) {
+
+            // 所有圖片連結加載完成後，更新 UI
+            DispatchQueue.main.async {
+                self.imageUrls = newImageUrls
                 self.collectionView.reloadData()
+                self.refreshControl.endRefreshing()  // 成功時停止刷新動畫
             }
         }
     }
+
+//    @objc func fetchImagesFromFirebase() {
+//
+//        var newImageUrls: [URL] = []
+//
+//        let userId = "9Y2GjnVg8TEoze0GUJSU"
+//        let db = Firestore.firestore()
+//
+//        let translateRef = db.collection("Users").document(userId).collection("MorningImage")
+//
+//        translateRef.order(by: "createdTime", descending: true).getDocuments { snapshot, error in
+//            if let error = error {
+//                print("Error fetching documents: \(error.localizedDescription)")
+//                return
+//            }
+//
+//            guard let documents = snapshot?.documents else {
+//                print("No documents found")
+//                return
+//            }
+//
+//            let dispatchGroup = DispatchGroup()
+//
+//            // 4. 遍歷每個文檔，並從中提取圖片 URL
+//            for document in documents {
+//                let data = document.data()
+//                if let imageURLString = data["imageURL"] as? String, let imageURL = URL(string: imageURLString) {
+//                    dispatchGroup.enter()
+//                    newImageUrls.append(imageURL)
+//                    dispatchGroup.leave()
+//                }
+//            }
+//
+//            // 5. 當所有圖片連結加載完成後，更新 UI
+//            dispatchGroup.notify(queue: .main) {
+//                self.imageUrls = newImageUrls
+//
+//                self.collectionView.reloadData()
+//                self.refreshControl.endRefreshing()
+//            }
+//        }
+//    }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return imageUrls.count

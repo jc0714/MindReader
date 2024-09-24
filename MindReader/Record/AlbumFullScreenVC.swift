@@ -67,6 +67,8 @@ class AlbumFullScreenVC: UIViewController, UICollectionViewDelegate, UICollectio
     func setupToolbar() {
         let toolbar = UIToolbar()
         toolbar.translatesAutoresizingMaskIntoConstraints = false
+        toolbar.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        toolbar.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         view.addSubview(toolbar)
 
         toolbar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
@@ -76,7 +78,8 @@ class AlbumFullScreenVC: UIViewController, UICollectionViewDelegate, UICollectio
         let shareButton = UIBarButtonItem(title: "Share", style: .plain, target: self, action: #selector(shareImage))
         let deleteButton = UIBarButtonItem(title: "Delete", style: .plain, target: self, action: #selector(deleteImage))
 
-        toolbar.setItems([saveButton, shareButton, deleteButton], animated: false)
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        toolbar.setItems([saveButton, flexibleSpace, shareButton, flexibleSpace, deleteButton], animated: false)
 
         NSLayoutConstraint.activate([
             toolbar.bottomAnchor.constraint(equalTo: view.bottomAnchor),

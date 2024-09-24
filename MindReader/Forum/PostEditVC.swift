@@ -118,7 +118,6 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
         }
     }
 
-// swiftlint:disable function_body_length
     @objc func imageViewTapped() {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self

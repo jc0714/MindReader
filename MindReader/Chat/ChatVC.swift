@@ -8,7 +8,7 @@
 import UIKit
 import IQKeyboardManagerSwift
 
-class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
+class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UITextViewDelegate {
 
     private var chatView: ChatView!
     private var messages: [Message] = []
@@ -38,11 +38,13 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
          IQKeyboardManager.shared.enable = false
+        tabBarController?.tabBar.isHidden = true
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         IQKeyboardManager.shared.enable = true
+        tabBarController?.tabBar.isHidden = false
     }
 
     private func setupKeyboardObservers() {
@@ -69,6 +71,8 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         firebaseService.listenForMessages { [weak self] newMessages in
             guard let self = self else { return }
             self.messages = newMessages
+            print(self.messages)
+
             self.chatView.tableView.reloadData()
 
             if !self.messages.isEmpty {
@@ -84,11 +88,11 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
 
-        chatView.textField.delegate = self
+        chatView.textView.delegate = self
     }
 
     @objc private func sendMessage(_ sender: UIButton) {
-        guard var text = chatView.textField.text, !text.isEmpty else { return }
+        guard var text = chatView.textView.text, !text.isEmpty else { return }
         let senderName = "0"
 
         firebaseService.saveMessage(message: text, sender: senderName) { error in
@@ -97,7 +101,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
                 return
             }
 
-            self.chatView.textField.text = ""
+            self.chatView.textView.text = ""
 
             let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
             self.chatView.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
@@ -145,7 +149,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         let message = messages[indexPath.row]
 
         let isIncoming = indexPath.row % 2 == 1
-        cell.configure(with: message.content, isIncoming: isIncoming)
+        cell.configure(with: message.content, time: message.createdTime, isIncoming: isIncoming)
 
         return cell
     }
@@ -163,17 +167,15 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        chatView.textField.resignFirstResponder()
+        chatView.textView.resignFirstResponder()
         return true
     }
 
     private func formatPrompt(_ prompt: String) -> String {
         """
-        請你扮演一個溫柔又帶點幽默的朋友，跟我輕鬆聊聊天。
-        如果有些煩惱，希望你能給點安慰。
-        生活化的聊天，所以句子簡短即可。
-
-        \(prompt)
+        你是善解人意又帶點幽默的朋友。
+        請回覆訊息：
+        「\(prompt)」
         """
     }
 }

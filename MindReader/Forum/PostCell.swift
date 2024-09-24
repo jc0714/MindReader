@@ -28,7 +28,7 @@ class PostCell: UITableViewCell {
         let label = UILabel()
         label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 20)
-        label.backgroundColor = .pink3
+        label.backgroundColor = .color
         return label
     }()
 
@@ -152,7 +152,9 @@ class PostCell: UITableViewCell {
         heartView.translatesAutoresizingMaskIntoConstraints = false
         commentView.translatesAutoresizingMaskIntoConstraints = false
 
-        postImageHeightConstraint = postImageView.heightAnchor.constraint(lessThanOrEqualToConstant: 300)
+        postImageHeightConstraint = postImageView.heightAnchor.constraint(equalToConstant: 300)
+
+//        postImageHeightConstraint = postImageView.heightAnchor.constraint(lessThanOrEqualToConstant: 300)
         postImageHeightConstraint.isActive = true
 
         NSLayoutConstraint.activate([
@@ -172,30 +174,28 @@ class PostCell: UITableViewCell {
             categoryLabel.topAnchor.constraint(equalTo: authorName.bottomAnchor, constant: 5),
             categoryLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
             categoryLabel.widthAnchor.constraint(equalToConstant: 80),
-            categoryLabel.heightAnchor.constraint(equalToConstant: 25),
+//            categoryLabel.heightAnchor.constraint(equalToConstant: 25),
 
-            createdTimeLabel.centerYAnchor.constraint(equalTo: categoryLabel.centerYAnchor),
+            createdTimeLabel.topAnchor.constraint(equalTo: authorName.bottomAnchor),
             createdTimeLabel.leadingAnchor.constraint(equalTo: categoryLabel.trailingAnchor, constant: 10),
 
             contentLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 15),
             contentLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            contentLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
+            contentLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
 
             postImageView.topAnchor.constraint(equalTo: contentLabel.bottomAnchor, constant: 10),
             postImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             postImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             postImageView.bottomAnchor.constraint(equalTo: heartView.topAnchor, constant: -10),
 
-            heartView.heightAnchor.constraint(equalToConstant: 50),
             heartView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             heartView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
 
-            commentView.heightAnchor.constraint(equalToConstant: 50),
             commentView.leadingAnchor.constraint(equalTo: heartView.trailingAnchor, constant: 30),
             commentView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15)
         ])
 
-        postImageHeightConstraint.isActive = false
+//        postImageHeightConstraint.isActive = false
 
         heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
         commentButton.addTarget(self, action: #selector(commentButtonTapped), for: .touchUpInside)
@@ -210,7 +210,6 @@ class PostCell: UITableViewCell {
             postImageView.isHidden = true
             postImageHeightConstraint.isActive = false
         }
-        setNeedsLayout()
         layoutIfNeeded()
     }
 
@@ -231,11 +230,18 @@ class PostCell: UITableViewCell {
             return
         }
 
-        // 使用 Kingfisher 加載圖片，無需 placeholder
         postImageView.kf.setImage(with: imageURL, options: [
             .transition(.fade(0.2)), // 圖片加載時淡入效果
             .cacheOriginalImage      // 自動緩存圖片
-        ])
+        ]) { [weak self] result in
+            switch result {
+            case .success(_):
+                self?.setNeedsLayout()
+                self?.layoutIfNeeded() // 如果需要立即更新佈局
+            case .failure(let error):
+                print("Image load failed: \(error)")
+            }
+        }
     }
 
     @objc func heartButtonTapped() {

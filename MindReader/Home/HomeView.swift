@@ -10,6 +10,15 @@ import UIKit
 
 class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
+    let chatButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(systemName: "ellipsis.message"), for: .normal)
+        button.tintColor = .pink3
+        button.layer.cornerRadius = 10
+        return button
+    }()
+
     let imageButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -39,6 +48,9 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
+        label.backgroundColor = .pink1
+        label.layer.cornerRadius = 5
+        label.layer.masksToBounds = true
         return label
     }()
 
@@ -46,6 +58,9 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
+        label.backgroundColor = .pink1
+        label.layer.cornerRadius = 5
+        label.layer.masksToBounds = true
         return label
     }()
 
@@ -53,6 +68,9 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
+        label.backgroundColor = .pink1
+        label.layer.cornerRadius = 5
+        label.layer.masksToBounds = true
         return label
     }()
 
@@ -124,6 +142,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
     private func configureUI() {
         backgroundColor = .systemBackground
 
+        addSubview(chatButton)
         addSubview(imageButton)
         addSubview(textButton)
 
@@ -153,6 +172,9 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 //        generateImageButton.isHidden = true
 
         NSLayoutConstraint.activate([
+            chatButton.topAnchor.constraint(equalTo: topAnchor, constant: 100),
+            chatButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20),
+
             imageButton.topAnchor.constraint(equalTo: topAnchor, constant: 100),
             imageButton.leadingAnchor.constraint(equalTo: centerXAnchor, constant: -120),
             imageButton.widthAnchor.constraint(equalToConstant: 100),
