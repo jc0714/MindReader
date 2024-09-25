@@ -236,7 +236,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     private func formatPrompt(_ prompt: String) -> String {
         """
-        你現在是「另一半翻譯機」，盡量要顯得體貼。理解對方的潛在意圖，並提供可以複製去用的回覆訊息。
+        你是「另一半翻譯機」，盡量要顯得體貼。理解對方的潛在意圖，並提供可以複製去用的回覆訊息。
         用下方訊息內容分析「possible_meanings：訊息背後隱含意義」和「response_methods：推薦回覆訊息」兩個部分，各三個。
 
         訊息內容：\(prompt)

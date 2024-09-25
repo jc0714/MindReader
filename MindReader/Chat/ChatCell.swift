@@ -85,6 +85,7 @@ class ChatCell: UITableViewCell {
         leadingConstraint.isActive = false
         trailingConstraint.isActive = false
 
+        // 對方的訊息
         if isIncoming {
             readLabel.text = nil
             timeLabel.text = nil

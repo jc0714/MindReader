@@ -203,7 +203,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             submitButton.topAnchor.constraint(equalTo: promptTextField.bottomAnchor, constant: 20),
             submitButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             submitButton.widthAnchor.constraint(equalToConstant: 300),
-            submitButton.heightAnchor.constraint(equalToConstant: 60),
+            submitButton.heightAnchor.constraint(equalToConstant: 50),
 
             responseLabel.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 30),
             responseLabel.centerXAnchor.constraint(equalTo: centerXAnchor),

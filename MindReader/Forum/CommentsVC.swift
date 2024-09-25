@@ -88,13 +88,13 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 60),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -60) // 留出空间给输入区域
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -60)
         ])
     }
 
     private func setupCloseButton() {
         let closeButton = UIButton(type: .system)
-        closeButton.setTitle("關閉", for: .normal)
+        closeButton.setTitle("close", for: .normal)
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
 
         view.addSubview(closeButton)

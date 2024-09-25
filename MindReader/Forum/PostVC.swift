@@ -47,12 +47,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.register(PostCell.self, forCellReuseIdentifier: "PostCell")
         tableView.delegate = self
         tableView.dataSource = self
-//
-//        tableView.rowHeight = UITableView.automaticDimension
-//        tableView.estimatedRowHeight = 100
-//
-//        print("Estimated Row Height: \(tableView.estimatedRowHeight)")
-//        print("Row Height: \(tableView.rowHeight)")
     }
 
     // 初始化的時候把按過讚的愛心填滿
@@ -117,7 +111,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        // 如果有這個方法，應避免返回固定高度，否則會覆蓋自動行高
         return UITableView.automaticDimension
     }
  
@@ -125,8 +118,15 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         print("Author TAPPEDDD")
     }
 
-    // 更新愛心實心空心狀態
+    // 當點擊 post 時跳轉到詳細頁面
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedPost = posts[indexPath.row]
+        let detailVC = DetailVC()
+        detailVC.post = selectedPost // 將所選的 post 資料傳遞到 DetailVC
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
 
+    // 更新愛心實心空心狀態
     func updateHeartBtn(at indexPath: IndexPath) {
         var post = posts[indexPath.row]
         let postId = post.id
