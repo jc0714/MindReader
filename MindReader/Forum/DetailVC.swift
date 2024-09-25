@@ -42,6 +42,8 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
             self.postId = postId
             fetchComments(for: postId)
         }
+
+        NotificationCenter.default.addObserver(self, selector: #selector(handleCommentCountUpdate(_:)), name: NSNotification.Name("CommentCountUpdated"), object: nil)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -242,5 +244,25 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
             }
         }
 
+    }
+
+    @objc private func handleCommentCountUpdate(_ notification: Notification) {
+        // 獲取通知中的 postId 和新的留言數量
+        guard let userInfo = notification.userInfo,
+              let postId = userInfo["postId"] as? String,
+              let newCommentCount = userInfo["count"] as? Int else {
+            return
+        }
+
+        // 確保更新對應的 post
+        if post?.id == postId {
+            post?.comment = newCommentCount // 更新 post 的 comment 屬性
+            DispatchQueue.main.async {
+                // 獲取對應的 cell 並更新顯示
+                if let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? PostCell {
+                    cell.commentCount.text = "\(newCommentCount)" // 更新留言數量
+                }
+            }
+        }
     }
 }
