@@ -57,7 +57,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     }
 
     @objc func toChatButtonTapped(_ sender: UIButton) {
-        print("TAPPPPPED")
         let chatVC = ChatVC()
         navigationController?.pushViewController(chatVC, animated: true)
     }

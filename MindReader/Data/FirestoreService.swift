@@ -95,7 +95,7 @@ class FirestoreService {
                 let content = data["content"] as? String ?? ""
                 let sender = data["sender"] as? String ?? ""
                 let createdTime = data["createdTime"] as? Timestamp ?? Timestamp(date: Date())
-                
+     
                 let date = createdTime.dateValue()
                 let timeString = DateFormatter.sharedFormatter.string(from: date)
 

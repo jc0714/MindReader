@@ -169,15 +169,7 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
                 return UITableViewCell()
             }
             if let post = post {
-                cell.avatarImageView.image = UIImage(named: imageNames[post.avatar])
-                cell.articleTitle.text = post.title
-                cell.authorName.text = post.author.name
-                cell.createdTimeLabel.text = post.createdTime
-                cell.categoryLabel.text = post.category
-                cell.contentLabel.text = post.content
-                cell.heartCount.text = String(post.like)
-                cell.commentCount.text = String(post.comment)
-                cell.configure(with: post.image)
+                cell.configure(with: post, imageUrl: post.image)
 
                 if BasePostVC.likedPosts.contains(post.id) {
                     cell.heartButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)

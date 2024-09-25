@@ -28,10 +28,8 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 300
 
-        print("Estimated Row Height: \(tableView.estimatedRowHeight)")
-        print("Row Height: \(tableView.rowHeight)")
-
         NotificationCenter.default.addObserver(self, selector: #selector(handleCommentCountUpdate(_:)), name: NSNotification.Name("CommentCountUpdated"), object: nil)
+
     }
 
     // 配置 TableView
@@ -75,16 +73,10 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             fatalError("Unable to dequeue PostCell")
         }
 
+        cell.selectionStyle = .none
+
         let post = posts[indexPath.row]
-        cell.avatarImageView.image = UIImage(named: imageNames[post.avatar])
-        cell.articleTitle.text = post.title
-        cell.authorName.text = post.author.name
-        cell.createdTimeLabel.text = post.createdTime
-        cell.categoryLabel.text = post.category
-        cell.contentLabel.text = post.content
-        cell.heartCount.text = String(post.like)
-        cell.commentCount.text = String(post.comment)
-        cell.configure(with: post.image)
+        cell.configure(with: post, imageUrl: post.image)
 
         if BasePostVC.likedPosts.contains(post.id) {
             cell.heartButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
@@ -113,7 +105,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
- 
+
     func fetchPostsByAuthor(authorId: String) {
         print("Author TAPPEDDD")
     }
@@ -128,6 +120,9 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     // 更新愛心實心空心狀態
     func updateHeartBtn(at indexPath: IndexPath) {
+        //        var post = posts[indexPath.row]
+        //        PostManager.shared.updateHeartBtn(for: &post, postId: post.id, userRef: userRef, userId: userId, at: indexPath, in: tableView)
+        //    }
         var post = posts[indexPath.row]
         let postId = post.id
         let cell = tableView.cellForRow(at: indexPath) as? PostCell
@@ -169,7 +164,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 print("Error updating likes: \(error.localizedDescription)")
             }
         }
-
     }
 
     // 連結到留言 VC
@@ -194,4 +188,9 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             cell.commentCount.text = "\(count)"
         }
     }
+
+//    @objc private func handleCommentCountUpdate(_ notification: Notification) {
+//        guard let postIndex = posts.firstIndex(where: { $0.id == notification.userInfo?["postId"] as? String }) else { return }
+//        PostManager.shared.handleCommentCountUpdate(for: &posts[postIndex], notification, in: tableView)
+//    }
 }

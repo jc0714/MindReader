@@ -70,10 +70,10 @@ class ForumVC: BasePostVC {
                 let commentCount = (data["Comments"] as? [[String: Any]])?.count ?? 0
 
                 let image = data["image"] as? String
-                let createdTimeString = DateFormatter.localizedString(
-                    from: timestamp.dateValue(),
-                    dateStyle: .medium, timeStyle: .none
-                )
+
+                let date = timestamp.dateValue()
+                let createdTimeString = DateFormatter.yyyyMMddFormatter.string(from: date)
+
                 let author = Author(email: authorEmail, id: authorId, name: authorName)
                 return Post(avatar: avatar, title: title, createdTime: createdTimeString, id: id, category: category, content: content, image: image, author: author, like: like, comment: commentCount)
             }

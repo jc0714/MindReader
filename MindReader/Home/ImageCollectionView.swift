@@ -100,4 +100,3 @@ class ImageCollectionView: UIView, UICollectionViewDelegate, UICollectionViewDat
         }
     }
 }
-

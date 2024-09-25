@@ -11,6 +11,8 @@ import Kingfisher
 
 class PostCell: UITableViewCell {
 
+    let imageNames = ["photo4", "photo5", "photo6", "photo7"]
+
     private var isHeartSelected: Bool = false
 
     var heartButtonTappedClosure: (() -> Void)?
@@ -153,7 +155,6 @@ class PostCell: UITableViewCell {
         commentView.translatesAutoresizingMaskIntoConstraints = false
 
         postImageHeightConstraint = postImageView.heightAnchor.constraint(equalToConstant: 300)
-
 //        postImageHeightConstraint = postImageView.heightAnchor.constraint(lessThanOrEqualToConstant: 300)
         postImageHeightConstraint.isActive = true
 
@@ -176,7 +177,7 @@ class PostCell: UITableViewCell {
             categoryLabel.widthAnchor.constraint(equalToConstant: 80),
 //            categoryLabel.heightAnchor.constraint(equalToConstant: 25),
 
-            createdTimeLabel.topAnchor.constraint(equalTo: authorName.bottomAnchor),
+            createdTimeLabel.bottomAnchor.constraint(equalTo: categoryLabel.bottomAnchor),
             createdTimeLabel.leadingAnchor.constraint(equalTo: categoryLabel.trailingAnchor, constant: 10),
 
             contentLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 15),
@@ -201,7 +202,17 @@ class PostCell: UITableViewCell {
         commentButton.addTarget(self, action: #selector(commentButtonTapped), for: .touchUpInside)
     }
 
-    func configure(with imageUrl: String?) {
+    func configure(with post: Post, imageUrl: String?) {
+
+        avatarImageView.image = UIImage(named: imageNames[post.avatar])
+        articleTitle.text = post.title
+        authorName.text = post.author.name
+        createdTimeLabel.text = post.createdTime
+        categoryLabel.text = post.category
+        contentLabel.text = post.content
+        heartCount.text = String(post.like)
+        commentCount.text = String(post.comment)
+
         if let imageUrl = imageUrl, !imageUrl.isEmpty {
             postImageView.isHidden = false
             postImageHeightConstraint.isActive = true

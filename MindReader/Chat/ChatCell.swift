@@ -42,8 +42,11 @@ class ChatCell: UITableViewCell {
         return label
     }()
 
-    var leadingConstraint: NSLayoutConstraint!
-    var trailingConstraint: NSLayoutConstraint!
+    var messageLeadingConstraint: NSLayoutConstraint!
+    var messageTrailingConstraint: NSLayoutConstraint!
+
+    var timeLeadingConstraint: NSLayoutConstraint!
+    var timeTrailingConstraint: NSLayoutConstraint!
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -66,13 +69,17 @@ class ChatCell: UITableViewCell {
             readLabel.trailingAnchor.constraint(equalTo: bubbleBackgroundView.leadingAnchor, constant: -8),
             readLabel.bottomAnchor.constraint(equalTo: bubbleBackgroundView.bottomAnchor, constant: -14),
 
-            timeLabel.trailingAnchor.constraint(equalTo: bubbleBackgroundView.leadingAnchor, constant: -8),
             timeLabel.bottomAnchor.constraint(equalTo: bubbleBackgroundView.bottomAnchor)
         ]
         NSLayoutConstraint.activate(constraints)
 
-        leadingConstraint = messageLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32)
-        trailingConstraint = messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32)
+        // 自己
+        timeLeadingConstraint = timeLabel.trailingAnchor.constraint(equalTo: bubbleBackgroundView.leadingAnchor, constant: -8)
+        // 對方
+        timeTrailingConstraint = timeLabel.leadingAnchor.constraint(equalTo: bubbleBackgroundView.trailingAnchor, constant: 8)
+
+        messageLeadingConstraint = messageLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32)
+        messageTrailingConstraint = messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -81,20 +88,24 @@ class ChatCell: UITableViewCell {
 
     func configure(with message: String, time: String, isIncoming: Bool) {
         messageLabel.text = message
+        timeLabel.text = time
 
-        leadingConstraint.isActive = false
-        trailingConstraint.isActive = false
+        timeTrailingConstraint.isActive = false
+        timeLeadingConstraint.isActive = false
+
+        messageLeadingConstraint.isActive = false
+        messageTrailingConstraint.isActive = false
 
         // 對方的訊息
         if isIncoming {
             readLabel.text = nil
-            timeLabel.text = nil
-            leadingConstraint.isActive = true
+            messageLeadingConstraint.isActive = true
+            timeTrailingConstraint.isActive = true
             bubbleBackgroundView.backgroundColor = UIColor(white: 0.9, alpha: 1)
         } else {
             readLabel.text = "Read"
-            timeLabel.text = time
-            trailingConstraint.isActive = true
+            messageTrailingConstraint.isActive = true
+            timeLeadingConstraint.isActive = true
             bubbleBackgroundView.backgroundColor = UIColor.black
             messageLabel.textColor = .white
         }
