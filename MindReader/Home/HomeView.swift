@@ -78,6 +78,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let imageView = UIImageView()
         imageView.layer.borderColor = UIColor.black.cgColor
         imageView.contentMode = .scaleAspectFit
+        imageView.backgroundColor = .pink1
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

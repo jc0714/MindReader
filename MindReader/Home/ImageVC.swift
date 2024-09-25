@@ -93,7 +93,7 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
         view.addSubview(finalImageView)
 
         // 設置顏色按鈕
-        let colors: [UIColor] = [.white, .black, .red, .blue, .green]
+        let colors: [UIColor] = [.white, .black, .red, .orange, .yellow, .blue, .green, .purple]
 
         for color in colors {
             let button = createColorButton(color: color)
@@ -141,13 +141,13 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
         let generatedImage = renderer.image { _ in
             backgroundImage.draw(at: .zero)
 
-            let fontSize = 80
+            let fontSize = 120
             let text = copiedText ?? ""
             let textAttributes: [NSAttributedString.Key: Any] = [
-                .font: UIFont.systemFont(ofSize: CGFloat(fontSize)),
+                .font: UIFont.boldSystemFont(ofSize: CGFloat(fontSize)),
                 .foregroundColor: textColor
             ]
-            let textRect = CGRect(x: 30, y: 30, width: backgroundImage.size.width - 40, height: backgroundImage.size.height - 40)
+            let textRect = CGRect(x: 30, y: 60, width: backgroundImage.size.width - 40, height: backgroundImage.size.height - 40)
             text.draw(in: textRect, withAttributes: textAttributes)
         }
         finalImageView.image = generatedImage

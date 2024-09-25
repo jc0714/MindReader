@@ -15,7 +15,7 @@ class ImageCollectionView: UIView, UICollectionViewDelegate, UICollectionViewDat
 
     weak var delegate: ImageCollectionViewDelegate?
 
-    private let imageNames = ["photo1", "photo2", "photo3", "photo4", "photo5", "photo6", "photo7"]
+    private let imageNames = ["photo1", "photo2", "photo3", "photo4", "photo5", "photo6", "photo7","photo8", "photo9", "photo10", "photo11", "photo12", "photo13", "photo14", "photo15"]
 
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -25,6 +25,8 @@ class ImageCollectionView: UIView, UICollectionViewDelegate, UICollectionViewDat
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "imageCell")
         return collectionView
     }()
+
+    private var selectedIndexPath: IndexPath?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -69,7 +71,6 @@ class ImageCollectionView: UIView, UICollectionViewDelegate, UICollectionViewDat
             imageView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor),
             imageView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor)
         ])
-
         return cell
     }
 
@@ -85,4 +86,18 @@ class ImageCollectionView: UIView, UICollectionViewDelegate, UICollectionViewDat
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 100, height: 100)
     }
+
+    // MARK: - ScrollView Delegate
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        // 處理滑動時的卡片縮放效果
+        for cell in collectionView.visibleCells {
+            let cellCenter = collectionView.convert(cell.center, to: nil)
+            let screenCenter = collectionView.superview!.center
+            let distance = abs(screenCenter.x - cellCenter.x)
+            let scale = max(1 - distance / screenCenter.x, 0.85)
+            cell.transform = CGAffineTransform(scaleX: scale, y: scale)
+        }
+    }
 }
+
