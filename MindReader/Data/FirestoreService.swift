@@ -13,14 +13,45 @@ class FirestoreService {
 
     private let db = Firestore.firestore()
 
-    private let userId = "9Y2GjnVg8TEoze0GUJSU"
-    private let chatId = "7jAWex6b1RUsAwKCswGD"
+    // MARK: Login
+    func saveUserInfoToFirestore(userIdentifier: String, fullName: String?, email: String?, realUserStatus: Int) {
+
+        let documentID = UUID().uuidString
+
+        var userData: [String: Any] = [
+            "user": userIdentifier,
+            "name": fullName,
+            "email": email,
+            "realUserStatus": realUserStatus,
+            "likePosts": [String](),
+            "postIds": [String](),
+            "translate": [String]()
+        ]
+//
+//        // 如果 fullName 和 email 不為 nil，則添加到字典中
+//        if let fullName = fullName {
+//            userData["fullName"] = fullName
+//        }
+//
+//        if let email = email {
+//            userData["email"] = email
+//        }
+
+        // 將資料存入 Firestore
+        db.collection("Users").document(documentID).setData(userData) { error in
+            if let error = error {
+                print("Error saving user data to Firestore: \(error.localizedDescription)")
+            } else {
+                print("User data successfully saved to Firestore!")
+            }
+        }
+    }
 
     // MARK: HomeVC
 
     func saveToFirestore(prompt: String, response: String, imageURL: String?) async throws {
 
-        let translateRef = db.collection("Users") .document(userId).collection("Translate")
+        let translateRef = db.collection("Translate")
 
         let documentID = UUID().uuidString
         var data: [String: Any] = [
@@ -39,6 +70,12 @@ class FirestoreService {
     }
 
     func uploadImage(imageData: Data) async throws -> String {
+
+        guard let userId = UserManager.shared.userId else {
+            print("User ID is nil")
+            return ""
+        }
+
         let uploadRef = Storage.storage().reference(withPath: "images/\(userId)/\(UUID().uuidString).jpg")
         _ = try await uploadRef.putDataAsync(imageData, metadata: StorageMetadata())
         let downloadURL = try await uploadRef.downloadURL()
@@ -47,6 +84,12 @@ class FirestoreService {
 
     // MARK: 早安圖
     func uploadMorningImage(imageData: Data) async throws -> String {
+
+        guard let userId = UserManager.shared.userId else {
+            print("User ID is nil")
+            return ""
+        }
+
         let uploadRef = Storage.storage().reference(withPath: "MorningImages/\(userId)/\(UUID().uuidString).jpg")
         _ = try await uploadRef.putDataAsync(imageData, metadata: StorageMetadata())
         let downloadURL = try await uploadRef.downloadURL()
@@ -54,6 +97,11 @@ class FirestoreService {
     }
 
     func saveToMorningImageToDatabase(imageURL: String) async throws {
+
+        guard let userId = UserManager.shared.userId else {
+            print("User ID is nil")
+            return
+        }
 
         let translateRef = db.collection("Users") .document(userId).collection("MorningImage")
 
@@ -65,6 +113,11 @@ class FirestoreService {
     }
 
     func saveMessage(message: String, sender: String, completion: @escaping (Error?) -> Void) {
+
+        guard let userId = UserManager.shared.userId, let chatId = UserManager.shared.chatId else {
+            print("User ID is nil")
+            return
+        }
 
         let messageRef = db.collection("Users") .document(userId).collection("Chat").document(chatId).collection("msg")
 
@@ -80,6 +133,11 @@ class FirestoreService {
     }
 
     func listenForMessages(completion: @escaping ([Message]) -> Void) {
+
+        guard let userId = UserManager.shared.userId, let chatId = UserManager.shared.chatId else {
+            print("User ID is nil")
+            return
+        }
 
         let messageRef = db.collection("Users") .document(userId).collection("Chat").document(chatId).collection("msg").order(by: "createdTime", descending: false)
 

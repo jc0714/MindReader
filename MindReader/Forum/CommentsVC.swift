@@ -76,6 +76,11 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         }
     }
 
+    @objc private func closeButtonTapped() {
+        dismiss(animated: true, completion: nil)
+        listener?.remove() // 移除 Firestore 監聽器
+    }
+
     // MARK: - UI Setup
     private func setupTableView() {
         tableView.dataSource = self
@@ -134,7 +139,10 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @objc private func sendComment() {
         guard let commentText = commentTextField.text, !commentText.isEmpty else { return }
 
-        let userId = "9Y2GjnVg8TEoze0GUJSU"
+        guard let userId = UserManager.shared.userId else {
+            print("User ID is nil")
+            return
+        }
 
         let newComment: [String: Any] = [
             "author": "@0714JC",
@@ -156,11 +164,6 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 }
             }
         }
-    }
-
-    @objc private func closeButtonTapped() {
-        dismiss(animated: true, completion: nil)
-        listener?.remove() // 移除 Firestore 監聽器
     }
 
     // MARK: - UITableViewDataSource

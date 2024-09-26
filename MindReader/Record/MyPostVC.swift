@@ -38,8 +38,13 @@ class MyPostVC: BasePostVC {
     }
 
     @objc private func fetchPosts() {
+        guard let userId = UserManager.shared.userId else {
+            print("User ID is nil")
+            return
+        }
+
         // 該用戶的文章
-        Firestore.firestore().collection("Users").document("9Y2GjnVg8TEoze0GUJSU").getDocument { (documentSnapshot, error) in
+        Firestore.firestore().collection("Users").document(userId).getDocument { (documentSnapshot, error) in
             guard let document = documentSnapshot, document.exists, error == nil else {
                 print("Error getting document: \(String(describing: error))")
                 self.refreshControl.endRefreshing()
@@ -133,13 +138,19 @@ class MyPostVC: BasePostVC {
     }
 
     func deletePost(at indexPath: IndexPath) {
+
+        guard let userId = UserManager.shared.userId else {
+            print("User ID is nil")
+            return
+        }
+
         print("刪除第 \(indexPath.row) 行")
 
         let postId = posts[indexPath.row].id
 
         Firestore.firestore().collection("posts").document(postId).delete()
 
-        Firestore.firestore().collection("Users").document("9Y2GjnVg8TEoze0GUJSU").updateData([
+        Firestore.firestore().collection("Users").document(userId).updateData([
             "postIds": FieldValue.arrayRemove([postId])
         ])
     }

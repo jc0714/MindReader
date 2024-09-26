@@ -14,7 +14,6 @@ class TagFilterView: UIView {
     var tagSelectedClosure: ((String) -> Void)?
     private var selectedIndex: IndexPath?
 
-    // 创建 UICollectionView
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal

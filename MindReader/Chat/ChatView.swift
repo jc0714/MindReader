@@ -97,8 +97,6 @@ class ChatView: UIView, UITextViewDelegate {
         }
     }
 
-    // MARK: - UITextViewDelegate
-
     @objc private func textViewDidChange() {
         let contentHeight = textView.sizeThatFits(CGSize(width: textView.frame.width, height: .greatestFiniteMagnitude)).height
 
@@ -109,7 +107,6 @@ class ChatView: UIView, UITextViewDelegate {
             textViewHeightConstraint.constant = contentHeight
             textView.isScrollEnabled = false
         }
-
         layoutIfNeeded()
     }
 }

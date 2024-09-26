@@ -38,6 +38,10 @@
 		E99142322C9FFABA00016C90 /* AlbumFullScreenVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99142312C9FFABA00016C90 /* AlbumFullScreenVC.swift */; };
 		E99142342CA0042200016C90 /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99142332CA0042200016C90 /* ImageCell.swift */; };
 		E99142582CA2D03500016C90 /* DateFormatterExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99142572CA2D03500016C90 /* DateFormatterExtension.swift */; };
+		E9C668B22CA5405800C0EE1D /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C668B12CA5405800C0EE1D /* SettingView.swift */; };
+		E9C668B42CA5407400C0EE1D /* SettingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C668B32CA5407400C0EE1D /* SettingVC.swift */; };
+		E9C668B72CA54CF800C0EE1D /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C668B62CA54CF800C0EE1D /* UserManager.swift */; };
+		E9C668BD2CA5A06300C0EE1D /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */; };
 		E9F6B67E2C95800F008E9FBF /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B67D2C95800F008E9FBF /* ChatView.swift */; };
 		E9F6B6832C968743008E9FBF /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6822C968743008E9FBF /* Model.swift */; };
 		E9F6B6862C96EB14008E9FBF /* ForumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6852C96EB14008E9FBF /* ForumVC.swift */; };
@@ -82,6 +86,11 @@
 		E99142312C9FFABA00016C90 /* AlbumFullScreenVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumFullScreenVC.swift; sourceTree = "<group>"; };
 		E99142332CA0042200016C90 /* ImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
 		E99142572CA2D03500016C90 /* DateFormatterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterExtension.swift; sourceTree = "<group>"; };
+		E9C668B12CA5405800C0EE1D /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
+		E9C668B32CA5407400C0EE1D /* SettingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVC.swift; sourceTree = "<group>"; };
+		E9C668B52CA5444C00C0EE1D /* MindReader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MindReader.entitlements; sourceTree = "<group>"; };
+		E9C668B62CA54CF800C0EE1D /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
+		E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		E9F6B67D2C95800F008E9FBF /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		E9F6B6822C968743008E9FBF /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		E9F6B6852C96EB14008E9FBF /* ForumVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForumVC.swift; sourceTree = "<group>"; };
@@ -154,6 +163,8 @@
 		E97C15DF2C9166B5002B437C /* MindReader */ = {
 			isa = PBXGroup;
 			children = (
+				E9C668B52CA5444C00C0EE1D /* MindReader.entitlements */,
+				E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */,
 				E97C15E02C9166B5002B437C /* AppDelegate.swift */,
 				E97C15E22C9166B5002B437C /* SceneDelegate.swift */,
 				E90B5E4D2CA39DFE00CA24F7 /* Data */,
@@ -169,6 +180,7 @@
 				E97C15E92C9166B7002B437C /* Assets.xcassets */,
 				E97C15EE2C9166B7002B437C /* Info.plist */,
 				E97C15F82C918944002B437C /* GoogleService-Info.plist */,
+				E9C668B62CA54CF800C0EE1D /* UserManager.swift */,
 			);
 			path = MindReader;
 			sourceTree = "<group>";
@@ -227,6 +239,8 @@
 		E9F6B6BC2C9B1C4D008E9FBF /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				E9C668B12CA5405800C0EE1D /* SettingView.swift */,
+				E9C668B32CA5407400C0EE1D /* SettingVC.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -339,6 +353,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E97C16042C919FFF002B437C /* ChatVC.swift in Sources */,
+				E9C668B42CA5407400C0EE1D /* SettingVC.swift in Sources */,
 				E97C16172C955CBB002B437C /* FirestoreService.swift in Sources */,
 				E97C15E52C9166B5002B437C /* HomeVC.swift in Sources */,
 				E97C15F72C91812F002B437C /* APIService.swift in Sources */,
@@ -355,6 +370,7 @@
 				E9F6B6B62C9AA030008E9FBF /* ButtonExtension.swift in Sources */,
 				E9F6B6832C968743008E9FBF /* Model.swift in Sources */,
 				E90B5E4F2CA3A22000CA24F7 /* DetailVC.swift in Sources */,
+				E9C668B72CA54CF800C0EE1D /* UserManager.swift in Sources */,
 				E97C16082C92BC88002B437C /* APIKeys.swift in Sources */,
 				E99142582CA2D03500016C90 /* DateFormatterExtension.swift in Sources */,
 				E99142342CA0042200016C90 /* ImageCell.swift in Sources */,
@@ -369,8 +385,10 @@
 				E9F6B6882C96EFC9008E9FBF /* PostCell.swift in Sources */,
 				E9240AD32C9D442F00A47944 /* RecordView.swift in Sources */,
 				E9F6B6BE2C9BCF7C008E9FBF /* CommentCell.swift in Sources */,
+				E9C668B22CA5405800C0EE1D /* SettingView.swift in Sources */,
 				E90B5E552CA509AB00CA24F7 /* TagFilterView.swift in Sources */,
 				E9240AD12C9D216A00A47944 /* MyPostVC.swift in Sources */,
+				E9C668BD2CA5A06300C0EE1D /* LoginVC.swift in Sources */,
 				E9F6B6C52C9C694D008E9FBF /* RecordVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -521,6 +539,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MindReader/MindReader.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 637F48P3P9;
@@ -551,6 +570,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MindReader/MindReader.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 637F48P3P9;

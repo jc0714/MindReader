@@ -21,7 +21,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     let imageNames = ["photo4", "photo5", "photo6", "photo7"]
 
-    private let userId = "9Y2GjnVg8TEoze0GUJSU"
     private let userRef = Firestore.firestore().collection("Users").document("9Y2GjnVg8TEoze0GUJSU")
 
     override func viewDidLoad() {
@@ -154,6 +153,12 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     // 更新愛心實心空心狀態
     func updateHeartBtn(at indexPath: IndexPath) {
+
+        guard let userId = UserManager.shared.userId else {
+            print("User ID is nil")
+            return
+        }
+
         var post = posts[indexPath.row]
         let postId = post.id
         let cell = tableView.cellForRow(at: indexPath) as? PostCell

@@ -33,9 +33,26 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .color
+
+        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
+        UserDefaults.standard.synchronize()
+
+        if !UserDefaults.standard.bool(forKey: "isUserLoggedIn") {
+            showLoginView()
+        }
+
+        UserManager.shared.userId = "9Y2GjnVg8TEoze0GUJSU"
+        UserManager.shared.chatId = "7jAWex6b1RUsAwKCswGD"
+
         setupActions()
     }
 
+    private func showLoginView() {
+        let loginVC = LoginVC()
+        loginVC.modalPresentationStyle = .overFullScreen // 使用全螢幕的呈現方式
+        self.present(loginVC, animated: true, completion: nil)
+    }
+    
     // MARK: - Setup Actions
 
     private func setupActions() {
@@ -84,8 +101,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         Task {
             do {
-                prompt = formatPrompt(prompt)
-                let response = try await apiService.generateTextResponse(for: prompt)
+                var formatedPrompt = formatPrompt(prompt)
+                let response = try await apiService.generateTextResponse(for: formatedPrompt)
 
                 if let data = response.data(using: .utf8),
                    let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],

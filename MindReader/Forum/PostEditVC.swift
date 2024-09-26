@@ -94,7 +94,12 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
 
                 try await document.setData(data)
 
-                let authorCollection = Firestore.firestore().collection("Users").document("9Y2GjnVg8TEoze0GUJSU")
+                guard let userId = UserManager.shared.userId else {
+                    print("User ID is nil")
+                    return
+                }
+
+                let authorCollection = Firestore.firestore().collection("Users").document(userId)
                 try await authorCollection.updateData([
                     "postIds": FieldValue.arrayUnion([document.documentID])
                 ])

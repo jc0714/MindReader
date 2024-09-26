@@ -26,7 +26,6 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
     private let sendButton = UIButton(type: .system)
 
     private let userRef = Firestore.firestore().collection("Users").document("9Y2GjnVg8TEoze0GUJSU")
-    private let userId = "9Y2GjnVg8TEoze0GUJSU"
 
     // Firestore 監聽器
     private var listener: ListenerRegistration?
@@ -105,7 +104,10 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
     @objc private func sendComment() {
         guard let commentText = commentTextField.text, !commentText.isEmpty else { return }
 
-        let userId = "9Y2GjnVg8TEoze0GUJSU"
+        guard let userId = UserManager.shared.userId else {
+            print("User ID is nil")
+            return
+        }
 
         let newComment: [String: Any] = [
             "author": "Joyce Chen",
@@ -210,6 +212,11 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
         let batch = Firestore.firestore().batch()
         let postRef = Firestore.firestore().collection("posts").document(postId)
 
+        guard let userId = UserManager.shared.userId else {
+            print("User ID is nil")
+            return
+        }
+        
         if BasePostVC.likedPosts.contains(postId) {
             // 如果用戶已經按了讚，則移除讚
             batch.updateData(["like": FieldValue.arrayRemove([userId])], forDocument: postRef)
