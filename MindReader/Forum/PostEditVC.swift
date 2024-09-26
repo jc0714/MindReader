@@ -42,11 +42,13 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         tabBarController?.tabBar.isHidden = false
+        navigationController?.setNavigationBarHidden(true, animated: true)
     }
 
     @objc func click() {

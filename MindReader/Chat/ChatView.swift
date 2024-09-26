@@ -84,6 +84,10 @@ class ChatView: UIView, UITextViewDelegate {
             textView.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -8),
             textView.bottomAnchor.constraint(equalTo: inputContainer.bottomAnchor, constant: -8)
         ])
+        textViewHeightConstraint = textView.heightAnchor.constraint(equalToConstant: 36)
+        textViewHeightConstraint.isActive = true
+
+        NotificationCenter.default.addObserver(self, selector: #selector(textViewDidChange), name: UITextView.textDidChangeNotification, object: textView)
     }
 
     func updateInputContainerBottomConstraint(by constant: CGFloat) {
@@ -95,16 +99,17 @@ class ChatView: UIView, UITextViewDelegate {
 
     // MARK: - UITextViewDelegate
 
-    func textViewDidChange(_ textView: UITextView) {
-//        let size = CGSize(width: 200, height: 50)
-//        let estimatedSize = textView.sizeThatFits(size)
-//
-//        let maxHeight: CGFloat = 150
-//        textView.isScrollEnabled = estimatedSize.height > maxHeight
-//        textViewHeightConstraint.constant = min(estimatedSize.height, maxHeight)
-//
-//        UIView.animate(withDuration: 0.2) {
-//            self.layoutIfNeeded()
-//        }
+    @objc private func textViewDidChange() {
+        let contentHeight = textView.sizeThatFits(CGSize(width: textView.frame.width, height: .greatestFiniteMagnitude)).height
+
+        if contentHeight > 150 {
+            textViewHeightConstraint.constant = 150
+            textView.isScrollEnabled = true
+        } else {
+            textViewHeightConstraint.constant = contentHeight
+            textView.isScrollEnabled = false
+        }
+
+        layoutIfNeeded()
     }
 }

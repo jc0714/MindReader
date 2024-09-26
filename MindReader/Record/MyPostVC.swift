@@ -97,6 +97,7 @@ class MyPostVC: BasePostVC {
 
                         DispatchQueue.main.async {
                             print("Post IDs: \(postIds)")
+                            self.filterPosts(by: "All")
                             self.tableView.reloadData()
                             self.refreshControl.endRefreshing()
                         }

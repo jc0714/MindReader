@@ -40,21 +40,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     }
 
-    // 配置 TableView
-//    private func setupTableView() {
-//        view.addSubview(tableView)
-//        tableView.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-//            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-//            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-//        ])
-//        tableView.register(PostCell.self, forCellReuseIdentifier: "PostCell")
-//        tableView.delegate = self
-//        tableView.dataSource = self
-//    }
-
     private func setupUI() {
         view.addSubview(tagFilterView) 
         view.addSubview(tableView)
@@ -76,7 +61,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
-
         setupTableView()
     }
 
@@ -87,7 +71,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.dataSource = self
     }
 
-    private func filterPosts(by tag: String) {
+    func filterPosts(by tag: String) {
         if tag == "All" {
             filteredPosts = posts
         } else {
@@ -160,7 +144,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         print("Author TAPPEDDD")
     }
 
-    // 當點擊 post 時跳轉到詳細頁面
+    // 當點擊 post 時跳轉到這個貼文頁面
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedPost = posts[indexPath.row]
         let detailVC = DetailVC()
@@ -170,9 +154,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     // 更新愛心實心空心狀態
     func updateHeartBtn(at indexPath: IndexPath) {
-        //        var post = posts[indexPath.row]
-        //        PostManager.shared.updateHeartBtn(for: &post, postId: post.id, userRef: userRef, userId: userId, at: indexPath, in: tableView)
-        //    }
         var post = posts[indexPath.row]
         let postId = post.id
         let cell = tableView.cellForRow(at: indexPath) as? PostCell
@@ -239,8 +220,3 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
 }
-
-//    @objc private func handleCommentCountUpdate(_ notification: Notification) {
-//        guard let postIndex = posts.firstIndex(where: { $0.id == notification.userInfo?["postId"] as? String }) else { return }
-//        PostManager.shared.handleCommentCountUpdate(for: &posts[postIndex], notification, in: tableView)
-//    }

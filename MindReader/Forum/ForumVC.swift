@@ -80,6 +80,7 @@ class ForumVC: BasePostVC {
 
             DispatchQueue.main.async {
                 self?.setupUI()
+                self?.filterPosts(by: "All")
                 self?.tableView.reloadData()
                 self?.refreshControl.endRefreshing()
             }
