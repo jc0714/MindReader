@@ -58,7 +58,8 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     func handleClick() async {
         if let title = editView.titleTextField.text, !title.isEmpty,
            let content = editView.contentTextView.text, !content.isEmpty,
-           let category = editView.categoryTextField.text, !category.isEmpty {
+           // 如果為空，就把他歸類在其他
+           let category = editView.selectedCategory, !category.isEmpty {
 
             do {
                 editView.publishButton.isUserInteractionEnabled = false

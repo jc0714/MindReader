@@ -13,7 +13,11 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     let tableView = UITableView()
     var posts: [Post] = []
+    var filteredPosts: [Post] = []
+
     static var likedPosts: Set<String> = []
+
+    private let tagFilterView = TagFilterView()
 
     let imageNames = ["photo4", "photo5", "photo6", "photo7"]
 
@@ -22,8 +26,12 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTableView()
+        navigationController?.setNavigationBarHidden(true, animated: false)
+
+        setupUI()
         loadLikedPosts()
+
+//        filterPosts(by: "All")
 
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 300
@@ -33,18 +41,59 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
 
     // 配置 TableView
-    private func setupTableView() {
+//    private func setupTableView() {
+//        view.addSubview(tableView)
+//        tableView.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+//            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+//            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+//        ])
+//        tableView.register(PostCell.self, forCellReuseIdentifier: "PostCell")
+//        tableView.delegate = self
+//        tableView.dataSource = self
+//    }
+
+    private func setupUI() {
+        view.addSubview(tagFilterView) 
         view.addSubview(tableView)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+
+        tagFilterView.translatesAutoresizingMaskIntoConstraints = false
+
+        tagFilterView.tagSelectedClosure = { [weak self] selectedTag in
+            self?.filterPosts(by: selectedTag)
+        }
+
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tagFilterView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tagFilterView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tagFilterView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tagFilterView.heightAnchor.constraint(equalToConstant: 50),
+
+            tableView.topAnchor.constraint(equalTo: tagFilterView.bottomAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
+
+        setupTableView()
+    }
+
+    private func setupTableView() {
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(PostCell.self, forCellReuseIdentifier: "PostCell")
         tableView.delegate = self
         tableView.dataSource = self
+    }
+
+    private func filterPosts(by tag: String) {
+        if tag == "All" {
+            filteredPosts = posts
+        } else {
+            filteredPosts = posts.filter { $0.category.contains(tag) }
+        }
+        tableView.reloadData()
     }
 
     // 初始化的時候把按過讚的愛心填滿
@@ -58,6 +107,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 BasePostVC.likedPosts = Set(likePosts)
             }
             DispatchQueue.main.async {
+                self.filterPosts(by: "All")
                 self.tableView.reloadData()
             }
         }
@@ -65,7 +115,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     // 配置 cell
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return posts.count
+        return filteredPosts.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -75,7 +125,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
         cell.selectionStyle = .none
 
-        let post = posts[indexPath.row]
+        let post = filteredPosts[indexPath.row]
         cell.configure(with: post, imageUrl: post.image)
 
         if BasePostVC.likedPosts.contains(post.id) {
@@ -188,9 +238,9 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             cell.commentCount.text = "\(count)"
         }
     }
+}
 
 //    @objc private func handleCommentCountUpdate(_ notification: Notification) {
 //        guard let postIndex = posts.firstIndex(where: { $0.id == notification.userInfo?["postId"] as? String }) else { return }
 //        PostManager.shared.handleCommentCountUpdate(for: &posts[postIndex], notification, in: tableView)
 //    }
-}

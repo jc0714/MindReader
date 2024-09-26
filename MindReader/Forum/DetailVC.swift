@@ -102,7 +102,7 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
         let userId = "9Y2GjnVg8TEoze0GUJSU"
 
         let newComment: [String: Any] = [
-            "author": "@0714JC",
+            "author": "Joyce Chen",
             "authorId": userId,
             "content": commentText,
             "timestamp": Timestamp(date: Date())
@@ -169,6 +169,7 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
                 return UITableViewCell()
             }
             if let post = post {
+                cell.selectionStyle = .none
                 cell.configure(with: post, imageUrl: post.image)
 
                 if BasePostVC.likedPosts.contains(post.id) {
@@ -189,6 +190,7 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
             }
 
             let comment = comments[indexPath.row - 1] // 留言從第 1 行開始
+            cell.selectionStyle = .none
             cell.configure(author: comment.author, content: comment.content, timestamp: comment.timestamp)
 
             return cell

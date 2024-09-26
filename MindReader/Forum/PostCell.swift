@@ -30,7 +30,7 @@ class PostCell: UITableViewCell {
         let label = UILabel()
         label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 20)
-        label.backgroundColor = .color
+//        label.backgroundColor = .color
         return label
     }()
 
