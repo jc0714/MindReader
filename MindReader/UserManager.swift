@@ -20,16 +20,16 @@ class UserManager {
             UserDefaults.standard.set(newValue, forKey: "userId")
         }
     }
-
-    // 登入狀態
-    var isLoggedIn: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: "isLoggedIn")
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "isLoggedIn")
-        }
-    }
+//
+//    // 登入狀態
+//    var isLoggedIn: Bool {
+//        get {
+//            return UserDefaults.standard.bool(forKey: "isLoggedIn")
+//        }
+//        set {
+//            UserDefaults.standard.set(newValue, forKey: "isLoggedIn")
+//        }
+//    }
 
     // 聊天室 ID
     var chatId: String? {

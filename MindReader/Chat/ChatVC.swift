@@ -125,7 +125,11 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
                     print(response)
 
                     let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
-                    self.chatView.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                    let numberOfRows = self.chatView.tableView.numberOfRows(inSection: 0)
+                    if numberOfRows > 0 {
+                        let indexPath = IndexPath(row: numberOfRows - 1, section: 0)
+                        self.chatView.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                    }
                     sender.isUserInteractionEnabled = true
                 }
             } catch {

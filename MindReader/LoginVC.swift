@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import AuthenticationServices
+import Firebase
 
 class LoginVC: UIViewController, ASAuthorizationControllerPresentationContextProviding {
 
@@ -75,17 +76,53 @@ extension LoginVC: ASAuthorizationControllerDelegate {
             let email = appleIDCredential.email
             let realUserStatus = appleIDCredential.realUserStatus.rawValue
 
-            // 儲存用戶資訊到 Firestore
-            firebaseService.saveUserInfoToFirestore(userIdentifier: userIdentifier, fullName: fullName, email: email, realUserStatus: realUserStatus)
+            // 查詢 Firestore 以確認用戶是否已存在
+            let usersCollection = Firestore.firestore().collection("Users")
+            usersCollection.whereField("user", isEqualTo: userIdentifier).getDocuments { (snapshot, error) in
+                if let error = error {
+                    print("Error checking if user exists: \(error.localizedDescription)")
+                    return
+                }
 
-            UserDefaults.standard.set(userIdentifier, forKey: "appleUserIdentifier")
-            UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
-            UserDefaults.standard.synchronize()
+                if let snapshot = snapshot, snapshot.documents.isEmpty {
+                    self.firebaseService.saveUserInfoToFirestore(userIdentifier: userIdentifier, fullName: fullName, email: email, realUserStatus: realUserStatus)
+
+                    UserDefaults.standard.set(userIdentifier, forKey: "appleUserIdentifier")
+                    UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+                    UserDefaults.standard.synchronize()
+                } else {
+                    print("User already exists in Firestore.")
+                }
+            }
         }
 
         // 登入成功後，關閉 LoginViewController
         self.dismiss(animated: true, completion: nil)
     }
+
+//    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+//
+//        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+//            let userIdentifier = appleIDCredential.user
+//            print("user: \(appleIDCredential.user)")
+//            print("fullName: \(String(describing: appleIDCredential.fullName))")
+//            print("Email: \(String(describing: appleIDCredential.email))")
+//
+//            let fullName = appleIDCredential.fullName?.description
+//            let email = appleIDCredential.email
+//            let realUserStatus = appleIDCredential.realUserStatus.rawValue
+//
+//            // 儲存用戶資訊到 Firestore
+//            firebaseService.saveUserInfoToFirestore(userIdentifier: userIdentifier, fullName: fullName, email: email, realUserStatus: realUserStatus)
+//
+//            UserDefaults.standard.set(userIdentifier, forKey: "appleUserIdentifier")
+//            UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+//            UserDefaults.standard.synchronize()
+//        }
+//
+//        // 登入成功後，關閉 LoginViewController
+//        self.dismiss(animated: true, completion: nil)
+//    }
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         print("didCompleteWithError: \(error.localizedDescription)")

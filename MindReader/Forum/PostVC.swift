@@ -21,7 +21,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     let imageNames = ["photo4", "photo5", "photo6", "photo7"]
 
-    private let userRef = Firestore.firestore().collection("Users").document("9Y2GjnVg8TEoze0GUJSU")
+//    private let userRef = Firestore.firestore().collection("Users").document("9Y2GjnVg8TEoze0GUJSU")
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -81,7 +81,12 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     // 初始化的時候把按過讚的愛心填滿
     private func loadLikedPosts() {
-        userRef.getDocument { [weak self] (document, error) in
+        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
+            print("User ID is nil")
+            return
+        }
+
+        Firestore.firestore().collection("Users").document(userId).getDocument { [weak self] (document, error) in
             guard let self = self, let document = document, document.exists, let data = document.data() else {
                 print("Error fetching liked posts: \(String(describing: error))")
                 return
@@ -154,11 +159,13 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     // 更新愛心實心空心狀態
     func updateHeartBtn(at indexPath: IndexPath) {
 
-        guard let userId = UserManager.shared.userId else {
+        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
             print("User ID is nil")
             return
         }
 
+        let userRef = Firestore.firestore().collection("Users").document(userId)
+        
         var post = posts[indexPath.row]
         let postId = post.id
         let cell = tableView.cellForRow(at: indexPath) as? PostCell

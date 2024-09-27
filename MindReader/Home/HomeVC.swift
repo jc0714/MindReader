@@ -40,9 +40,9 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         if !UserDefaults.standard.bool(forKey: "isUserLoggedIn") {
             showLoginView()
         }
-
-        UserManager.shared.userId = "9Y2GjnVg8TEoze0GUJSU"
-        UserManager.shared.chatId = "7jAWex6b1RUsAwKCswGD"
+//
+//        UserManager.shared.userId = "9Y2GjnVg8TEoze0GUJSU"
+//        UserManager.shared.chatId = "7jAWex6b1RUsAwKCswGD"
 
         setupActions()
     }

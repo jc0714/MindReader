@@ -38,7 +38,7 @@ class MyPostVC: BasePostVC {
     }
 
     @objc private func fetchPosts() {
-        guard let userId = UserManager.shared.userId else {
+        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
             print("User ID is nil")
             return
         }
@@ -138,22 +138,55 @@ class MyPostVC: BasePostVC {
     }
 
     func deletePost(at indexPath: IndexPath) {
-
-        guard let userId = UserManager.shared.userId else {
+        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
             print("User ID is nil")
             return
         }
 
-        print("刪除第 \(indexPath.row) 行")
-
         let postId = posts[indexPath.row].id
 
-        Firestore.firestore().collection("posts").document(postId).delete()
+        // 刪除貼文
+        Firestore.firestore().collection("posts").document(postId).delete { error in
+            if let error = error {
+                print("Error deleting post: \(error.localizedDescription)")
+                return
+            }
 
-        Firestore.firestore().collection("Users").document(userId).updateData([
-            "postIds": FieldValue.arrayRemove([postId])
-        ])
+            // 更新使用者的 postIds
+            Firestore.firestore().collection("Users").document(userId).updateData([
+                "postIds": FieldValue.arrayRemove([postId])
+            ]) { updateError in
+                if let updateError = updateError {
+                    print("Error updating user's postIds: \(updateError.localizedDescription)")
+                } else {
+                    // 移除 posts 陣列中的項目
+                    self.posts.remove(at: indexPath.row)
+
+                    // 更新 UI
+                    DispatchQueue.main.async {
+                        self.tableView.deleteRows(at: [indexPath], with: .automatic)
+                    }
+                }
+            }
+        }
     }
+
+    
+//    func deletePost(at indexPath: IndexPath) {
+//
+//        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
+//            print("User ID is nil")
+//            return
+//        }
+//
+//        let postId = posts[indexPath.row].id
+//
+//        Firestore.firestore().collection("posts").document(postId).delete()
+//
+//        Firestore.firestore().collection("Users").document(userId).updateData([
+//            "postIds": FieldValue.arrayRemove([postId])
+//        ])
+//    }
 
     // 分享操作
     func sharePost(at indexPath: IndexPath) {

@@ -94,7 +94,7 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
 
                 try await document.setData(data)
 
-                guard let userId = UserManager.shared.userId else {
+                guard let userId = UserDefaults.standard.string(forKey: "userID") else {
                     print("User ID is nil")
                     return
                 }

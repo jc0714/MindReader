@@ -14,9 +14,10 @@ class FirestoreService {
     private let db = Firestore.firestore()
 
     // MARK: Login
-    func saveUserInfoToFirestore(userIdentifier: String, fullName: String?, email: String?, realUserStatus: Int) {
 
+    func saveUserInfoToFirestore(userIdentifier: String, fullName: String?, email: String?, realUserStatus: Int) {
         let documentID = UUID().uuidString
+        let chatRoomId = UUID().uuidString // 固定 chatRoomId
 
         var userData: [String: Any] = [
             "user": userIdentifier,
@@ -25,24 +26,41 @@ class FirestoreService {
             "realUserStatus": realUserStatus,
             "likePosts": [String](),
             "postIds": [String](),
-            "translate": [String]()
+            "translate": [String](),
+            "chatRoomId": chatRoomId // 將 chatRoomId 儲存在 user 資料中
         ]
-//
-//        // 如果 fullName 和 email 不為 nil，則添加到字典中
-//        if let fullName = fullName {
-//            userData["fullName"] = fullName
-//        }
-//
-//        if let email = email {
-//            userData["email"] = email
-//        }
 
-        // 將資料存入 Firestore
+        // 儲存用戶資料到 Firestore
         db.collection("Users").document(documentID).setData(userData) { error in
             if let error = error {
                 print("Error saving user data to Firestore: \(error.localizedDescription)")
             } else {
                 print("User data successfully saved to Firestore!")
+
+                UserDefaults.standard.set(documentID, forKey: "userID")
+                UserDefaults.standard.set(chatRoomId, forKey: "chatRoomId")
+                UserDefaults.standard.synchronize()
+
+                // 其他初始化代碼（如 photos 和 chat 開場訊息）
+                self.initializeChatRoom(userId: documentID, chatRoomId: chatRoomId)
+            }
+        }
+    }
+
+    func initializeChatRoom(userId: String, chatRoomId: String) {
+        // 新增 msg 集合並存入一筆開場訊息文件
+        let chatRef = self.db.collection("Users").document(userId).collection("Chat").document(chatRoomId)
+        let messageRef = chatRef.collection("msg")
+        let chatData: [String: Any] = [
+            "sender": "0",
+            "content": "Welcome to the chat!",
+            "createdTime": FieldValue.serverTimestamp()
+        ]
+        messageRef.addDocument(data: chatData) { chatError in
+            if let chatError = chatError {
+                print("Error creating chat message document: \(chatError.localizedDescription)")
+            } else {
+                print("Chat message document created successfully!")
             }
         }
     }
@@ -71,7 +89,7 @@ class FirestoreService {
 
     func uploadImage(imageData: Data) async throws -> String {
 
-        guard let userId = UserManager.shared.userId else {
+        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
             print("User ID is nil")
             return ""
         }
@@ -85,7 +103,7 @@ class FirestoreService {
     // MARK: 早安圖
     func uploadMorningImage(imageData: Data) async throws -> String {
 
-        guard let userId = UserManager.shared.userId else {
+        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
             print("User ID is nil")
             return ""
         }
@@ -98,7 +116,7 @@ class FirestoreService {
 
     func saveToMorningImageToDatabase(imageURL: String) async throws {
 
-        guard let userId = UserManager.shared.userId else {
+        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
             print("User ID is nil")
             return
         }
@@ -114,7 +132,7 @@ class FirestoreService {
 
     func saveMessage(message: String, sender: String, completion: @escaping (Error?) -> Void) {
 
-        guard let userId = UserManager.shared.userId, let chatId = UserManager.shared.chatId else {
+        guard let userId = UserDefaults.standard.string(forKey: "userID"), let chatId = UserDefaults.standard.string(forKey: "chatRoomId") else {
             print("User ID is nil")
             return
         }
@@ -134,7 +152,7 @@ class FirestoreService {
 
     func listenForMessages(completion: @escaping ([Message]) -> Void) {
 
-        guard let userId = UserManager.shared.userId, let chatId = UserManager.shared.chatId else {
+        guard let userId = UserDefaults.standard.string(forKey: "userID"), let chatId = UserDefaults.standard.string(forKey: "chatRoomId") else {
             print("User ID is nil")
             return
         }

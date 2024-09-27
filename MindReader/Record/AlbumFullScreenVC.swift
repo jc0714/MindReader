@@ -132,7 +132,7 @@ class AlbumFullScreenVC: UIViewController, UICollectionViewDelegate, UICollectio
                     return
                 }
 
-                guard let userId = UserManager.shared.userId else {
+                guard let userId = UserDefaults.standard.string(forKey: "userID") else {
                     print("User ID is nil")
                     return
                 }
