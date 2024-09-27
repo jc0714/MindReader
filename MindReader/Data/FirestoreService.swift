@@ -48,12 +48,12 @@ class FirestoreService {
     }
 
     func initializeChatRoom(userId: String, chatRoomId: String) {
-        // 新增 msg 集合並存入一筆開場訊息文件
+        // 新增 msg collection 並存入一筆開場訊息文件
         let chatRef = self.db.collection("Users").document(userId).collection("Chat").document(chatRoomId)
         let messageRef = chatRef.collection("msg")
         let chatData: [String: Any] = [
             "sender": "0",
-            "content": "Welcome to the chat!",
+            "content": "早安午安晚安！☀️✨ 我是阿雲～ 歡迎跟我分享你的日常，快樂或低谷都可以。一起度過每一天吧🌼",
             "createdTime": FieldValue.serverTimestamp()
         ]
         messageRef.addDocument(data: chatData) { chatError in
@@ -93,7 +93,7 @@ class FirestoreService {
 
         let authorCollection = Firestore.firestore().collection("Users").document(userId)
         try await authorCollection.updateData([
-            "postIds": FieldValue.arrayUnion([documentID])
+            "translate": FieldValue.arrayUnion([documentID])
         ])
     }
 

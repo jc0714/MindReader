@@ -151,7 +151,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
 
         let message = messages[indexPath.row]
 
-        let isIncoming = indexPath.row % 2 == 1
+        let isIncoming = indexPath.row % 2 == 0
         cell.configure(with: message.content, time: message.createdTime, isIncoming: isIncoming)
 
         return cell
