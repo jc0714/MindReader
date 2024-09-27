@@ -40,9 +40,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         if !UserDefaults.standard.bool(forKey: "isUserLoggedIn") {
             showLoginView()
         }
-//
-//        UserManager.shared.userId = "9Y2GjnVg8TEoze0GUJSU"
-//        UserManager.shared.chatId = "7jAWex6b1RUsAwKCswGD"
 
         setupActions()
     }
@@ -57,7 +54,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     private func setupActions() {
         homeView.chatButton.addTarget(self, action: #selector(toChatButtonTapped), for: .touchUpInside)
- 
         homeView.imageButton.addTarget(self, action: #selector(showImageView), for: .touchUpInside)
         homeView.textButton.addTarget(self, action: #selector(enterText), for: .touchUpInside)
 
@@ -88,7 +84,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         }
 
         // 可設置等待回應動畫
-
 //        sender.isUserInteractionEnabled = false
 //        sender.backgroundColor = .color
 

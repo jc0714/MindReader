@@ -76,10 +76,8 @@ class FirestoreService {
         
         let translateRef = db.collection("Translate")
 
-        let documentID = UUID().uuidString
         var data: [String: Any] = [
             "createdTime": Timestamp(date: Date()),
-            "id": documentID,
             "reply": response
         ]
         if let imageURL = imageURL {
@@ -89,7 +87,9 @@ class FirestoreService {
             data["userInput"] = prompt
             data["tag"] = 2
         }
-        try await translateRef.addDocument(data: data)
+
+        let newDocumentRef = try await translateRef.addDocument(data: data)
+        let documentID = newDocumentRef.documentID
 
         let authorCollection = Firestore.firestore().collection("Users").document(userId)
         try await authorCollection.updateData([

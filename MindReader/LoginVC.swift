@@ -96,6 +96,7 @@ extension LoginVC: ASAuthorizationControllerDelegate {
             }
         }
 
+        UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
         // 登入成功後，關閉 LoginViewController
         self.dismiss(animated: true, completion: nil)
     }

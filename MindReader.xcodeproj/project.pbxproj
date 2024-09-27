@@ -40,7 +40,6 @@
 		E99142582CA2D03500016C90 /* DateFormatterExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99142572CA2D03500016C90 /* DateFormatterExtension.swift */; };
 		E9C668B22CA5405800C0EE1D /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C668B12CA5405800C0EE1D /* SettingView.swift */; };
 		E9C668B42CA5407400C0EE1D /* SettingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C668B32CA5407400C0EE1D /* SettingVC.swift */; };
-		E9C668B72CA54CF800C0EE1D /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C668B62CA54CF800C0EE1D /* UserManager.swift */; };
 		E9C668BD2CA5A06300C0EE1D /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */; };
 		E9F6B67E2C95800F008E9FBF /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B67D2C95800F008E9FBF /* ChatView.swift */; };
 		E9F6B6832C968743008E9FBF /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6822C968743008E9FBF /* Model.swift */; };
@@ -89,7 +88,6 @@
 		E9C668B12CA5405800C0EE1D /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		E9C668B32CA5407400C0EE1D /* SettingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVC.swift; sourceTree = "<group>"; };
 		E9C668B52CA5444C00C0EE1D /* MindReader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MindReader.entitlements; sourceTree = "<group>"; };
-		E9C668B62CA54CF800C0EE1D /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		E9F6B67D2C95800F008E9FBF /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		E9F6B6822C968743008E9FBF /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
@@ -180,7 +178,6 @@
 				E97C15E92C9166B7002B437C /* Assets.xcassets */,
 				E97C15EE2C9166B7002B437C /* Info.plist */,
 				E97C15F82C918944002B437C /* GoogleService-Info.plist */,
-				E9C668B62CA54CF800C0EE1D /* UserManager.swift */,
 			);
 			path = MindReader;
 			sourceTree = "<group>";
@@ -370,7 +367,6 @@
 				E9F6B6B62C9AA030008E9FBF /* ButtonExtension.swift in Sources */,
 				E9F6B6832C968743008E9FBF /* Model.swift in Sources */,
 				E90B5E4F2CA3A22000CA24F7 /* DetailVC.swift in Sources */,
-				E9C668B72CA54CF800C0EE1D /* UserManager.swift in Sources */,
 				E97C16082C92BC88002B437C /* APIKeys.swift in Sources */,
 				E99142582CA2D03500016C90 /* DateFormatterExtension.swift in Sources */,
 				E99142342CA0042200016C90 /* ImageCell.swift in Sources */,
