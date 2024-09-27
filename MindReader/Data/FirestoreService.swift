@@ -69,6 +69,11 @@ class FirestoreService {
 
     func saveToFirestore(prompt: String, response: String, imageURL: String?) async throws {
 
+        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
+            print("User ID is nil")
+            return
+        }
+        
         let translateRef = db.collection("Translate")
 
         let documentID = UUID().uuidString
@@ -85,6 +90,11 @@ class FirestoreService {
             data["tag"] = 2
         }
         try await translateRef.addDocument(data: data)
+
+        let authorCollection = Firestore.firestore().collection("Users").document(userId)
+        try await authorCollection.updateData([
+            "postIds": FieldValue.arrayUnion([documentID])
+        ])
     }
 
     func uploadImage(imageData: Data) async throws -> String {

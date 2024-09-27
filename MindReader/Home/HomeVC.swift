@@ -34,8 +34,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         super.viewDidLoad()
         view.backgroundColor = .color
 
-        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
-        UserDefaults.standard.synchronize()
+//        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
+//        UserDefaults.standard.synchronize()
 
         if !UserDefaults.standard.bool(forKey: "isUserLoggedIn") {
             showLoginView()

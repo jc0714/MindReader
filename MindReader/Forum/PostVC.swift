@@ -107,6 +107,11 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        guard indexPath.row < filteredPosts.count else {
+            return UITableViewCell()
+        }
+
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as? PostCell else {
             fatalError("Unable to dequeue PostCell")
         }
@@ -150,6 +155,10 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     // 當點擊 post 時跳轉到這個貼文頁面
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.row < posts.count else {
+            return
+        }
+
         let selectedPost = posts[indexPath.row]
         let detailVC = DetailVC()
         detailVC.post = selectedPost // 將所選的 post 資料傳遞到 DetailVC

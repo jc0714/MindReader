@@ -38,20 +38,21 @@ class MyPostVC: BasePostVC {
     }
 
     @objc private func fetchPosts() {
+
         guard let userId = UserDefaults.standard.string(forKey: "userID") else {
             print("User ID is nil")
             return
         }
 
         // 該用戶的文章
-        Firestore.firestore().collection("Users").document(userId).getDocument { (documentSnapshot, error) in
+        Firestore.firestore().collection("Users").document(userId).addSnapshotListener { (documentSnapshot, error) in
             guard let document = documentSnapshot, document.exists, error == nil else {
                 print("Error getting document: \(String(describing: error))")
                 self.refreshControl.endRefreshing()
                 return
             }
             // 從 posts collection 撈文章
-            if let postIds = document.data()?["postIds"] as? [String] {
+            if let postIds = document.data()?["postIds"] as? [String], !postIds.isEmpty {
                 Firestore.firestore().collection("posts")
                     .whereField(FieldPath.documentID(), in: postIds)
                     .order(by: "createdTime", descending: true)
@@ -108,8 +109,11 @@ class MyPostVC: BasePostVC {
                         }
                     }
             } else {
-                print("No postIds found")
-            }
+                print("No postIds found or postIds array is empty")
+                self.posts.removeAll()
+                self.filterPosts(by: "All")
+                self.tableView.reloadData()
+                self.refreshControl.endRefreshing()            }
         }
     }
 
@@ -137,43 +141,7 @@ class MyPostVC: BasePostVC {
         return configuration
     }
 
-    func deletePost(at indexPath: IndexPath) {
-        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-            print("User ID is nil")
-            return
-        }
-
-        let postId = posts[indexPath.row].id
-
-        // 刪除貼文
-        Firestore.firestore().collection("posts").document(postId).delete { error in
-            if let error = error {
-                print("Error deleting post: \(error.localizedDescription)")
-                return
-            }
-
-            // 更新使用者的 postIds
-            Firestore.firestore().collection("Users").document(userId).updateData([
-                "postIds": FieldValue.arrayRemove([postId])
-            ]) { updateError in
-                if let updateError = updateError {
-                    print("Error updating user's postIds: \(updateError.localizedDescription)")
-                } else {
-                    // 移除 posts 陣列中的項目
-                    self.posts.remove(at: indexPath.row)
-
-                    // 更新 UI
-                    DispatchQueue.main.async {
-                        self.tableView.deleteRows(at: [indexPath], with: .automatic)
-                    }
-                }
-            }
-        }
-    }
-
-    
 //    func deletePost(at indexPath: IndexPath) {
-//
 //        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
 //            print("User ID is nil")
 //            return
@@ -181,12 +149,43 @@ class MyPostVC: BasePostVC {
 //
 //        let postId = posts[indexPath.row].id
 //
-//        Firestore.firestore().collection("posts").document(postId).delete()
+//        // 刪除貼文
+//        Firestore.firestore().collection("posts").document(postId).delete { error in
+//            if let error = error {
+//                print("Error deleting post: \(error.localizedDescription)")
+//                return
+//            }
 //
-//        Firestore.firestore().collection("Users").document(userId).updateData([
-//            "postIds": FieldValue.arrayRemove([postId])
-//        ])
+//            // 更新使用者的 postIds
+//            Firestore.firestore().collection("Users").document(userId).updateData([
+//                "postIds": FieldValue.arrayRemove([postId])
+//            ]) { updateError in
+//                if let updateError = updateError {
+//                    print("Error updating user's postIds: \(updateError.localizedDescription)")
+//                } else {
+//                    // 移除 posts 陣列中的項目
+//                    print(self.posts.count)
+//                    self.posts.remove(at: indexPath.row)
+//                }
+//            }
+//        }
 //    }
+    
+    func deletePost(at indexPath: IndexPath) {
+
+        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
+            print("User ID is nil")
+            return
+        }
+
+        let postId = posts[indexPath.row].id
+
+        Firestore.firestore().collection("posts").document(postId).delete()
+
+        Firestore.firestore().collection("Users").document(userId).updateData([
+            "postIds": FieldValue.arrayRemove([postId])
+        ])
+    }
 
     // 分享操作
     func sharePost(at indexPath: IndexPath) {
