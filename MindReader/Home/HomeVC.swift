@@ -34,6 +34,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         super.viewDidLoad()
         view.backgroundColor = .color
 
+        self.navigationItem.backButtonTitle = ""
+
 
 //        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
 //        UserDefaults.standard.synchronize()

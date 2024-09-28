@@ -139,13 +139,13 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @objc private func sendComment() {
         guard let commentText = commentTextField.text, !commentText.isEmpty else { return }
 
-        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
+        guard let userId = UserDefaults.standard.string(forKey: "userID"), let userName =                 UserDefaults.standard.string(forKey: "userLastName") else {
             print("User ID is nil")
             return
         }
 
         let newComment: [String: Any] = [
-            "author": "@0714JC",
+            "author": userName,
             "authorId": userId,
             "content": commentText,
             "timestamp": Timestamp(date: Date())

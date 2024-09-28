@@ -27,6 +27,8 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
 
         view.backgroundColor = .color
 
+        setUpNavigation()
+
         chatView.tableView.delegate = self
         chatView.tableView.dataSource = self
         setUpActions()
@@ -35,9 +37,20 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         setupKeyboardObservers()
     }
 
+    func setUpNavigation() {
+
+        let titleLabel = UILabel()
+        titleLabel.text = "阿雲"
+        titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        titleLabel.textColor = UIColor.systemBrown
+        titleLabel.textAlignment = .left
+
+        self.navigationItem.titleView = titleLabel
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-         IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enable = false
         tabBarController?.tabBar.isHidden = true
     }
 
@@ -67,9 +80,14 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         NotificationCenter.default.removeObserver(self)
     }
 
+    @objc func backButtonTapped() {
+        self.navigationController?.popViewController(animated: true)
+    }
+
     private func listenForMessages() {
         firebaseService.listenForMessages { [weak self] newMessages in
             guard let self = self else { return }
+
             self.messages = newMessages
 
             self.chatView.tableView.reloadData()

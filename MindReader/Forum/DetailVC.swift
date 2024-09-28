@@ -25,14 +25,15 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
     private let commentTextField = UITextField()
     private let sendButton = UIButton(type: .system)
 
-//    private let userRef = Firestore.firestore().collection("Users").document("9Y2GjnVg8TEoze0GUJSU")
-
     // Firestore 監聽器
     private var listener: ListenerRegistration?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .color
+
+        setUpNavigation()
+
         setupInputArea()
 
         setupTableView()
@@ -56,6 +57,22 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
         navigationController?.setNavigationBarHidden(true, animated: true)
     }
 
+    func setUpNavigation() {
+
+         // 設置導航欄背景顏色
+        navigationController?.setNavigationBarHidden(false, animated: true)
+
+        navigationController?.navigationBar.isTranslucent = false
+
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground() // 設置為不透明背景
+        appearance.backgroundColor = .color
+
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+    }
+
     // 配置 TableView
     private func setupTableView() {
         tableView.register(PostCell.self, forCellReuseIdentifier: "PostCell")
@@ -68,7 +85,7 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 16),
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100)
@@ -104,13 +121,12 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
     @objc private func sendComment() {
         guard let commentText = commentTextField.text, !commentText.isEmpty else { return }
 
-        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-            print("User ID is nil")
+        guard let userId = UserDefaults.standard.string(forKey: "userID"), let userName =                 UserDefaults.standard.string(forKey: "userLastName") else {
             return
         }
 
         let newComment: [String: Any] = [
-            "author": "Joyce Chen",
+            "author": userName,
             "authorId": userId,
             "content": commentText,
             "timestamp": Timestamp(date: Date())

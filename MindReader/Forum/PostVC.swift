@@ -21,8 +21,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     let imageNames = ["photo4", "photo5", "photo6", "photo7"]
 
-//    private let userRef = Firestore.firestore().collection("Users").document("9Y2GjnVg8TEoze0GUJSU")
-
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.setNavigationBarHidden(true, animated: false)
