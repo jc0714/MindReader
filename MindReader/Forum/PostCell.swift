@@ -212,6 +212,7 @@ class PostCell: UITableViewCell {
         contentLabel.text = post.content
         heartCount.text = String(post.like)
         commentCount.text = String(post.comment)
+//        commentCount.text = String(post.comment)
 
         if let imageUrl = imageUrl, !imageUrl.isEmpty {
             postImageView.isHidden = false

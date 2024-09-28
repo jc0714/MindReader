@@ -44,34 +44,34 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     // MARK: - Firestore Listener
     private func setupFirestoreListener() {
-        let postRef = Firestore.firestore().collection("posts").document(postId)
+        let commentsRef = Firestore.firestore().collection("posts").document(postId).collection("Comments")
 
-        listener = postRef.addSnapshotListener { [weak self] documentSnapshot, error in
-            guard let self = self, let document = documentSnapshot, error == nil else {
+        listener = commentsRef.addSnapshotListener { [weak self] querySnapshot, error in
+            guard let self = self, let documents = querySnapshot?.documents, error == nil else {
                 print("Error fetching comments: \(String(describing: error))")
                 return
             }
 
-            if let data = document.data(), let commentsData = data["Comments"] as? [[String: Any]] {
-                self.comments = commentsData.compactMap { comment in
-                    guard let author = comment["author"] as? String,
-                          let content = comment["content"] as? String,
-                          let authorId = comment["authorId"] as? String,
-                          let timestamp = comment["timestamp"] as? Timestamp else {
-                        return nil
-                    }
-
-                    return Comment(author: author, authorId: authorId, content: content, timestamp: timestamp.dateValue())
+            // 將 comments 子集合中的文件轉換為 Comment 對象
+            self.comments = documents.compactMap { document in
+                let data = document.data()
+                guard let author = data["author"] as? String,
+                      let content = data["content"] as? String,
+                      let authorId = data["authorId"] as? String,
+                      let timestamp = data["timestamp"] as? Timestamp else {
+                    return nil
                 }
 
-                // 更新留言數量
-                let commentCount = commentsData.count
-                NotificationCenter.default.post(name: NSNotification.Name("CommentCountUpdated"), object: nil, userInfo: ["postId": self.postId, "count": commentCount])
+                return Comment(author: author, authorId: authorId, content: content, timestamp: timestamp.dateValue())
+            }
 
-                // 更新 UI
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
+            // 更新留言數量
+            let commentCount = documents.count
+            NotificationCenter.default.post(name: NSNotification.Name("CommentCountUpdated"), object: nil, userInfo: ["postId": self.postId, "count": commentCount])
+
+            // 更新 UI
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
             }
         }
     }
@@ -144,6 +144,7 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             return
         }
 
+        let documentID = UUID().uuidString
         let newComment: [String: Any] = [
             "author": userName,
             "authorId": userId,
@@ -151,10 +152,8 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             "timestamp": Timestamp(date: Date())
         ]
 
-        let postRef = Firestore.firestore().collection("posts").document(postId)
-        postRef.updateData([
-            "Comments": FieldValue.arrayUnion([newComment])
-        ]) { error in
+        let postRef = Firestore.firestore().collection("posts").document(postId).collection("Comments").document(documentID)
+        postRef.setData(newComment) { error in
             if let error = error {
                 print("Error adding comment: \(error)")
             } else {

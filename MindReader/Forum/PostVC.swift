@@ -34,7 +34,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.estimatedRowHeight = 300
 
         NotificationCenter.default.addObserver(self, selector: #selector(handleCommentCountUpdate(_:)), name: NSNotification.Name("CommentCountUpdated"), object: nil)
-
     }
 
     private func setupUI() {
@@ -133,10 +132,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             self?.showCommentsForPost(at: indexPath)
         }
 
-        cell.authorTapAction = { [weak self] in
-            self?.fetchPostsByAuthor(authorId: post.author.id)
-        }
-
         cell.setNeedsLayout()
         cell.layoutIfNeeded()
 
@@ -145,10 +140,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
-    }
-
-    func fetchPostsByAuthor(authorId: String) {
-        print("Author TAPPEDDD")
     }
 
     // 當點擊 post 時跳轉到這個貼文頁面
@@ -226,6 +217,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         present(commentsVC, animated: true, completion: nil)
     }
 
+    // 留言數量計算
     @objc private func handleCommentCountUpdate(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
               let postId = userInfo["postId"] as? String,

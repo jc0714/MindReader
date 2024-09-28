@@ -125,6 +125,8 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
             return
         }
 
+        let documentID = UUID().uuidString
+
         let newComment: [String: Any] = [
             "author": userName,
             "authorId": userId,
@@ -132,10 +134,8 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
             "timestamp": Timestamp(date: Date())
         ]
 
-        let postRef = Firestore.firestore().collection("posts").document(postId)
-        postRef.updateData([
-            "Comments": FieldValue.arrayUnion([newComment])
-        ]) { error in
+        let postRef = Firestore.firestore().collection("posts").document(postId).collection("Comments").document(documentID)
+        postRef.setData(newComment) { error in
             if let error = error {
                 print("Error adding comment: \(error)")
             } else {
@@ -148,38 +148,71 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
     }
 
     // 從 Firestore 獲取留言
-    private func fetchComments(for postId: String) {
-        let postRef = Firestore.firestore().collection("posts").document(postId)
 
-        listener = postRef.addSnapshotListener { [weak self] documentSnapshot, error in
-            guard let self = self, let document = documentSnapshot, error == nil else {
+    private func fetchComments(for postId: String) {
+        let commentsRef = Firestore.firestore().collection("posts").document(postId).collection("Comments")
+
+        listener = commentsRef.addSnapshotListener { [weak self] querySnapshot, error in
+            guard let self = self, let documents = querySnapshot?.documents, error == nil else {
                 print("Error fetching comments: \(String(describing: error))")
                 return
             }
 
-            if let data = document.data(), let commentsData = data["Comments"] as? [[String: Any]] {
-                self.comments = commentsData.compactMap { comment in
-                    guard let author = comment["author"] as? String,
-                          let content = comment["content"] as? String,
-                          let authorId = comment["authorId"] as? String,
-                          let timestamp = comment["timestamp"] as? Timestamp else {
-                        return nil
-                    }
-
-                    return Comment(author: author, authorId: authorId, content: content, timestamp: timestamp.dateValue())
+            self.comments = documents.compactMap { document in
+                let data = document.data()
+                guard let author = data["author"] as? String,
+                      let content = data["content"] as? String,
+                      let authorId = data["authorId"] as? String,
+                      let timestamp = data["timestamp"] as? Timestamp else {
+                    return nil
                 }
 
-                // 更新留言數量
-                let commentCount = commentsData.count
-                NotificationCenter.default.post(name: NSNotification.Name("CommentCountUpdated"), object: nil, userInfo: ["postId": self.postId, "count": commentCount])
+                return Comment(author: author, authorId: authorId, content: content, timestamp: timestamp.dateValue())
+            }
 
-                // 更新 UI
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
+            // 更新留言數量
+            let commentCount = documents.count
+            NotificationCenter.default.post(name: NSNotification.Name("CommentCountUpdated"), object: nil, userInfo: ["postId": self.postId, "count": commentCount])
+
+            // 更新 UI
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
             }
         }
     }
+
+//    private func fetchComments(for postId: String) {
+//        let postRef = Firestore.firestore().collection("posts").document(postId)
+//
+//        listener = postRef.addSnapshotListener { [weak self] documentSnapshot, error in
+//            guard let self = self, let document = documentSnapshot, error == nil else {
+//                print("Error fetching comments: \(String(describing: error))")
+//                return
+//            }
+//
+//            if let data = document.data(), let commentsData = data["Comments"] as? [[String: Any]] {
+//                self.comments = commentsData.compactMap { comment in
+//                    guard let author = comment["author"] as? String,
+//                          let content = comment["content"] as? String,
+//                          let authorId = comment["authorId"] as? String,
+//                          let timestamp = comment["timestamp"] as? Timestamp else {
+//                        return nil
+//                    }
+//
+//                    return Comment(author: author, authorId: authorId, content: content, timestamp: timestamp.dateValue())
+//                }
+//
+//                // 更新留言數量
+//                let commentCount = commentsData.count
+//                NotificationCenter.default.post(name: NSNotification.Name("CommentCountUpdated"), object: nil, userInfo: ["postId": self.postId, "count": commentCount])
+//
+//                // 更新 UI
+//                DispatchQueue.main.async {
+//                    self.tableView.reloadData()
+//                }
+//            }
+//        }
+//    }
 
     // UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -221,6 +254,7 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
         }
     }
 
+    // 留言刪除 誰可以
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         guard indexPath.row > 0 else { return false }
 
@@ -233,6 +267,7 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
         return false
     }
 
+    // 留言刪除 UI Firebase 都要記得
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             comments.remove(at: indexPath.row - 1)
