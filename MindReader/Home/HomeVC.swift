@@ -34,6 +34,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         super.viewDidLoad()
         view.backgroundColor = .color
 
+
 //        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
 //        UserDefaults.standard.synchronize()
 

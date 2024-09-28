@@ -58,9 +58,14 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     }
 
     func handleClick() async {
+
+        guard let userId = UserDefaults.standard.string(forKey: "userID"), let userName =                 UserDefaults.standard.string(forKey: "userLastName") else {
+            print("User ID is nil")
+            return
+        }
+
         if let title = editView.titleTextField.text, !title.isEmpty,
            let content = editView.contentTextView.text, !content.isEmpty,
-           // 如果為空，就把他歸類在其他
            let category = editView.selectedCategory, !category.isEmpty {
 
             do {
@@ -76,8 +81,8 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
                 var data: [String: Any] = [
                     "author": [
                         "email": "JJ",
-                        "id": "JJCC",
-                        "name": "JC"
+                        "id": userId,
+                        "name": userName
                     ],
                     "avatar": selectedAvatarIndex,
                     "title": title,

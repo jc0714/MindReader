@@ -19,7 +19,7 @@ class FirestoreService {
         let documentID = UUID().uuidString
         let chatRoomId = UUID().uuidString // 固定 chatRoomId
 
-        var userData: [String: Any] = [
+        let userData: [String: Any] = [
             "user": userIdentifier,
             "name": fullName,
             "email": email,
