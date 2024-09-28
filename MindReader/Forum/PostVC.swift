@@ -28,8 +28,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         setupUI()
         loadLikedPosts()
 
-//        filterPosts(by: "All")
-
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 300
 

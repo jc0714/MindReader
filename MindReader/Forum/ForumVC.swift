@@ -19,8 +19,6 @@ class ForumVC: BasePostVC {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-//        setupUI()
-
         fetchPosts()
 
         refreshControl = UIRefreshControl()
@@ -43,108 +41,60 @@ class ForumVC: BasePostVC {
 
     @objc private func fetchPosts() {
         posts.removeAll()
+        let dispatchGroup = DispatchGroup()
+        var commentCounts = [String: Int]() // 用來儲存每篇貼文的評論數量
+
         Firestore.firestore().collection("posts")
             .order(by: "createdTime", descending: true)
             .getDocuments { [weak self] (querySnapshot, error) in
-            guard let documents = querySnapshot?.documents, error == nil else {
-                print("Error getting documents: \(String(describing: error))")
-                self?.refreshControl.endRefreshing()
-                return
-            }
+                guard let documents = querySnapshot?.documents, error == nil else {
+                    print("Error getting documents: \(String(describing: error))")
+                    self?.refreshControl.endRefreshing()
+                    return
+                }
 
-            let dispatchGroup = DispatchGroup() // 用於同步所有的評論數量請求
-
-            self?.posts = documents.compactMap { document in
-                let data = document.data()
-                guard let avatar = data["avatar"] as? Int,
-                      let title = data["title"] as? String,
-                      let timestamp = data["createdTime"] as? Timestamp,
-                      let id = data["id"] as? String,
-                      let category = data["category"] as? String,
-                      let content = data["content"] as? String,
-                      let authorData = data["author"] as? [String: Any],
-                      let authorEmail = authorData["email"] as? String,
-                      let authorId = authorData["id"] as? String,
-                      let authorName = authorData["name"] as? String
-                else { return nil }
-
-                let like = (data["like"] as? [String])?.count ?? 0
-
-                var commentCount = 0 // 初始值
-
-                dispatchGroup.enter()
-                Firestore.firestore().collection("posts").document(id).collection("Comments")
-                    .getDocuments { querySnapshot, error in
-                        if let documents = querySnapshot?.documents {
-                            commentCount = documents.count
-                        } else {
-                            print("Error getting comments: \(String(describing: error))")
+                for document in documents {
+                    let postId = document.documentID
+                    dispatchGroup.enter()
+                    Firestore.firestore().collection("posts").document(postId).collection("Comments")
+                        .getDocuments { querySnapshot, error in
+                            commentCounts[postId] = querySnapshot?.documents.count ?? 0
+                            dispatchGroup.leave()
                         }
-                        dispatchGroup.leave()
+                }
+
+                dispatchGroup.notify(queue: .main) {
+                    self?.posts = documents.compactMap { document in
+                        let data = document.data()
+                        guard let avatar = data["avatar"] as? Int,
+                              let title = data["title"] as? String,
+                              let timestamp = data["createdTime"] as? Timestamp,
+                              let id = data["id"] as? String,
+                              let category = data["category"] as? String,
+                              let content = data["content"] as? String,
+                              let authorData = data["author"] as? [String: Any],
+                              let authorEmail = authorData["email"] as? String,
+                              let authorId = authorData["id"] as? String,
+                              let authorName = authorData["name"] as? String
+                        else { return nil }
+
+                        let like = (data["like"] as? [String])?.count ?? 0
+                        let image = data["image"] as? String
+                        let date = timestamp.dateValue()
+                        let createdTimeString = DateFormatter.yyyyMMddFormatter.string(from: date)
+                        let author = Author(email: authorEmail, id: authorId, name: authorName)
+                        let commentCount = commentCounts[id] ?? 0
+
+                        return Post(avatar: avatar, title: title, createdTime: createdTimeString, id: id, category: category, content: content, image: image, author: author, like: like, comment: commentCount)
                     }
 
-                let image = data["image"] as? String
-                let date = timestamp.dateValue()
-                let createdTimeString = DateFormatter.yyyyMMddFormatter.string(from: date)
-                let author = Author(email: authorEmail, id: authorId, name: authorName)
-
-                return Post(avatar: avatar, title: title, createdTime: createdTimeString, id: id, category: category, content: content, image: image, author: author, like: like, comment: commentCount)
+                    self?.setupUI()
+                    self?.filterPosts(by: "All")
+                    self?.tableView.reloadData()
+                    self?.refreshControl.endRefreshing()
+                }
             }
-
-            dispatchGroup.notify(queue: .main) {
-                self?.setupUI()
-                self?.filterPosts(by: "All")
-                self?.tableView.reloadData()
-                self?.refreshControl.endRefreshing()
-            }
-        }
     }
-
-//    @objc private func fetchPosts() {
-//        posts.removeAll()
-//        Firestore.firestore().collection("posts")
-//            .order(by: "createdTime", descending: true)
-//            .getDocuments { [weak self] (querySnapshot, error) in
-//            guard let documents = querySnapshot?.documents, error == nil else {
-//                print("Error getting documents: \(String(describing: error))")
-//                self?.refreshControl.endRefreshing()
-//                return
-//            }
-//
-//            self?.posts = documents.compactMap { document in
-//                let data = document.data()
-//                guard let avatar = data["avatar"] as? Int,
-//                      let title = data["title"] as? String,
-//                      let timestamp = data["createdTime"] as? Timestamp,
-//                      let id = data["id"] as? String,
-//                      let category = data["category"] as? String,
-//                      let content = data["content"] as? String,
-//                      let authorData = data["author"] as? [String: Any],
-//                      let authorEmail = authorData["email"] as? String,
-//                      let authorId = authorData["id"] as? String,
-//                      let authorName = authorData["name"] as? String
-//                else { return nil }
-//
-//                let like = (data["like"] as? [String])?.count ?? 0
-////                let commentCount = (data["Comments"] as? [[String: Any]])?.count ?? 0
-//
-//                let image = data["image"] as? String
-//
-//                let date = timestamp.dateValue()
-//                let createdTimeString = DateFormatter.yyyyMMddFormatter.string(from: date)
-//
-//                let author = Author(email: authorEmail, id: authorId, name: authorName)
-//                return Post(avatar: avatar, title: title, createdTime: createdTimeString, id: id, category: category, content: content, image: image, author: author, like: like, comment: commentCount)
-//            }
-//
-//            DispatchQueue.main.async {
-//                self?.setupUI()
-//                self?.filterPosts(by: "All")
-//                self?.tableView.reloadData()
-//                self?.refreshControl.endRefreshing()
-//            }
-//        }
-//    }
 
     private func setupUI() {
         view.backgroundColor = .color

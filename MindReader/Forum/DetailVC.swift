@@ -150,7 +150,7 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
     // 從 Firestore 獲取留言
 
     private func fetchComments(for postId: String) {
-        let commentsRef = Firestore.firestore().collection("posts").document(postId).collection("Comments")
+        let commentsRef = Firestore.firestore().collection("posts").document(postId).collection("Comments").order(by: "timestamp", descending: true)
 
         listener = commentsRef.addSnapshotListener { [weak self] querySnapshot, error in
             guard let self = self, let documents = querySnapshot?.documents, error == nil else {

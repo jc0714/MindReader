@@ -33,8 +33,8 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(CommentCell.self, forCellReuseIdentifier: "CommentCell")
-
-        view.backgroundColor = UIColor.white.withAlphaComponent(0.9)
+        
+        view.backgroundColor = UIColor.white.withAlphaComponent(1)
 
         setupTableView()
         setupCloseButton()
@@ -44,7 +44,7 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     // MARK: - Firestore Listener
     private func setupFirestoreListener() {
-        let commentsRef = Firestore.firestore().collection("posts").document(postId).collection("Comments")
+        let commentsRef = Firestore.firestore().collection("posts").document(postId).collection("Comments").order(by: "timestamp", descending: true)
 
         listener = commentsRef.addSnapshotListener { [weak self] querySnapshot, error in
             guard let self = self, let documents = querySnapshot?.documents, error == nil else {
@@ -52,7 +52,6 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 return
             }
 
-            // 將 comments 子集合中的文件轉換為 Comment 對象
             self.comments = documents.compactMap { document in
                 let data = document.data()
                 guard let author = data["author"] as? String,
@@ -65,7 +64,6 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 return Comment(author: author, authorId: authorId, content: content, timestamp: timestamp.dateValue())
             }
 
-            // 更新留言數量
             let commentCount = documents.count
             NotificationCenter.default.post(name: NSNotification.Name("CommentCountUpdated"), object: nil, userInfo: ["postId": self.postId, "count": commentCount])
 

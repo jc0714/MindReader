@@ -38,74 +38,81 @@ class MyPostVC: BasePostVC {
     }
 
     @objc private func fetchPosts() {
+        self.posts.removeAll()
+
+        let dispatchGroup = DispatchGroup()
+        var commentCounts = [String: Int]()
 
         guard let userId = UserDefaults.standard.string(forKey: "userID") else {
             print("User ID is nil")
             return
         }
 
-        // 該用戶的文章
-        Firestore.firestore().collection("Users").document(userId).addSnapshotListener { (documentSnapshot, error) in
+        Firestore.firestore().collection("Users").document(userId).addSnapshotListener { [weak self] (documentSnapshot, error) in
+            guard let self = self else { return }
             guard let document = documentSnapshot, document.exists, error == nil else {
                 print("Error getting document: \(String(describing: error))")
                 self.refreshControl.endRefreshing()
                 return
             }
-            // 從 posts collection 撈文章
+
+            // 該用戶的文章
             if let postIds = document.data()?["postIds"] as? [String], !postIds.isEmpty {
+                // 從 posts collection 撈文章
                 Firestore.firestore().collection("posts")
                     .whereField(FieldPath.documentID(), in: postIds)
                     .order(by: "createdTime", descending: true)
-                    .getDocuments { [weak self] (snapshot, error) in
-                        guard let self = self else { return }
-                        if let error = error {
-                            print("Error getting documents: \(error)")
+                    .getDocuments { (snapshot, error) in
+                        guard let snapshot = snapshot, error == nil else {
+                            print("Error getting documents: \(String(describing: error))")
+                            self.refreshControl.endRefreshing()
                             return
                         }
-                        guard let snapshot = snapshot else {
-                            print("No documents found")
-                            return
-                        }
-
-                        self.posts.removeAll()
 
                         for document in snapshot.documents {
-                            let data = document.data()
-                            guard let avatar = data["avatar"] as? Int,
-                                  let title = data["title"] as? String,
-                                  let timestamp = data["createdTime"] as? Timestamp,
-                                  let category = data["category"] as? String,
-                                  let content = data["content"] as? String,
-                                  let authorData = data["author"] as? [String: Any],
-                                  let authorEmail = authorData["email"] as? String,
-                                  let authorId = authorData["id"] as? String,
-                                  let authorName = authorData["name"] as? String
-                            else {
-                                    continue
-                            }
-
-                            let like = (data["like"] as? [String])?.count ?? 0
-                            let commentCount = (data["Comments"] as? [[String: Any]])?.count ?? 0
-
-                            let image = data["image"] as? String
-
-                            let createdTimeString = DateFormatter.localizedString(
-                                from: timestamp.dateValue(),
-                                dateStyle: .medium, timeStyle: .none
-                            )
-
-                            let author = Author(email: authorEmail, id: authorId, name: authorName)
-
-                            let post = Post(avatar: avatar, title: title, createdTime: createdTimeString, id: document.documentID, category: category, content: content, image: image, author: author, like: like, comment: commentCount)
-
-                            self.posts.append(post)
+                            let postId = document.documentID
+                            dispatchGroup.enter()
+                            Firestore.firestore().collection("posts").document(postId).collection("Comments")
+                                .getDocuments { querySnapshot, error in
+                                    commentCounts[postId] = querySnapshot?.documents.count ?? 0
+                                    dispatchGroup.leave()
+                                }
                         }
 
-                        DispatchQueue.main.async {
-                            print("Post IDs: \(postIds)")
-                            self.filterPosts(by: "All")
-                            self.tableView.reloadData()
-                            self.refreshControl.endRefreshing()
+                        dispatchGroup.notify(queue: .main) {
+                            self.posts = snapshot.documents.compactMap { document in
+                                let data = document.data()
+                                guard let avatar = data["avatar"] as? Int,
+                                      let title = data["title"] as? String,
+                                      let timestamp = data["createdTime"] as? Timestamp,
+                                      let category = data["category"] as? String,
+                                      let content = data["content"] as? String,
+                                      let authorData = data["author"] as? [String: Any],
+                                      let authorEmail = authorData["email"] as? String,
+                                      let authorId = authorData["id"] as? String,
+                                      let authorName = authorData["name"] as? String
+                                else { return nil }
+
+                                let like = (data["like"] as? [String])?.count ?? 0
+                                let commentCount = commentCounts[document.documentID] ?? 0 // 正確的留言數量
+
+                                let image = data["image"] as? String
+                                let createdTimeString = DateFormatter.localizedString(
+                                    from: timestamp.dateValue(),
+                                    dateStyle: .medium, timeStyle: .none
+                                )
+
+                                let author = Author(email: authorEmail, id: authorId, name: authorName)
+
+                                return Post(avatar: avatar, title: title, createdTime: createdTimeString, id: document.documentID, category: category, content: content, image: image, author: author, like: like, comment: commentCount)
+                            }
+
+                            DispatchQueue.main.async {
+                                print("Post IDs: \(postIds)")
+                                self.filterPosts(by: "All")
+                                self.tableView.reloadData()
+                                self.refreshControl.endRefreshing()
+                            }
                         }
                     }
             } else {
@@ -113,9 +120,11 @@ class MyPostVC: BasePostVC {
                 self.posts.removeAll()
                 self.filterPosts(by: "All")
                 self.tableView.reloadData()
-                self.refreshControl.endRefreshing()            }
+                self.refreshControl.endRefreshing()
+            }
         }
     }
+
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 
@@ -141,36 +150,6 @@ class MyPostVC: BasePostVC {
         return configuration
     }
 
-//    func deletePost(at indexPath: IndexPath) {
-//        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-//            print("User ID is nil")
-//            return
-//        }
-//
-//        let postId = posts[indexPath.row].id
-//
-//        // 刪除貼文
-//        Firestore.firestore().collection("posts").document(postId).delete { error in
-//            if let error = error {
-//                print("Error deleting post: \(error.localizedDescription)")
-//                return
-//            }
-//
-//            // 更新使用者的 postIds
-//            Firestore.firestore().collection("Users").document(userId).updateData([
-//                "postIds": FieldValue.arrayRemove([postId])
-//            ]) { updateError in
-//                if let updateError = updateError {
-//                    print("Error updating user's postIds: \(updateError.localizedDescription)")
-//                } else {
-//                    // 移除 posts 陣列中的項目
-//                    print(self.posts.count)
-//                    self.posts.remove(at: indexPath.row)
-//                }
-//            }
-//        }
-//    }
-    
     func deletePost(at indexPath: IndexPath) {
 
         guard let userId = UserDefaults.standard.string(forKey: "userID") else {
