@@ -40,6 +40,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 //        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
 //        UserDefaults.standard.synchronize()
 
+//        UserDefaults.standard.set("A1578E48-486F-4989-A1FD-AA52783B9924", forKey: "userId")
+
         if !UserDefaults.standard.bool(forKey: "isUserLoggedIn") {
             showLoginView()
         }

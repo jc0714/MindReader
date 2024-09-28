@@ -52,13 +52,11 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
         saveToFireBaseButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            // imageCollectionView constraints
             imageCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             imageCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             imageCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             imageCollectionView.heightAnchor.constraint(equalToConstant: 120),
 
-            // finalImageView constraints
             finalImageView.topAnchor.constraint(equalTo: imageCollectionView.bottomAnchor, constant: 40),
             finalImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             finalImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),

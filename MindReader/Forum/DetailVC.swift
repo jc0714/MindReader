@@ -221,6 +221,26 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
         }
     }
 
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        guard indexPath.row > 0 else { return false }
+
+        let comment = comments[indexPath.row - 1]
+
+        if let userId = UserDefaults.standard.string(forKey: "userId") {
+            return comment.authorId == userId
+        }
+
+        return false
+    }
+
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            comments.remove(at: indexPath.row - 1)
+
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+    }
+
     func updateHeartBtn(at indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as? PostCell
 
@@ -281,7 +301,7 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
 
         // 確保更新對應的 post
         if post?.id == postId {
-            post?.comment = newCommentCount // 更新 post 的 comment 屬性
+            post?.comment = newCommentCount // 更新 post 的 comment
             DispatchQueue.main.async {
                 // 獲取對應的 cell 並更新顯示
                 if let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? PostCell {
