@@ -34,9 +34,16 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.separatorStyle = .none
 
         NotificationCenter.default.addObserver(self, selector: #selector(handleCommentCountUpdate(_:)), name: NSNotification.Name("CommentCountUpdated"), object: nil)
+    }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         NotificationCenter.default.addObserver(self, selector: #selector(handleLikeUpdate(notification:)), name: NSNotification.Name("LikeCountUpdated"), object: nil)
+    }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("LikeCountUpdated"), object: nil)
     }
 
     private func setupUI() {
@@ -104,25 +111,24 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         guard let userInfo = notification.userInfo,
               let postId = userInfo["postId"] as? String,
               let newLikes = userInfo["newLikes"] as? Int,
+              let isLiked = userInfo["isLiked"] as? Bool,
               let index = posts.firstIndex(where: { $0.id == postId }) else {
             return
         }
 
-        // 檢查是否真的需要更新
-        if posts[index].like == newLikes {
-            return
-        }
-
-        // 更新本地數據
+        // 更新本地資料
         posts[index].like = newLikes
 
-        // 更新介面
-        if let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? PostCell {
-            cell.heartCount.text = String(newLikes)
-            let heartImage = BasePostVC.likedPosts.contains(postId) ? "heart.fill" : "heart"
-            cell.heartButton.setImage(UIImage(systemName: heartImage), for: .normal)
+        // 更新 UI
+        DispatchQueue.main.async {
+            if let cell = self.tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? PostCell {
+                cell.heartCount.text = String(newLikes)
+                let heartImage = isLiked ? "heart.fill" : "heart"
+                cell.heartButton.setImage(UIImage(systemName: heartImage), for: .normal)
+            }
         }
     }
+
 
     deinit {
         // 移除觀察者
@@ -175,11 +181,11 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     // 當點擊 post 時跳轉到這個貼文頁面
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard indexPath.row < posts.count else {
+        guard indexPath.row < filteredPosts.count else {
             return
         }
 
-        let selectedPost = posts[indexPath.row]
+        let selectedPost = filteredPosts[indexPath.row]
         let detailVC = DetailVC()
         detailVC.post = selectedPost // 將所選的 post 資料傳遞到 DetailVC
         navigationController?.pushViewController(detailVC, animated: true)
@@ -187,59 +193,141 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     // 更新愛心實心空心狀態
     func updateHeartBtn(at indexPath: IndexPath) {
-
         guard let userId = UserDefaults.standard.string(forKey: "userID") else {
             print("User ID is nil")
             return
         }
 
         let userRef = Firestore.firestore().collection("Users").document(userId)
-        
         var post = posts[indexPath.row]
         let postId = post.id
-        let cell = tableView.cellForRow(at: indexPath) as? PostCell
 
         // 批次寫入操作
         let batch = Firestore.firestore().batch()
         let postRef = Firestore.firestore().collection("posts").document(postId)
 
+        var isLiked = false
+
         if BasePostVC.likedPosts.contains(postId) {
-            // 如果用戶已經按了讚，則移除讚
+            // 移除愛心
             batch.updateData(["like": FieldValue.arrayRemove([userId])], forDocument: postRef)
             batch.updateData(["likePosts": FieldValue.arrayRemove([postId])], forDocument: userRef)
-
-            // 更新本地數據，移除已按讚的文章
             BasePostVC.likedPosts.remove(postId)
             post.like -= 1
-            cell?.heartButton.setImage(UIImage(systemName: "heart"), for: .normal)
+            isLiked = false
         } else {
-            // 如果用戶還未按讚，則添加讚
+            // 添加愛心
             batch.updateData(["like": FieldValue.arrayUnion([userId])], forDocument: postRef)
             batch.updateData(["likePosts": FieldValue.arrayUnion([postId])], forDocument: userRef)
-
-            // 更新本地數據，添加已按讚的文章
             BasePostVC.likedPosts.insert(postId)
             post.like += 1
-            cell?.heartButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+            isLiked = true
         }
-        posts[indexPath.row] = post
-
-        // 更新愛心數量顯示
-        cell?.heartCount.text = String(post.like)
 
         // 提交批次寫入操作
         Task {
             do {
                 try await batch.commit()
-                NotificationCenter.default.post(name: NSNotification.Name("LikeCountUpdated"), object: nil, userInfo: ["postId": postId, "newLikes": post.like])
-//                NotificationCenter.default.post(name: NSNotification.Name("RefreshDataNotification"), object: nil, userInfo: ["postId": postId, "newLikes": post.like])
 
-//                NotificationCenter.default.post(name: NSNotification.Name("RefreshDataNotification"), object: nil)
+                // 發送通知，將新的愛心狀態（是否按讚）傳遞過去
+                NotificationCenter.default.post(name: NSNotification.Name("LikeCountUpdated"), object: nil, userInfo: ["postId": postId, "newLikes": post.like, "isLiked": isLiked])
             } catch {
                 print("Error updating likes: \(error.localizedDescription)")
             }
         }
     }
+
+//    func updateHeartBtn(at indexPath: IndexPath) {
+//        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
+//            print("User ID is nil")
+//            return
+//        }
+//
+//        let userRef = Firestore.firestore().collection("Users").document(userId)
+//        var post = posts[indexPath.row]
+//        let postId = post.id
+////        let cell = tableView.cellForRow(at: indexPath) as? PostCell
+//
+//        // 批次寫入操作
+//        let batch = Firestore.firestore().batch()
+//        let postRef = Firestore.firestore().collection("posts").document(postId)
+//
+//        if BasePostVC.likedPosts.contains(postId) {
+//            // 移除愛心
+//            batch.updateData(["like": FieldValue.arrayRemove([userId])], forDocument: postRef)
+//            batch.updateData(["likePosts": FieldValue.arrayRemove([postId])], forDocument: userRef)
+//            BasePostVC.likedPosts.remove(postId)
+//        } else {
+//            // 添加愛心
+//            batch.updateData(["like": FieldValue.arrayUnion([userId])], forDocument: postRef)
+//            batch.updateData(["likePosts": FieldValue.arrayUnion([postId])], forDocument: userRef)
+//            BasePostVC.likedPosts.insert(postId)
+//        }
+//
+//        // 提交批次寫入操作
+//        Task {
+//            do {
+//                try await batch.commit()
+//                // 上傳成功後發送通知，並將更新後的愛心數量傳遞過去
+//                let newLikes = BasePostVC.likedPosts.contains(postId) ? post.like + 1 : post.like - 1
+//                NotificationCenter.default.post(name: NSNotification.Name("LikeCountUpdated"), object: nil, userInfo: ["postId": postId, "newLikes": newLikes])
+//            } catch {
+//                print("Error updating likes: \(error.localizedDescription)")
+//            }
+//        }
+//    }
+
+//    func updateHeartBtn(at indexPath: IndexPath) {
+//
+//        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
+//            print("User ID is nil")
+//            return
+//        }
+//
+//        let userRef = Firestore.firestore().collection("Users").document(userId)
+//        
+//        var post = posts[indexPath.row]
+//        let postId = post.id
+//        let cell = tableView.cellForRow(at: indexPath) as? PostCell
+//
+//        // 批次寫入操作
+//        let batch = Firestore.firestore().batch()
+//        let postRef = Firestore.firestore().collection("posts").document(postId)
+//
+//        if BasePostVC.likedPosts.contains(postId) {
+//            // 如果用戶已經按了讚，則移除讚
+//            batch.updateData(["like": FieldValue.arrayRemove([userId])], forDocument: postRef)
+//            batch.updateData(["likePosts": FieldValue.arrayRemove([postId])], forDocument: userRef)
+//
+//            // 更新本地數據，移除已按讚的文章
+//            BasePostVC.likedPosts.remove(postId)
+////            post.like -= 1
+////            cell?.heartButton.setImage(UIImage(systemName: "heart"), for: .normal)
+//        } else {
+//            // 如果用戶還未按讚，則添加讚
+//            batch.updateData(["like": FieldValue.arrayUnion([userId])], forDocument: postRef)
+//            batch.updateData(["likePosts": FieldValue.arrayUnion([postId])], forDocument: userRef)
+//
+//            // 更新本地數據，添加已按讚的文章
+//            BasePostVC.likedPosts.insert(postId)
+////            post.like += 1
+////            cell?.heartButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+//        }
+////        posts[indexPath.row] = post
+//
+//        // 更新愛心數量顯示
+////        cell?.heartCount.text = String(post.like)
+//
+//        // 提交批次寫入操作
+//        Task {
+//            do {
+//                try await batch.commit()
+//                NotificationCenter.default.post(name: NSNotification.Name("LikeCountUpdated"), object: nil, userInfo: ["postId": postId, "newLikes": post.like])
+//            } catch {
+//                print("Error updating likes: \(error.localizedDescription)")
+//            }
+//        }
+//    }
 
     // 連結到留言 VC
     func showCommentsForPost(at indexPath: IndexPath) {
@@ -265,3 +353,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
 }
+
+//                NotificationCenter.default.post(name: NSNotification.Name("RefreshDataNotification"), object: nil, userInfo: ["postId": postId, "newLikes": post.like])
+
+//                NotificationCenter.default.post(name: NSNotification.Name("RefreshDataNotification"), object: nil)
