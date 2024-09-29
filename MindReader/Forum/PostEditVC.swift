@@ -109,7 +109,7 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
                     "postIds": FieldValue.arrayUnion([document.documentID])
                 ])
 
-                NotificationCenter.default.post(name: NSNotification.Name("DataUpdated"), object: nil)
+                NotificationCenter.default.post(name: NSNotification.Name("NewPostAdded"), object: nil)
 
                 DispatchQueue.main.async { [weak self] in
                     self?.navigationController?.popViewController(animated: true)

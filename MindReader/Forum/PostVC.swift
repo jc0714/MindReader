@@ -34,6 +34,9 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.separatorStyle = .none
 
         NotificationCenter.default.addObserver(self, selector: #selector(handleCommentCountUpdate(_:)), name: NSNotification.Name("CommentCountUpdated"), object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(handleLikeUpdate(notification:)), name: NSNotification.Name("LikeCountUpdated"), object: nil)
+
     }
 
     private func setupUI() {
@@ -93,9 +96,37 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             }
             DispatchQueue.main.async {
                 self.filterPosts(by: "All")
-                self.tableView.reloadData()
             }
         }
+    }
+
+    @objc func handleLikeUpdate(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let postId = userInfo["postId"] as? String,
+              let newLikes = userInfo["newLikes"] as? Int,
+              let index = posts.firstIndex(where: { $0.id == postId }) else {
+            return
+        }
+
+        // 檢查是否真的需要更新
+        if posts[index].like == newLikes {
+            return
+        }
+
+        // 更新本地數據
+        posts[index].like = newLikes
+
+        // 更新介面
+        if let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? PostCell {
+            cell.heartCount.text = String(newLikes)
+            let heartImage = BasePostVC.likedPosts.contains(postId) ? "heart.fill" : "heart"
+            cell.heartButton.setImage(UIImage(systemName: heartImage), for: .normal)
+        }
+    }
+
+    deinit {
+        // 移除觀察者
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("RefreshDataNotification"), object: nil)
     }
 
     // 配置 cell
@@ -191,6 +222,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             post.like += 1
             cell?.heartButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
         }
+        posts[indexPath.row] = post
 
         // 更新愛心數量顯示
         cell?.heartCount.text = String(post.like)
@@ -199,8 +231,10 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         Task {
             do {
                 try await batch.commit()
-                NotificationCenter.default.post(name: NSNotification.Name("RefreshDataNotification"), object: nil)
+                NotificationCenter.default.post(name: NSNotification.Name("LikeCountUpdated"), object: nil, userInfo: ["postId": postId, "newLikes": post.like])
+//                NotificationCenter.default.post(name: NSNotification.Name("RefreshDataNotification"), object: nil, userInfo: ["postId": postId, "newLikes": post.like])
 
+//                NotificationCenter.default.post(name: NSNotification.Name("RefreshDataNotification"), object: nil)
             } catch {
                 print("Error updating likes: \(error.localizedDescription)")
             }

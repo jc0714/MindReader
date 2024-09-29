@@ -51,6 +51,9 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
         }
 
         NotificationCenter.default.addObserver(self, selector: #selector(handleCommentCountUpdate(_:)), name: NSNotification.Name("CommentCountUpdated"), object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(handleLikeUpdate(notification:)), name: NSNotification.Name("LikeCountUpdated"), object: nil)
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -62,6 +65,26 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
         super.viewWillDisappear(animated)
         listener?.remove()
         navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+
+    @objc func handleLikeUpdate(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let postId = userInfo["postId"] as? String,
+              let newLikes = userInfo["newLikes"] as? Int else {
+            return
+        }
+
+        // 更新介面
+        if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? PostCell {
+            cell.heartCount.text = String(newLikes)
+            let heartImage = BasePostVC.likedPosts.contains(postId) ? "heart.fill" : "heart"
+            cell.heartButton.setImage(UIImage(systemName: heartImage), for: .normal)
+        }
+    }
+
+    deinit {
+        // 移除觀察者
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("RefreshDataNotification"), object: nil)
     }
 
     func setUpNavigation() {
@@ -259,8 +282,11 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
         Task {
             do {
                 try await batch.commit()
-                NotificationCenter.default.post(name: NSNotification.Name("RefreshDataNotification"), object: nil)
+                NotificationCenter.default.post(name: NSNotification.Name("LikeCountUpdated"), object: nil, userInfo: ["postId": postId, "newLikes": post?.like])
 
+//                NotificationCenter.default.post(name: NSNotification.Name("RefreshDataNotification"), object: nil)
+
+//                tableView.reloadRows(at: [indexPath], with: .automatic)
             } catch {
                 print("Error updating likes: \(error.localizedDescription)")
             }

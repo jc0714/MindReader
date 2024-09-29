@@ -16,6 +16,8 @@ class ForumVC: BasePostVC {
 
     private var refreshControl: UIRefreshControl!
 
+    private let tag = "All"
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -24,19 +26,15 @@ class ForumVC: BasePostVC {
         refreshControl = UIRefreshControl()
         tableView.addSubview(refreshControl)
 
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadTableData), name: NSNotification.Name("DataUpdated"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadTableData), name: NSNotification.Name("NewPostAdded"), object: nil)
 
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadTableData), name: NSNotification.Name("RefreshDataNotification"), object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(reloadTableData), name: NSNotification.Name("RefreshDataNotification"), object: nil)
 
         refreshControl.addTarget(self, action: #selector(fetchPosts), for: UIControl.Event.valueChanged)
     }
 
     @objc func reloadTableData() {
         fetchPosts()
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
     }
 
     @objc private func fetchPosts() {
