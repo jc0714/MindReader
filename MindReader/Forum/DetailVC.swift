@@ -40,8 +40,9 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
 
         if let postId = post?.id {
             self.postId = postId
-            fetchComments(for: postId)
         }
+
+        setupFirestoreListener()
 
         NotificationCenter.default.addObserver(self, selector: #selector(handleCommentCountUpdate(_:)), name: NSNotification.Name("CommentCountUpdated"), object: nil)
     }
@@ -148,8 +149,9 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
     }
 
     // 從 Firestore 獲取留言
-
-    private func fetchComments(for postId: String) {
+//
+    // MARK: - Firestore Listener
+    private func setupFirestoreListener() {
         let commentsRef = Firestore.firestore().collection("posts").document(postId).collection("Comments").order(by: "timestamp", descending: true)
 
         listener = commentsRef.addSnapshotListener { [weak self] querySnapshot, error in
@@ -167,10 +169,11 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
                     return nil
                 }
 
-                return Comment(author: author, authorId: authorId, content: content, timestamp: timestamp.dateValue())
+                let documentId = document.documentID
+
+                return Comment(id: documentId, author: author, authorId: authorId, content: content, timestamp: timestamp.dateValue())
             }
 
-            // 更新留言數量
             let commentCount = documents.count
             NotificationCenter.default.post(name: NSNotification.Name("CommentCountUpdated"), object: nil, userInfo: ["postId": self.postId, "count": commentCount])
 
@@ -180,39 +183,6 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
             }
         }
     }
-
-//    private func fetchComments(for postId: String) {
-//        let postRef = Firestore.firestore().collection("posts").document(postId)
-//
-//        listener = postRef.addSnapshotListener { [weak self] documentSnapshot, error in
-//            guard let self = self, let document = documentSnapshot, error == nil else {
-//                print("Error fetching comments: \(String(describing: error))")
-//                return
-//            }
-//
-//            if let data = document.data(), let commentsData = data["Comments"] as? [[String: Any]] {
-//                self.comments = commentsData.compactMap { comment in
-//                    guard let author = comment["author"] as? String,
-//                          let content = comment["content"] as? String,
-//                          let authorId = comment["authorId"] as? String,
-//                          let timestamp = comment["timestamp"] as? Timestamp else {
-//                        return nil
-//                    }
-//
-//                    return Comment(author: author, authorId: authorId, content: content, timestamp: timestamp.dateValue())
-//                }
-//
-//                // 更新留言數量
-//                let commentCount = commentsData.count
-//                NotificationCenter.default.post(name: NSNotification.Name("CommentCountUpdated"), object: nil, userInfo: ["postId": self.postId, "count": commentCount])
-//
-//                // 更新 UI
-//                DispatchQueue.main.async {
-//                    self.tableView.reloadData()
-//                }
-//            }
-//        }
-//    }
 
     // UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -270,9 +240,11 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
     // 留言刪除 UI Firebase 都要記得
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            comments.remove(at: indexPath.row - 1)
+            let commentId = comments[indexPath.row - 1].id
 
-            tableView.deleteRows(at: [indexPath], with: .automatic)
+            let postRef = Firestore.firestore().collection("posts").document(postId).collection("Comments").document(commentId)
+
+            postRef.delete()
         }
     }
 

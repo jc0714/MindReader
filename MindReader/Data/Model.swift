@@ -50,6 +50,7 @@ struct Author {
 // MARK: Comment
 
 struct Comment {
+    let id: String
     let author: String
     let authorId: String
     let content: String
@@ -63,3 +64,4 @@ struct Message {
     let sender: String
     let createdTime: String
 }
+

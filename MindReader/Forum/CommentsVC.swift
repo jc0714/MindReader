@@ -61,7 +61,9 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                     return nil
                 }
 
-                return Comment(author: author, authorId: authorId, content: content, timestamp: timestamp.dateValue())
+                let documentId = document.documentID
+
+                return Comment(id: documentId, author: author, authorId: authorId, content: content, timestamp: timestamp.dateValue())
             }
 
             let commentCount = documents.count

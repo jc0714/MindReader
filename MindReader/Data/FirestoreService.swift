@@ -52,7 +52,7 @@ class FirestoreService {
         let chatRef = self.db.collection("Users").document(userId).collection("Chat").document(chatRoomId)
         let messageRef = chatRef.collection("msg")
         let chatData: [String: Any] = [
-            "sender": "0",
+            "sender": "1",
             "content": "早安午安晚安！☀️✨ 我是阿雲～ 歡迎跟我分享你的日常，快樂或低谷都可以。一起度過每一天吧🌼",
             "createdTime": FieldValue.serverTimestamp()
         ]
@@ -192,6 +192,7 @@ class FirestoreService {
         }
     }
 
+    
     func setupFirestoreListener(for collection: String, completion: @escaping () -> Void) -> ListenerRegistration? {
         return db.collection(collection).addSnapshotListener { (_, error) in
             if let error = error {
