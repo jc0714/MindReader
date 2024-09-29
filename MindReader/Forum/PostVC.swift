@@ -31,6 +31,8 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 300
 
+        tableView.separatorStyle = .none
+
         NotificationCenter.default.addObserver(self, selector: #selector(handleCommentCountUpdate(_:)), name: NSNotification.Name("CommentCountUpdated"), object: nil)
     }
 

@@ -91,7 +91,7 @@ class FirestoreService {
         let newDocumentRef = try await translateRef.addDocument(data: data)
         let documentID = newDocumentRef.documentID
 
-        let authorCollection = Firestore.firestore().collection("Users").document(userId)
+        let authorCollection = db.collection("Users").document(userId)
         try await authorCollection.updateData([
             "translate": FieldValue.arrayUnion([documentID])
         ])
@@ -181,7 +181,7 @@ class FirestoreService {
                 let content = data["content"] as? String ?? ""
                 let sender = data["sender"] as? String ?? ""
                 let createdTime = data["createdTime"] as? Timestamp ?? Timestamp(date: Date())
-     
+
                 let date = createdTime.dateValue()
                 let timeString = DateFormatter.sharedFormatter.string(from: date)
 
@@ -193,7 +193,7 @@ class FirestoreService {
     }
 
     func setupFirestoreListener(for postId: String, completion: @escaping ([Comment]) -> Void) -> ListenerRegistration {
-        let commentsRef = Firestore.firestore().collection("posts").document(postId).collection("Comments").order(by: "timestamp", descending: true)
+        let commentsRef = db.collection("posts").document(postId).collection("Comments").order(by: "timestamp", descending: true)
 
         let listener = commentsRef.addSnapshotListener { [weak self] querySnapshot, error in
             guard let self = self, let documents = querySnapshot?.documents, error == nil else {
@@ -221,15 +221,5 @@ class FirestoreService {
 
         }
         return listener
-    }
-
-    func setupFirestoreListener(for collection: String, completion: @escaping () -> Void) -> ListenerRegistration? {
-        return db.collection(collection).addSnapshotListener { (_, error) in
-            if let error = error {
-                print("Error listening to documents: \(error)")
-            } else {
-                completion()
-            }
-        }
     }
 }

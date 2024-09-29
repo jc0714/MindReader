@@ -25,6 +25,14 @@ class ChatCell: UITableViewCell {
         return view
     }()
 
+    let inComeMsgImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.layer.cornerRadius = 20
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+
     let readLabel: UILabel = {
         let label = UILabel()
         label.text = "Reed"
@@ -44,6 +52,7 @@ class ChatCell: UITableViewCell {
 
     var messageLeadingConstraint: NSLayoutConstraint!
     var messageTrailingConstraint: NSLayoutConstraint!
+    var avatarLeadingConstraint: NSLayoutConstraint!
 
     var timeLeadingConstraint: NSLayoutConstraint!
     var timeTrailingConstraint: NSLayoutConstraint!
@@ -51,10 +60,14 @@ class ChatCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
+
         addSubview(bubbleBackgroundView)
         addSubview(messageLabel)
         addSubview(readLabel)
         addSubview(timeLabel)
+        addSubview(inComeMsgImageView) // 添加頭貼
 
         let constraints = [
             messageLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),
@@ -69,17 +82,22 @@ class ChatCell: UITableViewCell {
             readLabel.trailingAnchor.constraint(equalTo: bubbleBackgroundView.leadingAnchor, constant: -8),
             readLabel.bottomAnchor.constraint(equalTo: bubbleBackgroundView.bottomAnchor, constant: -14),
 
-            timeLabel.bottomAnchor.constraint(equalTo: bubbleBackgroundView.bottomAnchor)
+            timeLabel.bottomAnchor.constraint(equalTo: bubbleBackgroundView.bottomAnchor),
+
+            inComeMsgImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            inComeMsgImageView.bottomAnchor.constraint(equalTo: bubbleBackgroundView.bottomAnchor, constant: -4),
+            inComeMsgImageView.widthAnchor.constraint(equalToConstant: 40),
+            inComeMsgImageView.heightAnchor.constraint(equalToConstant: 40)
         ]
         NSLayoutConstraint.activate(constraints)
 
         // 自己
-        timeLeadingConstraint = timeLabel.trailingAnchor.constraint(equalTo: bubbleBackgroundView.leadingAnchor, constant: -8)
-        // 對方
-        timeTrailingConstraint = timeLabel.leadingAnchor.constraint(equalTo: bubbleBackgroundView.trailingAnchor, constant: 8)
-
-        messageLeadingConstraint = messageLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32)
         messageTrailingConstraint = messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32)
+        timeLeadingConstraint = timeLabel.trailingAnchor.constraint(equalTo: bubbleBackgroundView.leadingAnchor, constant: -8)
+
+        // 對方
+        messageLeadingConstraint = messageLabel.leadingAnchor.constraint(equalTo: inComeMsgImageView.trailingAnchor, constant: 24)
+        timeTrailingConstraint = timeLabel.leadingAnchor.constraint(equalTo: bubbleBackgroundView.trailingAnchor, constant: 8)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -102,17 +120,24 @@ class ChatCell: UITableViewCell {
             messageLeadingConstraint.isActive = true
             timeTrailingConstraint.isActive = true
             bubbleBackgroundView.backgroundColor = UIColor(white: 0.9, alpha: 1)
+
+            inComeMsgImageView.isHidden = false
+            inComeMsgImageView.image = UIImage(named: "photo4")
         } else {
             readLabel.text = "Read"
             messageTrailingConstraint.isActive = true
             timeLeadingConstraint.isActive = true
             bubbleBackgroundView.backgroundColor = UIColor.black
             messageLabel.textColor = .white
+
+            inComeMsgImageView.isHidden = true
         }
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
         messageLabel.textColor = .black
+        inComeMsgImageView.isHidden = true // 重置頭貼狀態
     }
 }
+

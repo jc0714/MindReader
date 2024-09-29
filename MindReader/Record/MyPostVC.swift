@@ -12,6 +12,8 @@ import FirebaseFirestore
 
 class MyPostVC: BasePostVC {
 
+    private var listener: ListenerRegistration?
+
     private var refreshControl: UIRefreshControl!
 
     override func viewDidLoad() {
@@ -27,6 +29,11 @@ class MyPostVC: BasePostVC {
         NotificationCenter.default.addObserver(self, selector: #selector(reloadTableData), name: NSNotification.Name("RefreshDataNotification"), object: nil)
 
         refreshControl.addTarget(self, action: #selector(fetchPosts), for: UIControl.Event.valueChanged)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        listener?.remove()
     }
 
     @objc func reloadTableData() {
@@ -48,7 +55,7 @@ class MyPostVC: BasePostVC {
             return
         }
 
-        Firestore.firestore().collection("Users").document(userId).addSnapshotListener { [weak self] (documentSnapshot, error) in
+        listener = Firestore.firestore().collection("Users").document(userId).addSnapshotListener { [weak self] (documentSnapshot, error) in
             guard let self = self else { return }
             guard let document = documentSnapshot, document.exists, error == nil else {
                 print("Error getting document: \(String(describing: error))")
@@ -124,7 +131,6 @@ class MyPostVC: BasePostVC {
             }
         }
     }
-
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 

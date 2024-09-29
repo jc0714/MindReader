@@ -31,6 +31,9 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
 
         chatView.tableView.delegate = self
         chatView.tableView.dataSource = self
+
+        chatView.tableView.backgroundColor = .pink1
+
         setUpActions()
         listenForMessages()
 
@@ -118,7 +121,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
                 return
             }
 
-            self.chatView.textView.text = ""
+            self.chatView.resetTextView()
 
             let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
             self.chatView.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)

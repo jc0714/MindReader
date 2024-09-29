@@ -62,7 +62,6 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
         super.viewWillDisappear(animated)
         listener?.remove()
         navigationController?.setNavigationBarHidden(true, animated: true)
-        listener?.remove()
     }
 
     func setUpNavigation() {

@@ -20,7 +20,6 @@ class ChatView: UIView, UITextViewDelegate {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .white
         setupInputView()
         setupTableView()
     }
@@ -33,7 +32,7 @@ class ChatView: UIView, UITextViewDelegate {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.allowsSelection = false
         tableView.separatorStyle = .none
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = .clear
         tableView.register(ChatCell.self, forCellReuseIdentifier: "ChatCell")
         addSubview(tableView)
 
@@ -107,6 +106,13 @@ class ChatView: UIView, UITextViewDelegate {
             textViewHeightConstraint.constant = contentHeight
             textView.isScrollEnabled = false
         }
+        layoutIfNeeded()
+    }
+
+    func resetTextView() {
+        textView.text = ""
+        textViewHeightConstraint.constant = 36
+        textView.isScrollEnabled = false
         layoutIfNeeded()
     }
 }

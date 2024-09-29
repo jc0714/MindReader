@@ -11,26 +11,19 @@ import Kingfisher
 
 class PostCell: UITableViewCell {
 
-    let imageNames = ["photo4", "photo5", "photo6", "photo7"]
-
+    private let imageNames = ["photo4", "photo5", "photo6", "photo7"]
     private var isHeartSelected: Bool = false
-
     var heartButtonTappedClosure: (() -> Void)?
-
     var commentButtonTappedClosure: (() -> Void)?
     var commentButtonLongPressClosure: (() -> Void)?
-
     var authorTapAction: (() -> Void)?
-
     var postImageHeightConstraint: NSLayoutConstraint!
 
     let avatarImageView = UIImageView()
-
     let articleTitle: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 20)
-//        label.backgroundColor = .color
         return label
     }()
 
@@ -38,6 +31,7 @@ class PostCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .pink1
+        label.isUserInteractionEnabled = true
         return label
     }()
 
@@ -65,7 +59,6 @@ class PostCell: UITableViewCell {
     }()
 
     let postImageView = UIImageView()
-
     let heartButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(systemName: "heart"), for: .normal)
@@ -104,6 +97,18 @@ class PostCell: UITableViewCell {
         return createStackedView(button: heartButton, label: heartCount)
     }()
 
+    private let cardView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 12
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.2
+        view.layer.shadowOffset = CGSize(width: 0, height: 2)
+        view.layer.shadowRadius = 4
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
@@ -117,31 +122,31 @@ class PostCell: UITableViewCell {
     }
 
     private func setupViews() {
+        contentView.addSubview(cardView)
+        cardView.addSubview(avatarImageView)
+        cardView.addSubview(articleTitle)
+        cardView.addSubview(authorName)
+        cardView.addSubview(categoryLabel)
+        cardView.addSubview(createdTimeLabel)
+        cardView.addSubview(contentLabel)
+        cardView.addSubview(postImageView)
+        cardView.addSubview(heartView)
+        cardView.addSubview(commentView)
 
         avatarImageView.contentMode = .scaleAspectFill
         avatarImageView.clipsToBounds = true
         avatarImageView.layer.cornerRadius = 35
 
-        postImageView.contentMode = .scaleAspectFill
+        postImageView.contentMode = .scaleAspectFit
         postImageView.clipsToBounds = true
 
         heartButton.isUserInteractionEnabled = true
-
-        contentView.addSubview(avatarImageView)
-        contentView.addSubview(articleTitle)
-        contentView.addSubview(authorName)
-        contentView.addSubview(categoryLabel)
-        contentView.addSubview(createdTimeLabel)
-        contentView.addSubview(contentLabel)
-        contentView.addSubview(postImageView)
-        contentView.addSubview(heartButton)
-        contentView.addSubview(heartView)
-        contentView.addSubview(commentView)
 
         setupConstraints()
     }
 
     private func setupConstraints() {
+        cardView.translatesAutoresizingMaskIntoConstraints = false
         avatarImageView.translatesAutoresizingMaskIntoConstraints = false
         articleTitle.translatesAutoresizingMaskIntoConstraints = false
         authorName.translatesAutoresizingMaskIntoConstraints = false
@@ -149,61 +154,59 @@ class PostCell: UITableViewCell {
         createdTimeLabel.translatesAutoresizingMaskIntoConstraints = false
         contentLabel.translatesAutoresizingMaskIntoConstraints = false
         postImageView.translatesAutoresizingMaskIntoConstraints = false
-        heartButton.translatesAutoresizingMaskIntoConstraints = false
-        commentButton.translatesAutoresizingMaskIntoConstraints = false
         heartView.translatesAutoresizingMaskIntoConstraints = false
         commentView.translatesAutoresizingMaskIntoConstraints = false
 
         postImageHeightConstraint = postImageView.heightAnchor.constraint(equalToConstant: 300)
-//        postImageHeightConstraint = postImageView.heightAnchor.constraint(lessThanOrEqualToConstant: 300)
         postImageHeightConstraint.isActive = true
 
         NSLayoutConstraint.activate([
-            avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
-            avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+            cardView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            cardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+            cardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
+            cardView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+
+            avatarImageView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 15),
+            avatarImageView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 15),
             avatarImageView.widthAnchor.constraint(equalToConstant: 70),
             avatarImageView.heightAnchor.constraint(equalToConstant: 70),
 
-            articleTitle.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            articleTitle.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 10),
             articleTitle.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
-            articleTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
+            articleTitle.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -15),
 
             authorName.topAnchor.constraint(equalTo: articleTitle.bottomAnchor, constant: 5),
             authorName.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
-            authorName.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
+            authorName.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -15),
 
             categoryLabel.topAnchor.constraint(equalTo: authorName.bottomAnchor, constant: 5),
             categoryLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
             categoryLabel.widthAnchor.constraint(equalToConstant: 80),
-//            categoryLabel.heightAnchor.constraint(equalToConstant: 25),
 
             createdTimeLabel.bottomAnchor.constraint(equalTo: categoryLabel.bottomAnchor),
             createdTimeLabel.leadingAnchor.constraint(equalTo: categoryLabel.trailingAnchor, constant: 10),
 
             contentLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 15),
-            contentLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            contentLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
+            contentLabel.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 30),
+            contentLabel.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -30),
 
             postImageView.topAnchor.constraint(equalTo: contentLabel.bottomAnchor, constant: 10),
-            postImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            postImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
+            postImageView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 30),
+            postImageView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -30),
             postImageView.bottomAnchor.constraint(equalTo: heartView.topAnchor, constant: -10),
 
-            heartView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            heartView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
+            heartView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 30),
+            heartView.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -15),
 
             commentView.leadingAnchor.constraint(equalTo: heartView.trailingAnchor, constant: 30),
-            commentView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15)
+            commentView.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -15)
         ])
-
-//        postImageHeightConstraint.isActive = false
 
         heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)
         commentButton.addTarget(self, action: #selector(commentButtonTapped), for: .touchUpInside)
     }
 
     func configure(with post: Post, imageUrl: String?) {
-
         avatarImageView.image = UIImage(named: imageNames[post.avatar])
         articleTitle.text = post.title
         authorName.text = post.author.name
@@ -225,6 +228,7 @@ class PostCell: UITableViewCell {
     }
 
     override func prepareForReuse() {
+        super.prepareForReuse()
         articleTitle.text = ""
         authorName.text = ""
         categoryLabel.text = ""
@@ -233,6 +237,7 @@ class PostCell: UITableViewCell {
         contentLabel.text = ""
         postImageView.image = nil
         isHeartSelected = false
+        postImageView.isHidden = true
     }
 
     private func loadImage(from url: String) {
@@ -242,26 +247,24 @@ class PostCell: UITableViewCell {
         }
 
         postImageView.kf.setImage(with: imageURL, options: [
-            .transition(.fade(0.2)), // 圖片加載時淡入效果
-            .cacheOriginalImage      // 自動緩存圖片
+            .transition(.fade(0.2)),
+            .cacheOriginalImage
         ]) { [weak self] result in
             switch result {
             case .success(_):
                 self?.setNeedsLayout()
-                self?.layoutIfNeeded() // 如果需要立即更新佈局
+                self?.layoutIfNeeded()
             case .failure(let error):
                 print("Image load failed: \(error)")
             }
         }
     }
 
-    @objc func heartButtonTapped() {
-        // 通知 VC
+    @objc private func heartButtonTapped() {
         heartButtonTappedClosure?()
     }
 
     @objc private func commentButtonTapped() {
-        // 通知 VC
         commentButtonTappedClosure?()
     }
 
@@ -269,7 +272,7 @@ class PostCell: UITableViewCell {
         authorTapAction?()
     }
 
-    func createStackedView(button: UIButton, label: UILabel) -> UIView {
+    private func createStackedView(button: UIButton, label: UILabel) -> UIView {
         let view = UIView()
         let stackView = UIStackView(arrangedSubviews: [button, label])
         stackView.axis = .horizontal

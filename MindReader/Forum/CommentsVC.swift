@@ -41,7 +41,6 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         setupTableView()
         setupCloseButton()
         setupInputArea()
-//        setupFirestoreListener()
 
         listener = fireStoreService.setupFirestoreListener(for: postId) { [weak self] comments in
             self?.comments = comments
