@@ -192,7 +192,37 @@ class FirestoreService {
         }
     }
 
-    
+    func setupFirestoreListener(for postId: String, completion: @escaping ([Comment]) -> Void) -> ListenerRegistration {
+        let commentsRef = Firestore.firestore().collection("posts").document(postId).collection("Comments").order(by: "timestamp", descending: true)
+
+        let listener = commentsRef.addSnapshotListener { [weak self] querySnapshot, error in
+            guard let self = self, let documents = querySnapshot?.documents, error == nil else {
+                print("Error fetching comments: \(String(describing: error))")
+                return
+            }
+
+            let comments = documents.compactMap { document -> Comment? in
+                let data = document.data()
+                guard let author = data["author"] as? String,
+                      let content = data["content"] as? String,
+                      let authorId = data["authorId"] as? String,
+                      let timestamp = data["timestamp"] as? Timestamp else {
+                    return nil
+                }
+
+                let documentId = document.documentID
+
+                return Comment(id: documentId, author: author, authorId: authorId, content: content, timestamp: timestamp.dateValue())
+            }
+            completion(comments)
+
+            let commentCount = documents.count
+            NotificationCenter.default.post(name: NSNotification.Name("CommentCountUpdated"), object: nil, userInfo: ["postId": postId, "count": commentCount])
+
+        }
+        return listener
+    }
+
     func setupFirestoreListener(for collection: String, completion: @escaping () -> Void) -> ListenerRegistration? {
         return db.collection(collection).addSnapshotListener { (_, error) in
             if let error = error {

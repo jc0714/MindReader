@@ -14,10 +14,12 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     private let tableView = UITableView()
     private var comments: [Comment] = []
     private var postId: String
-    private var listener: ListenerRegistration?
 
     private let commentTextField = UITextField()
     private let sendButton = UIButton(type: .system)
+
+    private let fireStoreService = FirestoreService()
+    private var listener: ListenerRegistration?
 
     // MARK: - Initializer
     init(postId: String) {
@@ -39,39 +41,12 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         setupTableView()
         setupCloseButton()
         setupInputArea()
-        setupFirestoreListener()
-    }
+//        setupFirestoreListener()
 
-    // MARK: - Firestore Listener
-    private func setupFirestoreListener() {
-        let commentsRef = Firestore.firestore().collection("posts").document(postId).collection("Comments").order(by: "timestamp", descending: true)
-
-        listener = commentsRef.addSnapshotListener { [weak self] querySnapshot, error in
-            guard let self = self, let documents = querySnapshot?.documents, error == nil else {
-                print("Error fetching comments: \(String(describing: error))")
-                return
-            }
-
-            self.comments = documents.compactMap { document in
-                let data = document.data()
-                guard let author = data["author"] as? String,
-                      let content = data["content"] as? String,
-                      let authorId = data["authorId"] as? String,
-                      let timestamp = data["timestamp"] as? Timestamp else {
-                    return nil
-                }
-
-                let documentId = document.documentID
-
-                return Comment(id: documentId, author: author, authorId: authorId, content: content, timestamp: timestamp.dateValue())
-            }
-
-            let commentCount = documents.count
-            NotificationCenter.default.post(name: NSNotification.Name("CommentCountUpdated"), object: nil, userInfo: ["postId": self.postId, "count": commentCount])
-
-            // 更新 UI
+        listener = fireStoreService.setupFirestoreListener(for: postId) { [weak self] comments in
+            self?.comments = comments
             DispatchQueue.main.async {
-                self.tableView.reloadData()
+                self?.tableView.reloadData()
             }
         }
     }
