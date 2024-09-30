@@ -62,7 +62,7 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
             finalImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             finalImageView.heightAnchor.constraint(equalToConstant: 300),
 
-            stackView.bottomAnchor.constraint(equalTo: finalImageView.topAnchor, constant: -20),
+            stackView.topAnchor.constraint(equalTo: finalImageView.bottomAnchor, constant: 30),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             stackView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -20),
             stackView.heightAnchor.constraint(equalToConstant: 30),
@@ -72,11 +72,11 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
             saveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
 
             // shareButton constraints
-            shareButton.leadingAnchor.constraint(equalTo: saveButton.trailingAnchor, constant: 30),
+            shareButton.leadingAnchor.constraint(equalTo: saveButton.trailingAnchor, constant: 20),
             shareButton.bottomAnchor.constraint(equalTo: saveButton.bottomAnchor),
 
             // saveToFireBaseButton constraints
-            saveToFireBaseButton.leadingAnchor.constraint(equalTo: shareButton.trailingAnchor, constant: 30),
+            saveToFireBaseButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             saveToFireBaseButton.bottomAnchor.constraint(equalTo: saveButton.bottomAnchor)
         ])
     }

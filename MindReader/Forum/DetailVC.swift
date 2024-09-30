@@ -13,6 +13,7 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
 
     var post: Post? // 用來接收傳遞的 post 物件
     var comments: [Comment] = [] // 留言數組
+    var heartCount: Int = 0
 
     let imageNames = ["photo4", "photo5", "photo6", "photo7"]
 
@@ -55,7 +56,6 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        NotificationCenter.default.addObserver(self, selector: #selector(handleLikeUpdate(notification:)), name: NSNotification.Name("LikeCountUpdated"), object: nil)
         navigationController?.setNavigationBarHidden(false, animated: true)
     }
 
@@ -64,15 +64,6 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
         listener?.remove()
         navigationController?.setNavigationBarHidden(true, animated: true)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("LikeCountUpdated"), object: nil)
-    }
-
-//    @objc private func handleLikeUpdate(notification: Notification) {
-//    
-//    }
-
-    deinit {
-        // 移除觀察者
-//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("RefreshDataNotification"), object: nil)
     }
 
     func setUpNavigation() {
@@ -186,6 +177,8 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
                     cell.heartButton.setImage(UIImage(systemName: "heart"), for: .normal)
                 }
 
+                cell.heartCount.text = String(heartCount)
+
                 cell.heartButtonTappedClosure = { [weak self] in
                     self?.updateHeartBtn(at: indexPath)
                 }
@@ -270,7 +263,6 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
         Task {
             do {
                 try await batch.commit()
-                NotificationCenter.default.post(name: NSNotification.Name("RefreshDataNotification"), object: nil)
 
             } catch {
                 print("Error updating likes: \(error.localizedDescription)")
@@ -279,48 +271,6 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
 
     }
     
-//    func updateHeartBtn(at indexPath: IndexPath) {
-//        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-//            print("User ID is nil")
-//            return
-//        }
-//
-//        let userRef = Firestore.firestore().collection("Users").document(userId)
-////        var isLiked = false
-//
-//        var isLiked = false
-//
-//        // 批次寫入操作
-//        let batch = Firestore.firestore().batch()
-//        let postRef = Firestore.firestore().collection("posts").document(postId)
-//
-//        if BasePostVC.likedPosts.contains(postId) {
-//            // 移除愛心
-//            batch.updateData(["like": FieldValue.arrayRemove([userId])], forDocument: postRef)
-//            batch.updateData(["likePosts": FieldValue.arrayRemove([postId])], forDocument: userRef)
-//            BasePostVC.likedPosts.remove(postId)
-//            post?.like -= 1
-//            isLiked = false
-//        } else {
-//            // 添加愛心
-//            batch.updateData(["like": FieldValue.arrayUnion([userId])], forDocument: postRef)
-//            batch.updateData(["likePosts": FieldValue.arrayUnion([postId])], forDocument: userRef)
-//            BasePostVC.likedPosts.insert(postId)
-//            post?.like += 1
-//            isLiked = true
-//        }
-//
-//        // 提交批次寫入操作
-//        Task {
-//            do {
-//                try await batch.commit()
-//                NotificationCenter.default.post(name: NSNotification.Name("RefreshDataNotification"), object: nil)
-//            } catch {
-//                print("Error updating likes: \(error.localizedDescription)")
-//            }
-//        }
-//    }
-
     @objc private func handleCommentCountUpdate(_ notification: Notification) {
         // 獲取通知中的 postId 和新的留言數量
         guard let userInfo = notification.userInfo,

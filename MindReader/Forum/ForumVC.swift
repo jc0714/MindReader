@@ -28,9 +28,13 @@ class ForumVC: BasePostVC {
 
         NotificationCenter.default.addObserver(self, selector: #selector(reloadTableData), name: NSNotification.Name("NewPostAdded"), object: nil)
 
-//        NotificationCenter.default.addObserver(self, selector: #selector(reloadTableData), name: NSNotification.Name("RefreshDataNotification"), object: nil)
 
         refreshControl.addTarget(self, action: #selector(fetchPosts), for: UIControl.Event.valueChanged)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchPosts()
     }
 
     @objc func reloadTableData() {
@@ -87,7 +91,7 @@ class ForumVC: BasePostVC {
                     }
 
                     self?.setupUI()
-                    self?.filterPosts(by: "All")
+                    self?.filterPosts(by: self?.selectedTag ?? "All")
                     self?.tableView.reloadData()
                     self?.refreshControl.endRefreshing()
                 }

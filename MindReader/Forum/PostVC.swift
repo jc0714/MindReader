@@ -13,6 +13,8 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     let tableView = UITableView()
     var posts: [Post] = []
+
+    var selectedTag: String = "All"
     var filteredPosts: [Post] = []
 
     static var likedPosts: Set<String> = []
@@ -33,12 +35,22 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
         tableView.separatorStyle = .none
 
+        tagFilterView.tagSelectedClosure = { [weak self] selectedTag in
+            self?.selectedTag = selectedTag
+            UserDefaults.standard.set(selectedTag, forKey: "selectedTag")
+            self?.filterPosts(by: selectedTag)
+        }
+
         NotificationCenter.default.addObserver(self, selector: #selector(handleCommentCountUpdate(_:)), name: NSNotification.Name("CommentCountUpdated"), object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleLikeUpdate(notification:)), name: NSNotification.Name("LikeCountUpdated"), object: nil)
+
+        if let savedTag = UserDefaults.standard.string(forKey: "selectedTag") {
+            selectedTag = savedTag
+            filterPosts(by: selectedTag)
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -51,10 +63,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         view.addSubview(tableView)
 
         tagFilterView.translatesAutoresizingMaskIntoConstraints = false
-
-        tagFilterView.tagSelectedClosure = { [weak self] selectedTag in
-            self?.filterPosts(by: selectedTag)
-        }
 
         NSLayoutConstraint.activate([
             tagFilterView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -105,36 +113,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 self.filterPosts(by: "All")
             }
         }
-    }
-
-    @objc private func handleLikeUpdate(notification: Notification) {
-        guard let userInfo = notification.userInfo,
-              let postId = userInfo["postId"] as? String,
-              let newLikes = userInfo["newLikes"] as? Int,
-              let isLiked = userInfo["isLiked"] as? Bool,
-              let index = posts.firstIndex(where: { $0.id == postId }) else {
-            return
-        }
-
-        // 更新 UI
-        DispatchQueue.main.async {
-            if let cell = self.tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? PostCell {
-                cell.heartCount.text = String(newLikes)
-                let heartImage = isLiked ? "heart.fill" : "heart"
-                cell.heartButton.setImage(UIImage(systemName: heartImage), for: .normal)
-            } else {
-                // 如果 cell 看不到
-                self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
-            }
-        }
-    }
-
-//    
-
-
-    deinit {
-        // 移除觀察者
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("RefreshDataNotification"), object: nil)
     }
 
     // 配置 cell
@@ -190,6 +168,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let selectedPost = filteredPosts[indexPath.row]
         let detailVC = DetailVC()
         detailVC.post = selectedPost // 將所選的 post 資料傳遞到 DetailVC
+        detailVC.heartCount = filteredPosts[indexPath.row].like
         navigationController?.pushViewController(detailVC, animated: true)
     }
 
@@ -201,7 +180,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
 
         let userRef = Firestore.firestore().collection("Users").document(userId)
-        let postId = posts[indexPath.row].id
+        let postId = filteredPosts[indexPath.row].id
         let postRef = Firestore.firestore().collection("posts").document(postId)
         let cell = tableView.cellForRow(at: indexPath) as? PostCell
 
@@ -229,23 +208,23 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 // 更新本地數據和 UI
                 if isLiked {
                     BasePostVC.likedPosts.insert(postId)
-                    posts[indexPath.row].like += 1
+                    filteredPosts[indexPath.row].like += 1
                     cell?.heartButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
                 } else {
                     BasePostVC.likedPosts.remove(postId)
-                    posts[indexPath.row].like -= 1
+                    filteredPosts[indexPath.row].like -= 1
                     cell?.heartButton.setImage(UIImage(systemName: "heart"), for: .normal)
                 }
-                cell?.heartCount.text = String(posts[indexPath.row].like)
+                cell?.heartCount.text = String(filteredPosts[indexPath.row].like)
 
-                // 發送通知
-//                NotificationCenter.default.post(name: NSNotification.Name("RefreshDataNotification"), object: nil)
+                if let originalIndex = posts.firstIndex(where: { $0.id == postId }) {
+                    posts[originalIndex].like = filteredPosts[indexPath.row].like
+                }
             } catch {
                 print("Error updating likes: \(error.localizedDescription)")
             }
         }
     }
-
 
     // 連結到留言 VC
     func showCommentsForPost(at indexPath: IndexPath) {
@@ -271,7 +250,3 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
 }
-
-//                NotificationCenter.default.post(name: NSNotification.Name("RefreshDataNotification"), object: nil, userInfo: ["postId": postId, "newLikes": post.like])
-
-//                NotificationCenter.default.post(name: NSNotification.Name("RefreshDataNotification"), object: nil)
