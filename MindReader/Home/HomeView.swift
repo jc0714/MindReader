@@ -80,17 +80,10 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = .pink1
         imageView.layer.cornerRadius = 10
+        imageView.image = UIImage(named: "uploadImage")
+        imageView.isUserInteractionEnabled = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
-    }()
-
-    let chooseImageButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Choose Image", for: .normal)
-        button.backgroundColor = .pink1
-        button.layer.cornerRadius = 10
-        return button
     }()
 
     let promptTextField: UITextView = {
@@ -151,7 +144,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         addSubview(promptTextField)
 
         addSubview(imageView)
-        addSubview(chooseImageButton)
 
         addSubview(submitButton)
         addSubview(indicatorView)
@@ -170,8 +162,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         indicatorView.addSubview(activityIndicator)
         activityIndicator.center = center
-
-//        generateImageButton.isHidden = true
 
         NSLayoutConstraint.activate([
             chatButton.topAnchor.constraint(equalTo: topAnchor, constant: 100),
@@ -196,11 +186,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
             imageView.widthAnchor.constraint(equalToConstant: 300),
             imageView.heightAnchor.constraint(equalToConstant: 150),
-
-            chooseImageButton.topAnchor.constraint(equalTo: imageButton.bottomAnchor, constant: 10),
-            chooseImageButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            chooseImageButton.widthAnchor.constraint(equalToConstant: 150),
-            chooseImageButton.heightAnchor.constraint(equalToConstant: 20),
 
             submitButton.topAnchor.constraint(equalTo: promptTextField.bottomAnchor, constant: 20),
             submitButton.centerXAnchor.constraint(equalTo: centerXAnchor),

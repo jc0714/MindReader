@@ -15,6 +15,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - Properties
 
     private let homeView = HomeView()
+    private var selectedButton: UIButton?
+
 
     private let apiService = APIService()
     private let firestoreService = FirestoreService()
@@ -36,12 +38,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         self.navigationItem.backButtonTitle = ""
 
-
-//        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
-//        UserDefaults.standard.synchronize()
-
-//        UserDefaults.standard.set("A1578E48-486F-4989-A1FD-AA52783B9924", forKey: "userId")
-
         if !UserDefaults.standard.bool(forKey: "isUserLoggedIn") {
             showLoginView()
         }
@@ -59,15 +55,18 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     private func setupActions() {
         homeView.chatButton.addTarget(self, action: #selector(toChatButtonTapped), for: .touchUpInside)
-        homeView.imageButton.addTarget(self, action: #selector(showImageView), for: .touchUpInside)
-        homeView.textButton.addTarget(self, action: #selector(enterText), for: .touchUpInside)
+        homeView.imageButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        homeView.textButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
 
-        homeView.chooseImageButton.addTarget(self, action: #selector(selectImageFromAlbum), for: .touchUpInside)
+//        homeView.imageView.addTarget(self, action: #selector(selectImageFromAlbum), for: .touchUpInside)
 
         homeView.submitButton.addTarget(self, action: #selector(didTapSubmit), for: .touchUpInside)
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
+
+        let tapGestureToAlbum = UITapGestureRecognizer(target: self, action: #selector(selectImageFromAlbum))
+        homeView.imageView.addGestureRecognizer(tapGestureToAlbum)
 
         homeView.setupLabelGestures(target: self, action: #selector(copyLabelText))
 
@@ -169,14 +168,36 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     // MARK: - View Configuration
 
+    @objc private func buttonTapped(_ sender: UIButton) {
+        guard sender != selectedButton else { return }
+
+        if let previousButton = selectedButton {
+            UIView.animate(withDuration: 0.2) {
+                previousButton.transform = .identity
+                previousButton.backgroundColor = .pink1
+            }
+        }
+
+        selectedButton = sender
+
+        UIView.animate(withDuration: 0.2, animations: {
+            sender.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+            sender.backgroundColor = .pink3
+        })
+
+        if sender == homeView.imageButton {
+            showImageView()
+        } else if sender == homeView.textButton {
+            enterText()
+        }
+    }
+
     @objc func showImageView() {
-        // 先顯示長輩圖按鈕
-        homeView.generateImageButton.isHidden = false
         configureView(for: 0, isImageViewVisible: true)
+        homeView.imageView.image = UIImage(named: "uploadImage")
     }
 
     @objc func enterText() {
-//        homeView.generateImageButton.isHidden = true
         configureView(for: 1, isImageViewVisible: false)
     }
 
@@ -184,14 +205,12 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         homeView.submitButton.tag = tag
         homeView.promptTextField.isHidden = isImageViewVisible
         homeView.imageView.isHidden = !isImageViewVisible
-        homeView.chooseImageButton.isHidden = !isImageViewVisible
         homeView.promptTextField.text = nil
         homeView.imageView.image = nil
         homeView.responseLabel.text = ""
         homeView.replyLabel1.text = ""
         homeView.replyLabel2.text = ""
         homeView.replyLabel3.text = ""
-//        homeView.generateImageButton.isHidden = true
     }
 
     // MARK: - Keyboard Handling
