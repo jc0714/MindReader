@@ -12,6 +12,8 @@ import FirebaseStorage
 
 class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
 
+    let dataToUpload: [[String: Any]] = []
+
     // MARK: - Properties
 
     private let homeView = HomeView()
@@ -43,6 +45,11 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         }
 
         setupActions()
+
+//        Task {
+//            await firestoreService.batchUploadData(for: dataToUpload)
+//        }
+
     }
 
     private func showLoginView() {
@@ -57,8 +64,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         homeView.chatButton.addTarget(self, action: #selector(toChatButtonTapped), for: .touchUpInside)
         homeView.imageButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
         homeView.textButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
-
-//        homeView.imageView.addTarget(self, action: #selector(selectImageFromAlbum), for: .touchUpInside)
 
         homeView.submitButton.addTarget(self, action: #selector(didTapSubmit), for: .touchUpInside)
 
@@ -88,8 +93,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         }
 
         // 可設置等待回應動畫
-//        sender.isUserInteractionEnabled = false
-//        sender.backgroundColor = .color
+        sender.isUserInteractionEnabled = false
+        sender.backgroundColor = .gray
 
         let prompt = sender.tag == 1 ? homeView.promptTextField.text : recognizedText
 
@@ -100,6 +105,17 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         Task {
             do {
+                let existingResponse = try await self.firestoreService.fetchResponse(for: prompt)
+
+                if let possibleMeanings = existingResponse?["possible_meanings"] as? [String],
+                   let responseMethods = existingResponse?["response_methods"] as? [String]{
+                    
+                    self.updateResponseLabels(possibleMeanings: possibleMeanings, responseMethods: responseMethods)
+
+                    sender.isUserInteractionEnabled = true
+                    sender.backgroundColor = .pink1
+                    return
+                }
                 var formatedPrompt = formatPrompt(prompt)
                 let response = try await apiService.generateTextResponse(for: formatedPrompt)
 
@@ -112,14 +128,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                     print("Possible Meanings: \(possibleMeanings)")
                     print("Response Methods: \(responseMethods)")
 
-                    DispatchQueue.main.async {
-                        self.homeView.responseLabel.text = "可能含義\n1.\(possibleMeanings[0])\n2.\(possibleMeanings[1])\n3.\(possibleMeanings[2])\n\n推薦回覆"
-                        self.homeView.replyLabel1.text = responseMethods[0]
-                        self.homeView.replyLabel2.text = responseMethods[1]
-                        self.homeView.replyLabel3.text = responseMethods[2]
-                        self.view.setNeedsLayout()
-                        self.view.layoutIfNeeded()
-                    }
+                    self.updateResponseLabels(possibleMeanings: possibleMeanings, responseMethods: responseMethods)
+
                 }
 
                 if let imageData = homeView.imageView.image?.jpegData(compressionQuality: 0.75) {
@@ -133,7 +143,20 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                 sender.backgroundColor = .pink1
             } catch {
                 print("Failed to get response: \(error)")
+                sender.isUserInteractionEnabled = true
+                sender.backgroundColor = .pink1
             }
+        }
+    }
+
+    private func updateResponseLabels(possibleMeanings: [String], responseMethods: [String]) {
+        DispatchQueue.main.async {
+            self.homeView.responseLabel.text = "可能含義\n1.\(possibleMeanings[0])\n2.\(possibleMeanings[1])\n3.\(possibleMeanings[2])\n\n推薦回覆"
+            self.homeView.replyLabel1.text = responseMethods[0]
+            self.homeView.replyLabel2.text = responseMethods[1]
+            self.homeView.replyLabel3.text = responseMethods[2]
+            self.view.setNeedsLayout()
+            self.view.layoutIfNeeded()
         }
     }
 

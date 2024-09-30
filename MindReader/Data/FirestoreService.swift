@@ -67,6 +67,34 @@ class FirestoreService {
 
     // MARK: HomeVC
 
+    // 批次打翻譯紀錄進去
+    func batchUploadData(for dataToUpload: [[String: Any]]) async {
+        let batch = db.batch()
+
+        for data in dataToUpload {
+            let documentRef = db.collection("TranslateDB").document() // 這裡自動生成新的 document ID
+            batch.setData(data, forDocument: documentRef)
+        }
+
+        do {
+            try await batch.commit()
+            print("Batch upload successful!")
+        } catch {
+            print("Batch upload failed: \(error.localizedDescription)")
+        }
+    }
+
+    func fetchResponse(for prompt: String) async throws -> [String: Any]? {
+        let querySnapshot = try await db.collection("TranslateDB").whereField("prompt", isEqualTo: prompt).getDocuments()
+
+        if let document = querySnapshot.documents.first {
+            print(document.data())
+            return document.data()
+        } else {
+            return nil
+        }
+    }
+
     func saveToFirestore(prompt: String, response: String, imageURL: String?) async throws {
 
         guard let userId = UserDefaults.standard.string(forKey: "userID") else {

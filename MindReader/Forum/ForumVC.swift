@@ -93,7 +93,6 @@ class ForumVC: BasePostVC {
                     }
 
                     self?.setupUI()
-//                    self?.filterPosts(by: self?.selectedTag ?? "All")
                     self?.tableView.reloadData()
                     self?.refreshControl.endRefreshing()
                 }
