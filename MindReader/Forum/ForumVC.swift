@@ -100,7 +100,7 @@ class ForumVC: BasePostVC {
     }
 
     private func setupUI() {
-        view.backgroundColor = .color
+        view.backgroundColor = .milkYellow
         setupEditButton()
     }
 

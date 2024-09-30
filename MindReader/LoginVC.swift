@@ -83,7 +83,7 @@ extension LoginVC: ASAuthorizationControllerDelegate {
                     print("Error checking if user exists: \(error.localizedDescription)")
                     return
                 }
-
+                // 用戶不存在
                 if let snapshot = snapshot, snapshot.documents.isEmpty {
                     self.firebaseService.saveUserInfoToFirestore(userIdentifier: userIdentifier, fullName: lastName, email: email, realUserStatus: realUserStatus)
 
@@ -91,12 +91,25 @@ extension LoginVC: ASAuthorizationControllerDelegate {
                     UserDefaults.standard.set(userIdentifier, forKey: "appleUserIdentifier")
                     UserDefaults.standard.synchronize()
                 } else {
-                    print("User already exists in Firestore.")
+                    // 用戶已經存在
+                    if let document = snapshot?.documents.first {
+                    let existingUserId = document.documentID
+                    UserDefaults.standard.set(existingUserId, forKey: "userId")
+                    UserDefaults.standard.synchronize()
+
+                    print("User already exists in Firestore. UserId saved to UserDefaults.")
+                    } 
                 }
             }
         }
 
         UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+//        
+//        DispatchQueue.main.async {
+//            let homeVC = HomeVC()
+//            let navigationController = UINavigationController(rootViewController: homeVC)
+//            UIApplication.shared.windows.first?.rootViewController = navigationController
+//        }
         // 登入成功後，關閉 LoginViewController
         self.dismiss(animated: true, completion: nil)
     }

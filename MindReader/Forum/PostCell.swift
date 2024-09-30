@@ -38,7 +38,7 @@ class PostCell: UITableViewCell {
     let categoryLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
-        label.backgroundColor = .color
+        label.backgroundColor = .milkYellow
         label.textAlignment = .center
         return label
     }()
@@ -232,7 +232,7 @@ class PostCell: UITableViewCell {
         articleTitle.text = ""
         authorName.text = ""
         categoryLabel.text = ""
-        categoryLabel.backgroundColor = .color
+        categoryLabel.backgroundColor = .milkYellow
         createdTimeLabel.text = ""
         contentLabel.text = ""
         postImageView.image = nil

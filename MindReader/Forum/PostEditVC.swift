@@ -26,7 +26,7 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .color
+        view.backgroundColor = .milkYellow
 
         editView.avatarImage.image = UIImage(named: imageNames[selectedAvatarIndex])
 

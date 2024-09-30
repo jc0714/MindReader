@@ -104,9 +104,9 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
         stackView.distribution = .equalSpacing
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
-        saveButton = createButton(title: "存到相簿去！", backgroundColor: .darkGray, action: #selector(saveImageToAlbum))
-        shareButton = createButton(title: "分享", backgroundColor: .darkGray, action: #selector(shareImage))
-        saveToFireBaseButton = createButton(title: "貼到相片牆", backgroundColor: .darkGray, action: #selector(saveToFireBase))
+        saveButton = createButton(title: "存到相簿去！", backgroundColor: .pink3, action: #selector(saveImageToAlbum))
+        shareButton = createButton(title: "分享", backgroundColor: .pink3, action: #selector(shareImage))
+        saveToFireBaseButton = createButton(title: "貼到相片牆", backgroundColor: .pink3, action: #selector(saveToFireBase))
 
         view.addSubview(saveButton)
         view.addSubview(shareButton)

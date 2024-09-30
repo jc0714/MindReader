@@ -25,14 +25,14 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .color
+        view.backgroundColor = .milkYellow
 
         setUpNavigation()
 
         chatView.tableView.delegate = self
         chatView.tableView.dataSource = self
 
-        chatView.tableView.backgroundColor = .pink1
+        chatView.tableView.backgroundColor = .milkYellow.withAlphaComponent(0.2)
 
         setUpActions()
         listenForMessages()
@@ -112,8 +112,11 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     }
 
     @objc private func sendMessage(_ sender: UIButton) {
+        
         guard var text = chatView.textView.text, !text.isEmpty else { return }
         let senderName = "0"
+
+        chatView.showLoadingAnimation()
 
         firebaseService.saveMessage(message: text, sender: senderName) { error in
             if let error = error {
@@ -132,32 +135,35 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
             do {
                 text = formatPrompt(text)
                 let response = try await apiService.generateTextResponse(for: text)
-                DispatchQueue.main.async {
 
-                    let senderName = "1"
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        let senderName = "1"
 
-                    self.firebaseService.saveMessage(message: response, sender: senderName) { error in
-                        if let error = error {
-                            print("Failed to save message: \(error)")
-                            return
+                        self.firebaseService.saveMessage(message: response, sender: senderName) { error in
+                            if let error = error {
+                                print("Failed to save message: \(error)")
+                                return
+                            }
                         }
+                        print(response)
+
+                        let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
+                        let numberOfRows = self.chatView.tableView.numberOfRows(inSection: 0)
+
+                        if numberOfRows > 0 {
+                            let indexPath = IndexPath(row: numberOfRows - 1, section: 0)
+                            self.chatView.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                        }
+                        sender.isUserInteractionEnabled = true
+                        self.chatView.hideLoadingAnimation()
                     }
 
-                    print(response)
-
-                    let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
-                    let numberOfRows = self.chatView.tableView.numberOfRows(inSection: 0)
-                    if numberOfRows > 0 {
-                        let indexPath = IndexPath(row: numberOfRows - 1, section: 0)
-                        self.chatView.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
-                    }
-                    sender.isUserInteractionEnabled = true
-                }
             } catch {
                 print("Failed to get response: \(error)")
             }
         }
     }
+
 
     // MARK: - UITableViewDataSource
 

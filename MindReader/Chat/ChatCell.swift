@@ -119,7 +119,7 @@ class ChatCell: UITableViewCell {
             readLabel.text = nil
             messageLeadingConstraint.isActive = true
             timeTrailingConstraint.isActive = true
-            bubbleBackgroundView.backgroundColor = UIColor(white: 0.9, alpha: 1)
+            bubbleBackgroundView.backgroundColor = .yelloww.withAlphaComponent(0.5)
 
             inComeMsgImageView.isHidden = false
             inComeMsgImageView.image = UIImage(named: "photo4")
@@ -127,7 +127,7 @@ class ChatCell: UITableViewCell {
             readLabel.text = "Read"
             messageTrailingConstraint.isActive = true
             timeLeadingConstraint.isActive = true
-            bubbleBackgroundView.backgroundColor = UIColor.black
+            bubbleBackgroundView.backgroundColor = UIColor.brown
             messageLabel.textColor = .white
 
             inComeMsgImageView.isHidden = true

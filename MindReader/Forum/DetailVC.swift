@@ -32,7 +32,7 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .color
+        view.backgroundColor = .milkYellow
 
         setUpNavigation()
 
@@ -75,7 +75,7 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
 
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground() // 設置為不透明背景
-        appearance.backgroundColor = .color
+        appearance.backgroundColor = .milkYellow
 
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance

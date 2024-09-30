@@ -12,6 +12,8 @@ import IQKeyboardManagerSwift
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    var window: UIWindow?
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
@@ -19,6 +21,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefaults.standard.removeObject(forKey: "ForumVC_selectedTag")
         UserDefaults.standard.removeObject(forKey: "MyPostVC_selectedTag")
 //        IQKeyboardManager.shared.keyboardDistanceFromTextField = -10
+
+//        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
+
+        window = UIWindow(frame: UIScreen.main.bounds)
+
+        // 檢查用戶登入狀態
+        let isLoggedIn = UserDefaults.standard.bool(forKey: "isUserLoggedIn")
+
+        let rootViewController: UIViewController
+        if isLoggedIn {
+            // 用戶已登入，進入 HomeVC
+            rootViewController = HomeVC()
+        } else {
+            // 用戶未登入，呈現登入頁
+            rootViewController = LoginVC()
+        }
+
+        // 創建 UINavigationController 並設置為 rootViewController
+        let navigationController = UINavigationController(rootViewController: rootViewController)
+        window?.rootViewController = navigationController
+
+        // 顯示視窗
+        window?.makeKeyAndVisible()
         return true
     }
 

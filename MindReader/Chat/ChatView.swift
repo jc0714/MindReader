@@ -7,8 +7,11 @@
 
 import Foundation
 import UIKit
+import Lottie
 
 class ChatView: UIView, UITextViewDelegate {
+    private var typingAnimationView: LottieAnimationView = LottieAnimationView(name: "typing")
+
 
     let tableView = UITableView(frame: .zero, style: .plain)
     let textView = UITextView()
@@ -45,9 +48,12 @@ class ChatView: UIView, UITextViewDelegate {
     }
 
     private func setupInputView() {
-        inputContainer.backgroundColor = .color
+        inputContainer.backgroundColor = .milkYellow
         inputContainer.translatesAutoresizingMaskIntoConstraints = false
         addSubview(inputContainer)
+
+        typingAnimationView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(typingAnimationView)
 
         textView.isScrollEnabled = false
         textView.layer.borderWidth = 1.0
@@ -81,12 +87,22 @@ class ChatView: UIView, UITextViewDelegate {
             textView.topAnchor.constraint(equalTo: inputContainer.topAnchor, constant: 8),
             textView.leadingAnchor.constraint(equalTo: inputContainer.leadingAnchor, constant: 8),
             textView.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -8),
-            textView.bottomAnchor.constraint(equalTo: inputContainer.bottomAnchor, constant: -8)
+            textView.bottomAnchor.constraint(equalTo: inputContainer.bottomAnchor, constant: -8),
+
+            typingAnimationView.leadingAnchor.constraint(equalTo: inputContainer.leadingAnchor, constant: 8),
+            typingAnimationView.bottomAnchor.constraint(equalTo: inputContainer.topAnchor),
+            typingAnimationView.widthAnchor.constraint(equalToConstant: 75),
+            typingAnimationView.heightAnchor.constraint(equalToConstant: 75)
         ])
+
+        typingAnimationView.isHidden = true
+        
         textViewHeightConstraint = textView.heightAnchor.constraint(equalToConstant: 36)
         textViewHeightConstraint.isActive = true
 
         NotificationCenter.default.addObserver(self, selector: #selector(textViewDidChange), name: UITextView.textDidChangeNotification, object: textView)
+        bringSubviewToFront(typingAnimationView)
+
     }
 
     func updateInputContainerBottomConstraint(by constant: CGFloat) {
@@ -115,4 +131,19 @@ class ChatView: UIView, UITextViewDelegate {
         textView.isScrollEnabled = false
         layoutIfNeeded()
     }
+
+    // 顯示動畫
+    func showLoadingAnimation() {
+        self.bringSubviewToFront(self.typingAnimationView)
+        typingAnimationView.isHidden = false
+        typingAnimationView.play()
+        self.layoutIfNeeded()
+    }
+
+    // 隱藏動畫
+    func hideLoadingAnimation() {
+        typingAnimationView.stop()
+        typingAnimationView.isHidden = true
+    }
+
 }

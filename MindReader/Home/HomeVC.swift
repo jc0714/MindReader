@@ -9,6 +9,7 @@ import Vision
 import Firebase
 import FirebaseFirestore
 import FirebaseStorage
+import Lottie
 
 class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
 
@@ -18,7 +19,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     private let homeView = HomeView()
     private var selectedButton: UIButton?
-
 
     private let apiService = APIService()
     private let firestoreService = FirestoreService()
@@ -30,16 +30,19 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     private var copiedText: String = ""
 
+    private var animationView: LottieAnimationView?
+
     override func loadView() {
         view = homeView
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .color
+        view.backgroundColor = .milkYellow
 
         self.navigationItem.backButtonTitle = ""
 
+        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
         if !UserDefaults.standard.bool(forKey: "isUserLoggedIn") {
             showLoginView()
         }
@@ -49,15 +52,21 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 //        Task {
 //            await firestoreService.batchUploadData(for: dataToUpload)
 //        }
-
     }
+
+//    override func viewWillAppear(_ animated: Bool) {
+//        if !UserDefaults.standard.bool(forKey: "isUserLoggedIn") {
+//            showLoginView()
+//        }
+//
+//    }
 
     private func showLoginView() {
         let loginVC = LoginVC()
         loginVC.modalPresentationStyle = .overFullScreen // 使用全螢幕的呈現方式
         self.present(loginVC, animated: true, completion: nil)
     }
-    
+//    
     // MARK: - Setup Actions
 
     private func setupActions() {

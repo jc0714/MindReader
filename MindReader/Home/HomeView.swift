@@ -93,7 +93,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         field.autocorrectionType = .no
         field.layer.cornerRadius = 10
         field.clipsToBounds = true
-        field.backgroundColor = .color
+        field.backgroundColor = .milkYellow
         field.layer.borderWidth = 1
         field.layer.borderColor = UIColor.secondaryLabel.cgColor
         field.returnKeyType = .done
@@ -157,7 +157,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         indicatorView.isHidden = true
         indicatorView.frame = bounds
-        indicatorView.backgroundColor = .color
+        indicatorView.backgroundColor = .milkYellow
         indicatorView.alpha = 0.95
 
         indicatorView.addSubview(activityIndicator)
