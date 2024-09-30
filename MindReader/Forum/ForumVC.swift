@@ -21,6 +21,8 @@ class ForumVC: BasePostVC {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.VCid = "ForumVC"
+
         fetchPosts()
 
         refreshControl = UIRefreshControl()
@@ -91,7 +93,7 @@ class ForumVC: BasePostVC {
                     }
 
                     self?.setupUI()
-                    self?.filterPosts(by: self?.selectedTag ?? "All")
+//                    self?.filterPosts(by: self?.selectedTag ?? "All")
                     self?.tableView.reloadData()
                     self?.refreshControl.endRefreshing()
                 }

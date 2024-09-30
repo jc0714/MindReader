@@ -14,12 +14,21 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     let tableView = UITableView()
     var posts: [Post] = []
 
-    var selectedTag: String = "All"
-    var filteredPosts: [Post] = []
 
     static var likedPosts: Set<String> = []
 
     private let tagFilterView = TagFilterView()
+    var selectedTag: String = "All"
+
+    var VCid: String = ""
+
+    var currentPosts: [Post] {
+        if selectedTag == "All" {
+            return posts
+        } else {
+            return posts.filter { $0.category.contains(selectedTag) }
+        }
+    }
 
     let imageNames = ["photo4", "photo5", "photo6", "photo7"]
 
@@ -35,10 +44,14 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
         tableView.separatorStyle = .none
 
+        if let savedTag = UserDefaults.standard.string(forKey: "\(VCid)_selectedTag") {
+            selectedTag = savedTag
+        }
+
         tagFilterView.tagSelectedClosure = { [weak self] selectedTag in
             self?.selectedTag = selectedTag
-            UserDefaults.standard.set(selectedTag, forKey: "selectedTag")
-            self?.filterPosts(by: selectedTag)
+            UserDefaults.standard.set(selectedTag, forKey: "\(self?.VCid ?? "")_selectedTag")
+            self?.tableView.reloadData()
         }
 
         NotificationCenter.default.addObserver(self, selector: #selector(handleCommentCountUpdate(_:)), name: NSNotification.Name("CommentCountUpdated"), object: nil)
@@ -47,9 +60,9 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if let savedTag = UserDefaults.standard.string(forKey: "selectedTag") {
+        if let savedTag = UserDefaults.standard.string(forKey: "\(self.VCid)_selectedTag") {
             selectedTag = savedTag
-            filterPosts(by: selectedTag)
+            tableView.reloadData()
         }
     }
 
@@ -85,14 +98,14 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.dataSource = self
     }
 
-    func filterPosts(by tag: String) {
-        if tag == "All" {
-            filteredPosts = posts
-        } else {
-            filteredPosts = posts.filter { $0.category.contains(tag) }
-        }
-        tableView.reloadData()
-    }
+//    func filterPosts(by tag: String) {
+//        if tag == "All" {
+//            filteredPosts = posts
+//        } else {
+//            filteredPosts = posts.filter { $0.category.contains(tag) }
+//        }
+//        tableView.reloadData()
+//    }
 
     // 初始化的時候把按過讚的愛心填滿
     private func loadLikedPosts() {
@@ -110,19 +123,19 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 BasePostVC.likedPosts = Set(likePosts)
             }
             DispatchQueue.main.async {
-                self.filterPosts(by: "All")
+                self.tableView.reloadData()
             }
         }
     }
 
     // 配置 cell
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredPosts.count
+        return currentPosts.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        guard indexPath.row < filteredPosts.count else {
+        guard indexPath.row < currentPosts.count else {
             return UITableViewCell()
         }
 
@@ -132,7 +145,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
         cell.selectionStyle = .none
 
-        let post = filteredPosts[indexPath.row]
+        let post = currentPosts[indexPath.row]
         cell.configure(with: post, imageUrl: post.image)
 
         if BasePostVC.likedPosts.contains(post.id) {
@@ -161,14 +174,14 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     // 當點擊 post 時跳轉到這個貼文頁面
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard indexPath.row < filteredPosts.count else {
+        guard indexPath.row < currentPosts.count else {
             return
         }
 
-        let selectedPost = filteredPosts[indexPath.row]
+        let selectedPost = currentPosts[indexPath.row]
         let detailVC = DetailVC()
         detailVC.post = selectedPost // 將所選的 post 資料傳遞到 DetailVC
-        detailVC.heartCount = filteredPosts[indexPath.row].like
+        detailVC.heartCount = currentPosts[indexPath.row].like
         navigationController?.pushViewController(detailVC, animated: true)
     }
 
@@ -180,7 +193,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
 
         let userRef = Firestore.firestore().collection("Users").document(userId)
-        let postId = filteredPosts[indexPath.row].id
+        let postId = currentPosts[indexPath.row].id
         let postRef = Firestore.firestore().collection("posts").document(postId)
         let cell = tableView.cellForRow(at: indexPath) as? PostCell
 
@@ -205,21 +218,20 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             do {
                 try await batch.commit()
 
+                if let originalIndex = posts.firstIndex(where: { $0.id == postId }) {
+                    posts[originalIndex].like += isLiked ? 1 : -1
+                }
+
                 // 更新本地數據和 UI
                 if isLiked {
                     BasePostVC.likedPosts.insert(postId)
-                    filteredPosts[indexPath.row].like += 1
                     cell?.heartButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
                 } else {
                     BasePostVC.likedPosts.remove(postId)
-                    filteredPosts[indexPath.row].like -= 1
                     cell?.heartButton.setImage(UIImage(systemName: "heart"), for: .normal)
                 }
-                cell?.heartCount.text = String(filteredPosts[indexPath.row].like)
+                cell?.heartCount.text = String(currentPosts[indexPath.row].like)
 
-                if let originalIndex = posts.firstIndex(where: { $0.id == postId }) {
-                    posts[originalIndex].like = filteredPosts[indexPath.row].like
-                }
             } catch {
                 print("Error updating likes: \(error.localizedDescription)")
             }

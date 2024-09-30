@@ -16,7 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         FirebaseApp.configure()
         IQKeyboardManager.shared.enable = true
-        UserDefaults.standard.removeObject(forKey: "selectedTag")
+        UserDefaults.standard.removeObject(forKey: "ForumVC_selectedTag")
+        UserDefaults.standard.removeObject(forKey: "MyPostVC_selectedTag")
 //        IQKeyboardManager.shared.keyboardDistanceFromTextField = -10
         return true
     }

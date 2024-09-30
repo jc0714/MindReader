@@ -19,6 +19,8 @@ class MyPostVC: BasePostVC {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.VCid = "MyPostVC"
+
         fetchPosts()
 
         refreshControl = UIRefreshControl()
@@ -119,7 +121,7 @@ class MyPostVC: BasePostVC {
 
                             DispatchQueue.main.async {
                                 print("Post IDs: \(postIds)")
-                                self.filterPosts(by: "All")
+//                                self.filterPosts(by: "All")
                                 self.tableView.reloadData()
                                 self.refreshControl.endRefreshing()
                             }
@@ -128,7 +130,7 @@ class MyPostVC: BasePostVC {
             } else {
                 print("No postIds found or postIds array is empty")
                 self.posts.removeAll()
-                self.filterPosts(by: "All")
+//                self.filterPosts(by: "All")
                 self.tableView.reloadData()
                 self.refreshControl.endRefreshing()
             }
