@@ -69,7 +69,7 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
     func setUpNavigation() {
 
          // 設置導航欄背景顏色
-        navigationController?.setNavigationBarHidden(false, animated: true)
+//        navigationController?.setNavigationBarHidden(false, animated: true)
 
         navigationController?.navigationBar.isTranslucent = false
 

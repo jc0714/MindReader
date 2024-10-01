@@ -34,7 +34,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.setNavigationBarHidden(true, animated: false)
 
         setupUI()
         loadLikedPosts()
