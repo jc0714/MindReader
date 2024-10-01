@@ -65,7 +65,6 @@ class LoginVC: UIViewController, ASAuthorizationControllerPresentationContextPro
 extension LoginVC: ASAuthorizationControllerDelegate {
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
             let userIdentifier = appleIDCredential.user
             print("user: \(appleIDCredential.user)")
@@ -76,55 +75,114 @@ extension LoginVC: ASAuthorizationControllerDelegate {
             let email = appleIDCredential.email
             let realUserStatus = appleIDCredential.realUserStatus.rawValue
 
+            let dispatchGroup = DispatchGroup()  // 用於追蹤所有操作的完成狀態
+
             // 查詢 Firestore 以確認用戶是否已存在
             let usersCollection = Firestore.firestore().collection("Users")
+
+            dispatchGroup.enter()  // 開始一個異步操作
             usersCollection.whereField("user", isEqualTo: userIdentifier).getDocuments { (snapshot, error) in
                 if let error = error {
                     print("Error checking if user exists: \(error.localizedDescription)")
+                    dispatchGroup.leave()  // 異步操作完成
                     return
                 }
-                // 用戶不存在
-                if let snapshot = snapshot, snapshot.documents.isEmpty {
-                    self.firebaseService.saveUserInfoToFirestore(userIdentifier: userIdentifier, fullName: lastName, email: email, realUserStatus: realUserStatus)
 
+                if let snapshot = snapshot, snapshot.documents.isEmpty {
+                    // 用戶不存在
+                    self.firebaseService.saveUserInfoToFirestore(userIdentifier: userIdentifier, fullName: lastName, email: email, realUserStatus: realUserStatus)
                     UserDefaults.standard.set(lastName, forKey: "userLastName")
                     UserDefaults.standard.set(userIdentifier, forKey: "appleUserIdentifier")
-                    UserDefaults.standard.synchronize()
                 } else {
                     // 用戶已經存在
                     if let document = snapshot?.documents.first {
-                    let existingUserId = document.documentID
-                    UserDefaults.standard.set(existingUserId, forKey: "userId")
-                    UserDefaults.standard.synchronize()
-
-                    print("User already exists in Firestore. UserId saved to UserDefaults.")
+                        let existingUserId = document.documentID
+                        let chatRoomId = document.data()["chatRoomId"] as? String ?? ""
+                        UserDefaults.standard.set(existingUserId, forKey: "userID")
+                        UserDefaults.standard.set(chatRoomId, forKey: "chatRoomId")
+                        print("User already exists in Firestore. UserId and chatRoomId saved to UserDefaults.")
                     }
                 }
-            }
-        }
 
-        UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
-        
-        DispatchQueue.main.async {
-            // 获取 Main Storyboard
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-
-            // 获取 Tab Bar Controller
-            guard let tabBarController = storyboard.instantiateViewController(withIdentifier: "MainTabBarController") as? UITabBarController else {
-                print("无法找到 MainTabBarController")
-                return
+                dispatchGroup.leave()  // 異步操作完成
             }
 
-            // 设置根视图控制器为 Tab Bar Controller
-            UIApplication.shared.windows.first?.rootViewController = tabBarController
+            // 監聽所有異步操作是否完成
+            dispatchGroup.notify(queue: .main) {
+                // 保存登入狀態並跳轉到主頁面
+                UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+                UserDefaults.standard.synchronize()
 
-            // 添加转场动画（可选）
-            UIApplication.shared.windows.first?.makeKeyAndVisible()
+                // 跳轉到 TabBarController
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                guard let tabBarController = storyboard.instantiateViewController(withIdentifier: "MainTabBarController") as? UITabBarController else {
+                    print("无法找到 MainTabBarController")
+                    return
+                }
+                UIApplication.shared.windows.first?.rootViewController = tabBarController
+                UIApplication.shared.windows.first?.makeKeyAndVisible()
+            }
         }
-
-        // 登入成功後，關閉 LoginViewController
-//        self.dismiss(animated: true, completion: nil)
     }
+
+//    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+//
+//        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+//            let userIdentifier = appleIDCredential.user
+//            print("user: \(appleIDCredential.user)")
+//            print("fullName: \(String(describing: appleIDCredential.fullName))")
+//            print("Email: \(String(describing: appleIDCredential.email))")
+//
+//            let lastName = appleIDCredential.fullName?.familyName ?? "UUser"
+//            let email = appleIDCredential.email
+//            let realUserStatus = appleIDCredential.realUserStatus.rawValue
+//
+//            // 查詢 Firestore 以確認用戶是否已存在
+//            let usersCollection = Firestore.firestore().collection("Users")
+//            usersCollection.whereField("user", isEqualTo: userIdentifier).getDocuments { (snapshot, error) in
+//                if let error = error {
+//                    print("Error checking if user exists: \(error.localizedDescription)")
+//                    return
+//                }
+//                // 用戶不存在
+//                if let snapshot = snapshot, snapshot.documents.isEmpty {
+//                    self.firebaseService.saveUserInfoToFirestore(userIdentifier: userIdentifier, fullName: lastName, email: email, realUserStatus: realUserStatus)
+//
+//                    UserDefaults.standard.set(lastName, forKey: "userLastName")
+//                    UserDefaults.standard.set(userIdentifier, forKey: "appleUserIdentifier")
+//                    UserDefaults.standard.synchronize()
+//                } else {
+//                    // 用戶已經存在
+//                    if let document = snapshot?.documents.first {
+//                    let existingUserId = document.documentID
+//                    let chatRoomId = document.data()["chatRoomId"] as? String ?? ""
+//
+//                    UserDefaults.standard.set(existingUserId, forKey: "userID")
+//                    UserDefaults.standard.set(chatRoomId, forKey: "chatRoomId")
+//                    UserDefaults.standard.synchronize()
+//
+//                    print("User already exists in Firestore. UserId saved to UserDefaults.")
+//                    }
+//                }
+//            }
+//        }
+//
+//        UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+//        
+//        DispatchQueue.main.async {
+//
+//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//
+//            guard let tabBarController = storyboard.instantiateViewController(withIdentifier: "MainTabBarController") as? UITabBarController else {
+//                print("找不到 MainTabBarController")
+//                return
+//            }
+//
+//            UIApplication.shared.windows.first?.rootViewController = tabBarController
+//
+//            UIApplication.shared.windows.first?.makeKeyAndVisible()
+//        }
+//    }
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         print("didCompleteWithError: \(error.localizedDescription)")

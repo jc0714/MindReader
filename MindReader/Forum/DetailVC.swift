@@ -204,7 +204,7 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
 
         let comment = comments[indexPath.row - 1]
 
-        if let userId = UserDefaults.standard.string(forKey: "userId") {
+        if let userId = UserDefaults.standard.string(forKey: "userID") {
             return comment.authorId == userId
         }
 

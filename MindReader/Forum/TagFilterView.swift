@@ -33,6 +33,8 @@ class TagFilterView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        selectedIndex = IndexPath(item: 0, section: 0)
+        collectionView.reloadData()
     }
 
     required init?(coder: NSCoder) {

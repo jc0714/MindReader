@@ -164,7 +164,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         activityIndicator.center = center
 
         NSLayoutConstraint.activate([
-            chatButton.topAnchor.constraint(equalTo: topAnchor, constant: 100),
+            chatButton.topAnchor.constraint(equalTo: topAnchor, constant: 120),
             chatButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20),
 
             imageButton.topAnchor.constraint(equalTo: topAnchor, constant: 100),
@@ -212,6 +212,9 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             generateImageButton.trailingAnchor.constraint(equalTo: responseLabel.trailingAnchor, constant: 15)
         ])
         responseLabel.preferredMaxLayoutWidth = 300
+
+        bringSubviewToFront(chatButton)
+
     }
 
     func setupLabelGestures(target: Any, action: Selector) {

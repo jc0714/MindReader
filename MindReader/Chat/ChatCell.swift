@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import AlertKit
 
 class ChatCell: UITableViewCell {
 
@@ -116,6 +117,13 @@ class ChatCell: UITableViewCell {
     @objc private func handleLongPress() {
         UIPasteboard.general.string = messageLabel.text
         print("Message copied: \(messageLabel.text ?? "")")
+
+        AlertKitAPI.present(
+            title: "複製成功",
+            icon: .done,
+            style: .iOS17AppleMusic,
+            haptic: .success
+        )
     }
 
     func configure(with message: String, time: String, isIncoming: Bool) {
