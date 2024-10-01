@@ -60,7 +60,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="clB-8P-3ZA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="823.66412213740455" y="710.56338028169023"/>
+            <point key="canvasLocation" x="-103" y="1451"/>
         </scene>
         <!--Post EditVC-->
         <scene sceneID="XQc-Kj-bmk">
@@ -76,7 +76,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ph5-GQ-UGy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-103" y="1451"/>
+            <point key="canvasLocation" x="-103" y="2162"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="3gL-lN-4A4">
@@ -172,11 +172,10 @@
         <!--Navigation Controller-->
         <scene sceneID="av7-ef-6aM">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="e5p-PA-Smp" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="e5p-PA-Smp" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="" image="person.2.fill" catalog="system" id="0PE-QV-yJt"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="l35-Az-a6P">
-                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

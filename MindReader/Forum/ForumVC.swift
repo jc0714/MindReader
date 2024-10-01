@@ -37,6 +37,8 @@ class ForumVC: BasePostVC {
         super.viewWillAppear(animated)
 //        navigationController?.setNavigationBarHidden(true, animated: false)
 
+        navigationController?.navigationBar.isHidden = true
+
         fetchPosts()
     }
 

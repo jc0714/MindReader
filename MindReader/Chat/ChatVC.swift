@@ -25,14 +25,14 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .milkYellow
+        view.backgroundColor = .yelloww
 
         setUpNavigation()
 
         chatView.tableView.delegate = self
         chatView.tableView.dataSource = self
 
-        chatView.tableView.backgroundColor = .milkYellow.withAlphaComponent(0.2)
+        chatView.tableView.backgroundColor = .milkYellow
 
         setUpActions()
         listenForMessages()

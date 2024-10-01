@@ -36,8 +36,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
 
         // 創建 UINavigationController 並設置為 rootViewController
-        let navigationController = UINavigationController(rootViewController: rootViewController)
-        window?.rootViewController = navigationController
+//        let navigationController = UINavigationController(rootViewController: rootViewController)
+        window?.rootViewController = rootViewController
 
         // 顯示視窗
         window?.makeKeyAndVisible()

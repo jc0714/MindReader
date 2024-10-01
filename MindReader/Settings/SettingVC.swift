@@ -12,70 +12,134 @@ import Firebase
 class SettingVC: UIViewController {
 
     // UI 元素
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "設定"
-        label.font = UIFont.boldSystemFont(ofSize: 24)
-        label.textAlignment = .center
-        label.textColor = .pink3
-        return label
+    private let titleLabel = createLabel(text: "設定", fontSize: 24, fontWeight: .bold, textColor: .pink3)
+    private let nameLabel = createLabel(text: "名字", fontSize: 18, fontWeight: .medium, textColor: .darkGray)
+
+    private let editButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "pencil"), for: .normal)
+        button.tintColor = .pink3
+        button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+        return button
     }()
 
-    private let nameSettingView = SettingItemView(title: "名字設定", icon: UIImage(systemName: "person.fill"))
-    private let languageSettingView = SettingItemView(title: "語言選擇", icon: UIImage(systemName: "globe"))
+    private let nameTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "輸入新的姓名"
+        textField.borderStyle = .roundedRect
+        textField.isHidden = true
+        return textField
+    }()
+
+    private let submitButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("送出", for: .normal)
+        button.backgroundColor = .pink3
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 10
+        button.isHidden = true
+        button.addTarget(self, action: #selector(submitButtonTapped), for: .touchUpInside)
+        return button
+    }()
+
+    private let containerStackView = UIStackView()
+
+    // 新增主題切換和回報問題的設定項
     private let themeSettingView = SettingItemView(title: "主題切換", icon: UIImage(systemName: "paintpalette.fill"))
     private let feedbackView = SettingItemView(title: "回報問題", icon: UIImage(systemName: "exclamationmark.bubble.fill"))
-
-    private let containerStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.spacing = 16
-        stackView.distribution = .fillEqually
-        return stackView
-    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        loadUserName()
     }
 
     private func setupUI() {
-        view.backgroundColor = UIColor(red: 255/255, green: 245/255, blue: 238/255, alpha: 1) // 淡粉色背景
-        setupTitleLabel()
-        setupContainerStackView()
-        addSettingItemsToStackView()
-    }
+        view.backgroundColor = UIColor(red: 255/255, green: 245/255, blue: 238/255, alpha: 1)
 
-    private func setupTitleLabel() {
         view.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
-    }
 
-    private func setupContainerStackView() {
-        containerStackView.alignment = .center
-        view.addSubview(containerStackView)
+        containerStackView.axis = .vertical
+        containerStackView.spacing = 16
+        containerStackView.distribution = .equalSpacing
+
         containerStackView.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(containerStackView)
         NSLayoutConstraint.activate([
             containerStackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
             containerStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            containerStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            containerStackView.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+            containerStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
+
+        addSettingItemsToStackView()
     }
 
     private func addSettingItemsToStackView() {
+        // 姓名設定區塊
+        let nameSettingView = UIStackView(arrangedSubviews: [nameLabel, editButton])
+        nameSettingView.axis = .horizontal
+        nameSettingView.spacing = 8
+        nameSettingView.alignment = .center
+
+        // 添加設定項到 StackView
         containerStackView.addArrangedSubview(nameSettingView)
-        containerStackView.addArrangedSubview(languageSettingView)
+        containerStackView.addArrangedSubview(nameTextField)
+        containerStackView.addArrangedSubview(submitButton)
         containerStackView.addArrangedSubview(themeSettingView)
         containerStackView.addArrangedSubview(feedbackView)
     }
+
+    private func loadUserName() {
+        let userLastName = UserDefaults.standard.string(forKey: "userLastName")
+        nameLabel.text = userLastName
+    }
+
+    @objc private func editButtonTapped() {
+        nameTextField.text = nameLabel.text
+
+        if nameTextField.isHidden == false{
+            nameTextField.isHidden = true
+            submitButton.isHidden = true
+        } else {
+            nameTextField.isHidden = false
+            submitButton.isHidden = false
+        }
+    }
+
+    @objc private func submitButtonTapped() {
+        guard let newName = nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !newName.isEmpty else { return }
+        updateNameInFirebase(newName: newName)
+    }
+
+    private func updateNameInFirebase(newName: String) {
+        guard let userId = UserDefaults.standard.string(forKey: "userID") else { return }
+
+        let usersCollection = Firestore.firestore().collection("Users")
+        usersCollection.document(userId).updateData(["userFullName": newName]) { error in
+            if error == nil {
+                UserDefaults.standard.set(newName, forKey: "userLastName")
+                self.nameLabel.text = newName
+                self.nameTextField.isHidden = true
+                self.submitButton.isHidden = true
+            }
+        }
+    }
+
+    private static func createLabel(text: String, fontSize: CGFloat, fontWeight: UIFont.Weight, textColor: UIColor) -> UILabel {
+        let label = UILabel()
+        label.text = text
+        label.font = UIFont.systemFont(ofSize: fontSize, weight: fontWeight)
+        label.textColor = textColor
+        return label
+    }
 }
 
-// 自訂可愛風格設定項目 View
 class SettingItemView: UIView {
 
     private let iconImageView: UIImageView = {
@@ -114,90 +178,16 @@ class SettingItemView: UIView {
         let stackView = UIStackView(arrangedSubviews: [iconImageView, titleLabel])
         stackView.axis = .horizontal
         stackView.spacing = 12
-        stackView.alignment = .center
+        stackView.alignment = .leading
         addSubview(stackView)
 
         stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            stackView.widthAnchor.constraint(equalToConstant: 200),
+//            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             stackView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
         ])
     }
 }
-
-
-//class SettingVC: UIViewController {
-//
-//    // UI 元件
-//    let nameTextField: UITextField = {
-//        let textField = UITextField()
-//        textField.placeholder = "輸入新的姓氏"
-//        textField.borderStyle = .roundedRect
-//        return textField
-//    }()
-//
-//    let submitButton: UIButton = {
-//        let button = UIButton(type: .system)
-//        button.setTitle("送出", for: .normal)
-//        button.addTarget(self, action: #selector(submitButtonTapped), for: .touchUpInside)
-//        return button
-//    }()
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//
-//        let userLastName = UserDefaults.standard.string(forKey: "userLastName")
-//        nameTextField.text = userLastName
-//        
-//        setupUI()
-//    }
-//
-//    // 設置 UI
-//    func setupUI() {
-//        view.backgroundColor = .white
-//
-//        // 添加 TextField 和 Button
-//        view.addSubview(nameTextField)
-//        view.addSubview(submitButton)
-//
-//        // 設置佈局 (這裡簡單地使用 frame)
-//        nameTextField.frame = CGRect(x: 20, y: 100, width: view.frame.width - 40, height: 40)
-//        submitButton.frame = CGRect(x: 20, y: 160, width: view.frame.width - 40, height: 40)
-//    }
-//
-//    // 送出按鈕的動作
-//    @objc func submitButtonTapped() {
-//        guard let newName = nameTextField.text, !newName.isEmpty else {
-//            print("請輸入新的姓氏")
-//            return
-//        }
-//
-//        // 呼叫更新 Firebase 的方法
-//        updateNameInFirebase(newName: newName)
-//    }
-//
-//    // 更新 Firebase 中的 name 欄位
-//    func updateNameInFirebase(newName: String) {
-//        // 假設這裡已經有一個已登入的用戶 ID
-//        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-//            print("User ID is nil")
-//            return
-//        }
-//
-//        // 更新 Firebase 中的 name 欄位
-//        let usersCollection = Firestore.firestore().collection("Users")
-//        usersCollection.document(userId).updateData(["name": newName]) { error in
-//            if let error = error {
-//                print("更新失敗：\(error.localizedDescription)")
-//            } else {
-//                print("姓名已成功更新")
-//
-//                // 將新的姓氏存入 UserDefaults
-//                UserDefaults.standard.set(newName, forKey: "userLastName")
-//                print("新的姓氏已存入 UserDefaults")
-//            }
-//        }
-//    }
-//}

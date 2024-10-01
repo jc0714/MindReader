@@ -48,7 +48,7 @@ class ChatView: UIView, UITextViewDelegate {
     }
 
     private func setupInputView() {
-        inputContainer.backgroundColor = .milkYellow
+        inputContainer.backgroundColor = .yelloww
         inputContainer.translatesAutoresizingMaskIntoConstraints = false
         addSubview(inputContainer)
 
@@ -64,7 +64,7 @@ class ChatView: UIView, UITextViewDelegate {
         textView.translatesAutoresizingMaskIntoConstraints = false
 
         sendButton.setImage(UIImage(systemName: "paperplane.fill"), for: .normal)
-        sendButton.tintColor = .systemBlue
+        sendButton.tintColor = .pink3
         sendButton.translatesAutoresizingMaskIntoConstraints = false
 
         inputContainer.addSubview(textView)

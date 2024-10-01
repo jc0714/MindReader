@@ -71,7 +71,8 @@ extension LoginVC: ASAuthorizationControllerDelegate {
             print("fullName: \(String(describing: appleIDCredential.fullName))")
             print("Email: \(String(describing: appleIDCredential.email))")
 
-            let lastName = appleIDCredential.fullName?.familyName ?? "UUser"
+            let fullName = "\(appleIDCredential.fullName?.givenName ?? "") \(appleIDCredential.fullName?.familyName ?? "")"
+//            let fullName = appleIDCredential.fullName?.description
             let email = appleIDCredential.email
             let realUserStatus = appleIDCredential.realUserStatus.rawValue
 
@@ -90,8 +91,8 @@ extension LoginVC: ASAuthorizationControllerDelegate {
 
                 if let snapshot = snapshot, snapshot.documents.isEmpty {
                     // 用戶不存在
-                    self.firebaseService.saveUserInfoToFirestore(userIdentifier: userIdentifier, fullName: lastName, email: email, realUserStatus: realUserStatus)
-                    UserDefaults.standard.set(lastName, forKey: "userLastName")
+                    self.firebaseService.saveUserInfoToFirestore(appleUserIdentifier: userIdentifier, appleUserFullName: fullName, email: email, realUserStatus: realUserStatus)
+                    UserDefaults.standard.set(fullName, forKey: "appleUserFullName")
                     UserDefaults.standard.set(userIdentifier, forKey: "appleUserIdentifier")
                 } else {
                     // 用戶已經存在
