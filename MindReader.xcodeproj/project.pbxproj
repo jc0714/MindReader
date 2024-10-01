@@ -38,7 +38,6 @@
 		E99142322C9FFABA00016C90 /* AlbumFullScreenVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99142312C9FFABA00016C90 /* AlbumFullScreenVC.swift */; };
 		E99142342CA0042200016C90 /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99142332CA0042200016C90 /* ImageCell.swift */; };
 		E99142582CA2D03500016C90 /* DateFormatterExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99142572CA2D03500016C90 /* DateFormatterExtension.swift */; };
-		E9C668B22CA5405800C0EE1D /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C668B12CA5405800C0EE1D /* SettingView.swift */; };
 		E9C668B42CA5407400C0EE1D /* SettingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C668B32CA5407400C0EE1D /* SettingVC.swift */; };
 		E9C668BD2CA5A06300C0EE1D /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */; };
 		E9F6B67E2C95800F008E9FBF /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B67D2C95800F008E9FBF /* ChatView.swift */; };
@@ -84,7 +83,6 @@
 		E99142312C9FFABA00016C90 /* AlbumFullScreenVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumFullScreenVC.swift; sourceTree = "<group>"; };
 		E99142332CA0042200016C90 /* ImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
 		E99142572CA2D03500016C90 /* DateFormatterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterExtension.swift; sourceTree = "<group>"; };
-		E9C668B12CA5405800C0EE1D /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		E9C668B32CA5407400C0EE1D /* SettingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVC.swift; sourceTree = "<group>"; };
 		E9C668B52CA5444C00C0EE1D /* MindReader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MindReader.entitlements; sourceTree = "<group>"; };
 		E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
@@ -235,7 +233,6 @@
 		E9F6B6BC2C9B1C4D008E9FBF /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				E9C668B12CA5405800C0EE1D /* SettingView.swift */,
 				E9C668B32CA5407400C0EE1D /* SettingVC.swift */,
 			);
 			path = Settings;
@@ -381,7 +378,6 @@
 				E9F6B6882C96EFC9008E9FBF /* PostCell.swift in Sources */,
 				E9240AD32C9D442F00A47944 /* RecordView.swift in Sources */,
 				E9F6B6BE2C9BCF7C008E9FBF /* CommentCell.swift in Sources */,
-				E9C668B22CA5405800C0EE1D /* SettingView.swift in Sources */,
 				E90B5E552CA509AB00CA24F7 /* TagFilterView.swift in Sources */,
 				E9240AD12C9D216A00A47944 /* MyPostVC.swift in Sources */,
 				E9C668BD2CA5A06300C0EE1D /* LoginVC.swift in Sources */,

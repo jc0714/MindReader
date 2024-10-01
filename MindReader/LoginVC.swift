@@ -98,20 +98,32 @@ extension LoginVC: ASAuthorizationControllerDelegate {
                     UserDefaults.standard.synchronize()
 
                     print("User already exists in Firestore. UserId saved to UserDefaults.")
-                    } 
+                    }
                 }
             }
         }
 
         UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
-//        
-//        DispatchQueue.main.async {
-//            let homeVC = HomeVC()
-//            let navigationController = UINavigationController(rootViewController: homeVC)
-//            UIApplication.shared.windows.first?.rootViewController = navigationController
-//        }
+        
+        DispatchQueue.main.async {
+            // 获取 Main Storyboard
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+
+            // 获取 Tab Bar Controller
+            guard let tabBarController = storyboard.instantiateViewController(withIdentifier: "MainTabBarController") as? UITabBarController else {
+                print("无法找到 MainTabBarController")
+                return
+            }
+
+            // 设置根视图控制器为 Tab Bar Controller
+            UIApplication.shared.windows.first?.rootViewController = tabBarController
+
+            // 添加转场动画（可选）
+            UIApplication.shared.windows.first?.makeKeyAndVisible()
+        }
+
         // 登入成功後，關閉 LoginViewController
-        self.dismiss(animated: true, completion: nil)
+//        self.dismiss(animated: true, completion: nil)
     }
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {

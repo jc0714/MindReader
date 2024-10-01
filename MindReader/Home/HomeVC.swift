@@ -42,10 +42,11 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         self.navigationItem.backButtonTitle = ""
 
-        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
-        if !UserDefaults.standard.bool(forKey: "isUserLoggedIn") {
-            showLoginView()
-        }
+//        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
+
+//        if !UserDefaults.standard.bool(forKey: "isUserLoggedIn") {
+//            showLoginView()
+//        }
 
         setupActions()
 

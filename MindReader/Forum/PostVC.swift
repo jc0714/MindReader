@@ -60,6 +60,8 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        navigationController?.setNavigationBarHidden(true, animated: false)
+
         if let savedTag = UserDefaults.standard.string(forKey: "\(self.VCid)_selectedTag") {
             selectedTag = savedTag
             tableView.reloadData()
@@ -68,7 +70,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("LikeCountUpdated"), object: nil)
     }
 
     private func setupUI() {
