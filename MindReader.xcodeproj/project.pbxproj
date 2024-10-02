@@ -14,6 +14,7 @@
 		E9240AD12C9D216A00A47944 /* MyPostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9240AD02C9D216A00A47944 /* MyPostVC.swift */; };
 		E9240AD32C9D442F00A47944 /* RecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9240AD22C9D442F00A47944 /* RecordView.swift */; };
 		E9521C252CAD43C000BFCAEF /* Haptic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9521C242CAD43C000BFCAEF /* Haptic.swift */; };
+		E9521C272CADA18900BFCAEF /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9521C262CADA18900BFCAEF /* Block.swift */; };
 		E97654932CAA8F11003884AF /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = E97654922CAA8F11003884AF /* Lottie */; };
 		E97654962CABC4A7003884AF /* AlertKit in Frameworks */ = {isa = PBXBuildFile; productRef = E97654952CABC4A7003884AF /* AlertKit */; };
 		E97654982CACD854003884AF /* SettingItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97654972CACD853003884AF /* SettingItemCell.swift */; };
@@ -68,6 +69,7 @@
 		E9240AD02C9D216A00A47944 /* MyPostVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPostVC.swift; sourceTree = "<group>"; };
 		E9240AD22C9D442F00A47944 /* RecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordView.swift; sourceTree = "<group>"; };
 		E9521C242CAD43C000BFCAEF /* Haptic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptic.swift; sourceTree = "<group>"; };
+		E9521C262CADA18900BFCAEF /* Block.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
 		E97654972CACD853003884AF /* SettingItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingItemCell.swift; sourceTree = "<group>"; };
 		E97654992CACE9AC003884AF /* UserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
 		E976549B2CAD0A5F003884AF /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
@@ -248,6 +250,7 @@
 				E9C668B32CA5407400C0EE1D /* SettingVC.swift */,
 				E97654972CACD853003884AF /* SettingItemCell.swift */,
 				E97654992CACE9AC003884AF /* UserInfoCell.swift */,
+				E9521C262CADA18900BFCAEF /* Block.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -380,6 +383,7 @@
 				E99142322C9FFABA00016C90 /* AlbumFullScreenVC.swift in Sources */,
 				E976549C2CAD0A5F003884AF /* Animation.swift in Sources */,
 				E90B5E512CA3B62900CA24F7 /* HideTabBarVC.swift in Sources */,
+				E9521C272CADA18900BFCAEF /* Block.swift in Sources */,
 				E9F6B6B62C9AA030008E9FBF /* ButtonExtension.swift in Sources */,
 				E9F6B6832C968743008E9FBF /* Model.swift in Sources */,
 				E90B5E4F2CA3A22000CA24F7 /* DetailVC.swift in Sources */,

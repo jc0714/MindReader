@@ -68,6 +68,11 @@ class RecordView: UIView {
         moveIndicator(to: sender)
     }
 
+    func updateIndicator(forIndex index: Int) {
+        guard index >= 0 && index < buttons.count else { return }
+        moveIndicator(to: buttons[index])
+    }
+
     private func moveIndicator(to button: UIButton?) {
         guard let button = button else { return }
         let indicatorWidth: CGFloat = 120

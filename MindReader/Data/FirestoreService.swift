@@ -222,6 +222,8 @@ class FirestoreService {
     }
 
     func setupFirestoreListener(for postId: String, completion: @escaping ([Comment]) -> Void) -> ListenerRegistration {
+        let blockedList = UserDefaults.standard.stringArray(forKey: "BlockedList") ?? []
+
         let commentsRef = db.collection("posts").document(postId).collection("Comments").order(by: "timestamp", descending: true)
 
         let listener = commentsRef.addSnapshotListener { [weak self] querySnapshot, error in
@@ -236,6 +238,10 @@ class FirestoreService {
                       let content = data["content"] as? String,
                       let authorId = data["authorId"] as? String,
                       let timestamp = data["timestamp"] as? Timestamp else {
+                    return nil
+                }
+
+                if blockedList.contains(authorId) {
                     return nil
                 }
 
