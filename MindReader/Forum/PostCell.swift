@@ -261,6 +261,7 @@ class PostCell: UITableViewCell {
     }
 
     @objc private func heartButtonTapped() {
+        AnimationUtility.playHeartAnimation(above: heartButton)
         heartButtonTappedClosure?()
     }
 
