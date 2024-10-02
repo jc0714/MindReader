@@ -16,7 +16,7 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
 
     private let firestoreService = FirestoreService()
 
-    private let imageNames = ["photo4", "photo5", "photo6", "photo7"]
+    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7"]
     var selectedAvatarIndex = 0
 
     override func loadView() {
@@ -64,8 +64,8 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
             return
         }
 
-        if let title = editView.titleTextField.text, !title.isEmpty,
-           let content = editView.contentTextView.text, !content.isEmpty,
+        if let title = editView.titleTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !title.isEmpty,
+           let content = editView.contentTextView.text?.trimmingCharacters(in: .whitespacesAndNewlines), !content.isEmpty,
            let category = editView.selectedCategory, !category.isEmpty {
 
             do {

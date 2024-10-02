@@ -93,6 +93,7 @@ extension LoginVC: ASAuthorizationControllerDelegate {
                     // 用戶不存在
                     self.firebaseService.saveUserInfoToFirestore(appleUserIdentifier: userIdentifier, appleUserFullName: fullName, email: email, realUserStatus: realUserStatus)
                     UserDefaults.standard.set(fullName, forKey: "appleUserFullName")
+                    UserDefaults.standard.set(fullName, forKey: "userLastName")
                     UserDefaults.standard.set(userIdentifier, forKey: "appleUserIdentifier")
                 } else {
                     // 用戶已經存在
@@ -117,7 +118,7 @@ extension LoginVC: ASAuthorizationControllerDelegate {
                 // 跳轉到 TabBarController
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 guard let tabBarController = storyboard.instantiateViewController(withIdentifier: "MainTabBarController") as? UITabBarController else {
-                    print("无法找到 MainTabBarController")
+                    print("無法找到 MainTabBarController")
                     return
                 }
                 UIApplication.shared.windows.first?.rootViewController = tabBarController
@@ -125,65 +126,6 @@ extension LoginVC: ASAuthorizationControllerDelegate {
             }
         }
     }
-
-//    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-//
-//        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
-//            let userIdentifier = appleIDCredential.user
-//            print("user: \(appleIDCredential.user)")
-//            print("fullName: \(String(describing: appleIDCredential.fullName))")
-//            print("Email: \(String(describing: appleIDCredential.email))")
-//
-//            let lastName = appleIDCredential.fullName?.familyName ?? "UUser"
-//            let email = appleIDCredential.email
-//            let realUserStatus = appleIDCredential.realUserStatus.rawValue
-//
-//            // 查詢 Firestore 以確認用戶是否已存在
-//            let usersCollection = Firestore.firestore().collection("Users")
-//            usersCollection.whereField("user", isEqualTo: userIdentifier).getDocuments { (snapshot, error) in
-//                if let error = error {
-//                    print("Error checking if user exists: \(error.localizedDescription)")
-//                    return
-//                }
-//                // 用戶不存在
-//                if let snapshot = snapshot, snapshot.documents.isEmpty {
-//                    self.firebaseService.saveUserInfoToFirestore(userIdentifier: userIdentifier, fullName: lastName, email: email, realUserStatus: realUserStatus)
-//
-//                    UserDefaults.standard.set(lastName, forKey: "userLastName")
-//                    UserDefaults.standard.set(userIdentifier, forKey: "appleUserIdentifier")
-//                    UserDefaults.standard.synchronize()
-//                } else {
-//                    // 用戶已經存在
-//                    if let document = snapshot?.documents.first {
-//                    let existingUserId = document.documentID
-//                    let chatRoomId = document.data()["chatRoomId"] as? String ?? ""
-//
-//                    UserDefaults.standard.set(existingUserId, forKey: "userID")
-//                    UserDefaults.standard.set(chatRoomId, forKey: "chatRoomId")
-//                    UserDefaults.standard.synchronize()
-//
-//                    print("User already exists in Firestore. UserId saved to UserDefaults.")
-//                    }
-//                }
-//            }
-//        }
-//
-//        UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
-//        
-//        DispatchQueue.main.async {
-//
-//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//
-//            guard let tabBarController = storyboard.instantiateViewController(withIdentifier: "MainTabBarController") as? UITabBarController else {
-//                print("找不到 MainTabBarController")
-//                return
-//            }
-//
-//            UIApplication.shared.windows.first?.rootViewController = tabBarController
-//
-//            UIApplication.shared.windows.first?.makeKeyAndVisible()
-//        }
-//    }
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         print("didCompleteWithError: \(error.localizedDescription)")

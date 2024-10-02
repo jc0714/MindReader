@@ -59,6 +59,7 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     private func setupTableView() {
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.separatorStyle = .none
 
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -111,7 +112,7 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     }
 
     @objc private func sendComment() {
-        guard let commentText = commentTextField.text, !commentText.isEmpty else { return }
+        guard let commentText = commentTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !commentText.isEmpty else { return }
 
         guard let userId = UserDefaults.standard.string(forKey: "userID"), let userName =                 UserDefaults.standard.string(forKey: "userLastName") else {
             print("User ID is nil")

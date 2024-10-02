@@ -47,6 +47,7 @@ class SettingVC: UIViewController {
     // 新增主題切換和回報問題的設定項
     private let themeSettingView = SettingItemView(title: "主題切換", icon: UIImage(systemName: "paintpalette.fill"))
     private let feedbackView = SettingItemView(title: "回報問題", icon: UIImage(systemName: "exclamationmark.bubble.fill"))
+    private let logOutView = SettingItemView(title: "登出", icon: UIImage(systemName: "heart.fill"))
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,17 +88,28 @@ class SettingVC: UIViewController {
         nameSettingView.spacing = 8
         nameSettingView.alignment = .center
 
-        // 添加設定項到 StackView
+        logOutView.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(logOutTapped))
+        logOutView.addGestureRecognizer(tapGesture)
+
         containerStackView.addArrangedSubview(nameSettingView)
         containerStackView.addArrangedSubview(nameTextField)
         containerStackView.addArrangedSubview(submitButton)
         containerStackView.addArrangedSubview(themeSettingView)
         containerStackView.addArrangedSubview(feedbackView)
+        containerStackView.addArrangedSubview(logOutView)
     }
+
 
     private func loadUserName() {
         let userLastName = UserDefaults.standard.string(forKey: "userLastName")
         nameLabel.text = userLastName
+    }
+
+    @objc private func logOutTapped() {
+        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
+
+        print("登出!!!")
     }
 
     @objc private func editButtonTapped() {

@@ -14,6 +14,7 @@ class PostEditView: UIView {
     let categoryStackView = UIStackView()
     let contentTextView = UITextView()
     let imageView = UIImageView()
+    let placeHolderImageView = UIImageView()
     let publishButton = UIButton()
 
     // Buttons for categories
@@ -49,9 +50,12 @@ class PostEditView: UIView {
         contentTextView.layer.borderColor = UIColor.lightGray.cgColor
         contentTextView.layer.borderWidth = 1.0
 
-        imageView.backgroundColor = .pink1
+        imageView.backgroundColor = UIColor(named: "pink1")?.withAlphaComponent(0.5)
         imageView.isUserInteractionEnabled = true
         imageView.contentMode = .scaleAspectFit
+        
+        placeHolderImageView.image = UIImage(systemName: "photo.on.rectangle.angled")
+        placeHolderImageView.tintColor = .white
 
         publishButton.setTitle("Publish", for: .normal)
         publishButton.backgroundColor = .pink1
@@ -90,6 +94,7 @@ class PostEditView: UIView {
         addSubview(titleTextField)
         addSubview(categoryStackView)
         addSubview(contentTextView)
+        addSubview(placeHolderImageView)
         addSubview(imageView)
         addSubview(publishButton)
 
@@ -97,18 +102,19 @@ class PostEditView: UIView {
         titleTextField.translatesAutoresizingMaskIntoConstraints = false
         categoryStackView.translatesAutoresizingMaskIntoConstraints = false
         contentTextView.translatesAutoresizingMaskIntoConstraints = false
+        placeHolderImageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.translatesAutoresizingMaskIntoConstraints = false
         publishButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            avatarImage.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: margin),
-            avatarImage.leftAnchor.constraint(equalTo: leftAnchor, constant: margin),
+            avatarImage.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16),
+            avatarImage.leftAnchor.constraint(equalTo: leftAnchor, constant: 16),
             avatarImage.heightAnchor.constraint(equalToConstant: 100),
             avatarImage.widthAnchor.constraint(equalToConstant: 100),
 
-            titleTextField.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: margin),
-            titleTextField.leadingAnchor.constraint(equalTo: avatarImage.trailingAnchor, constant: margin),
-            titleTextField.rightAnchor.constraint(equalTo: rightAnchor, constant: -margin),
+            titleTextField.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16),
+            titleTextField.leadingAnchor.constraint(equalTo: avatarImage.trailingAnchor, constant: 16),
+            titleTextField.rightAnchor.constraint(equalTo: rightAnchor, constant: -16),
             titleTextField.heightAnchor.constraint(equalToConstant: 50),
 
             categoryStackView.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 15),
@@ -116,19 +122,24 @@ class PostEditView: UIView {
             categoryStackView.rightAnchor.constraint(equalTo: rightAnchor, constant: -15),
             categoryStackView.heightAnchor.constraint(equalToConstant: 40),
 
-            contentTextView.topAnchor.constraint(equalTo: categoryStackView.bottomAnchor, constant: margin),
-            contentTextView.leftAnchor.constraint(equalTo: leftAnchor, constant: margin),
-            contentTextView.rightAnchor.constraint(equalTo: rightAnchor, constant: -margin),
+            contentTextView.topAnchor.constraint(equalTo: categoryStackView.bottomAnchor, constant: 16),
+            contentTextView.leftAnchor.constraint(equalTo: leftAnchor, constant: 16),
+            contentTextView.rightAnchor.constraint(equalTo: rightAnchor, constant: -16),
             contentTextView.heightAnchor.constraint(equalToConstant: 200),
 
-            imageView.topAnchor.constraint(equalTo: contentTextView.bottomAnchor, constant: margin),
-            imageView.leftAnchor.constraint(equalTo: leftAnchor, constant: margin),
-            imageView.rightAnchor.constraint(equalTo: rightAnchor, constant: -margin),
+            placeHolderImageView.topAnchor.constraint(equalTo: contentTextView.bottomAnchor, constant: 16),
+            placeHolderImageView.leftAnchor.constraint(equalTo: leftAnchor, constant: 16),
+            placeHolderImageView.rightAnchor.constraint(equalTo: rightAnchor, constant: -16),
+            placeHolderImageView.heightAnchor.constraint(equalToConstant: 200),
+
+            imageView.topAnchor.constraint(equalTo: contentTextView.bottomAnchor, constant: 16),
+            imageView.leftAnchor.constraint(equalTo: leftAnchor, constant: 16),
+            imageView.rightAnchor.constraint(equalTo: rightAnchor, constant: -16),
             imageView.heightAnchor.constraint(equalToConstant: 200),
 
-            publishButton.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: margin),
-            publishButton.leftAnchor.constraint(equalTo: leftAnchor, constant: margin),
-            publishButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -margin),
+            publishButton.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16),
+            publishButton.leftAnchor.constraint(equalTo: leftAnchor, constant: 16),
+            publishButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -16),
             publishButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }

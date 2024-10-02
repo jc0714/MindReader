@@ -14,7 +14,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     let tableView = UITableView()
     var posts: [Post] = []
 
-
     static var likedPosts: Set<String> = []
 
     private let tagFilterView = TagFilterView()
@@ -30,7 +29,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
 
-    let imageNames = ["photo4", "photo5", "photo6", "photo7"]
+    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -240,7 +239,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     // 連結到留言 VC
     func showCommentsForPost(at indexPath: IndexPath) {
-        let commentsVC = CommentsVC(postId: posts[indexPath.row].id)
+        let commentsVC = CommentsVC(postId: currentPosts[indexPath.row].id)
         if let sheet = commentsVC.sheetPresentationController {
             sheet.detents = [.medium(), .large()]
             sheet.prefersGrabberVisible = true
@@ -256,7 +255,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             return
         }
 
-        if let index = posts.firstIndex(where: { $0.id == postId }),
+        if let index = currentPosts.firstIndex(where: { $0.id == postId }),
            let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? PostCell {
             cell.commentCount.text = "\(count)"
         }

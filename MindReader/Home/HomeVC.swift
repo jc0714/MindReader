@@ -10,6 +10,7 @@ import Firebase
 import FirebaseFirestore
 import FirebaseStorage
 import Lottie
+import AlertKit
 
 class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
 
@@ -29,8 +30,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     private var recognizedText: String = ""
 
     private var copiedText: String = ""
-
-    private var animationView: LottieAnimationView?
 
     override func loadView() {
         view = homeView
@@ -125,6 +124,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         Task {
             do {
+                homeView.showLoadingAnimation()
+
                 let existingResponse = try await self.firestoreService.fetchResponse(for: prompt)
 
                 if let possibleMeanings = existingResponse?["possible_meanings"] as? [String],
@@ -134,9 +135,10 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
                     sender.isUserInteractionEnabled = true
                     sender.backgroundColor = .pink1
+                    homeView.hideLoadingAnimation()
                     return
                 }
-                var formatedPrompt = formatPrompt(prompt)
+                let formatedPrompt = formatPrompt(prompt)
                 let response = try await apiService.generateTextResponse(for: formatedPrompt)
 
                 if let data = response.data(using: .utf8),
@@ -161,10 +163,12 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
                 sender.isUserInteractionEnabled = true
                 sender.backgroundColor = .pink1
+                homeView.hideLoadingAnimation()
             } catch {
                 print("Failed to get response: \(error)")
                 sender.isUserInteractionEnabled = true
                 sender.backgroundColor = .pink1
+                homeView.hideLoadingAnimation()
             }
         }
     }
@@ -273,31 +277,19 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - Copy Label Text
 
     @objc func copyLabelText(_ sender: UITapGestureRecognizer) {
-        showCopySuccessWithScaleAnimation()
+        AlertKitAPI.present(
+            title: "複製成功",
+            icon: .done,
+            style: .iOS17AppleMusic,
+            haptic: .success
+        )
+
         if let label = sender.view as? UILabel {
             UIPasteboard.general.string = label.text
             copiedText = label.text ?? "早安"
             print("Text copied: \(label.text ?? "")")
         }
         homeView.generateImageButton.isHidden = false
-    }
-
-    func showCopySuccessWithScaleAnimation() {
-        let copySuccessLabel = UILabel()
-        copySuccessLabel.text = "Copied✅"
-        copySuccessLabel.textColor = .white
-        copySuccessLabel.backgroundColor = .lightGray
-        copySuccessLabel.textAlignment = .center
-        copySuccessLabel.layer.cornerRadius = 8
-        copySuccessLabel.layer.masksToBounds = true
-        copySuccessLabel.frame = CGRect(x: 0, y: 0, width: 150, height: 40)
-        copySuccessLabel.center = CGPoint(x: self.view.center.x, y: self.view.frame.height - 150)
-        view.addSubview(copySuccessLabel)
-
-//        copySuccessLabel.transform = CGAffineTransform(scaleX: 1, y: 1)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            copySuccessLabel.removeFromSuperview()
-        }
     }
 
     @objc func toGenerateButtonTapped(_ sender: UIButton) {

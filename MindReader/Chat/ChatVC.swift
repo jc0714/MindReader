@@ -113,7 +113,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
 
     @objc private func sendMessage(_ sender: UIButton) {
         
-        guard var text = chatView.textView.text, !text.isEmpty else { return }
+        guard var text = chatView.textView.text?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty else { return }
         let senderName = "0"
 
         chatView.showLoadingAnimation()

@@ -15,7 +15,7 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
     var comments: [Comment] = [] // 留言數組
     var heartCount: Int = 0
 
-    let imageNames = ["photo4", "photo5", "photo6", "photo7"]
+    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7"]
 
     var postId: String = ""
 
@@ -90,6 +90,7 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
         tableView.delegate = self
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 100
+        tableView.separatorStyle = .none
 
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -128,7 +129,7 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
     }
 
     @objc private func sendComment() {
-        guard let commentText = commentTextField.text, !commentText.isEmpty else { return }
+        guard let commentText = commentTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !commentText.isEmpty else { return }
 
         guard let userId = UserDefaults.standard.string(forKey: "userID"), let userName =                 UserDefaults.standard.string(forKey: "userLastName") else {
             return

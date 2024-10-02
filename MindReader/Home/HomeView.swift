@@ -7,8 +7,11 @@
 
 import Foundation
 import UIKit
+import Lottie
 
 class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+    private var waitingAnimationView: LottieAnimationView = LottieAnimationView(name: "runningBird")
 
     let chatButton: UIButton = {
         let button = UIButton()
@@ -137,6 +140,9 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
     private func configureUI() {
         backgroundColor = .systemBackground
 
+        waitingAnimationView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(waitingAnimationView)
+
         addSubview(chatButton)
         addSubview(imageButton)
         addSubview(textButton)
@@ -209,11 +215,20 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             replyLabel3.widthAnchor.constraint(equalToConstant: 300),
 
             generateImageButton.bottomAnchor.constraint(equalTo: responseLabel.bottomAnchor),
-            generateImageButton.trailingAnchor.constraint(equalTo: responseLabel.trailingAnchor, constant: 15)
+            generateImageButton.trailingAnchor.constraint(equalTo: responseLabel.trailingAnchor, constant: 15),
+
+            //waitingAnimationView.leadingAnchor.constraint(equalTo: submitButton.leadingAnchor, constant: 8),
+            waitingAnimationView.centerXAnchor.constraint(equalTo: promptTextField.centerXAnchor, constant: 0),
+            waitingAnimationView.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 30),
+            waitingAnimationView.widthAnchor.constraint(equalToConstant: 200),
+            waitingAnimationView.heightAnchor.constraint(equalToConstant: 200)
         ])
         responseLabel.preferredMaxLayoutWidth = 300
 
+        waitingAnimationView.isHidden = true
+
         bringSubviewToFront(chatButton)
+        bringSubviewToFront(waitingAnimationView)
 
     }
 
@@ -226,4 +241,20 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         replyLabel2.addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
         replyLabel3.addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
     }
+
+    func showLoadingAnimation() {
+        self.bringSubviewToFront(self.waitingAnimationView)
+        waitingAnimationView.isHidden = false
+        waitingAnimationView.loopMode = .loop
+        waitingAnimationView.play()
+        self.layoutIfNeeded()
+    }
+
+    // 隱藏動畫
+    func hideLoadingAnimation() {
+        waitingAnimationView.stop()
+        waitingAnimationView.isHidden = true
+    }
+
 }
+

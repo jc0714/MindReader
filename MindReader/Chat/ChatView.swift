@@ -12,7 +12,6 @@ import Lottie
 class ChatView: UIView, UITextViewDelegate {
     private var typingAnimationView: LottieAnimationView = LottieAnimationView(name: "typing")
 
-
     let tableView = UITableView(frame: .zero, style: .plain)
     let textView = UITextView()
     let sendButton = UIButton(type: .system)
