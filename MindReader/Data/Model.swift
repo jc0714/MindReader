@@ -63,5 +63,6 @@ struct Message {
     let content: String
     let sender: String
     let createdTime: String
+    let createdDate: Date
 }
 

@@ -15,6 +15,8 @@
 		E9240AD32C9D442F00A47944 /* RecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9240AD22C9D442F00A47944 /* RecordView.swift */; };
 		E97654932CAA8F11003884AF /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = E97654922CAA8F11003884AF /* Lottie */; };
 		E97654962CABC4A7003884AF /* AlertKit in Frameworks */ = {isa = PBXBuildFile; productRef = E97654952CABC4A7003884AF /* AlertKit */; };
+		E97654982CACD854003884AF /* SettingItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97654972CACD853003884AF /* SettingItemCell.swift */; };
+		E976549A2CACE9AC003884AF /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97654992CACE9AC003884AF /* UserInfoCell.swift */; };
 		E97C15E12C9166B5002B437C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C15E02C9166B5002B437C /* AppDelegate.swift */; };
 		E97C15E32C9166B5002B437C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C15E22C9166B5002B437C /* SceneDelegate.swift */; };
 		E97C15E52C9166B5002B437C /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C15E42C9166B5002B437C /* HomeVC.swift */; };
@@ -63,6 +65,8 @@
 		E9240ACE2C9D209F00A47944 /* AlbumCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumCell.swift; sourceTree = "<group>"; };
 		E9240AD02C9D216A00A47944 /* MyPostVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPostVC.swift; sourceTree = "<group>"; };
 		E9240AD22C9D442F00A47944 /* RecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordView.swift; sourceTree = "<group>"; };
+		E97654972CACD853003884AF /* SettingItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingItemCell.swift; sourceTree = "<group>"; };
+		E97654992CACE9AC003884AF /* UserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
 		E97C15DD2C9166B5002B437C /* MindReader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MindReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E97C15E02C9166B5002B437C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E97C15E22C9166B5002B437C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -236,6 +240,8 @@
 			isa = PBXGroup;
 			children = (
 				E9C668B32CA5407400C0EE1D /* SettingVC.swift */,
+				E97654972CACD853003884AF /* SettingItemCell.swift */,
+				E97654992CACE9AC003884AF /* UserInfoCell.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -354,6 +360,7 @@
 				E97C16042C919FFF002B437C /* ChatVC.swift in Sources */,
 				E9C668B42CA5407400C0EE1D /* SettingVC.swift in Sources */,
 				E97C16172C955CBB002B437C /* FirestoreService.swift in Sources */,
+				E976549A2CACE9AC003884AF /* UserInfoCell.swift in Sources */,
 				E97C15E52C9166B5002B437C /* HomeVC.swift in Sources */,
 				E97C15F72C91812F002B437C /* APIService.swift in Sources */,
 				E9F6B6B22C997482008E9FBF /* ImageVC.swift in Sources */,
@@ -376,6 +383,7 @@
 				E9F6B6C02C9C194F008E9FBF /* AlbumVC.swift in Sources */,
 				E97C15E12C9166B5002B437C /* AppDelegate.swift in Sources */,
 				E9F6B68C2C9717A9008E9FBF /* PostEditView.swift in Sources */,
+				E97654982CACD854003884AF /* SettingItemCell.swift in Sources */,
 				E99142272C9EEDCE00016C90 /* ImageCollectionView.swift in Sources */,
 				E97C16152C95536B002B437C /* TextRecognition.swift in Sources */,
 				E97C15E32C9166B5002B437C /* SceneDelegate.swift in Sources */,

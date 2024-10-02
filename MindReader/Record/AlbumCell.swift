@@ -16,6 +16,7 @@ class AlbumCell: UICollectionViewCell {
         imageView.frame = self.contentView.bounds
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
+        imageView.image = UIImage(named: "photo7")
         self.contentView.addSubview(imageView)
     }
 
@@ -38,8 +39,6 @@ class AlbumCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        // 重置 imageView 的圖片，避免顯示舊圖片
-        imageView.image = nil
+        imageView.image = UIImage(named: "photo7")
     }
-
 }

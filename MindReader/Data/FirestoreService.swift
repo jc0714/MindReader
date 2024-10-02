@@ -214,7 +214,7 @@ class FirestoreService {
                 let date = createdTime.dateValue()
                 let timeString = DateFormatter.sharedFormatter.string(from: date)
 
-                let message = Message(content: content, sender: sender, createdTime: timeString)
+                let message = Message(content: content, sender: sender, createdTime: timeString, createdDate: date)
                 messages.append(message)
             }
             completion(messages)

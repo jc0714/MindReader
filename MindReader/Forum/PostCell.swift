@@ -62,7 +62,7 @@ class PostCell: UITableViewCell {
     let heartButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(systemName: "heart"), for: .normal)
-        button.tintColor = .red
+        button.tintColor = .orange
         return button
     }()
 
@@ -70,14 +70,14 @@ class PostCell: UITableViewCell {
         let label = UILabel()
         label.text = "0"
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .red
+        label.textColor = .orange
         return label
     }()
 
     let commentButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(systemName: "bubble"), for: .normal)
-        button.tintColor = .systemMint
+        button.tintColor = .brown
         return button
     }()
 
@@ -85,7 +85,7 @@ class PostCell: UITableViewCell {
         let label = UILabel()
         label.text = "0"
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .systemMint
+        label.textColor = .brown
         return label
     }()
 

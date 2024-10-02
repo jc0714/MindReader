@@ -9,45 +9,20 @@ import Foundation
 import UIKit
 import Firebase
 
-class SettingVC: UIViewController {
+class SettingVC: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UserInfoCellDelegate {
 
-    // UI 元素
     private let titleLabel = createLabel(text: "設定", fontSize: 24, fontWeight: .bold, textColor: .pink3)
-    private let nameLabel = createLabel(text: "名字", fontSize: 18, fontWeight: .medium, textColor: .darkGray)
 
-    private let editButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "pencil"), for: .normal)
-        button.tintColor = .pink3
-        button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
-        return button
-    }()
+    private var collectionView: UICollectionView!
+    private var userName: String = ""
 
-    private let nameTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "輸入新的姓名"
-        textField.borderStyle = .roundedRect
-        textField.isHidden = true
-        return textField
-    }()
-
-    private let submitButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("送出", for: .normal)
-        button.backgroundColor = .pink3
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 10
-        button.isHidden = true
-        button.addTarget(self, action: #selector(submitButtonTapped), for: .touchUpInside)
-        return button
-    }()
-
-    private let containerStackView = UIStackView()
-
-    // 新增主題切換和回報問題的設定項
-    private let themeSettingView = SettingItemView(title: "主題切換", icon: UIImage(systemName: "paintpalette.fill"))
-    private let feedbackView = SettingItemView(title: "回報問題", icon: UIImage(systemName: "exclamationmark.bubble.fill"))
-    private let logOutView = SettingItemView(title: "登出", icon: UIImage(systemName: "heart.fill"))
+    // 数据模型
+    private var settingsItems: [(title: String, icon: UIImage?)] = [
+        ("名字", UIImage(systemName: "pencil")),
+        ("主題切換", UIImage(systemName: "paintpalette.fill")),
+        ("回報問題", UIImage(systemName: "exclamationmark.bubble.fill")),
+        ("登出", UIImage(systemName: "heart.fill"))
+    ]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,6 +33,7 @@ class SettingVC: UIViewController {
     private func setupUI() {
         view.backgroundColor = UIColor(red: 255/255, green: 245/255, blue: 238/255, alpha: 1)
 
+        // 添加 titleLabel
         view.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -65,81 +41,58 @@ class SettingVC: UIViewController {
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
 
-        containerStackView.axis = .vertical
-        containerStackView.spacing = 16
-        containerStackView.distribution = .equalSpacing
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 16
+        layout.sectionInset = UIEdgeInsets(top: 20, left: 16, bottom: 20, right: 16)
 
-        containerStackView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .clear
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.register(UserInfoCell.self, forCellWithReuseIdentifier: "UserInfoCell")
+        collectionView.register(SettingItemCell.self, forCellWithReuseIdentifier: "SettingItemCell")
 
-        view.addSubview(containerStackView)
+        view.addSubview(collectionView)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            containerStackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
-            containerStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            containerStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+            collectionView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-
-        addSettingItemsToStackView()
     }
-
-    private func addSettingItemsToStackView() {
-        // 姓名設定區塊
-        let nameSettingView = UIStackView(arrangedSubviews: [nameLabel, editButton])
-        nameSettingView.axis = .horizontal
-        nameSettingView.spacing = 8
-        nameSettingView.alignment = .center
-
-        logOutView.isUserInteractionEnabled = true
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(logOutTapped))
-        logOutView.addGestureRecognizer(tapGesture)
-
-        containerStackView.addArrangedSubview(nameSettingView)
-        containerStackView.addArrangedSubview(nameTextField)
-        containerStackView.addArrangedSubview(submitButton)
-        containerStackView.addArrangedSubview(themeSettingView)
-        containerStackView.addArrangedSubview(feedbackView)
-        containerStackView.addArrangedSubview(logOutView)
-    }
-
 
     private func loadUserName() {
-        let userLastName = UserDefaults.standard.string(forKey: "userLastName")
-        nameLabel.text = userLastName
+        userName = UserDefaults.standard.string(forKey: "userLastName") ?? "UUUU"
     }
 
-    @objc private func logOutTapped() {
-        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
-
-        print("登出!!!")
+    // MARK: - UICollectionView DataSource 方法
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return settingsItems.count
     }
 
-    @objc private func editButtonTapped() {
-        nameTextField.text = nameLabel.text
-
-        if nameTextField.isHidden == false{
-            nameTextField.isHidden = true
-            submitButton.isHidden = true
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if indexPath.row == 0 {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UserInfoCell", for: indexPath) as? UserInfoCell
+            cell?.configure(with: userName, icon: UIImage(named: "photo1"))
+            cell?.delegate = self
+            return cell!
         } else {
-            nameTextField.isHidden = false
-            submitButton.isHidden = false
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SettingItemCell", for: indexPath) as? SettingItemCell
+            let item = settingsItems[indexPath.item]
+            cell!.configure(with: item.title, icon: item.icon)
+            return cell!
         }
     }
 
-    @objc private func submitButtonTapped() {
-        guard let newName = nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !newName.isEmpty else { return }
-        updateNameInFirebase(newName: newName)
-    }
-
-    private func updateNameInFirebase(newName: String) {
-        guard let userId = UserDefaults.standard.string(forKey: "userID") else { return }
-
-        let usersCollection = Firestore.firestore().collection("Users")
-        usersCollection.document(userId).updateData(["userFullName": newName]) { error in
-            if error == nil {
-                UserDefaults.standard.set(newName, forKey: "userLastName")
-                self.nameLabel.text = newName
-                self.nameTextField.isHidden = true
-                self.submitButton.isHidden = true
-            }
+    // MARK: - UICollectionViewDelegateFlowLayout 方法
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if indexPath.row == 0 {
+            // 第一行 UserInfoCell 的高度
+            return CGSize(width: collectionView.frame.width - 32, height: 150)
+        } else {
+            return CGSize(width: collectionView.frame.width - 32, height: 60)
         }
     }
 
@@ -148,58 +101,22 @@ class SettingVC: UIViewController {
         label.text = text
         label.font = UIFont.systemFont(ofSize: fontSize, weight: fontWeight)
         label.textColor = textColor
+        label.textAlignment = .center
         return label
     }
-}
 
-class SettingItemView: UIView {
+    func didTapSubmitButton(newName: String, in cell: UserInfoCell) {
+        guard let userId = UserDefaults.standard.string(forKey: "userID") else { return }
 
-    private let iconImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = .pink3
-        return imageView
-    }()
-
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-        label.textColor = .darkGray
-        return label
-    }()
-
-    init(title: String, icon: UIImage?) {
-        super.init(frame: .zero)
-        titleLabel.text = title
-        iconImageView.image = icon
-        setupUI()
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    private func setupUI() {
-        backgroundColor = .white
-        layer.cornerRadius = 15
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOpacity = 0.1
-        layer.shadowOffset = CGSize(width: 0, height: 2)
-        layer.shadowRadius = 4
-
-        let stackView = UIStackView(arrangedSubviews: [iconImageView, titleLabel])
-        stackView.axis = .horizontal
-        stackView.spacing = 12
-        stackView.alignment = .leading
-        addSubview(stackView)
-
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            stackView.widthAnchor.constraint(equalToConstant: 200),
-//            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            stackView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
-        ])
+        let usersCollection = Firestore.firestore().collection("Users")
+        usersCollection.document(userId).updateData(["userFullName": newName]) { error in
+            if error == nil {
+                UserDefaults.standard.set(newName, forKey: "userLastName")
+                self.userName = newName
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
+            }
+        }
     }
 }

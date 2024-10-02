@@ -24,4 +24,35 @@ extension DateFormatter {
         return formatter
     }()
 
+//    static let ChatFormatter: DateFormatter = {
+//        let formatter = DateFormatter()
+//        formatter.timeZone = TimeZone.current
+//        formatter.locale = Locale.current
+//
+//        formatter.dateFormat = "E, MM/dd"
+//
+//        return formatter
+//    }()
+
+    static let chatFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone.current
+        formatter.locale = Locale.current
+        return formatter
+    }()
+
+    static func formatChatDate(_ date: Date) -> String {
+        let calendar = Calendar.current
+
+        if calendar.isDateInToday(date) {
+            chatFormatter.dateFormat = "今天"
+        } else if calendar.isDateInYesterday(date) {
+            chatFormatter.dateFormat = "昨天"
+        } else {
+            chatFormatter.dateFormat = "E, MM/dd"
+        }
+
+        return chatFormatter.string(from: date)
+    }
+
 }

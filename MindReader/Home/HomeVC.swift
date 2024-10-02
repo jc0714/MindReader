@@ -117,7 +117,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         let prompt = sender.tag == 1 ? homeView.promptTextField.text : recognizedText
 
-        guard var prompt = prompt, !prompt.isEmpty else {
+        guard let prompt = prompt, !prompt.isEmpty else {
             print("Prompt is empty")
             return
         }

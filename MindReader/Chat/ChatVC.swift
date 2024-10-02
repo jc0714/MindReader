@@ -17,9 +17,30 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
 
     private var inputContainerBottomConstraint: NSLayoutConstraint!
 
+    private let dateLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        label.textAlignment = .center
+        label.layer.cornerRadius = 12
+        label.clipsToBounds = true
+        label.isHidden = true
+        return label
+    }()
+
     override func loadView() {
         chatView = ChatView()
         view = chatView
+
+        chatView.addSubview(dateLabel)
+        dateLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            dateLabel.topAnchor.constraint(equalTo: chatView.safeAreaLayoutGuide.topAnchor, constant: 10),
+            dateLabel.centerXAnchor.constraint(equalTo: chatView.centerXAnchor),
+            dateLabel.widthAnchor.constraint(equalToConstant: 100),
+            dateLabel.heightAnchor.constraint(equalToConstant: 30)
+        ])
     }
 
     override func viewDidLoad() {
@@ -164,7 +185,6 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         }
     }
 
-
     // MARK: - UITableViewDataSource
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -199,6 +219,27 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         chatView.textView.resignFirstResponder()
         return true
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let visibleCells = chatView.tableView.visibleCells as? [ChatCell], let firstVisibleCell = visibleCells.first else { return }
+        if let indexPath = chatView.tableView.indexPath(for: firstVisibleCell) {
+            let messageDate = messages[indexPath.row].createdDate
+            let dateString = DateFormatter.formatChatDate(messageDate)
+
+            dateLabel.text = dateString
+            dateLabel.isHidden = false
+        }
+    }
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        dateLabel.isHidden = true
+    }
+
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            dateLabel.isHidden = true
+        }
     }
 
     private func formatPrompt(_ prompt: String) -> String {
