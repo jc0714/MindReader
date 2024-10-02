@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import AlertKit
 
 class ChatCell: UITableViewCell {
 
@@ -23,6 +24,14 @@ class ChatCell: UITableViewCell {
         view.layer.cornerRadius = 12
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }()
+
+    let inComeMsgImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.layer.cornerRadius = 20
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
 
     let readLabel: UILabel = {
@@ -42,16 +51,28 @@ class ChatCell: UITableViewCell {
         return label
     }()
 
-    var leadingConstraint: NSLayoutConstraint!
-    var trailingConstraint: NSLayoutConstraint!
+    var messageLeadingConstraint: NSLayoutConstraint!
+    var messageTrailingConstraint: NSLayoutConstraint!
+    var avatarLeadingConstraint: NSLayoutConstraint!
+
+    var timeLeadingConstraint: NSLayoutConstraint!
+    var timeTrailingConstraint: NSLayoutConstraint!
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupViews()
+        addLongPressGesture()
+    }
+
+    func setupViews() {
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
 
         addSubview(bubbleBackgroundView)
         addSubview(messageLabel)
         addSubview(readLabel)
         addSubview(timeLabel)
+        addSubview(inComeMsgImageView) // 添加頭貼
 
         let constraints = [
             messageLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),
@@ -66,41 +87,79 @@ class ChatCell: UITableViewCell {
             readLabel.trailingAnchor.constraint(equalTo: bubbleBackgroundView.leadingAnchor, constant: -8),
             readLabel.bottomAnchor.constraint(equalTo: bubbleBackgroundView.bottomAnchor, constant: -14),
 
-            timeLabel.trailingAnchor.constraint(equalTo: bubbleBackgroundView.leadingAnchor, constant: -8),
-            timeLabel.bottomAnchor.constraint(equalTo: bubbleBackgroundView.bottomAnchor)
+            timeLabel.bottomAnchor.constraint(equalTo: bubbleBackgroundView.bottomAnchor),
+
+            inComeMsgImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            inComeMsgImageView.bottomAnchor.constraint(equalTo: bubbleBackgroundView.bottomAnchor, constant: -4),
+            inComeMsgImageView.widthAnchor.constraint(equalToConstant: 40),
+            inComeMsgImageView.heightAnchor.constraint(equalToConstant: 40)
         ]
         NSLayoutConstraint.activate(constraints)
 
-        leadingConstraint = messageLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32)
-        trailingConstraint = messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32)
+        // 自己
+        messageTrailingConstraint = messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32)
+        timeLeadingConstraint = timeLabel.trailingAnchor.constraint(equalTo: bubbleBackgroundView.leadingAnchor, constant: -8)
+
+        // 對方
+        messageLeadingConstraint = messageLabel.leadingAnchor.constraint(equalTo: inComeMsgImageView.trailingAnchor, constant: 24)
+        timeTrailingConstraint = timeLabel.leadingAnchor.constraint(equalTo: bubbleBackgroundView.trailingAnchor, constant: 8)
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    private func addLongPressGesture() {
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        self.addGestureRecognizer(longPressGesture)
+    }
+
+    @objc private func handleLongPress() {
+        UIPasteboard.general.string = messageLabel.text
+        print("Message copied: \(messageLabel.text ?? "")")
+
+        AlertKitAPI.present(
+            title: "複製成功",
+            icon: .done,
+            style: .iOS17AppleMusic,
+            haptic: .success
+        )
+    }
+
     func configure(with message: String, time: String, isIncoming: Bool) {
         messageLabel.text = message
+        timeLabel.text = time
 
-        leadingConstraint.isActive = false
-        trailingConstraint.isActive = false
+        timeTrailingConstraint.isActive = false
+        timeLeadingConstraint.isActive = false
 
+        messageLeadingConstraint.isActive = false
+        messageTrailingConstraint.isActive = false
+
+        // 對方的訊息
         if isIncoming {
             readLabel.text = nil
-            timeLabel.text = nil
-            leadingConstraint.isActive = true
-            bubbleBackgroundView.backgroundColor = UIColor(white: 0.9, alpha: 1)
+            messageLeadingConstraint.isActive = true
+            timeTrailingConstraint.isActive = true
+            bubbleBackgroundView.backgroundColor = .yelloww.withAlphaComponent(0.5)
+
+            inComeMsgImageView.isHidden = false
+            inComeMsgImageView.image = UIImage(named: "photo4")
         } else {
             readLabel.text = "Read"
-            timeLabel.text = time
-            trailingConstraint.isActive = true
-            bubbleBackgroundView.backgroundColor = UIColor.black
+            messageTrailingConstraint.isActive = true
+            timeLeadingConstraint.isActive = true
+            bubbleBackgroundView.backgroundColor = UIColor.brown
             messageLabel.textColor = .white
+
+            inComeMsgImageView.isHidden = true
         }
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
         messageLabel.textColor = .black
+        inComeMsgImageView.isHidden = true // 重置頭貼狀態
     }
 }
+

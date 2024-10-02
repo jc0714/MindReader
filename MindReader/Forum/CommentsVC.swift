@@ -14,10 +14,12 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     private let tableView = UITableView()
     private var comments: [Comment] = []
     private var postId: String
-    private var listener: ListenerRegistration?
 
     private let commentTextField = UITextField()
     private let sendButton = UIButton(type: .system)
+
+    private let fireStoreService = FirestoreService()
+    private var listener: ListenerRegistration?
 
     // MARK: - Initializer
     init(postId: String) {
@@ -33,53 +35,31 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(CommentCell.self, forCellReuseIdentifier: "CommentCell")
-
-        view.backgroundColor = UIColor.white.withAlphaComponent(0.9)
+        
+        view.backgroundColor = UIColor.white.withAlphaComponent(1)
 
         setupTableView()
         setupCloseButton()
         setupInputArea()
-        setupFirestoreListener()
-    }
 
-    // MARK: - Firestore Listener
-    private func setupFirestoreListener() {
-        let postRef = Firestore.firestore().collection("posts").document(postId)
-
-        listener = postRef.addSnapshotListener { [weak self] documentSnapshot, error in
-            guard let self = self, let document = documentSnapshot, error == nil else {
-                print("Error fetching comments: \(String(describing: error))")
-                return
-            }
-
-            if let data = document.data(), let commentsData = data["Comments"] as? [[String: Any]] {
-                self.comments = commentsData.compactMap { comment in
-                    guard let author = comment["author"] as? String,
-                          let content = comment["content"] as? String,
-                          let authorId = comment["authorId"] as? String,
-                          let timestamp = comment["timestamp"] as? Timestamp else {
-                        return nil
-                    }
-
-                    return Comment(author: author, authorId: authorId, content: content, timestamp: timestamp.dateValue())
-                }
-
-                // 更新留言數量
-                let commentCount = commentsData.count
-                NotificationCenter.default.post(name: NSNotification.Name("CommentCountUpdated"), object: nil, userInfo: ["postId": self.postId, "count": commentCount])
-
-                // 更新 UI
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
+        listener = fireStoreService.setupFirestoreListener(for: postId) { [weak self] comments in
+            self?.comments = comments
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
             }
         }
+    }
+
+    @objc private func closeButtonTapped() {
+        dismiss(animated: true, completion: nil)
+        listener?.remove() // 移除 Firestore 監聽器
     }
 
     // MARK: - UI Setup
     private func setupTableView() {
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.separatorStyle = .none
 
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -88,13 +68,13 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 60),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -60) // 留出空间给输入区域
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -60)
         ])
     }
 
     private func setupCloseButton() {
         let closeButton = UIButton(type: .system)
-        closeButton.setTitle("關閉", for: .normal)
+        closeButton.setTitle("close", for: .normal)
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
 
         view.addSubview(closeButton)
@@ -132,21 +112,23 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     }
 
     @objc private func sendComment() {
-        guard let commentText = commentTextField.text, !commentText.isEmpty else { return }
+        guard let commentText = commentTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !commentText.isEmpty else { return }
 
-        let userId = "9Y2GjnVg8TEoze0GUJSU"
+        guard let userId = UserDefaults.standard.string(forKey: "userID"), let userName =                 UserDefaults.standard.string(forKey: "userLastName") else {
+            print("User ID is nil")
+            return
+        }
 
+        let documentID = UUID().uuidString
         let newComment: [String: Any] = [
-            "author": "@0714JC",
+            "author": userName,
             "authorId": userId,
             "content": commentText,
             "timestamp": Timestamp(date: Date())
         ]
 
-        let postRef = Firestore.firestore().collection("posts").document(postId)
-        postRef.updateData([
-            "Comments": FieldValue.arrayUnion([newComment])
-        ]) { error in
+        let postRef = Firestore.firestore().collection("posts").document(postId).collection("Comments").document(documentID)
+        postRef.setData(newComment) { error in
             if let error = error {
                 print("Error adding comment: \(error)")
             } else {
@@ -156,11 +138,6 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 }
             }
         }
-    }
-
-    @objc private func closeButtonTapped() {
-        dismiss(animated: true, completion: nil)
-        listener?.remove() // 移除 Firestore 監聽器
     }
 
     // MARK: - UITableViewDataSource

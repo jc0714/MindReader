@@ -16,7 +16,7 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
 
     private let firestoreService = FirestoreService()
 
-    private let imageNames = ["photo4", "photo5", "photo6", "photo7"]
+    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7"]
     var selectedAvatarIndex = 0
 
     override func loadView() {
@@ -26,7 +26,7 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .color
+        view.backgroundColor = .milkYellow
 
         editView.avatarImage.image = UIImage(named: imageNames[selectedAvatarIndex])
 
@@ -42,11 +42,13 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         tabBarController?.tabBar.isHidden = false
+        navigationController?.setNavigationBarHidden(true, animated: true)
     }
 
     @objc func click() {
@@ -56,9 +58,15 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     }
 
     func handleClick() async {
-        if let title = editView.titleTextField.text, !title.isEmpty,
-           let content = editView.contentTextView.text, !content.isEmpty,
-           let category = editView.categoryTextField.text, !category.isEmpty {
+
+        guard let userId = UserDefaults.standard.string(forKey: "userID"), let userName =                 UserDefaults.standard.string(forKey: "userLastName") else {
+            print("User ID is nil")
+            return
+        }
+
+        if let title = editView.titleTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !title.isEmpty,
+           let content = editView.contentTextView.text?.trimmingCharacters(in: .whitespacesAndNewlines), !content.isEmpty,
+           let category = editView.selectedCategory, !category.isEmpty {
 
             do {
                 editView.publishButton.isUserInteractionEnabled = false
@@ -73,8 +81,8 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
                 var data: [String: Any] = [
                     "author": [
                         "email": "JJ",
-                        "id": "JJCC",
-                        "name": "JC"
+                        "id": userId,
+                        "name": userName
                     ],
                     "avatar": selectedAvatarIndex,
                     "title": title,
@@ -91,12 +99,17 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
 
                 try await document.setData(data)
 
-                let authorCollection = Firestore.firestore().collection("Users").document("9Y2GjnVg8TEoze0GUJSU")
+                guard let userId = UserDefaults.standard.string(forKey: "userID") else {
+                    print("User ID is nil")
+                    return
+                }
+
+                let authorCollection = Firestore.firestore().collection("Users").document(userId)
                 try await authorCollection.updateData([
                     "postIds": FieldValue.arrayUnion([document.documentID])
                 ])
 
-                NotificationCenter.default.post(name: NSNotification.Name("DataUpdated"), object: nil)
+                NotificationCenter.default.post(name: NSNotification.Name("NewPostAdded"), object: nil)
 
                 DispatchQueue.main.async { [weak self] in
                     self?.navigationController?.popViewController(animated: true)

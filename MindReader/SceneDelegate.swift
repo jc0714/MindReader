@@ -12,11 +12,41 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+
+        window = UIWindow(windowScene: windowScene)
+
+        window?.tintColor = UIColor.pink3
+
+//        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
+        // 檢查用戶登入狀態
+        let isLoggedIn = UserDefaults.standard.bool(forKey: "isUserLoggedIn")
+
+        let rootViewController: UIViewController
+        if isLoggedIn {
+            // 用戶已登入，進入 HomeVC
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            guard let tabBarController = storyboard.instantiateViewController(withIdentifier: "MainTabBarController") as? UITabBarController else {
+                fatalError("無法找到 MainTabBarController")
+            }
+            rootViewController = tabBarController
+        } else {
+            // 用戶未登入，呈現登入頁
+            rootViewController = LoginVC()
+        }
+
+        // 創建 UINavigationController 並設置為 rootViewController
+//        let navigationController = UINavigationController(rootViewController: rootViewController)
+        window?.rootViewController = rootViewController
+
+        // 顯示視窗
+        window?.makeKeyAndVisible()
+
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         // swiftlint:disable:next unused_optional_binding
-        guard let _ = (scene as? UIWindowScene) else { return }
+
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

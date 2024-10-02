@@ -7,8 +7,11 @@
 
 import Foundation
 import UIKit
+import Lottie
 
 class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+    private var waitingAnimationView: LottieAnimationView = LottieAnimationView(name: "runningBird")
 
     let chatButton: UIButton = {
         let button = UIButton()
@@ -78,17 +81,12 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let imageView = UIImageView()
         imageView.layer.borderColor = UIColor.black.cgColor
         imageView.contentMode = .scaleAspectFit
+        imageView.backgroundColor = .pink1
+        imageView.layer.cornerRadius = 10
+        imageView.image = UIImage(named: "uploadImage")
+        imageView.isUserInteractionEnabled = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
-    }()
-
-    let chooseImageButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Choose Image", for: .normal)
-        button.backgroundColor = .pink1
-        button.layer.cornerRadius = 10
-        return button
     }()
 
     let promptTextField: UITextView = {
@@ -98,7 +96,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         field.autocorrectionType = .no
         field.layer.cornerRadius = 10
         field.clipsToBounds = true
-        field.backgroundColor = .color
+        field.backgroundColor = .milkYellow
         field.layer.borderWidth = 1
         field.layer.borderColor = UIColor.secondaryLabel.cgColor
         field.returnKeyType = .done
@@ -142,6 +140,9 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
     private func configureUI() {
         backgroundColor = .systemBackground
 
+        waitingAnimationView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(waitingAnimationView)
+
         addSubview(chatButton)
         addSubview(imageButton)
         addSubview(textButton)
@@ -149,7 +150,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         addSubview(promptTextField)
 
         addSubview(imageView)
-        addSubview(chooseImageButton)
 
         addSubview(submitButton)
         addSubview(indicatorView)
@@ -163,16 +163,14 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         indicatorView.isHidden = true
         indicatorView.frame = bounds
-        indicatorView.backgroundColor = .color
+        indicatorView.backgroundColor = .milkYellow
         indicatorView.alpha = 0.95
 
         indicatorView.addSubview(activityIndicator)
         activityIndicator.center = center
 
-//        generateImageButton.isHidden = true
-
         NSLayoutConstraint.activate([
-            chatButton.topAnchor.constraint(equalTo: topAnchor, constant: 100),
+            chatButton.topAnchor.constraint(equalTo: topAnchor, constant: 120),
             chatButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20),
 
             imageButton.topAnchor.constraint(equalTo: topAnchor, constant: 100),
@@ -195,15 +193,10 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             imageView.widthAnchor.constraint(equalToConstant: 300),
             imageView.heightAnchor.constraint(equalToConstant: 150),
 
-            chooseImageButton.topAnchor.constraint(equalTo: imageButton.bottomAnchor, constant: 10),
-            chooseImageButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            chooseImageButton.widthAnchor.constraint(equalToConstant: 150),
-            chooseImageButton.heightAnchor.constraint(equalToConstant: 20),
-
             submitButton.topAnchor.constraint(equalTo: promptTextField.bottomAnchor, constant: 20),
             submitButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             submitButton.widthAnchor.constraint(equalToConstant: 300),
-            submitButton.heightAnchor.constraint(equalToConstant: 60),
+            submitButton.heightAnchor.constraint(equalToConstant: 50),
 
             responseLabel.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 30),
             responseLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -222,9 +215,21 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             replyLabel3.widthAnchor.constraint(equalToConstant: 300),
 
             generateImageButton.bottomAnchor.constraint(equalTo: responseLabel.bottomAnchor),
-            generateImageButton.trailingAnchor.constraint(equalTo: responseLabel.trailingAnchor, constant: 15)
+            generateImageButton.trailingAnchor.constraint(equalTo: responseLabel.trailingAnchor, constant: 15),
+
+            //waitingAnimationView.leadingAnchor.constraint(equalTo: submitButton.leadingAnchor, constant: 8),
+            waitingAnimationView.centerXAnchor.constraint(equalTo: promptTextField.centerXAnchor, constant: 0),
+            waitingAnimationView.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 30),
+            waitingAnimationView.widthAnchor.constraint(equalToConstant: 200),
+            waitingAnimationView.heightAnchor.constraint(equalToConstant: 200)
         ])
         responseLabel.preferredMaxLayoutWidth = 300
+
+        waitingAnimationView.isHidden = true
+
+        bringSubviewToFront(chatButton)
+        bringSubviewToFront(waitingAnimationView)
+
     }
 
     func setupLabelGestures(target: Any, action: Selector) {
@@ -236,4 +241,20 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         replyLabel2.addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
         replyLabel3.addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
     }
+
+    func showLoadingAnimation() {
+        self.bringSubviewToFront(self.waitingAnimationView)
+        waitingAnimationView.isHidden = false
+        waitingAnimationView.loopMode = .loop
+        waitingAnimationView.play()
+        self.layoutIfNeeded()
+    }
+
+    // 隱藏動畫
+    func hideLoadingAnimation() {
+        waitingAnimationView.stop()
+        waitingAnimationView.isHidden = true
+    }
+
 }
+

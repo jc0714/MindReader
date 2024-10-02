@@ -9,12 +9,17 @@ import Vision
 import Firebase
 import FirebaseFirestore
 import FirebaseStorage
+import Lottie
+import AlertKit
 
 class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
+
+    let dataToUpload: [[String: Any]] = []
 
     // MARK: - Properties
 
     private let homeView = HomeView()
+    private var selectedButton: UIButton?
 
     private let apiService = APIService()
     private let firestoreService = FirestoreService()
@@ -32,24 +37,60 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .color
+        view.backgroundColor = .milkYellow
+
+        self.navigationItem.backButtonTitle = ""
+
+//        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
+
+//        if !UserDefaults.standard.bool(forKey: "isUserLoggedIn") {
+//            showLoginView()
+//        }
+
         setupActions()
+
+//        Task {
+//            await firestoreService.batchUploadData(for: dataToUpload)
+//        }
     }
 
+//    override func viewWillAppear(_ animated: Bool) {
+//        if !UserDefaults.standard.bool(forKey: "isUserLoggedIn") {
+//            showLoginView()
+//        }
+//
+//    }
+
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        navigationController?.setNavigationBarHidden(true, animated: false)
+//    }
+//
+//    override func viewWillDisappear(_ animated: Bool) {
+//        super.viewWillDisappear(animated)
+//        navigationController?.setNavigationBarHidden(true, animated: false)
+//    }
+
+    private func showLoginView() {
+        let loginVC = LoginVC()
+        loginVC.modalPresentationStyle = .overFullScreen // 使用全螢幕的呈現方式
+        self.present(loginVC, animated: true, completion: nil)
+    }
+//    
     // MARK: - Setup Actions
 
     private func setupActions() {
         homeView.chatButton.addTarget(self, action: #selector(toChatButtonTapped), for: .touchUpInside)
- 
-        homeView.imageButton.addTarget(self, action: #selector(showImageView), for: .touchUpInside)
-        homeView.textButton.addTarget(self, action: #selector(enterText), for: .touchUpInside)
-
-        homeView.chooseImageButton.addTarget(self, action: #selector(selectImageFromAlbum), for: .touchUpInside)
+        homeView.imageButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        homeView.textButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
 
         homeView.submitButton.addTarget(self, action: #selector(didTapSubmit), for: .touchUpInside)
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
+
+        let tapGestureToAlbum = UITapGestureRecognizer(target: self, action: #selector(selectImageFromAlbum))
+        homeView.imageView.addGestureRecognizer(tapGestureToAlbum)
 
         homeView.setupLabelGestures(target: self, action: #selector(copyLabelText))
 
@@ -57,7 +98,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     }
 
     @objc func toChatButtonTapped(_ sender: UIButton) {
-        print("TAPPPPPED")
         let chatVC = ChatVC()
         navigationController?.pushViewController(chatVC, animated: true)
     }
@@ -72,9 +112,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         }
 
         // 可設置等待回應動畫
-
-//        sender.isUserInteractionEnabled = false
-//        sender.backgroundColor = .color
+        sender.isUserInteractionEnabled = false
+        sender.backgroundColor = .gray
 
         let prompt = sender.tag == 1 ? homeView.promptTextField.text : recognizedText
 
@@ -85,8 +124,22 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         Task {
             do {
-                prompt = formatPrompt(prompt)
-                let response = try await apiService.generateTextResponse(for: prompt)
+                homeView.showLoadingAnimation()
+
+                let existingResponse = try await self.firestoreService.fetchResponse(for: prompt)
+
+                if let possibleMeanings = existingResponse?["possible_meanings"] as? [String],
+                   let responseMethods = existingResponse?["response_methods"] as? [String]{
+                    
+                    self.updateResponseLabels(possibleMeanings: possibleMeanings, responseMethods: responseMethods)
+
+                    sender.isUserInteractionEnabled = true
+                    sender.backgroundColor = .pink1
+                    homeView.hideLoadingAnimation()
+                    return
+                }
+                let formatedPrompt = formatPrompt(prompt)
+                let response = try await apiService.generateTextResponse(for: formatedPrompt)
 
                 if let data = response.data(using: .utf8),
                    let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
@@ -97,14 +150,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                     print("Possible Meanings: \(possibleMeanings)")
                     print("Response Methods: \(responseMethods)")
 
-                    DispatchQueue.main.async {
-                        self.homeView.responseLabel.text = "可能含義\n1.\(possibleMeanings[0])\n2.\(possibleMeanings[1])\n3.\(possibleMeanings[2])\n\n推薦回覆"
-                        self.homeView.replyLabel1.text = responseMethods[0]
-                        self.homeView.replyLabel2.text = responseMethods[1]
-                        self.homeView.replyLabel3.text = responseMethods[2]
-                        self.view.setNeedsLayout()
-                        self.view.layoutIfNeeded()
-                    }
+                    self.updateResponseLabels(possibleMeanings: possibleMeanings, responseMethods: responseMethods)
+
                 }
 
                 if let imageData = homeView.imageView.image?.jpegData(compressionQuality: 0.75) {
@@ -116,10 +163,24 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
                 sender.isUserInteractionEnabled = true
                 sender.backgroundColor = .pink1
-
+                homeView.hideLoadingAnimation()
             } catch {
                 print("Failed to get response: \(error)")
+                sender.isUserInteractionEnabled = true
+                sender.backgroundColor = .pink1
+                homeView.hideLoadingAnimation()
             }
+        }
+    }
+
+    private func updateResponseLabels(possibleMeanings: [String], responseMethods: [String]) {
+        DispatchQueue.main.async {
+            self.homeView.responseLabel.text = "可能含義\n1.\(possibleMeanings[0])\n2.\(possibleMeanings[1])\n3.\(possibleMeanings[2])\n\n推薦回覆"
+            self.homeView.replyLabel1.text = responseMethods[0]
+            self.homeView.replyLabel2.text = responseMethods[1]
+            self.homeView.replyLabel3.text = responseMethods[2]
+            self.view.setNeedsLayout()
+            self.view.layoutIfNeeded()
         }
     }
 
@@ -154,14 +215,36 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     // MARK: - View Configuration
 
+    @objc private func buttonTapped(_ sender: UIButton) {
+        guard sender != selectedButton else { return }
+
+        if let previousButton = selectedButton {
+            UIView.animate(withDuration: 0.2) {
+                previousButton.transform = .identity
+                previousButton.backgroundColor = .pink1
+            }
+        }
+
+        selectedButton = sender
+
+        UIView.animate(withDuration: 0.2, animations: {
+            sender.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+            sender.backgroundColor = .pink3
+        })
+
+        if sender == homeView.imageButton {
+            showImageView()
+        } else if sender == homeView.textButton {
+            enterText()
+        }
+    }
+
     @objc func showImageView() {
-        // 先顯示長輩圖按鈕
-        homeView.generateImageButton.isHidden = false
         configureView(for: 0, isImageViewVisible: true)
+        homeView.imageView.image = UIImage(named: "uploadImage")
     }
 
     @objc func enterText() {
-//        homeView.generateImageButton.isHidden = true
         configureView(for: 1, isImageViewVisible: false)
     }
 
@@ -169,14 +252,12 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         homeView.submitButton.tag = tag
         homeView.promptTextField.isHidden = isImageViewVisible
         homeView.imageView.isHidden = !isImageViewVisible
-        homeView.chooseImageButton.isHidden = !isImageViewVisible
         homeView.promptTextField.text = nil
         homeView.imageView.image = nil
         homeView.responseLabel.text = ""
         homeView.replyLabel1.text = ""
         homeView.replyLabel2.text = ""
         homeView.replyLabel3.text = ""
-//        homeView.generateImageButton.isHidden = true
     }
 
     // MARK: - Keyboard Handling
@@ -196,31 +277,19 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - Copy Label Text
 
     @objc func copyLabelText(_ sender: UITapGestureRecognizer) {
-        showCopySuccessWithScaleAnimation()
+        AlertKitAPI.present(
+            title: "複製成功",
+            icon: .done,
+            style: .iOS17AppleMusic,
+            haptic: .success
+        )
+
         if let label = sender.view as? UILabel {
             UIPasteboard.general.string = label.text
             copiedText = label.text ?? "早安"
             print("Text copied: \(label.text ?? "")")
         }
         homeView.generateImageButton.isHidden = false
-    }
-
-    func showCopySuccessWithScaleAnimation() {
-        let copySuccessLabel = UILabel()
-        copySuccessLabel.text = "Copied✅"
-        copySuccessLabel.textColor = .white
-        copySuccessLabel.backgroundColor = .lightGray
-        copySuccessLabel.textAlignment = .center
-        copySuccessLabel.layer.cornerRadius = 8
-        copySuccessLabel.layer.masksToBounds = true
-        copySuccessLabel.frame = CGRect(x: 0, y: 0, width: 150, height: 40)
-        copySuccessLabel.center = CGPoint(x: self.view.center.x, y: self.view.frame.height - 150)
-        view.addSubview(copySuccessLabel)
-
-//        copySuccessLabel.transform = CGAffineTransform(scaleX: 1, y: 1)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            copySuccessLabel.removeFromSuperview()
-        }
     }
 
     @objc func toGenerateButtonTapped(_ sender: UIButton) {
@@ -237,7 +306,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     private func formatPrompt(_ prompt: String) -> String {
         """
-        你現在是「另一半翻譯機」，盡量要顯得體貼。理解對方的潛在意圖，並提供可以複製去用的回覆訊息。
+        你是「另一半翻譯機」，盡量要顯得體貼。理解對方的潛在意圖，並提供可以複製去用的回覆訊息。
         用下方訊息內容分析「possible_meanings：訊息背後隱含意義」和「response_methods：推薦回覆訊息」兩個部分，各三個。
 
         訊息內容：\(prompt)

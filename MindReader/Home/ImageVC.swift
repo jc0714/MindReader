@@ -52,19 +52,17 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
         saveToFireBaseButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            // imageCollectionView constraints
             imageCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             imageCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             imageCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             imageCollectionView.heightAnchor.constraint(equalToConstant: 120),
 
-            // finalImageView constraints
             finalImageView.topAnchor.constraint(equalTo: imageCollectionView.bottomAnchor, constant: 40),
             finalImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             finalImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             finalImageView.heightAnchor.constraint(equalToConstant: 300),
 
-            stackView.bottomAnchor.constraint(equalTo: finalImageView.topAnchor, constant: -20),
+            stackView.topAnchor.constraint(equalTo: finalImageView.bottomAnchor, constant: 30),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             stackView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -20),
             stackView.heightAnchor.constraint(equalToConstant: 30),
@@ -74,11 +72,11 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
             saveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
 
             // shareButton constraints
-            shareButton.leadingAnchor.constraint(equalTo: saveButton.trailingAnchor, constant: 30),
+            shareButton.leadingAnchor.constraint(equalTo: saveButton.trailingAnchor, constant: 20),
             shareButton.bottomAnchor.constraint(equalTo: saveButton.bottomAnchor),
 
             // saveToFireBaseButton constraints
-            saveToFireBaseButton.leadingAnchor.constraint(equalTo: shareButton.trailingAnchor, constant: 30),
+            saveToFireBaseButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             saveToFireBaseButton.bottomAnchor.constraint(equalTo: saveButton.bottomAnchor)
         ])
     }
@@ -93,7 +91,7 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
         view.addSubview(finalImageView)
 
         // 設置顏色按鈕
-        let colors: [UIColor] = [.white, .black, .red, .blue, .green]
+        let colors: [UIColor] = [.white, .black, .red, .orange, .yellow, .blue, .green, .purple]
 
         for color in colors {
             let button = createColorButton(color: color)
@@ -106,9 +104,9 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
         stackView.distribution = .equalSpacing
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
-        saveButton = createButton(title: "存到相簿去！", backgroundColor: .darkGray, action: #selector(saveImageToAlbum))
-        shareButton = createButton(title: "分享", backgroundColor: .darkGray, action: #selector(shareImage))
-        saveToFireBaseButton = createButton(title: "貼到相片牆", backgroundColor: .darkGray, action: #selector(saveToFireBase))
+        saveButton = createButton(title: "存到相簿去！", backgroundColor: .pink3, action: #selector(saveImageToAlbum))
+        shareButton = createButton(title: "分享", backgroundColor: .pink3, action: #selector(shareImage))
+        saveToFireBaseButton = createButton(title: "貼到相片牆", backgroundColor: .pink3, action: #selector(saveToFireBase))
 
         view.addSubview(saveButton)
         view.addSubview(shareButton)
@@ -141,13 +139,13 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
         let generatedImage = renderer.image { _ in
             backgroundImage.draw(at: .zero)
 
-            let fontSize = 80
+            let fontSize = 120
             let text = copiedText ?? ""
             let textAttributes: [NSAttributedString.Key: Any] = [
-                .font: UIFont.systemFont(ofSize: CGFloat(fontSize)),
+                .font: UIFont.boldSystemFont(ofSize: CGFloat(fontSize)),
                 .foregroundColor: textColor
             ]
-            let textRect = CGRect(x: 30, y: 30, width: backgroundImage.size.width - 40, height: backgroundImage.size.height - 40)
+            let textRect = CGRect(x: 30, y: 60, width: backgroundImage.size.width - 40, height: backgroundImage.size.height - 40)
             text.draw(in: textRect, withAttributes: textAttributes)
         }
         finalImageView.image = generatedImage

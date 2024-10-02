@@ -63,9 +63,13 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
     @objc func fetchImagesFromFirebase() {
         var newImageUrls: [URL] = []
 
-        let userId = "9Y2GjnVg8TEoze0GUJSU"
         let db = Firestore.firestore()
 
+        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
+            print("User ID is nil")
+            return
+        }
+        
         let morningImageRef = db.collection("Users").document(userId).collection("MorningImage")
 
         // 按 createdTime 排序
