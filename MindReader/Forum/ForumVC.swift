@@ -51,55 +51,60 @@ class ForumVC: BasePostVC {
         let dispatchGroup = DispatchGroup()
         var commentCounts = [String: Int]() // 用來儲存每篇貼文的評論數量
 
+        let blockedList = UserDefaults.standard.stringArray(forKey: "BlockedList") ?? []
+
         Firestore.firestore().collection("posts")
             .order(by: "createdTime", descending: true)
-            .getDocuments { [weak self] (querySnapshot, error) in
-                guard let documents = querySnapshot?.documents, error == nil else {
-                    print("Error getting documents: \(String(describing: error))")
-                    self?.refreshControl.endRefreshing()
-                    return
-                }
+        .getDocuments { [weak self] (querySnapshot, error) in
+            guard let documents = querySnapshot?.documents, error == nil else {
+                print("Error getting documents: \(String(describing: error))")
+                self?.refreshControl.endRefreshing()
+                return
+            }
 
-                for document in documents {
-                    let postId = document.documentID
-                    dispatchGroup.enter()
-                    Firestore.firestore().collection("posts").document(postId).collection("Comments")
-                        .getDocuments { querySnapshot, error in
-                            commentCounts[postId] = querySnapshot?.documents.count ?? 0
-                            dispatchGroup.leave()
-                        }
-                }
+            for document in documents {
+                let postId = document.documentID
+                dispatchGroup.enter()
+                Firestore.firestore().collection("posts").document(postId).collection("Comments")
+                    .getDocuments { querySnapshot, error in
+                        commentCounts[postId] = querySnapshot?.documents.count ?? 0
+                        dispatchGroup.leave()
+                    }
+            }
 
-                dispatchGroup.notify(queue: .main) {
-                    self?.posts = documents.compactMap { document in
-                        let data = document.data()
-                        guard let avatar = data["avatar"] as? Int,
-                              let title = data["title"] as? String,
-                              let timestamp = data["createdTime"] as? Timestamp,
-                              let id = data["id"] as? String,
-                              let category = data["category"] as? String,
-                              let content = data["content"] as? String,
-                              let authorData = data["author"] as? [String: Any],
-                              let authorEmail = authorData["email"] as? String,
-                              let authorId = authorData["id"] as? String,
-                              let authorName = authorData["name"] as? String
-                        else { return nil }
+            dispatchGroup.notify(queue: .main) {
+                self?.posts = documents.compactMap { document in
+                    let data = document.data()
+                    guard let avatar = data["avatar"] as? Int,
+                          let title = data["title"] as? String,
+                          let timestamp = data["createdTime"] as? Timestamp,
+                          let id = data["id"] as? String,
+                          let category = data["category"] as? String,
+                          let content = data["content"] as? String,
+                          let authorData = data["author"] as? [String: Any],
+                          let authorEmail = authorData["email"] as? String,
+                          let authorId = authorData["id"] as? String,
+                          let authorName = authorData["name"] as? String
+                    else { return nil }
 
-                        let like = (data["like"] as? [String])?.count ?? 0
-                        let image = data["image"] as? String
-                        let date = timestamp.dateValue()
-                        let createdTimeString = DateFormatter.yyyyMMddFormatter.string(from: date)
-                        let author = Author(email: authorEmail, id: authorId, name: authorName)
-                        let commentCount = commentCounts[id] ?? 0
-
-                        return Post(avatar: avatar, title: title, createdTime: createdTimeString, id: id, category: category, content: content, image: image, author: author, like: like, comment: commentCount)
+                    if blockedList.contains(authorId) {
+                        return nil
                     }
 
-                    self?.setupUI()
-                    self?.tableView.reloadData()
-                    self?.refreshControl.endRefreshing()
+                    let like = (data["like"] as? [String])?.count ?? 0
+                    let image = data["image"] as? String
+                    let date = timestamp.dateValue()
+                    let createdTimeString = DateFormatter.yyyyMMddFormatter.string(from: date)
+                    let author = Author(email: authorEmail, id: authorId, name: authorName)
+                    let commentCount = commentCounts[id] ?? 0
+
+                    return Post(avatar: avatar, title: title, createdTime: createdTimeString, id: id, category: category, content: content, image: image, author: author, like: like, comment: commentCount)
                 }
+                self?.setupUI()
+                self?.tableView.reloadData()
+                self?.refreshControl.endRefreshing()
             }
+        }
     }
 
     private func setupUI() {

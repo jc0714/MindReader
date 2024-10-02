@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AlertKit
 
 class ImageVC: UIViewController, ImageCollectionViewDelegate {
 
@@ -125,6 +126,8 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
 
     // 改變文字顏色
     @objc private func colorButtonTapped(_ sender: UIButton) {
+        HapticFeedbackManager.successFeedback()
+
         textColor = sender.backgroundColor ?? .white
         regenerateImage()
     }
@@ -153,6 +156,15 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
 
     // MARK: - 存到相簿
     @objc private func saveImageToAlbum() {
+        HapticFeedbackManager.successFeedback()
+
+        AlertKitAPI.present(
+            title: "儲存成功",
+            icon: .done,
+            style: .iOS17AppleMusic,
+            haptic: .success
+        )
+
         guard let imageToSave = finalImageView.image else { return }
         UIImageWriteToSavedPhotosAlbum(imageToSave, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
     }
@@ -167,6 +179,8 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
 
     // MARK: - 分享圖片
     @objc private func shareImage() {
+        HapticFeedbackManager.successFeedback()
+
         guard let imageToShare = finalImageView.image else { return }
         let activityViewController = UIActivityViewController(activityItems: [imageToShare], applicationActivities: nil)
         present(activityViewController, animated: true, completion: nil)
@@ -174,6 +188,15 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
 
     // MARK: - 丟到相片牆
     @objc private func saveToFireBase() {
+        HapticFeedbackManager.successFeedback()
+
+        AlertKitAPI.present(
+            title: "貼到相片牆！",
+            icon: .done,
+            style: .iOS17AppleMusic,
+            haptic: .success
+        )
+
         guard let imageData = finalImageView.image?.jpegData(compressionQuality: 0.75) else { return }
 
         Task {

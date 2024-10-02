@@ -66,10 +66,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-    }
-
     private func setupUI() {
         view.addSubview(tagFilterView) 
         view.addSubview(tableView)
@@ -96,15 +92,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.delegate = self
         tableView.dataSource = self
     }
-
-//    func filterPosts(by tag: String) {
-//        if tag == "All" {
-//            filteredPosts = posts
-//        } else {
-//            filteredPosts = posts.filter { $0.category.contains(tag) }
-//        }
-//        tableView.reloadData()
-//    }
 
     // 初始化的時候把按過讚的愛心填滿
     private func loadLikedPosts() {
@@ -160,6 +147,10 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         cell.commentButtonTappedClosure = { [weak self] in
             self?.showCommentsForPost(at: indexPath)
         }
+
+        cell.reportButtonTappedClosure = { [weak self] action in
+            self?.handleOptionSelection(action: action, forPostAt: indexPath)
+    }
 
         cell.setNeedsLayout()
         cell.layoutIfNeeded()
@@ -245,6 +236,51 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             sheet.prefersGrabberVisible = true
         }
         present(commentsVC, animated: true, completion: nil)
+    }
+
+    func handleOptionSelection(action: String, forPostAt indexPath: IndexPath) {
+        let post = posts[indexPath.row]
+        let authorId = post.author.id
+        let postId = post.id
+
+        switch action {
+        case "檢舉":
+            // 處理檢舉的邏輯
+            print("檢舉第 \(indexPath.row) 個貼文")
+        case "封鎖":
+            // 處理封鎖的邏輯
+            print("封鎖第 \(indexPath.row) 個貼文")
+            addToBlockedList(userID: authorId)
+            updateBlockedListInFirebase(userId: authorId)
+
+        default:
+            break
+        }
+    }
+
+    // 封鎖檢舉
+    private func addToBlockedList(userID: String) {
+        var blockedList = UserDefaults.standard.stringArray(forKey: "BlockedList") ?? []
+
+        if !blockedList.contains(userID) {
+            blockedList.append(userID)
+            UserDefaults.standard.set(blockedList, forKey: "BlockedList")
+        }
+    }
+
+    private func updateBlockedListInFirebase(userId: String) {
+        guard let currentUserID = UserDefaults.standard.string(forKey: "userID") else { return }
+
+        let userRef = Firestore.firestore().collection("Users").document(currentUserID)
+
+        userRef.updateData([
+            "blockedList": FieldValue.arrayUnion([userId])
+        ]) { error in
+            if let error = error {
+            } else {
+                print("封鎖名單已成功更新到 Firebase")
+            }
+        }
     }
 
     // 留言數量計算

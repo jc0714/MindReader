@@ -11,7 +11,7 @@ import Lottie
 
 class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
-    private var waitingAnimationView: LottieAnimationView = LottieAnimationView(name: "runningBird")
+    private var waitingAnimationView: LottieAnimationView = LottieAnimationView(name: "runnungDoggy")
 
     let chatButton: UIButton = {
         let button = UIButton()
@@ -217,11 +217,10 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             generateImageButton.bottomAnchor.constraint(equalTo: responseLabel.bottomAnchor),
             generateImageButton.trailingAnchor.constraint(equalTo: responseLabel.trailingAnchor, constant: 15),
 
-            //waitingAnimationView.leadingAnchor.constraint(equalTo: submitButton.leadingAnchor, constant: 8),
             waitingAnimationView.centerXAnchor.constraint(equalTo: promptTextField.centerXAnchor, constant: 0),
-            waitingAnimationView.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 30),
-            waitingAnimationView.widthAnchor.constraint(equalToConstant: 200),
-            waitingAnimationView.heightAnchor.constraint(equalToConstant: 200)
+            waitingAnimationView.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 80),
+            waitingAnimationView.widthAnchor.constraint(equalToConstant: 300),
+            waitingAnimationView.heightAnchor.constraint(equalToConstant: 300)
         ])
         responseLabel.preferredMaxLayoutWidth = 300
 
@@ -252,9 +251,13 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
     // 隱藏動畫
     func hideLoadingAnimation() {
-        waitingAnimationView.stop()
-        waitingAnimationView.isHidden = true
+        UIView.animate(withDuration: 0.5, animations: {
+            self.waitingAnimationView.alpha = 0
+        }) { _ in
+            self.waitingAnimationView.stop()
+            self.waitingAnimationView.isHidden = true
+            self.waitingAnimationView.alpha = 1
+        }
     }
 
 }
-

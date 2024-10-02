@@ -105,26 +105,28 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - Submit Action
 
     @objc private func didTapSubmit(_ sender: UIButton) {
+        homeView.responseLabel.text = ""
+        homeView.replyLabel1.text = ""
+        homeView.replyLabel2.text = ""
+        homeView.replyLabel3.text = ""
 
         if sender.tag == 2 {
             showAlert(message: "請上傳有文字的訊息截圖，我來幫你解讀！")
             return
         }
 
-        // 可設置等待回應動畫
-        sender.isUserInteractionEnabled = false
-        sender.backgroundColor = .gray
-
         let prompt = sender.tag == 1 ? homeView.promptTextField.text : recognizedText
 
         guard let prompt = prompt, !prompt.isEmpty else {
             print("Prompt is empty")
+
             return
         }
 
         Task {
             do {
-                homeView.showLoadingAnimation()
+                sender.isUserInteractionEnabled = false
+                sender.backgroundColor = .milkYellow
 
                 let existingResponse = try await self.firestoreService.fetchResponse(for: prompt)
 
@@ -135,9 +137,11 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
                     sender.isUserInteractionEnabled = true
                     sender.backgroundColor = .pink1
-                    homeView.hideLoadingAnimation()
                     return
                 }
+
+                homeView.showLoadingAnimation()
+
                 let formatedPrompt = formatPrompt(prompt)
                 let response = try await apiService.generateTextResponse(for: formatedPrompt)
 
@@ -160,15 +164,15 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                 } else {
                     try await firestoreService.saveToFirestore(prompt: prompt, response: response, imageURL: nil)
                 }
-
+                homeView.hideLoadingAnimation()
                 sender.isUserInteractionEnabled = true
                 sender.backgroundColor = .pink1
-                homeView.hideLoadingAnimation()
+
             } catch {
+                homeView.hideLoadingAnimation()
                 print("Failed to get response: \(error)")
                 sender.isUserInteractionEnabled = true
                 sender.backgroundColor = .pink1
-                homeView.hideLoadingAnimation()
             }
         }
     }
