@@ -11,6 +11,7 @@ import UIKit
 class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
 
     private let tableView = UITableView()
+    
     private var possibleMeanings: [String] = []
     private var responseMethods: [String] = []
 
@@ -54,6 +55,8 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "ResponseCell")
+        tableView.register(ResponseCopyCell.self, forCellReuseIdentifier: "ResponseCopyCell")
+
         tableView.backgroundColor = UIColor(red: 255/255, green: 223/255, blue: 186/255, alpha: 1)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.layer.cornerRadius = 15
@@ -93,21 +96,24 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ResponseCell", for: indexPath)
-        cell.selectionStyle = .none
-        cell.textLabel?.numberOfLines = 0
-        cell.backgroundColor = .clear
 
         if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ResponseCell", for: indexPath)
+            cell.selectionStyle = .none
+            cell.textLabel?.numberOfLines = 0
+            cell.backgroundColor = .clear
+
             cell.textLabel?.text = "\(indexPath.row + 1). \(possibleMeanings[indexPath.row])"
-        } else {
-            cell.textLabel?.text = "\(indexPath.row + 1). \(responseMethods[indexPath.row])"
 
-            let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
-            cell.addGestureRecognizer(longPressGesture)
+            return cell
+        } else {          
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ResponseCopyCell", for: indexPath) as? ResponseCopyCell
+
+            let text = "\(responseMethods[indexPath.row])"
+            cell?.configure(with: text)
+
+            return cell!
         }
-
-        return cell
     }
 
     // MARK: - Section Headers
@@ -157,21 +163,17 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
         parentView.addSubview(self)
         self.translatesAutoresizingMaskIntoConstraints = false
 
-        // 初始位置设置在屏幕底部之外
         let offScreenBottomConstraint = self.bottomAnchor.constraint(equalTo: parentView.bottomAnchor, constant: 300)
         offScreenBottomConstraint.isActive = true
 
-        // 其他约束
         NSLayoutConstraint.activate([
             self.centerXAnchor.constraint(equalTo: parentView.centerXAnchor),
-            self.widthAnchor.constraint(equalToConstant: 300),
-            self.heightAnchor.constraint(equalToConstant: 500)
+            self.widthAnchor.constraint(equalToConstant: 330),
+            self.heightAnchor.constraint(equalToConstant: 550)
         ])
 
-        // 强制布局更新，使视图位于初始位置
         parentView.layoutIfNeeded()
 
-        // 使用动画移动 ToastView 到屏幕内
         UIView.animate(withDuration: 2, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: {
             offScreenBottomConstraint.constant = -100
             parentView.layoutIfNeeded()

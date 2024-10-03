@@ -88,13 +88,25 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 //        homeView.replyLabel3.text = ""
 
         if sender.tag == 2 {
-            showAlert(message: "請上傳有文字的訊息截圖，我來幫你解讀！")
+            AlertKitAPI.present(
+                title: "我沒有讀到文字哦，請上傳有文字的圖片",
+                icon: .error,
+                style: .iOS17AppleMusic,
+                haptic: .error
+            ) 
             return
         }
 
         let prompt = sender.tag == 1 ? homeView.promptTextField.text : recognizedText
 
         guard let prompt = prompt, !prompt.isEmpty else {
+            AlertKitAPI.present(
+                title: "請上傳有文字的圖片",
+                icon: .error,
+                style: .iOS17AppleMusic,
+                haptic: .error
+            )
+
             print("Prompt is empty")
 
             return
@@ -243,14 +255,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     @objc func dismissKeyboard() {
         view.endEditing(true)
-    }
-
-    // MARK: - Show Alert
-
-    private func showAlert(message: String) {
-        let alertController = UIAlertController(title: "沒有讀到文字", message: message, preferredStyle: .actionSheet)
-        alertController.addAction(UIAlertAction(title: "OK", style: .default))
-        self.present(alertController, animated: true, completion: nil)
     }
 
     // MARK: - Copy Label Text
