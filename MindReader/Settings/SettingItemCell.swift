@@ -77,4 +77,3 @@ class SettingItemCell: UICollectionViewCell {
         iconImageView.image = icon
     }
 }
-

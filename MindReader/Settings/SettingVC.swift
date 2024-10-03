@@ -19,7 +19,7 @@ class SettingVC: UIViewController, UICollectionViewDataSource, UICollectionViewD
     // 数据模型
     private var settingsItems: [(title: String, icon: UIImage?)] = [
         ("名字", UIImage(systemName: "pencil")),
-        ("主題切換", UIImage(systemName: "paintpalette.fill")),
+        ("封鎖名單", UIImage(systemName: "paintpalette.fill")),
         ("回報問題", UIImage(systemName: "exclamationmark.bubble.fill")),
         ("登出", UIImage(systemName: "heart.fill"))
     ]

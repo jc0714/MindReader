@@ -52,6 +52,7 @@ class ForumVC: BasePostVC {
         var commentCounts = [String: Int]() // 用來儲存每篇貼文的評論數量
 
         let blockedList = UserDefaults.standard.stringArray(forKey: "BlockedList") ?? []
+        let reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
 
         Firestore.firestore().collection("posts")
             .order(by: "createdTime", descending: true)
@@ -64,7 +65,9 @@ class ForumVC: BasePostVC {
 
             for document in documents {
                 let postId = document.documentID
+
                 dispatchGroup.enter()
+
                 Firestore.firestore().collection("posts").document(postId).collection("Comments")
                     .getDocuments { querySnapshot, error in
                         commentCounts[postId] = querySnapshot?.documents.count ?? 0
@@ -87,7 +90,7 @@ class ForumVC: BasePostVC {
                           let authorName = authorData["name"] as? String
                     else { return nil }
 
-                    if blockedList.contains(authorId) {
+                    if blockedList.contains(authorId) || reportedList.contains(id) {
                         return nil
                     }
 

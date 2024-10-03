@@ -221,6 +221,7 @@ class FirestoreService {
         }
     }
 
+    // 監聽留言
     func setupFirestoreListener(for postId: String, completion: @escaping ([Comment]) -> Void) -> ListenerRegistration {
         let blockedList = UserDefaults.standard.stringArray(forKey: "BlockedList") ?? []
 

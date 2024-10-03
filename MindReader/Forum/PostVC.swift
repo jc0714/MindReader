@@ -247,6 +247,8 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         case "檢舉":
             // 處理檢舉的邏輯
             print("檢舉第 \(indexPath.row) 個貼文")
+            addToReportedPostList(postID: postId)
+            updateReportedPostListInFirebase(postID: postId)
         case "封鎖":
             // 處理封鎖的邏輯
             print("封鎖第 \(indexPath.row) 個貼文")
@@ -258,7 +260,31 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
 
-    // 封鎖檢舉
+    // 封鎖
+    private func addToReportedPostList(postID: String) {
+        var reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
+
+        if !reportedList.contains(postID) {
+            reportedList.append(postID)
+            UserDefaults.standard.set(reportedList, forKey: "ReportedList")
+        }
+    }
+
+    private func updateReportedPostListInFirebase(postID: String) {
+        guard let currentUserID = UserDefaults.standard.string(forKey: "userID") else { return }
+
+        let userRef = Firestore.firestore().collection("Users").document(currentUserID)
+
+        userRef.updateData([
+            "reportedPostList": FieldValue.arrayUnion([postID])
+        ]) { error in
+            if let error = error {
+            } else {
+                print("檢舉貼文已成功更新到 Firebase")
+            }
+        }
+    }
+    // 封鎖
     private func addToBlockedList(userID: String) {
         var blockedList = UserDefaults.standard.stringArray(forKey: "BlockedList") ?? []
 

@@ -10,9 +10,6 @@ import UIKit
 
 class RecordView: UIView {
 
-//    weak var dataSource: SelectionDataSource?
-//    weak var delegate: SelectionViewDelegate?
-
     var buttons: [UIButton] = []
     private var views: [UIView] = []
     private let indicatorView = UIView()
@@ -40,7 +37,9 @@ class RecordView: UIView {
         for (index, button) in buttons.enumerated() {
             button.frame = CGRect(x: CGFloat(index) * buttonWidth, y: 0, width: buttonWidth, height: buttonHeight)
         }
-        moveIndicator(to: selectedButton)
+        if indicatorView.frame == .zero {
+            moveIndicator(to: selectedButton)
+        }
     }
 
     func setData() {
@@ -71,6 +70,19 @@ class RecordView: UIView {
     func updateIndicator(forIndex index: Int) {
         guard index >= 0 && index < buttons.count else { return }
         moveIndicator(to: buttons[index])
+    }
+
+    func updateIndicatorPosition(withProgress progress: CGFloat) {
+        guard buttons.count >= 2 else { return }
+
+        let buttonWidth = bounds.width / CGFloat(buttons.count)
+        let indicatorWidth: CGFloat = 120
+
+        // 計算指標的位置
+        let startX = buttons[0].frame.origin.x + (buttonWidth - indicatorWidth) / 2
+        let indicatorX = startX + (buttonWidth * progress)
+
+        indicatorView.frame = CGRect(x: indicatorX, y: bounds.height - 2, width: indicatorWidth, height: 2)
     }
 
     private func moveIndicator(to button: UIButton?) {
