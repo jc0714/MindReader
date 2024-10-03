@@ -52,6 +52,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 //        Task {
 //            await firestoreService.batchUploadData(for: dataToUpload)
 //        }
+
     }
 
     // MARK: - Setup Actions
@@ -63,13 +64,11 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         homeView.submitButton.addTarget(self, action: #selector(didTapSubmit), for: .touchUpInside)
 
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        view.addGestureRecognizer(tapGesture)
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+//        view.addGestureRecognizer(tapGesture)
 
         let tapGestureToAlbum = UITapGestureRecognizer(target: self, action: #selector(selectImageFromAlbum))
         homeView.imageView.addGestureRecognizer(tapGestureToAlbum)
-
-//        homeView.setupLabelGestures(target: self, action: #selector(copyLabelText))
 
         homeView.generateImageButton.addTarget(self, action: #selector(toGenerateButtonTapped), for: .touchUpInside)
     }
@@ -82,10 +81,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - Submit Action
 
     @objc private func didTapSubmit(_ sender: UIButton) {
-//        homeView.responseLabel.text = ""
-//        homeView.replyLabel1.text = ""
-//        homeView.replyLabel2.text = ""
-//        homeView.replyLabel3.text = ""
 
         if sender.tag == 2 {
             AlertKitAPI.present(
@@ -169,6 +164,11 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     private func updateResponseLabels(possibleMeanings: [String], responseMethods: [String]) {
         DispatchQueue.main.async {
             let toastView = ToastView()
+
+            toastView.onCopyTap = { [weak self] text in
+                self?.handleCopiedText(text)
+            }
+
             toastView.configure(with: possibleMeanings, responseMethods: responseMethods)
 
             toastView.showInView(self.view)
@@ -259,21 +259,43 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     // MARK: - Copy Label Text
 
-    @objc func copyLabelText(_ sender: UITapGestureRecognizer) {
-        AlertKitAPI.present(
-            title: "複製成功",
-            icon: .done,
-            style: .iOS17AppleMusic,
-            haptic: .success
-        )
-
-        if let label = sender.view as? UILabel {
-            UIPasteboard.general.string = label.text
-            copiedText = label.text ?? "早安"
-            print("Text copied: \(label.text ?? "")")
-        }
-        homeView.generateImageButton.isHidden = false
+    func toastViewDidCopyText(_ text: String) {
+        handleCopiedText(text)
     }
+    
+    func handleCopiedText(_ text: String) {
+            // 展示複製成功的提示
+            AlertKitAPI.present(
+                title: "複製成功",
+                icon: .done,
+                style: .iOS17AppleMusic,
+                haptic: .success
+            )
+
+            // 複製文字到剪貼板
+            UIPasteboard.general.string = text
+            copiedText = text
+            print("Text copied: \(text)")
+
+            // 顯示 "製作長輩圖" 按鈕
+            homeView.generateImageButton.isHidden = false
+        }
+    
+//    @objc func copyLabelText(_ sender: UITapGestureRecognizer) {
+//        AlertKitAPI.present(
+//            title: "複製成功",
+//            icon: .done,
+//            style: .iOS17AppleMusic,
+//            haptic: .success
+//        )
+//
+//        if let label = sender.view as? UILabel {
+//            UIPasteboard.general.string = label.text
+//            copiedText = label.text ?? "早安"
+//            print("Text copied: \(label.text ?? "")")
+//        }
+//        homeView.generateImageButton.isHidden = false
+//    }
 
     @objc func toGenerateButtonTapped(_ sender: UIButton) {
         performSegue(withIdentifier: "toGenerateImage", sender: copiedText)

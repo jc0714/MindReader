@@ -8,12 +8,20 @@
 import Foundation
 import UIKit
 
+protocol ToastViewDelegate: AnyObject {
+    func toastViewDidCopyText(_ text: String)
+}
+
 class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
+
+    weak var delegate: ToastViewDelegate?
 
     private let tableView = UITableView()
     
     private var possibleMeanings: [String] = []
     private var responseMethods: [String] = []
+
+    var onCopyTap: ((String) -> Void)?
 
     private let closeButton: UIButton = {
         let button = UIButton(type: .system)
@@ -57,6 +65,7 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "ResponseCell")
         tableView.register(ResponseCopyCell.self, forCellReuseIdentifier: "ResponseCopyCell")
 
+        tableView.isUserInteractionEnabled = true
         tableView.backgroundColor = UIColor(red: 255/255, green: 223/255, blue: 186/255, alpha: 1)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.layer.cornerRadius = 15
@@ -99,7 +108,7 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
 
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "ResponseCell", for: indexPath)
-            cell.selectionStyle = .none
+            cell.selectionStyle = .default
             cell.textLabel?.numberOfLines = 0
             cell.backgroundColor = .clear
 
@@ -113,6 +122,21 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
             cell?.configure(with: text)
 
             return cell!
+        }
+    }
+
+    // MARK: - Tap Action
+
+    func notifyCopyText(_ text: String) {
+        delegate?.toastViewDidCopyText(text)
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        if indexPath.section == 1 {
+            print("TAPPEDDDDD")
+            let text = "\(responseMethods[indexPath.row])"
+            onCopyTap?(text) // 通過 closure 傳遞文字給 HomeVC
         }
     }
 

@@ -39,43 +39,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         button.layer.cornerRadius = 10
         return button
     }()
-//
-//    let responseLabel: UILabel = {
-//        let label = UILabel()
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        label.numberOfLines = 0
-//        return label
-//    }()
-//
-//    let replyLabel1: UILabel = {
-//        let label = UILabel()
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        label.numberOfLines = 0
-//        label.backgroundColor = .pink1
-//        label.layer.cornerRadius = 5
-//        label.layer.masksToBounds = true
-//        return label
-//    }()
-//
-//    let replyLabel2: UILabel = {
-//        let label = UILabel()
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        label.numberOfLines = 0
-//        label.backgroundColor = .pink1
-//        label.layer.cornerRadius = 5
-//        label.layer.masksToBounds = true
-//        return label
-//    }()
-//
-//    let replyLabel3: UILabel = {
-//        let label = UILabel()
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        label.numberOfLines = 0
-//        label.backgroundColor = .pink1
-//        label.layer.cornerRadius = 5
-//        label.layer.masksToBounds = true
-//        return label
-//    }()
 
     let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -121,6 +84,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         button.setImage(UIImage(systemName: "photo.artframe"), for: .normal)
         button.backgroundColor = .pink1
         button.layer.cornerRadius = 10
+        button.isHidden = true
         return button
     }()
 
@@ -197,22 +161,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             submitButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             submitButton.widthAnchor.constraint(equalToConstant: 300),
             submitButton.heightAnchor.constraint(equalToConstant: 50),
-//
-//            responseLabel.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 30),
-//            responseLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-//            responseLabel.widthAnchor.constraint(equalToConstant: 300),
-//
-//            replyLabel1.topAnchor.constraint(equalTo: responseLabel.bottomAnchor, constant: 15),
-//            replyLabel1.centerXAnchor.constraint(equalTo: centerXAnchor),
-//            replyLabel1.widthAnchor.constraint(equalToConstant: 300),
-//
-//            replyLabel2.topAnchor.constraint(equalTo: replyLabel1.bottomAnchor, constant: 15),
-//            replyLabel2.centerXAnchor.constraint(equalTo: centerXAnchor),
-//            replyLabel2.widthAnchor.constraint(equalToConstant: 300),
-//
-//            replyLabel3.topAnchor.constraint(equalTo: replyLabel2.bottomAnchor, constant: 15),
-//            replyLabel3.centerXAnchor.constraint(equalTo: centerXAnchor),
-//            replyLabel3.widthAnchor.constraint(equalToConstant: 300),
 
             generateImageButton.bottomAnchor.constraint(equalTo: chatButton.bottomAnchor),
             generateImageButton.trailingAnchor.constraint(equalTo: chatButton.trailingAnchor, constant: 15),
@@ -230,16 +178,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         bringSubviewToFront(waitingAnimationView)
 
     }
-//
-//    func setupLabelGestures(target: Any, action: Selector) {
-//        replyLabel1.isUserInteractionEnabled = true
-//        replyLabel2.isUserInteractionEnabled = true
-//        replyLabel3.isUserInteractionEnabled = true
-//
-//        replyLabel1.addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
-//        replyLabel2.addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
-//        replyLabel3.addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
-//    }
 
     func showLoadingAnimation() {
         self.bringSubviewToFront(self.waitingAnimationView)

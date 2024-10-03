@@ -141,7 +141,7 @@ class ChatCell: UITableViewCell {
             readLabel.text = nil
             messageLeadingConstraint.isActive = true
             timeTrailingConstraint.isActive = true
-            bubbleBackgroundView.backgroundColor = .yelloww.withAlphaComponent(0.5)
+            bubbleBackgroundView.backgroundColor = .yelloww.withAlphaComponent(0.3)
 
             inComeMsgImageView.isHidden = false
             inComeMsgImageView.image = UIImage(named: "photo4")

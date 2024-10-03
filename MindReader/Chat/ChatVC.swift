@@ -45,8 +45,9 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view.backgroundColor = .yelloww
+        
+        // 聊天室上方名字條、input container 下方一點點
+        view.backgroundColor = .pink1
 
         setUpNavigation()
 
