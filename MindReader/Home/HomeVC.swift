@@ -69,7 +69,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         let tapGestureToAlbum = UITapGestureRecognizer(target: self, action: #selector(selectImageFromAlbum))
         homeView.imageView.addGestureRecognizer(tapGestureToAlbum)
 
-        homeView.setupLabelGestures(target: self, action: #selector(copyLabelText))
+//        homeView.setupLabelGestures(target: self, action: #selector(copyLabelText))
 
         homeView.generateImageButton.addTarget(self, action: #selector(toGenerateButtonTapped), for: .touchUpInside)
     }
@@ -82,10 +82,10 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - Submit Action
 
     @objc private func didTapSubmit(_ sender: UIButton) {
-        homeView.responseLabel.text = ""
-        homeView.replyLabel1.text = ""
-        homeView.replyLabel2.text = ""
-        homeView.replyLabel3.text = ""
+//        homeView.responseLabel.text = ""
+//        homeView.replyLabel1.text = ""
+//        homeView.replyLabel2.text = ""
+//        homeView.replyLabel3.text = ""
 
         if sender.tag == 2 {
             showAlert(message: "請上傳有文字的訊息截圖，我來幫你解讀！")
@@ -156,12 +156,10 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     private func updateResponseLabels(possibleMeanings: [String], responseMethods: [String]) {
         DispatchQueue.main.async {
-            self.homeView.responseLabel.text = "可能含義\n1.\(possibleMeanings[0])\n2.\(possibleMeanings[1])\n3.\(possibleMeanings[2])\n\n推薦回覆"
-            self.homeView.replyLabel1.text = responseMethods[0]
-            self.homeView.replyLabel2.text = responseMethods[1]
-            self.homeView.replyLabel3.text = responseMethods[2]
-            self.view.setNeedsLayout()
-            self.view.layoutIfNeeded()
+            let toastView = ToastView()
+            toastView.configure(with: possibleMeanings, responseMethods: responseMethods)
+
+            toastView.showInView(self.view)
         }
     }
 
@@ -235,10 +233,10 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         homeView.imageView.isHidden = !isImageViewVisible
         homeView.promptTextField.text = nil
         homeView.imageView.image = nil
-        homeView.responseLabel.text = ""
-        homeView.replyLabel1.text = ""
-        homeView.replyLabel2.text = ""
-        homeView.replyLabel3.text = ""
+//        homeView.responseLabel.text = ""
+//        homeView.replyLabel1.text = ""
+//        homeView.replyLabel2.text = ""
+//        homeView.replyLabel3.text = ""
     }
 
     // MARK: - Keyboard Handling
