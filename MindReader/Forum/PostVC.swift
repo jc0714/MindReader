@@ -260,7 +260,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
 
-    // 封鎖
+    // 檢舉
     private func addToReportedPostList(postID: String) {
         var reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
 

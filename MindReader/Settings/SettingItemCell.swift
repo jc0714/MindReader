@@ -7,8 +7,7 @@
 
 import Foundation
 import UIKit
-
-class SettingItemCell: UICollectionViewCell {
+class SettingItemCell: UITableViewCell {
 
     private let cardView: UIView = {
         let view = UIView()
@@ -35,8 +34,9 @@ class SettingItemCell: UICollectionViewCell {
         return label
     }()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    // 正确的 UITableViewCell 初始化方法
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
     }
 
@@ -59,8 +59,8 @@ class SettingItemCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             iconImageView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 16),
             iconImageView.centerYAnchor.constraint(equalTo: cardView.centerYAnchor),
-            iconImageView.widthAnchor.constraint(equalToConstant: 24), // 设置图标宽度
-            iconImageView.heightAnchor.constraint(equalToConstant: 24) // 设置图标高度
+            iconImageView.widthAnchor.constraint(equalToConstant: 24),
+            iconImageView.heightAnchor.constraint(equalToConstant: 24)
         ])
 
         cardView.addSubview(titleLabel)

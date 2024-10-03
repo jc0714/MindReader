@@ -54,12 +54,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 //        }
     }
 
-    private func showLoginView() {
-        let loginVC = LoginVC()
-        loginVC.modalPresentationStyle = .overFullScreen // 使用全螢幕的呈現方式
-        self.present(loginVC, animated: true, completion: nil)
-    }
-//    
     // MARK: - Setup Actions
 
     private func setupActions() {

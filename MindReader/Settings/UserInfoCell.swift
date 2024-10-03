@@ -13,7 +13,7 @@ protocol UserInfoCellDelegate: AnyObject {
     func didTapSubmitButton(newName: String, in cell: UserInfoCell)
 }
 
-class UserInfoCell: UICollectionViewCell {
+class UserInfoCell: UITableViewCell {
 
     weak var delegate: UserInfoCellDelegate?
 
@@ -81,8 +81,8 @@ class UserInfoCell: UICollectionViewCell {
         return button
     }()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
     }
 
