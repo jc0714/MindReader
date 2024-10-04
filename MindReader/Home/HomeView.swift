@@ -253,14 +253,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
     // MARK: - Helper Methods to Configure Cells
     private func configureCell(_ cell: UICollectionViewCell, withText text: String, isSelected: Bool, at indexPath: IndexPath) {
-        let macaronColors: [UIColor] = [
-            UIColor(red: 255/255, green: 182/255, blue: 193/255, alpha: 1.0), // 淡粉色
-            UIColor(red: 255/255, green: 218/255, blue: 185/255, alpha: 1.0), // 淡珊瑚色
-            UIColor(red: 255/255, green: 239/255, blue: 213/255, alpha: 1.0), // 淡橙色
-            UIColor(red: 221/255, green: 255/255, blue: 221/255, alpha: 1.0), // 淡綠色
-            UIColor(red: 224/255, green: 255/255, blue: 255/255, alpha: 1.0), // 淡藍色
-            UIColor(red: 230/255, green: 230/255, blue: 250/255, alpha: 1.0)  // 淡紫色
-        ]
 
         // 設置背景顏色
         cell.contentView.layer.cornerRadius = 10
@@ -297,6 +289,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         }
     }
 
+    // 顯示動畫
     func showLoadingAnimation() {
         self.bringSubviewToFront(self.waitingAnimationView)
         waitingAnimationView.isHidden = false

@@ -20,13 +20,25 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
 
     var refreshControl = UIRefreshControl()
 
+    private let placeholderImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "AlbumPlaceHolder") 
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .pink3
+        view.backgroundColor = .white
 
         setupCollectionView()
 
         setUpAction()
+        fetchImagesFromFirebase()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
         fetchImagesFromFirebase()
     }
 
@@ -38,6 +50,15 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
     }
 
     func setupCollectionView() {
+        view.addSubview(placeholderImageView)
+
+        NSLayoutConstraint.activate([
+            placeholderImageView.topAnchor.constraint(equalTo: view.topAnchor),
+            placeholderImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            placeholderImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            placeholderImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+
         layout.itemSize = CGSize(width: 100, height: 100)
         layout.minimumInteritemSpacing = 10
         layout.minimumLineSpacing = 10
@@ -47,7 +68,7 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(AlbumCell.self, forCellWithReuseIdentifier: "AlbumCell")
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = .clear
 
         view.addSubview(collectionView)
 
@@ -102,6 +123,8 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
                 self.imageUrls = newImageUrls
                 self.collectionView.reloadData()
                 self.refreshControl.endRefreshing()  // 成功時停止刷新動畫
+
+                self.placeholderImageView.isHidden = !self.imageUrls.isEmpty
             }
         }
     }
