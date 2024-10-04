@@ -111,6 +111,7 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
             cell.selectionStyle = .default
             cell.textLabel?.numberOfLines = 0
             cell.backgroundColor = .clear
+            cell.selectionStyle = .none
 
             cell.textLabel?.text = "\(indexPath.row + 1). \(possibleMeanings[indexPath.row])"
 
