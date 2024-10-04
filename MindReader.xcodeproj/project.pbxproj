@@ -20,6 +20,7 @@
 		E9521C2D2CAE507000BFCAEF /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9521C2C2CAE507000BFCAEF /* ToastView.swift */; };
 		E9521C2F2CAE91C000BFCAEF /* ResponseCopyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9521C2E2CAE91C000BFCAEF /* ResponseCopyCell.swift */; };
 		E9521C322CAFB28300BFCAEF /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = E9521C312CAFB28300BFCAEF /* Lottie */; };
+		E9521C342CAFC28300BFCAEF /* WelcomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */; };
 		E97654962CABC4A7003884AF /* AlertKit in Frameworks */ = {isa = PBXBuildFile; productRef = E97654952CABC4A7003884AF /* AlertKit */; };
 		E97654982CACD854003884AF /* SettingItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97654972CACD853003884AF /* SettingItemCell.swift */; };
 		E976549A2CACE9AC003884AF /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97654992CACE9AC003884AF /* UserInfoCell.swift */; };
@@ -78,6 +79,7 @@
 		E9521C2A2CAE486700BFCAEF /* BlockedListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedListCell.swift; sourceTree = "<group>"; };
 		E9521C2C2CAE507000BFCAEF /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		E9521C2E2CAE91C000BFCAEF /* ResponseCopyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseCopyCell.swift; sourceTree = "<group>"; };
+		E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeVC.swift; sourceTree = "<group>"; };
 		E97654972CACD853003884AF /* SettingItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingItemCell.swift; sourceTree = "<group>"; };
 		E97654992CACE9AC003884AF /* UserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
 		E976549B2CAD0A5F003884AF /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 				E97C15E92C9166B7002B437C /* Assets.xcassets */,
 				E97C15EE2C9166B7002B437C /* Info.plist */,
 				E97C15F82C918944002B437C /* GoogleService-Info.plist */,
+				E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */,
 			);
 			path = MindReader;
 			sourceTree = "<group>";
@@ -384,6 +387,7 @@
 				E976549A2CACE9AC003884AF /* UserInfoCell.swift in Sources */,
 				E97C15E52C9166B5002B437C /* HomeVC.swift in Sources */,
 				E97C15F72C91812F002B437C /* APIService.swift in Sources */,
+				E9521C342CAFC28300BFCAEF /* WelcomeVC.swift in Sources */,
 				E9521C292CAE43D200BFCAEF /* BlockedListVC.swift in Sources */,
 				E9F6B6B22C997482008E9FBF /* ImageVC.swift in Sources */,
 				E9F6B67E2C95800F008E9FBF /* ChatView.swift in Sources */,

@@ -72,7 +72,6 @@ extension LoginVC: ASAuthorizationControllerDelegate {
             print("Email: \(String(describing: appleIDCredential.email))")
 
             let fullName = "\(appleIDCredential.fullName?.givenName ?? "") \(appleIDCredential.fullName?.familyName ?? "")"
-//            let fullName = appleIDCredential.fullName?.description
             let email = appleIDCredential.email
             let realUserStatus = appleIDCredential.realUserStatus.rawValue
 
@@ -91,10 +90,12 @@ extension LoginVC: ASAuthorizationControllerDelegate {
 
                 if let snapshot = snapshot, snapshot.documents.isEmpty {
                     // 用戶不存在
-                    self.firebaseService.saveUserInfoToFirestore(appleUserIdentifier: userIdentifier, appleUserFullName: fullName, email: email, realUserStatus: realUserStatus)
-                    UserDefaults.standard.set(fullName, forKey: "appleUserFullName")
-                    UserDefaults.standard.set(fullName, forKey: "userLastName")
-                    UserDefaults.standard.set(userIdentifier, forKey: "appleUserIdentifier")
+                    self.presentNameInputViewController(userIdentifier: userIdentifier, userFullName: fullName, email: email, realUserStatus: realUserStatus)
+
+//                    self.firebaseService.saveUserInfoToFirestore(appleUserIdentifier: userIdentifier, appleUserFullName: fullName, email: email, realUserStatus: realUserStatus)
+//                    UserDefaults.standard.set(fullName, forKey: "appleUserFullName")
+//                    UserDefaults.standard.set(fullName, forKey: "userLastName")
+//                    UserDefaults.standard.set(userIdentifier, forKey: "appleUserIdentifier")
                 } else {
                     // 用戶已經存在
                     if let document = snapshot?.documents.first {
@@ -102,12 +103,17 @@ extension LoginVC: ASAuthorizationControllerDelegate {
 
                         if isDeleted {
                             // 用戶已標記為刪除，創建新帳號
-                            self.firebaseService.saveUserInfoToFirestore(appleUserIdentifier: userIdentifier, appleUserFullName: fullName, email: email, realUserStatus: realUserStatus)
-                            UserDefaults.standard.set(fullName, forKey: "appleUserFullName")
-                            UserDefaults.standard.set(fullName, forKey: "userLastName")
-                            UserDefaults.standard.set(userIdentifier, forKey: "appleUserIdentifier")
+                            let oldUserIdentifier = document.data()["appleUserIdentifier"] as? String ?? userIdentifier
+                            let oldUserFullName = document.data()["appleUserFullName"] as? String ?? userIdentifier
+                            let oldEmail = document.data()["email"] as? String ?? email
+                            self.presentNameInputViewController(userIdentifier: oldUserIdentifier, userFullName: oldUserFullName, email: oldEmail, realUserStatus: realUserStatus)
+
+//                            self.firebaseService.saveUserInfoToFirestore(appleUserIdentifier: userIdentifier, appleUserFullName: fullName, email: email, realUserStatus: realUserStatus)
+//                            UserDefaults.standard.set(fullName, forKey: "appleUserFullName")
+//                            UserDefaults.standard.set(fullName, forKey: "userLastName")
+//                            UserDefaults.standard.set(userIdentifier, forKey: "appleUserIdentifier")
                         } else {
-                            // 用戶未被刪除，使用現有帳號
+                            // 用戶已經存在，使用現有帳號
                             let existingUserId = document.documentID
                             let chatRoomId = document.data()["chatRoomId"] as? String ?? ""
                             UserDefaults.standard.set(existingUserId, forKey: "userID")
@@ -136,15 +142,34 @@ extension LoginVC: ASAuthorizationControllerDelegate {
                 UserDefaults.standard.synchronize()
 
                 // 跳轉到 TabBarController
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                guard let tabBarController = storyboard.instantiateViewController(withIdentifier: "MainTabBarController") as? UITabBarController else {
-                    print("無法找到 MainTabBarController")
-                    return
-                }
-                UIApplication.shared.windows.first?.rootViewController = tabBarController
-                UIApplication.shared.windows.first?.makeKeyAndVisible()
+                self.navigateToMainTabBarController()
             }
         }
+    }
+
+    private func presentNameInputViewController(userIdentifier: String, userFullName: String?, email: String?, realUserStatus: Int) {
+        let nameInputVC = WelcomeVC()
+        nameInputVC.onNameEntered = { [weak self] name in
+            guard let self = self else { return }
+            self.firebaseService.saveUserInfoToFirestore(appleUserIdentifier: userIdentifier, appleUserFullName: userFullName, userFullName: name, email: email, realUserStatus: realUserStatus)
+            UserDefaults.standard.set(name, forKey: "userLastName")
+            UserDefaults.standard.set(userIdentifier, forKey: "appleUserIdentifier")
+            self.navigateToMainTabBarController()
+
+        }
+        // 顯示名稱輸入頁面
+        self.present(nameInputVC, animated: true, completion: nil)
+
+    }
+
+    private func navigateToMainTabBarController() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let tabBarController = storyboard.instantiateViewController(withIdentifier: "MainTabBarController") as? UITabBarController else {
+            print("找不到 MainTabBarController")
+            return
+        }
+        UIApplication.shared.windows.first?.rootViewController = tabBarController
+        UIApplication.shared.windows.first?.makeKeyAndVisible()
     }
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {

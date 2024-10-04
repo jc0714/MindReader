@@ -15,14 +15,14 @@ class FirestoreService {
 
     // MARK: Login
 
-    func saveUserInfoToFirestore(appleUserIdentifier: String, appleUserFullName: String?, email: String?, realUserStatus: Int) {
+    func saveUserInfoToFirestore(appleUserIdentifier: String, appleUserFullName: String?, userFullName: String?, email: String?, realUserStatus: Int) {
         let documentID = UUID().uuidString
         let chatRoomId = UUID().uuidString // 固定 chatRoomId
 
         let userData: [String: Any] = [
             "appleUserIdentifier": appleUserIdentifier,
             "appleUserFullName": appleUserFullName,
-            "userFullName": appleUserFullName,
+            "userFullName": userFullName,
             "email": email,
             "realUserStatus": realUserStatus,
             "likePosts": [String](),
