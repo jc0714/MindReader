@@ -98,13 +98,33 @@ extension LoginVC: ASAuthorizationControllerDelegate {
                 } else {
                     // 用戶已經存在
                     if let document = snapshot?.documents.first {
-                        let existingUserId = document.documentID
-                        let chatRoomId = document.data()["chatRoomId"] as? String ?? ""
-                        UserDefaults.standard.set(existingUserId, forKey: "userID")
-                        UserDefaults.standard.set(chatRoomId, forKey: "chatRoomId")
-                        print("User already exists in Firestore. UserId and chatRoomId saved to UserDefaults.")
+                        let isDeleted = document.data()["isDeleted"] as? Bool ?? false
+
+                        if isDeleted {
+                            // 用戶已標記為刪除，創建新帳號
+                            self.firebaseService.saveUserInfoToFirestore(appleUserIdentifier: userIdentifier, appleUserFullName: fullName, email: email, realUserStatus: realUserStatus)
+                            UserDefaults.standard.set(fullName, forKey: "appleUserFullName")
+                            UserDefaults.standard.set(fullName, forKey: "userLastName")
+                            UserDefaults.standard.set(userIdentifier, forKey: "appleUserIdentifier")
+                        } else {
+                            // 用戶未被刪除，使用現有帳號
+                            let existingUserId = document.documentID
+                            let chatRoomId = document.data()["chatRoomId"] as? String ?? ""
+                            UserDefaults.standard.set(existingUserId, forKey: "userID")
+                            UserDefaults.standard.set(chatRoomId, forKey: "chatRoomId")
+                            print("User already exists in Firestore. UserId and chatRoomId saved to UserDefaults.")
+                        }
                     }
                 }
+//                    // 用戶已經存在
+//                    if let document = snapshot?.documents.first {
+//                        let existingUserId = document.documentID
+//                        let chatRoomId = document.data()["chatRoomId"] as? String ?? ""
+//                        UserDefaults.standard.set(existingUserId, forKey: "userID")
+//                        UserDefaults.standard.set(chatRoomId, forKey: "chatRoomId")
+//                        print("User already exists in Firestore. UserId and chatRoomId saved to UserDefaults.")
+//                    }
+//                }
 
                 dispatchGroup.leave()  // 異步操作完成
             }

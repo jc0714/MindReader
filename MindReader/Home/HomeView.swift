@@ -21,13 +21,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         return animationView
     }()
 
-
-//    private var waitingAnimationView: LottieAnimationView = {
-//        let animationView = LottieAnimationView(name: "runningDoggy")
-//        animationView.renderingEngine = .automatic
-//        return animationView
-//    }()
-
     let chatButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false

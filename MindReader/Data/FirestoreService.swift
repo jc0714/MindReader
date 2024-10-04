@@ -268,6 +268,7 @@ class FirestoreService {
             if error == nil {
                 print("帳號標記為刪除")
                 UserDefaults.standard.removeObject(forKey: "userID")
+                UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
 //                UserDefaults.standard.removeObject(forKey: "userLastName")
             } else {
                 print("刪除出錯了啊啊啊: \(error!.localizedDescription)")
