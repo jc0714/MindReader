@@ -54,9 +54,9 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
 
         NSLayoutConstraint.activate([
             placeholderImageView.topAnchor.constraint(equalTo: view.topAnchor),
-            placeholderImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             placeholderImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            placeholderImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            placeholderImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            placeholderImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 200)
         ])
 
         layout.itemSize = CGSize(width: 100, height: 100)

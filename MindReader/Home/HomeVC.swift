@@ -95,6 +95,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         }
 
         let prompt = sender.tag == 1 ? homeView.promptTextField.text : recognizedText
+        let audiance = homeView.selectedAudienceText ?? "不限"
+        let replyStyle = homeView.selectedReplyStyleText ?? "不限"
 
         guard let prompt = prompt, !prompt.isEmpty else {
             AlertKitAPI.present(
@@ -128,7 +130,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
                 homeView.showLoadingAnimation()
 
-                let formatedPrompt = formatPrompt(prompt)
+                let formatedPrompt = formatPrompt(prompt, audiance: audiance, replyStyle: replyStyle)
+                print("哈哈哈哈\(formatedPrompt)")
                 let response = try await apiService.generateTextResponse(for: formatedPrompt)
 
                 if let data = response.data(using: .utf8),
@@ -282,22 +285,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
             // 顯示 "製作長輩圖" 按鈕
             homeView.generateImageButton.isHidden = false
         }
-    
-//    @objc func copyLabelText(_ sender: UITapGestureRecognizer) {
-//        AlertKitAPI.present(
-//            title: "複製成功",
-//            icon: .done,
-//            style: .iOS17AppleMusic,
-//            haptic: .success
-//        )
-//
-//        if let label = sender.view as? UILabel {
-//            UIPasteboard.general.string = label.text
-//            copiedText = label.text ?? "早安"
-//            print("Text copied: \(label.text ?? "")")
-//        }
-//        homeView.generateImageButton.isHidden = false
-//    }
 
     @objc func toGenerateButtonTapped(_ sender: UIButton) {
         performSegue(withIdentifier: "toGenerateImage", sender: copiedText)
@@ -311,12 +298,14 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         }
     }
 
-    private func formatPrompt(_ prompt: String) -> String {
+    private func formatPrompt(_ prompt: String, audiance: String, replyStyle: String) -> String {
         """
-        你是「另一半翻譯機」，盡量要顯得體貼。理解對方的潛在意圖，並提供可以複製去用的回覆訊息。
+        你是「另一半翻譯機」。理解對方傳這封訊息的意圖，並針對「對象」提供「風格」回覆訊息。
         用下方訊息內容分析「possible_meanings：訊息背後隱含意義」和「response_methods：推薦回覆訊息」兩個部分，各三個。
 
         訊息內容：\(prompt)
+        對象：\(audiance)
+        回覆風格：\(replyStyle)
 
         用繁體中文，以 JSON 格式：
         "content": {

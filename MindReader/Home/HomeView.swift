@@ -98,7 +98,8 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
     let generateImageButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(systemName: "photo.artframe"), for: .normal)
+//        button.setImage(UIImage(systemName: "photo.artframe"), for: .normal)
+        button.setTitle("製作早安圖", for: .normal)
         button.backgroundColor = .pink1
         button.layer.cornerRadius = 10
         button.isHidden = true
@@ -111,8 +112,18 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
     private let audienceOptions = ["朋友", "家人", "同事", "陌生人"]
     private let replyStyleOptions = ["直接", "溫和", "幽默", "正式"]
 
-    private var selectedAudienceIndex: IndexPath?
-    private var selectedReplyStyleIndex: IndexPath?
+    var selectedAudienceIndex: IndexPath?
+    var selectedReplyStyleIndex: IndexPath?
+
+    var selectedAudienceText: String? {
+        guard let index = selectedAudienceIndex?.item else { return nil }
+        return audienceOptions[index]
+    }
+
+    var selectedReplyStyleText: String? {
+        guard let index = selectedReplyStyleIndex?.item else { return nil }
+        return replyStyleOptions[index]
+    }
 
     private let audienceCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -163,6 +174,9 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         addSubview(imageView)
 
+        addSubview(audienceCollectionView)
+        addSubview(replyStyleCollectionView)
+
         addSubview(submitButton)
         addSubview(indicatorView)
 
@@ -203,7 +217,17 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             imageView.widthAnchor.constraint(equalToConstant: 300),
             imageView.heightAnchor.constraint(equalToConstant: 150),
 
-            submitButton.topAnchor.constraint(equalTo: promptTextField.bottomAnchor, constant: 20),
+            audienceCollectionView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
+            audienceCollectionView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            audienceCollectionView.widthAnchor.constraint(equalToConstant: 300),
+            audienceCollectionView.heightAnchor.constraint(equalToConstant: 50),
+
+            replyStyleCollectionView.topAnchor.constraint(equalTo: audienceCollectionView.bottomAnchor, constant: 20),
+            replyStyleCollectionView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            replyStyleCollectionView.widthAnchor.constraint(equalToConstant: 300),
+            replyStyleCollectionView.heightAnchor.constraint(equalToConstant: 50),
+
+            submitButton.topAnchor.constraint(equalTo: replyStyleCollectionView.bottomAnchor, constant: 20),
             submitButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             submitButton.widthAnchor.constraint(equalToConstant: 300),
             submitButton.heightAnchor.constraint(equalToConstant: 50),
@@ -220,22 +244,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         bringSubviewToFront(chatButton)
         bringSubviewToFront(waitingAnimationView)
-
-        addSubview(audienceCollectionView)
-        addSubview(replyStyleCollectionView)
-
-        // Set up constraints for collection views
-        NSLayoutConstraint.activate([
-            audienceCollectionView.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 20),
-            audienceCollectionView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            audienceCollectionView.widthAnchor.constraint(equalToConstant: 300),
-            audienceCollectionView.heightAnchor.constraint(equalToConstant: 50),
-
-            replyStyleCollectionView.topAnchor.constraint(equalTo: audienceCollectionView.bottomAnchor, constant: 20),
-            replyStyleCollectionView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            replyStyleCollectionView.widthAnchor.constraint(equalToConstant: 300),
-            replyStyleCollectionView.heightAnchor.constraint(equalToConstant: 50)
-        ])
     }
 
     private func configureCollectionViews() {

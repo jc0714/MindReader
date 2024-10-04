@@ -139,6 +139,7 @@ extension LoginVC: ASAuthorizationControllerDelegate {
             self.navigateToMainTabBarController()
 
         }
+        nameInputVC.modalPresentationStyle = .fullScreen
         // 顯示名稱輸入頁面
         self.present(nameInputVC, animated: true, completion: nil)
 

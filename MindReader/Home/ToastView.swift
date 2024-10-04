@@ -43,7 +43,7 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
     }
 
     private func setupView() {
-        self.backgroundColor = .orange
+        self.backgroundColor = .brown
         self.layer.cornerRadius = 20
         self.layer.shadowColor = UIColor.black.cgColor
         self.layer.shadowOpacity = 0.3
@@ -70,7 +70,7 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.layer.cornerRadius = 15
         tableView.separatorStyle = .none
-        
+
         self.addSubview(tableView)
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: self.topAnchor, constant: 50),
