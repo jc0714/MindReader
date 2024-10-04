@@ -14,7 +14,6 @@
 		E9240AD12C9D216A00A47944 /* MyPostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9240AD02C9D216A00A47944 /* MyPostVC.swift */; };
 		E9240AD32C9D442F00A47944 /* RecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9240AD22C9D442F00A47944 /* RecordView.swift */; };
 		E9521C252CAD43C000BFCAEF /* Haptic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9521C242CAD43C000BFCAEF /* Haptic.swift */; };
-		E9521C272CADA18900BFCAEF /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9521C262CADA18900BFCAEF /* Block.swift */; };
 		E9521C292CAE43D200BFCAEF /* BlockedListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9521C282CAE43D200BFCAEF /* BlockedListVC.swift */; };
 		E9521C2B2CAE486700BFCAEF /* BlockedListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9521C2A2CAE486700BFCAEF /* BlockedListCell.swift */; };
 		E9521C2D2CAE507000BFCAEF /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9521C2C2CAE507000BFCAEF /* ToastView.swift */; };
@@ -74,7 +73,6 @@
 		E9240AD02C9D216A00A47944 /* MyPostVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPostVC.swift; sourceTree = "<group>"; };
 		E9240AD22C9D442F00A47944 /* RecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordView.swift; sourceTree = "<group>"; };
 		E9521C242CAD43C000BFCAEF /* Haptic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptic.swift; sourceTree = "<group>"; };
-		E9521C262CADA18900BFCAEF /* Block.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
 		E9521C282CAE43D200BFCAEF /* BlockedListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedListVC.swift; sourceTree = "<group>"; };
 		E9521C2A2CAE486700BFCAEF /* BlockedListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedListCell.swift; sourceTree = "<group>"; };
 		E9521C2C2CAE507000BFCAEF /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
@@ -186,6 +184,7 @@
 				E97C15E22C9166B5002B437C /* SceneDelegate.swift */,
 				E976549B2CAD0A5F003884AF /* Animation.swift */,
 				E9521C242CAD43C000BFCAEF /* Haptic.swift */,
+				E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */,
 				E90B5E4D2CA39DFE00CA24F7 /* Data */,
 				E90B5E4C2CA39DCC00CA24F7 /* Extension */,
 				E97C16072C92BC88002B437C /* APIKeys.swift */,
@@ -199,7 +198,6 @@
 				E97C15E92C9166B7002B437C /* Assets.xcassets */,
 				E97C15EE2C9166B7002B437C /* Info.plist */,
 				E97C15F82C918944002B437C /* GoogleService-Info.plist */,
-				E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */,
 			);
 			path = MindReader;
 			sourceTree = "<group>";
@@ -263,7 +261,6 @@
 				E9C668B32CA5407400C0EE1D /* SettingVC.swift */,
 				E97654972CACD853003884AF /* SettingItemCell.swift */,
 				E97654992CACE9AC003884AF /* UserInfoCell.swift */,
-				E9521C262CADA18900BFCAEF /* Block.swift */,
 				E9521C282CAE43D200BFCAEF /* BlockedListVC.swift */,
 				E9521C2A2CAE486700BFCAEF /* BlockedListCell.swift */,
 			);
@@ -400,7 +397,6 @@
 				E99142322C9FFABA00016C90 /* AlbumFullScreenVC.swift in Sources */,
 				E976549C2CAD0A5F003884AF /* Animation.swift in Sources */,
 				E90B5E512CA3B62900CA24F7 /* HideTabBarVC.swift in Sources */,
-				E9521C272CADA18900BFCAEF /* Block.swift in Sources */,
 				E9F6B6B62C9AA030008E9FBF /* ButtonExtension.swift in Sources */,
 				E9F6B6832C968743008E9FBF /* Model.swift in Sources */,
 				E90B5E4F2CA3A22000CA24F7 /* DetailVC.swift in Sources */,

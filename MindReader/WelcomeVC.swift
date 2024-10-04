@@ -50,7 +50,6 @@ class WelcomeVC: UIViewController {
     }
 
     private func setupUI() {
-        // 添加漸變背景
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = view.bounds
         gradientLayer.colors = [UIColor.systemTeal.cgColor, UIColor.systemPurple.cgColor]
@@ -62,7 +61,6 @@ class WelcomeVC: UIViewController {
         containerView.addSubview(nameTextField)
         containerView.addSubview(confirmButton)
 
-        // 設定 auto layout
         containerView.translatesAutoresizingMaskIntoConstraints = false
         nameTextField.translatesAutoresizingMaskIntoConstraints = false
         confirmButton.translatesAutoresizingMaskIntoConstraints = false

@@ -21,6 +21,15 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         return animationView
     }()
 
+    let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "人性翻譯機"
+        label.font = UIFont.systemFont(ofSize: 24)
+        label.textColor = .pink3
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
     let chatButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -99,14 +108,44 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
     let indicatorView = UIView()
     let activityIndicator = UIActivityIndicatorView(style: .large)
 
+    private let audienceOptions = ["朋友", "家人", "同事", "陌生人"]
+    private let replyStyleOptions = ["直接", "溫和", "幽默", "正式"]
+
+    private var selectedAudienceIndex: IndexPath?
+    private var selectedReplyStyleIndex: IndexPath?
+
+    private let audienceCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 10
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .clear
+        return collectionView
+    }()
+
+    private let replyStyleCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 10
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .clear
+        return collectionView
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureUI()
+        configureCollectionViews()
+
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         configureUI()
+        configureCollectionViews()
+
     }
 
     private func configureUI() {
@@ -114,6 +153,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         waitingAnimationView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(waitingAnimationView)
+        addSubview(titleLabel)
 
         addSubview(chatButton)
         addSubview(imageButton)
@@ -140,6 +180,9 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             chatButton.topAnchor.constraint(equalTo: topAnchor, constant: 120),
             chatButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20),
 
+            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 60),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
+            
             imageButton.topAnchor.constraint(equalTo: topAnchor, constant: 100),
             imageButton.leadingAnchor.constraint(equalTo: centerXAnchor, constant: -120),
             imageButton.widthAnchor.constraint(equalToConstant: 100),
@@ -178,6 +221,80 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         bringSubviewToFront(chatButton)
         bringSubviewToFront(waitingAnimationView)
 
+        addSubview(audienceCollectionView)
+        addSubview(replyStyleCollectionView)
+
+        // Set up constraints for collection views
+        NSLayoutConstraint.activate([
+            audienceCollectionView.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 20),
+            audienceCollectionView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            audienceCollectionView.widthAnchor.constraint(equalToConstant: 300),
+            audienceCollectionView.heightAnchor.constraint(equalToConstant: 50),
+
+            replyStyleCollectionView.topAnchor.constraint(equalTo: audienceCollectionView.bottomAnchor, constant: 20),
+            replyStyleCollectionView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            replyStyleCollectionView.widthAnchor.constraint(equalToConstant: 300),
+            replyStyleCollectionView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+
+    private func configureCollectionViews() {
+            // Register cell class for both collection views
+        audienceCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "AudienceCell")
+        replyStyleCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "ReplyStyleCell")
+
+        // Set delegates and data sources
+        audienceCollectionView.delegate = self
+        audienceCollectionView.dataSource = self
+
+        replyStyleCollectionView.delegate = self
+        replyStyleCollectionView.dataSource = self
+    }
+
+    // MARK: - Helper Methods to Configure Cells
+    private func configureCell(_ cell: UICollectionViewCell, withText text: String, isSelected: Bool, at indexPath: IndexPath) {
+        let macaronColors: [UIColor] = [
+            UIColor(red: 255/255, green: 182/255, blue: 193/255, alpha: 1.0), // 淡粉色
+            UIColor(red: 255/255, green: 218/255, blue: 185/255, alpha: 1.0), // 淡珊瑚色
+            UIColor(red: 255/255, green: 239/255, blue: 213/255, alpha: 1.0), // 淡橙色
+            UIColor(red: 221/255, green: 255/255, blue: 221/255, alpha: 1.0), // 淡綠色
+            UIColor(red: 224/255, green: 255/255, blue: 255/255, alpha: 1.0), // 淡藍色
+            UIColor(red: 230/255, green: 230/255, blue: 250/255, alpha: 1.0)  // 淡紫色
+        ]
+
+        // 設置背景顏色
+        cell.contentView.layer.cornerRadius = 10
+        cell.contentView.layer.borderWidth = isSelected ? 2 : 0
+        cell.contentView.layer.borderColor = isSelected ? UIColor.green.cgColor : UIColor.clear.cgColor
+        cell.contentView.backgroundColor = isSelected ? .white.withAlphaComponent(0.2) : .pink2
+
+        // 移除現有的 label 再添加新的
+        cell.contentView.subviews.forEach { $0.removeFromSuperview() }
+
+        let label = UILabel()
+        label.text = text
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        cell.contentView.addSubview(label)
+
+        NSLayoutConstraint.activate([
+            label.centerXAnchor.constraint(equalTo: cell.contentView.centerXAnchor),
+            label.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor)
+        ])
+
+        // 點按放大效果
+        cell.contentView.transform = isSelected ? CGAffineTransform(scaleX: 1.1, y: 1.1) : .identity
+
+        // 添加動畫
+        if isSelected {
+            UIView.animate(withDuration: 0.3, animations: {
+                cell.contentView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+            })
+        } else {
+            UIView.animate(withDuration: 0.3, animations: {
+                cell.contentView.transform = .identity
+            })
+        }
     }
 
     func showLoadingAnimation() {
@@ -198,5 +315,47 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             self.waitingAnimationView.alpha = 1
         }
     }
+}
 
+extension HomeView: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return collectionView == audienceCollectionView ? audienceOptions.count : replyStyleOptions.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: collectionView == audienceCollectionView ? "AudienceCell" : "ReplyStyleCell", for: indexPath)
+
+        let text = collectionView == audienceCollectionView ? audienceOptions[indexPath.item] : replyStyleOptions[indexPath.item]
+        let isSelected = (collectionView == audienceCollectionView && selectedAudienceIndex == indexPath) ||
+                         (collectionView == replyStyleCollectionView && selectedReplyStyleIndex == indexPath)
+        configureCell(cell, withText: text, isSelected: isSelected, at: indexPath)
+
+        return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView == audienceCollectionView {
+            // Deselect previously selected item
+            if let previousIndex = selectedAudienceIndex {
+                collectionView.deselectItem(at: previousIndex, animated: true)
+            }
+            selectedAudienceIndex = indexPath
+        } else {
+            // Deselect previously selected item
+            if let previousIndex = selectedReplyStyleIndex {
+                collectionView.deselectItem(at: previousIndex, animated: true)
+            }
+            selectedReplyStyleIndex = indexPath
+        }
+
+        // Reload the collection view to update the selection state
+        collectionView.reloadData()
+    }
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout
+extension HomeView: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 70, height: 40)
+    }
 }

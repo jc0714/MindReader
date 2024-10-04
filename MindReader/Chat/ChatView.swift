@@ -47,7 +47,7 @@ class ChatView: UIView, UITextViewDelegate {
     }
 
     private func setupInputView() {
-        inputContainer.backgroundColor = .pink1
+        inputContainer.backgroundColor = .pink2
         inputContainer.translatesAutoresizingMaskIntoConstraints = false
         addSubview(inputContainer)
 

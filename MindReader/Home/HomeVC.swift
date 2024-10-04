@@ -82,13 +82,15 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     @objc private func didTapSubmit(_ sender: UIButton) {
 
+        homeView.promptTextField.resignFirstResponder()
+
         if sender.tag == 2 {
             AlertKitAPI.present(
                 title: "我沒有讀到文字哦，請上傳有文字的圖片",
                 icon: .error,
                 style: .iOS17AppleMusic,
                 haptic: .error
-            ) 
+            )
             return
         }
 
