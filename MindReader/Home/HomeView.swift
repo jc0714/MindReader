@@ -126,7 +126,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         imageView.contentMode = .scaleAspectFill
 //        imageView.backgroundColor = .pink1
         imageView.layer.borderWidth = 1
-        imageView.layer.borderColor = UIColor.brown.cgColor
+        imageView.layer.borderColor = UIColor.pink1.cgColor
         imageView.layer.cornerRadius = 10
         imageView.image = UIImage(named: "uploadImage")
         imageView.isUserInteractionEnabled = true
@@ -254,7 +254,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         addSubview(submitButton)
         addSubview(indicatorView)
 
-        addSubview(generateImageButton)
+//        addSubview(generateImageButton)
 
         indicatorView.isHidden = true
         indicatorView.frame = bounds
@@ -333,8 +333,8 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             submitButton.widthAnchor.constraint(equalToConstant: 300),
             submitButton.heightAnchor.constraint(equalToConstant: 50),
 
-            generateImageButton.bottomAnchor.constraint(equalTo: chatButton.bottomAnchor),
-            generateImageButton.trailingAnchor.constraint(equalTo: chatButton.trailingAnchor, constant: 15),
+//            generateImageButton.bottomAnchor.constraint(equalTo: chatButton.bottomAnchor),
+//            generateImageButton.trailingAnchor.constraint(equalTo: chatButton.trailingAnchor, constant: 15),
 
             waitingAnimationView.centerXAnchor.constraint(equalTo: promptTextField.centerXAnchor, constant: 0),
             waitingAnimationView.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 80),
@@ -366,7 +366,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         // 設置背景顏色
         cell.contentView.layer.cornerRadius = 10
         cell.contentView.layer.borderWidth = isSelected ? 2 : 0
-        cell.contentView.layer.borderColor = isSelected ? UIColor.orange.cgColor : UIColor.clear.cgColor
+//        cell.contentView.layer.borderColor = isSelected ? UIColor.orange.cgColor : UIColor.clear.cgColor
         cell.contentView.backgroundColor = isSelected ? .pink3 : .pink2
 
         // 移除現有的 label 再添加新的

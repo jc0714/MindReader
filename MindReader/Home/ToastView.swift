@@ -20,8 +20,18 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
     
     private var possibleMeanings: [String] = []
     private var responseMethods: [String] = []
-
+    
     var onCopyTap: ((String) -> Void)?
+
+    let generateImageButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("製作早安圖", for: .normal)
+        button.backgroundColor = .pink1
+        button.layer.cornerRadius = 10
+        button.isHidden = true
+        return button
+    }()
 
     private let closeButton: UIButton = {
         let button = UIButton(type: .system)
@@ -153,10 +163,17 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         headerView.addSubview(titleLabel)
 
+        headerView.addSubview(generateImageButton)
+
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-            titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)
+            titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+
+//            generateImageButton.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 8),
+            generateImageButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
+            generateImageButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+            generateImageButton.widthAnchor.constraint(equalToConstant: 100)
         ])
 
         if section == 0 {

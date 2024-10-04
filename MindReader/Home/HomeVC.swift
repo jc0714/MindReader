@@ -70,7 +70,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         let tapGestureToAlbum = UITapGestureRecognizer(target: self, action: #selector(selectImageFromAlbum))
         homeView.imageView.addGestureRecognizer(tapGestureToAlbum)
 
-        homeView.generateImageButton.addTarget(self, action: #selector(toGenerateButtonTapped), for: .touchUpInside)
     }
 
     @objc func toChatButtonTapped(_ sender: UIButton) {
@@ -169,9 +168,11 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     private func updateResponseLabels(possibleMeanings: [String], responseMethods: [String]) {
         DispatchQueue.main.async {
             let toastView = ToastView()
+            toastView.generateImageButton.addTarget(self, action: #selector(self.toGenerateButtonTapped), for: .touchUpInside)
 
             toastView.onCopyTap = { [weak self] text in
                 self?.handleCopiedText(text)
+                toastView.generateImageButton.isHidden = false
             }
 
             toastView.configure(with: possibleMeanings, responseMethods: responseMethods)
@@ -250,10 +251,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         homeView.imageView.isHidden = !isImageViewVisible
         homeView.promptTextField.text = nil
         homeView.imageView.image = nil
-//        homeView.responseLabel.text = ""
-//        homeView.replyLabel1.text = ""
-//        homeView.replyLabel2.text = ""
-//        homeView.replyLabel3.text = ""
     }
 
     // MARK: - Keyboard Handling
@@ -263,28 +260,28 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     }
 
     // MARK: - Copy Label Text
-
-    func toastViewDidCopyText(_ text: String) {
-        handleCopiedText(text)
-    }
-    
+//
+//    func toastViewDidCopyText(_ text: String) {
+//        handleCopiedText(text)
+//    }
+//    
     func handleCopiedText(_ text: String) {
-            // 展示複製成功的提示
-            AlertKitAPI.present(
-                title: "複製成功",
-                icon: .done,
-                style: .iOS17AppleMusic,
-                haptic: .success
-            )
+        // 展示複製成功的提示
+        AlertKitAPI.present(
+            title: "複製成功",
+            icon: .done,
+            style: .iOS17AppleMusic,
+            haptic: .success
+        )
 
-            // 複製文字到剪貼板
-            UIPasteboard.general.string = text
-            copiedText = text
-            print("Text copied: \(text)")
+        // 複製文字到剪貼板
+        UIPasteboard.general.string = text
+        copiedText = text
+        print("Text copied: \(text)")
 
-            // 顯示 "製作長輩圖" 按鈕
-            homeView.generateImageButton.isHidden = false
-        }
+        // 顯示 "製作長輩圖" 按鈕
+
+    }
 
     @objc func toGenerateButtonTapped(_ sender: UIButton) {
         performSegue(withIdentifier: "toGenerateImage", sender: copiedText)
