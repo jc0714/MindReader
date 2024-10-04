@@ -19,7 +19,7 @@
 		E9521C2B2CAE486700BFCAEF /* BlockedListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9521C2A2CAE486700BFCAEF /* BlockedListCell.swift */; };
 		E9521C2D2CAE507000BFCAEF /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9521C2C2CAE507000BFCAEF /* ToastView.swift */; };
 		E9521C2F2CAE91C000BFCAEF /* ResponseCopyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9521C2E2CAE91C000BFCAEF /* ResponseCopyCell.swift */; };
-		E97654932CAA8F11003884AF /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = E97654922CAA8F11003884AF /* Lottie */; };
+		E9521C322CAFB28300BFCAEF /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = E9521C312CAFB28300BFCAEF /* Lottie */; };
 		E97654962CABC4A7003884AF /* AlertKit in Frameworks */ = {isa = PBXBuildFile; productRef = E97654952CABC4A7003884AF /* AlertKit */; };
 		E97654982CACD854003884AF /* SettingItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97654972CACD853003884AF /* SettingItemCell.swift */; };
 		E976549A2CACE9AC003884AF /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97654992CACE9AC003884AF /* UserInfoCell.swift */; };
@@ -126,12 +126,12 @@
 			files = (
 				E97654962CABC4A7003884AF /* AlertKit in Frameworks */,
 				E99142302C9FF8F200016C90 /* Kingfisher in Frameworks */,
-				E97654932CAA8F11003884AF /* Lottie in Frameworks */,
 				E9F6B6C32C9C247B008E9FBF /* IQKeyboardManagerSwift in Frameworks */,
 				E97C15FE2C9189FF002B437C /* FirebaseDatabase in Frameworks */,
 				E97C16022C9189FF002B437C /* FirebaseStorage in Frameworks */,
 				E97C15FC2C9189FF002B437C /* FirebaseAuth in Frameworks */,
 				E97C16002C9189FF002B437C /* FirebaseFirestore in Frameworks */,
+				E9521C322CAFB28300BFCAEF /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,8 +291,8 @@
 				E97C16012C9189FF002B437C /* FirebaseStorage */,
 				E9F6B6C22C9C247B008E9FBF /* IQKeyboardManagerSwift */,
 				E991422F2C9FF8F200016C90 /* Kingfisher */,
-				E97654922CAA8F11003884AF /* Lottie */,
 				E97654952CABC4A7003884AF /* AlertKit */,
+				E9521C312CAFB28300BFCAEF /* Lottie */,
 			);
 			productName = MindReader;
 			productReference = E97C15DD2C9166B5002B437C /* MindReader.app */;
@@ -326,8 +326,8 @@
 				E97C15FA2C9189FF002B437C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				E9F6B6C12C9C247B008E9FBF /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				E991422E2C9FF8F200016C90 /* XCRemoteSwiftPackageReference "Kingfisher" */,
-				E97654912CAA8F11003884AF /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				E97654942CABC4A6003884AF /* XCRemoteSwiftPackageReference "AlertKit" */,
+				E9521C302CAFB28300BFCAEF /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			productRefGroup = E97C15DE2C9166B5002B437C /* Products */;
 			projectDirPath = "";
@@ -652,7 +652,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		E97654912CAA8F11003884AF /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+		E9521C302CAFB28300BFCAEF /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-ios";
 			requirement = {
@@ -695,9 +695,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E97654922CAA8F11003884AF /* Lottie */ = {
+		E9521C312CAFB28300BFCAEF /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E97654912CAA8F11003884AF /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			package = E9521C302CAFB28300BFCAEF /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
 		};
 		E97654952CABC4A7003884AF /* AlertKit */ = {

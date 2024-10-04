@@ -11,7 +11,22 @@ import Lottie
 
 class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
-    private var waitingAnimationView: LottieAnimationView = LottieAnimationView(name: "runnungDoggy")
+    private var waitingAnimationView: LottieAnimationView = {
+        // 使用自定義的 LottieConfiguration，指定 renderingEngine 為 .mainThread
+        let configuration = LottieConfiguration(renderingEngine: .mainThread)
+        let animationView = LottieAnimationView(
+            name: "runningDoggy",
+            configuration: configuration
+        )
+        return animationView
+    }()
+
+
+//    private var waitingAnimationView: LottieAnimationView = {
+//        let animationView = LottieAnimationView(name: "runningDoggy")
+//        animationView.renderingEngine = .automatic
+//        return animationView
+//    }()
 
     let chatButton: UIButton = {
         let button = UIButton()
@@ -117,11 +132,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         addSubview(submitButton)
         addSubview(indicatorView)
-//        addSubview(responseLabel)
-//
-//        addSubview(replyLabel1)
-//        addSubview(replyLabel2)
-//        addSubview(replyLabel3)
 
         addSubview(generateImageButton)
 
@@ -170,8 +180,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             waitingAnimationView.widthAnchor.constraint(equalToConstant: 300),
             waitingAnimationView.heightAnchor.constraint(equalToConstant: 300)
         ])
-//        responseLabel.preferredMaxLayoutWidth = 300
-
         waitingAnimationView.isHidden = true
 
         bringSubviewToFront(chatButton)
@@ -183,7 +191,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         self.bringSubviewToFront(self.waitingAnimationView)
         waitingAnimationView.isHidden = false
         waitingAnimationView.loopMode = .loop
-        waitingAnimationView.play()
+        self.waitingAnimationView.play()
         self.layoutIfNeeded()
     }
 

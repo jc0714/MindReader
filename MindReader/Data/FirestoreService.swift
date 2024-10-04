@@ -258,4 +258,20 @@ class FirestoreService {
         }
         return listener
     }
+
+    // MARK: -刪除帳號
+    func deleteAccount() {
+        guard let userId = UserDefaults.standard.string(forKey: "userID") else { return }
+        let usersCollection = Firestore.firestore().collection("Users")
+
+        usersCollection.document(userId).updateData(["isDeleted": true]) { error in
+            if error == nil {
+                print("帳號標記為刪除")
+                UserDefaults.standard.removeObject(forKey: "userID")
+//                UserDefaults.standard.removeObject(forKey: "userLastName")
+            } else {
+                print("刪除出錯了啊啊啊: \(error!.localizedDescription)")
+            }
+        }
+    }
 }
