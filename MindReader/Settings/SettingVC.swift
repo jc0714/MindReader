@@ -17,17 +17,23 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 
     private let firestoreService = FirestoreService()
 
-    private var settingsItems: [[(title: String, icon: UIImage?)]] = [
-        [("名字", UIImage(systemName: "pencil"))], // 第一组
-        [
-            ("封鎖名單", UIImage(systemName: "paintpalette.fill")),
-            ("回報問題", UIImage(systemName: "exclamationmark.bubble.fill"))
-        ], // 第二组
-        [
-            ("刪除帳號", UIImage(systemName: "trash.fill")),
-            ("登出", UIImage(systemName: "heart.fill"))
-        ] // 第三组
+    private var settingsItems: [[String]] = [
+        ["名字"], // 第一组
+        ["封鎖名單", "回報問題"], // 第二组
+        ["刪除帳號", "登出"] // 第三组
     ]
+
+//    private var settingsItems: [[(title: String, icon: UIImage?)]] = [
+//        [("名字", UIImage(systemName: "pencil"))], // 第一组
+//        [
+//            ("封鎖名單", UIImage(systemName: "paintpalette.fill")),
+//            ("回報問題", UIImage(systemName: "exclamationmark.bubble.fill"))
+//        ], // 第二组
+//        [
+//            ("刪除帳號", UIImage(systemName: "trash.fill")),
+//            ("登出", UIImage(systemName: "heart.fill"))
+//        ] // 第三组
+//    ]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,7 +97,7 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
             let cell = tableView.dequeueReusableCell(withIdentifier: "SettingItemCell", for: indexPath) as? SettingItemCell
             cell?.backgroundColor = .clear
 
-            cell?.configure(with: item.title, icon: item.icon)
+            cell?.configure(with: item)
             return cell!
         }
     }
@@ -113,7 +119,7 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 
-        let selectedItem = settingsItems[indexPath.section][indexPath.row].title
+        let selectedItem = settingsItems[indexPath.section][indexPath.row]
 
         switch selectedItem {
         case "封鎖名單":
