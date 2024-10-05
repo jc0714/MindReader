@@ -48,6 +48,7 @@ class RecordView: UIView {
         for (index, title) in titles.enumerated() {
             let button = UIButton(type: .system)
             button.setTitle(title, for: .normal)
+            button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
             button.tag = index
             button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
 

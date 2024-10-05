@@ -47,11 +47,9 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         homeView.imageButton.backgroundColor = .pink3
         homeView.imageButton.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
 
-//        configureView(for: 0, isImageViewVisible: true)
 //        Task {
 //            await firestoreService.batchUploadData(for: dataToUpload)
 //        }
-
     }
 
     // MARK: - Setup Actions
@@ -130,7 +128,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                 homeView.showLoadingAnimation()
 
                 let formatedPrompt = formatPrompt(prompt, audiance: audiance, replyStyle: replyStyle)
-                print("打出去的 prompt \(formatedPrompt)")
+                print("打出去的 prompt: \(formatedPrompt)")
                 let response = try await apiService.generateTextResponse(for: formatedPrompt)
 
                 if let data = response.data(using: .utf8),
@@ -270,7 +268,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
             haptic: .success
         )
 
-        // 複製文字到剪貼板
         UIPasteboard.general.string = text
         copiedText = text
         print("Text copied: \(text)")
@@ -305,9 +302,9 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                 ""
             ],
             "response_methods": [
-                "",
-                "",
-                ""
+                "訊息1",
+                "訊息2",
+                "訊息3"
             ]
         }
         """

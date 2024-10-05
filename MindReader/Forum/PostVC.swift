@@ -263,6 +263,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     // 檢舉
     private func addToReportedPostList(postID: String) {
         var reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
+//        var reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
 
         if !reportedList.contains(postID) {
             reportedList.append(postID)

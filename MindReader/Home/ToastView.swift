@@ -27,7 +27,7 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("製作早安圖", for: .normal)
-        button.backgroundColor = .pink1
+        button.backgroundColor = UIColor.red.withAlphaComponent(0.3)
         button.layer.cornerRadius = 10
         button.isHidden = true
         return button
@@ -213,7 +213,7 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
         NSLayoutConstraint.activate([
             self.centerXAnchor.constraint(equalTo: parentView.centerXAnchor),
             self.widthAnchor.constraint(equalToConstant: 340),
-            self.heightAnchor.constraint(equalToConstant: 600)
+            self.heightAnchor.constraint(equalToConstant: 640)
         ])
 
         parentView.layoutIfNeeded()

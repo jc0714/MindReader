@@ -47,6 +47,14 @@ class UserInfoCell: UITableViewCell {
         return imageView
     }()
 
+    private let userInfoLabel: UILabel = {
+        let label = UILabel()
+        label.text = "您的名字："
+        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        label.textColor = .pink3
+        return label
+    }()
+
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
@@ -56,7 +64,7 @@ class UserInfoCell: UITableViewCell {
 
     private let nameTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "输入新的姓名"
+        textField.placeholder = "輸入新的姓名"
         textField.borderStyle = .roundedRect
         textField.isHidden = true
         return textField
@@ -64,7 +72,7 @@ class UserInfoCell: UITableViewCell {
 
     private let editButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "pencil"), for: .normal)
+        button.setImage(UIImage(named: "Vector"), for: .normal)
         button.tintColor = .pink3
         button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
         return button
@@ -118,32 +126,40 @@ class UserInfoCell: UITableViewCell {
             avatarImageView.heightAnchor.constraint(equalToConstant: 80)
         ])
 
+        cardView.addSubview(userInfoLabel)
+        userInfoLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            userInfoLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
+            userInfoLabel.topAnchor.constraint(equalTo: avatarImageView.topAnchor),
+            userInfoLabel.trailingAnchor.constraint(lessThanOrEqualTo: cardView.trailingAnchor, constant: -16)
+        ])
+
         cardView.addSubview(nameLabel)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             nameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
-            nameLabel.centerYAnchor.constraint(equalTo: avatarImageView.centerYAnchor)
+            nameLabel.centerYAnchor.constraint(equalTo: avatarImageView.centerYAnchor, constant: 10)
         ])
 
         cardView.addSubview(nameTextField)
         nameTextField.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             nameTextField.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
-            nameTextField.centerYAnchor.constraint(equalTo: avatarImageView.centerYAnchor),
-            nameTextField.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -16)
+            nameTextField.centerYAnchor.constraint(equalTo: avatarImageView.centerYAnchor, constant: 10),
+            nameTextField.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -40)
         ])
 
         cardView.addSubview(editButton)
         editButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             editButton.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -16),
-            editButton.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 16)
+            editButton.centerYAnchor.constraint(equalTo: nameTextField.centerYAnchor)
         ])
 
         cardView.addSubview(submitButton)
         submitButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            submitButton.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -16),
+            submitButton.centerXAnchor.constraint(equalTo: nameTextField.centerXAnchor),
             submitButton.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 10),
             submitButton.widthAnchor.constraint(equalToConstant: 60),
             submitButton.heightAnchor.constraint(equalToConstant: 30)
@@ -172,5 +188,8 @@ class UserInfoCell: UITableViewCell {
     @objc private func submitButtonTapped() {
         guard let newName = nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !newName.isEmpty else { return }
         delegate?.didTapSubmitButton(newName: newName, in: self)
+        nameTextField.isHidden = true
+        submitButton.isHidden = true
+        nameLabel.isHidden = false
     }
 }
