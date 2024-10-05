@@ -41,14 +41,13 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         self.navigationItem.backButtonTitle = ""
 
-//        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
-
-//        if !UserDefaults.standard.bool(forKey: "isUserLoggedIn") {
-//            showLoginView()
-//        }
-
         setupActions()
 
+        selectedButton = homeView.imageButton
+        homeView.imageButton.backgroundColor = .pink3
+        homeView.imageButton.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+
+//        configureView(for: 0, isImageViewVisible: true)
 //        Task {
 //            await firestoreService.batchUploadData(for: dataToUpload)
 //        }
@@ -94,12 +93,10 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         }
 
         let prompt = sender.tag == 1 ? homeView.promptTextField.text : recognizedText
-        let audiance = homeView.selectedAudienceText ?? "不限"
-        let replyStyle = homeView.selectedReplyStyleText ?? "不限"
 
-        guard let prompt = prompt, !prompt.isEmpty else {
+        guard let prompt = prompt?.trimmingCharacters(in: .whitespacesAndNewlines), !prompt.isEmpty else {
             AlertKitAPI.present(
-                title: "請上傳有文字的圖片",
+                title: "我沒有讀到文字哦",
                 icon: .error,
                 style: .iOS17AppleMusic,
                 haptic: .error
@@ -109,6 +106,9 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
             return
         }
+
+        let audiance = homeView.selectedAudienceText ?? "不限"
+        let replyStyle = homeView.selectedReplyStyleText ?? "不限"
 
         Task {
             do {
@@ -130,7 +130,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                 homeView.showLoadingAnimation()
 
                 let formatedPrompt = formatPrompt(prompt, audiance: audiance, replyStyle: replyStyle)
-                print("哈哈哈哈\(formatedPrompt)")
+                print("打出去的 prompt \(formatedPrompt)")
                 let response = try await apiService.generateTextResponse(for: formatedPrompt)
 
                 if let data = response.data(using: .utf8),
@@ -260,11 +260,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     }
 
     // MARK: - Copy Label Text
-//
-//    func toastViewDidCopyText(_ text: String) {
-//        handleCopiedText(text)
-//    }
-//    
+
     func handleCopiedText(_ text: String) {
         // 展示複製成功的提示
         AlertKitAPI.present(
@@ -278,9 +274,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         UIPasteboard.general.string = text
         copiedText = text
         print("Text copied: \(text)")
-
-        // 顯示 "製作長輩圖" 按鈕
-
     }
 
     @objc func toGenerateButtonTapped(_ sender: UIButton) {
@@ -297,7 +290,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     private func formatPrompt(_ prompt: String, audiance: String, replyStyle: String) -> String {
         """
-        你是「另一半翻譯機」。理解對方傳這封訊息的意圖，並針對「對象」提供「風格」回覆訊息。
+        你是「另一半翻譯機」，請分析這封訊息的意圖，並針對「該對象」提供「特定風格」的回覆訊息。
         用下方訊息內容分析「possible_meanings：訊息背後隱含意義」和「response_methods：推薦回覆訊息」兩個部分，各三個。
 
         訊息內容：\(prompt)
@@ -312,9 +305,9 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                 ""
             ],
             "response_methods": [
-                "可回覆訊息1",
-                "可回覆訊息2",
-                "可回覆訊息3"
+                "",
+                "",
+                ""
             ]
         }
         """

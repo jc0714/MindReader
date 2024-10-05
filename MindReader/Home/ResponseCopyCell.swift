@@ -13,7 +13,7 @@ class ResponseCopyCell: UITableViewCell {
 
     private let messageBackgroundView: UIView = {
         let view = UIView()
-        view.backgroundColor = .yellow
+        view.backgroundColor = UIColor(red: 255/255, green: 239/255, blue: 204/255, alpha: 1.0)
         view.layer.cornerRadius = 10
         view.clipsToBounds = true
         return view

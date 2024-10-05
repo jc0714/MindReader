@@ -43,10 +43,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let view = UIView()
         view.backgroundColor = .white
         view.layer.cornerRadius = 12
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.2
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        view.layer.shadowRadius = 4
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -55,10 +51,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let view = UIView()
         view.backgroundColor = .white
         view.layer.cornerRadius = 12
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.2
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        view.layer.shadowRadius = 4
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -76,10 +68,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let view = UIView()
         view.backgroundColor = .white
         view.layer.cornerRadius = 12
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.2
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        view.layer.shadowRadius = 4
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -123,8 +111,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.borderColor = UIColor.black.cgColor
-        imageView.contentMode = .scaleAspectFill
-//        imageView.backgroundColor = .pink1
+        imageView.contentMode = .scaleAspectFit
         imageView.layer.borderWidth = 1
         imageView.layer.borderColor = UIColor.pink1.cgColor
         imageView.layer.cornerRadius = 10
@@ -141,9 +128,9 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         field.autocorrectionType = .no
         field.layer.cornerRadius = 10
         field.clipsToBounds = true
-        field.backgroundColor = .milkYellow
+        field.backgroundColor = .white
         field.layer.borderWidth = 1
-        field.layer.borderColor = UIColor.secondaryLabel.cgColor
+        field.layer.borderColor = UIColor.pink1.cgColor
         field.returnKeyType = .done
         field.font = UIFont.systemFont(ofSize: 16)
         field.isHidden = true
@@ -153,21 +140,10 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
     let submitButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("開始解讀...", for: .normal)
-        button.backgroundColor = .pink1
+        button.setTitle("開始分析...", for: .normal)
+        button.backgroundColor = .pink3
         button.layer.cornerRadius = 10
         button.tag = 0 // 初始設定在圖片
-        return button
-    }()
-
-    let generateImageButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-//        button.setImage(UIImage(systemName: "photo.artframe"), for: .normal)
-        button.setTitle("製作早安圖", for: .normal)
-        button.backgroundColor = .pink1
-        button.layer.cornerRadius = 10
-        button.isHidden = true
         return button
     }()
 
@@ -215,6 +191,11 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         configureUI()
         configureCollectionViews()
 
+        selectedAudienceIndex = IndexPath(item: 0, section: 0)
+        selectedReplyStyleIndex = IndexPath(item: 0, section: 0)
+
+        audienceCollectionView.reloadData()
+        replyStyleCollectionView.reloadData()
     }
 
     required init?(coder: NSCoder) {
@@ -222,6 +203,11 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         configureUI()
         configureCollectionViews()
 
+        selectedAudienceIndex = IndexPath(item: 0, section: 0)
+        selectedReplyStyleIndex = IndexPath(item: 0, section: 0)
+
+        audienceCollectionView.reloadData()
+        replyStyleCollectionView.reloadData()
     }
 
     private func configureUI() {
@@ -273,8 +259,8 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
             messageCardView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
             messageCardView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            messageCardView.widthAnchor.constraint(equalToConstant: 320),
-            messageCardView.heightAnchor.constraint(equalToConstant: 270),
+            messageCardView.widthAnchor.constraint(equalToConstant: 340),
+            messageCardView.heightAnchor.constraint(equalToConstant: 255),
 
             messageLabel.topAnchor.constraint(equalTo: messageCardView.topAnchor, constant: 10),
             messageLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -290,56 +276,53 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             textButton.widthAnchor.constraint(equalToConstant: 100),
             textButton.heightAnchor.constraint(equalToConstant: 30),
 
-            promptTextField.topAnchor.constraint(equalTo: imageButton.bottomAnchor, constant: 30),
+            promptTextField.topAnchor.constraint(equalTo: imageButton.bottomAnchor, constant: 15),
             promptTextField.centerXAnchor.constraint(equalTo: centerXAnchor),
             promptTextField.widthAnchor.constraint(equalToConstant: 300),
             promptTextField.heightAnchor.constraint(equalToConstant: 150),
 
-            imageView.topAnchor.constraint(equalTo: imageButton.bottomAnchor, constant: 30),
+            imageView.topAnchor.constraint(equalTo: imageButton.bottomAnchor, constant: 15),
             imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
             imageView.widthAnchor.constraint(equalToConstant: 300),
             imageView.heightAnchor.constraint(equalToConstant: 150),
 
             audianceCardView.topAnchor.constraint(equalTo: messageCardView.bottomAnchor, constant: 10),
             audianceCardView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            audianceCardView.widthAnchor.constraint(equalToConstant: 320),
-            audianceCardView.heightAnchor.constraint(equalToConstant: 110),
+            audianceCardView.widthAnchor.constraint(equalToConstant: 340),
+            audianceCardView.heightAnchor.constraint(equalToConstant: 100),
 
             audianceLabel.topAnchor.constraint(equalTo: audianceCardView.topAnchor, constant: 10),
             audianceLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             audianceLabel.widthAnchor.constraint(equalToConstant: 300),
 
-            audienceCollectionView.topAnchor.constraint(equalTo: audianceLabel.bottomAnchor, constant: 15),
+            audienceCollectionView.topAnchor.constraint(equalTo: audianceLabel.bottomAnchor, constant: 10),
             audienceCollectionView.centerXAnchor.constraint(equalTo: centerXAnchor),
             audienceCollectionView.widthAnchor.constraint(equalToConstant: 300),
             audienceCollectionView.heightAnchor.constraint(equalToConstant: 50),
 
             replyStyleCardView.topAnchor.constraint(equalTo: audianceCardView.bottomAnchor, constant: 10),
             replyStyleCardView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            replyStyleCardView.widthAnchor.constraint(equalToConstant: 320),
-            replyStyleCardView.heightAnchor.constraint(equalToConstant: 110),
+            replyStyleCardView.widthAnchor.constraint(equalToConstant: 340),
+            replyStyleCardView.heightAnchor.constraint(equalToConstant: 100),
 
             replyStyleLabel.topAnchor.constraint(equalTo: replyStyleCardView.topAnchor, constant: 10),
             replyStyleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             replyStyleLabel.widthAnchor.constraint(equalToConstant: 300),
 
-            replyStyleCollectionView.topAnchor.constraint(equalTo: replyStyleLabel.bottomAnchor, constant: 20),
+            replyStyleCollectionView.topAnchor.constraint(equalTo: replyStyleLabel.bottomAnchor, constant: 10),
             replyStyleCollectionView.centerXAnchor.constraint(equalTo: centerXAnchor),
             replyStyleCollectionView.widthAnchor.constraint(equalToConstant: 300),
             replyStyleCollectionView.heightAnchor.constraint(equalToConstant: 50),
 
             submitButton.topAnchor.constraint(equalTo: replyStyleCardView.bottomAnchor, constant: 20),
             submitButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            submitButton.widthAnchor.constraint(equalToConstant: 300),
-            submitButton.heightAnchor.constraint(equalToConstant: 50),
-
-//            generateImageButton.bottomAnchor.constraint(equalTo: chatButton.bottomAnchor),
-//            generateImageButton.trailingAnchor.constraint(equalTo: chatButton.trailingAnchor, constant: 15),
+            submitButton.widthAnchor.constraint(equalToConstant: 200),
+            submitButton.heightAnchor.constraint(equalToConstant: 45),
 
             waitingAnimationView.centerXAnchor.constraint(equalTo: promptTextField.centerXAnchor, constant: 0),
-            waitingAnimationView.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 80),
-            waitingAnimationView.widthAnchor.constraint(equalToConstant: 300),
-            waitingAnimationView.heightAnchor.constraint(equalToConstant: 300)
+            waitingAnimationView.topAnchor.constraint(equalTo: submitButton.bottomAnchor),
+            waitingAnimationView.widthAnchor.constraint(equalToConstant: 150),
+            waitingAnimationView.heightAnchor.constraint(equalToConstant: 150)
         ])
         waitingAnimationView.isHidden = true
 
@@ -365,7 +348,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         // 設置背景顏色
         cell.contentView.layer.cornerRadius = 10
-        cell.contentView.layer.borderWidth = isSelected ? 2 : 0
+//        cell.contentView.layer.borderWidth = isSelected ? 2 : 0
 //        cell.contentView.layer.borderColor = isSelected ? UIColor.orange.cgColor : UIColor.clear.cgColor
         cell.contentView.backgroundColor = isSelected ? .pink3 : .pink2
 

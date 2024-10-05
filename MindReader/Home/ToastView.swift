@@ -17,10 +17,10 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
     weak var delegate: ToastViewDelegate?
 
     private let tableView = UITableView()
-    
+
     private var possibleMeanings: [String] = []
     private var responseMethods: [String] = []
-    
+
     var onCopyTap: ((String) -> Void)?
 
     let generateImageButton: UIButton = {
@@ -163,17 +163,19 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         headerView.addSubview(titleLabel)
 
-        headerView.addSubview(generateImageButton)
+        if section == 1 {
+            headerView.addSubview(generateImageButton)
+            NSLayoutConstraint.activate([
+                generateImageButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
+                generateImageButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+                generateImageButton.widthAnchor.constraint(equalToConstant: 100)
+            ])
+        }
 
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
             titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-
-//            generateImageButton.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 8),
-            generateImageButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-            generateImageButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-            generateImageButton.widthAnchor.constraint(equalToConstant: 100)
         ])
 
         if section == 0 {
@@ -210,8 +212,8 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
 
         NSLayoutConstraint.activate([
             self.centerXAnchor.constraint(equalTo: parentView.centerXAnchor),
-            self.widthAnchor.constraint(equalToConstant: 330),
-            self.heightAnchor.constraint(equalToConstant: 550)
+            self.widthAnchor.constraint(equalToConstant: 340),
+            self.heightAnchor.constraint(equalToConstant: 600)
         ])
 
         parentView.layoutIfNeeded()
