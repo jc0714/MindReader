@@ -43,6 +43,8 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let view = UIView()
         view.backgroundColor = .white
         view.layer.cornerRadius = 12
+//        view.layer.borderWidth = 5
+//        view.layer.borderColor = UIColor.milkYellowww.cgColor
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -51,6 +53,8 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let view = UIView()
         view.backgroundColor = .white
         view.layer.cornerRadius = 12
+//        view.layer.borderWidth = 5
+//        view.layer.borderColor = UIColor.milkYellowww.cgColor
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -68,6 +72,8 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let view = UIView()
         view.backgroundColor = .white
         view.layer.cornerRadius = 12
+//        view.layer.borderWidth = 5
+//        view.layer.borderColor = UIColor.milkYellowww.cgColor
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -143,6 +149,8 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         button.setTitle("開始分析...", for: .normal)
         button.backgroundColor = .pink3
         button.layer.cornerRadius = 10
+        button.layer.borderWidth = 5
+        button.layer.borderColor = UIColor.milkYellowww.cgColor
         button.tag = 0 // 初始設定在圖片
         return button
     }()

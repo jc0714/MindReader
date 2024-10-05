@@ -246,14 +246,12 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         switch action {
         case "檢舉":
             // 處理檢舉的邏輯
-            print("檢舉第 \(indexPath.row) 個貼文")
-            addToReportedPostList(postID: postId)
-            updateReportedPostListInFirebase(postID: postId)
+            showReportReasonSelection(forPostId: postId)
+//            addToReportedPostList(postID: postId)
+//            updateReportedPostListInFirebase(postID: postId)
         case "封鎖":
-            // 處理封鎖的邏輯
-            print("封鎖第 \(indexPath.row) 個貼文")
-            addToBlockedList(userID: authorId)
-            updateBlockedListInFirebase(userId: authorId)
+            // 彈出確認框
+            showBlockConfirmation(forUserId: authorId)
 
         default:
             break
@@ -261,9 +259,30 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
 
     // 檢舉
+    private func showReportReasonSelection(forPostId postId: String) {
+        let alertController = UIAlertController(title: "選擇檢舉原因", message: nil, preferredStyle: .actionSheet)
+
+        let reasons = ["不感興趣", "謾罵", "人身攻擊", "其他"]
+
+        for reason in reasons {
+            let action = UIAlertAction(title: reason, style: .default) { _ in
+                // 根據選擇的原因處理檢舉邏輯
+                self.addToReportedPostList(postID: postId)
+                self.updateReportedPostListInFirebase(postID: postId, reason: reason)
+                print("檢舉原因：\(reason)")
+            }
+            alertController.addAction(action)
+        }
+
+        let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+
+        // 呈現視窗
+        self.present(alertController, animated: true, completion: nil)
+    }
+
     private func addToReportedPostList(postID: String) {
         var reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
-//        var reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
 
         if !reportedList.contains(postID) {
             reportedList.append(postID)
@@ -271,7 +290,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
 
-    private func updateReportedPostListInFirebase(postID: String) {
+    private func updateReportedPostListInFirebase(postID: String, reason: String) {
         guard let currentUserID = UserDefaults.standard.string(forKey: "userID") else { return }
 
         let userRef = Firestore.firestore().collection("Users").document(currentUserID)
@@ -281,11 +300,47 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         ]) { error in
             if let error = error {
             } else {
-                print("檢舉貼文已成功更新到 Firebase")
+                print("檢舉貼文已成功更新到 User 的 Firebase")
+                self.saveReportedPostToCollection(postID: postID, reporterID: currentUserID, reason: reason)
             }
         }
     }
+
+    private func saveReportedPostToCollection(postID: String, reporterID: String, reason: String) {
+        let reportData: [String: Any] = [
+            "postID": postID,
+            "reporter": reporterID,
+            "reason": reason,
+            "timestamp": Timestamp() // 加入檢舉的時間
+        ]
+
+        let reportsRef = Firestore.firestore().collection("ReportedPosts")
+        reportsRef.addDocument(data: reportData) { error in
+            if let error = error {
+                print("Error saving reported post: \(error)")
+            } else {
+                print("檢舉資訊已成功存入 ReportedPosts collection")
+            }
+        }
+    }
+
     // 封鎖
+    private func showBlockConfirmation(forUserId userId: String) {
+        let alertController = UIAlertController(title: "封鎖用戶", message: "您確定要封鎖這位用戶嗎？", preferredStyle: .alert)
+
+        let confirmAction = UIAlertAction(title: "確定", style: .destructive) { _ in
+            self.addToBlockedList(userID: userId)
+            self.updateBlockedListInFirebase(userId: userId)
+        }
+
+        let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+
+        alertController.addAction(confirmAction)
+        alertController.addAction(cancelAction)
+
+        self.present(alertController, animated: true, completion: nil)
+    }
+
     private func addToBlockedList(userID: String) {
         var blockedList = UserDefaults.standard.stringArray(forKey: "BlockedList") ?? []
 

@@ -117,11 +117,10 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
                 if let possibleMeanings = existingResponse?["possible_meanings"] as? [String],
                    let responseMethods = existingResponse?["response_methods"] as? [String]{
-                    
                     self.updateResponseLabels(possibleMeanings: possibleMeanings, responseMethods: responseMethods)
 
                     sender.isUserInteractionEnabled = true
-                    sender.backgroundColor = .pink1
+                    sender.backgroundColor = .pink3
                     return
                 }
 
@@ -152,13 +151,13 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                 }
                 homeView.hideLoadingAnimation()
                 sender.isUserInteractionEnabled = true
-                sender.backgroundColor = .pink1
+                sender.backgroundColor = .pink3
 
             } catch {
                 homeView.hideLoadingAnimation()
                 print("Failed to get response: \(error)")
                 sender.isUserInteractionEnabled = true
-                sender.backgroundColor = .pink1
+                sender.backgroundColor = .pink3
             }
         }
     }
@@ -245,6 +244,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     private func configureView(for tag: Int, isImageViewVisible: Bool) {
         homeView.submitButton.tag = tag
+        homeView.submitButton.backgroundColor = .pink3
         homeView.promptTextField.isHidden = isImageViewVisible
         homeView.imageView.isHidden = !isImageViewVisible
         homeView.promptTextField.text = nil
