@@ -80,7 +80,7 @@ class UserInfoCell: UITableViewCell {
 
     private let submitButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("提交", for: .normal)
+        button.setTitle("儲存", for: .normal)
         button.backgroundColor = .pink3
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 10

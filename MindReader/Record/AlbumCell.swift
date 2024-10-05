@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import Kingfisher
 
 class AlbumCell: UICollectionViewCell {
     let imageView = UIImageView()
@@ -24,17 +25,9 @@ class AlbumCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // swiftlint:disable unused_closure_parameter
     func configure(with url: URL) {
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let data = data, let image = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    self.imageView.image = image
-                }
-            }
-        }.resume()
+        imageView.kf.setImage(with: url, placeholder: UIImage(named: "photo7"))
     }
-    // swiftlint:enable unused_closure_parameter
 
     override func prepareForReuse() {
         super.prepareForReuse()
