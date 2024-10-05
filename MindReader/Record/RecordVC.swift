@@ -44,12 +44,10 @@ class RecordVC: UIViewController, UIPageViewControllerDataSource, UIPageViewCont
     }
 
     private func setupPageViewController() {
-        // 初始化 UIPageViewController
         pageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         pageViewController.dataSource = self
         pageViewController.delegate = self
 
-        // 添加 pageViewController 為子視圖控制器
         addChild(pageViewController)
         view.addSubview(pageViewController.view)
 
@@ -62,7 +60,6 @@ class RecordVC: UIViewController, UIPageViewControllerDataSource, UIPageViewCont
         ])
         pageViewController.didMove(toParent: self)
 
-        // 設置初始視圖控制器
         viewControllers = [albumVC, myPostVC]
         pageViewController.setViewControllers([albumVC], direction: .forward, animated: false, completion: nil)
     }

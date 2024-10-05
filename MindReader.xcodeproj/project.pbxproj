@@ -10,6 +10,7 @@
 		E90B5E4F2CA3A22000CA24F7 /* DetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90B5E4E2CA3A22000CA24F7 /* DetailVC.swift */; };
 		E90B5E512CA3B62900CA24F7 /* HideTabBarVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90B5E502CA3B62900CA24F7 /* HideTabBarVC.swift */; };
 		E90B5E552CA509AB00CA24F7 /* TagFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90B5E542CA509AB00CA24F7 /* TagFilterView.swift */; };
+		E91218C12CB0ED6A000521ED /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91218C02CB0ED6A000521ED /* CustomTabBarController.swift */; };
 		E9240ACF2C9D209F00A47944 /* AlbumCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9240ACE2C9D209F00A47944 /* AlbumCell.swift */; };
 		E9240AD12C9D216A00A47944 /* MyPostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9240AD02C9D216A00A47944 /* MyPostVC.swift */; };
 		E9240AD32C9D442F00A47944 /* RecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9240AD22C9D442F00A47944 /* RecordView.swift */; };
@@ -69,6 +70,7 @@
 		E90B5E4E2CA3A22000CA24F7 /* DetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailVC.swift; sourceTree = "<group>"; };
 		E90B5E502CA3B62900CA24F7 /* HideTabBarVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideTabBarVC.swift; sourceTree = "<group>"; };
 		E90B5E542CA509AB00CA24F7 /* TagFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFilterView.swift; sourceTree = "<group>"; };
+		E91218C02CB0ED6A000521ED /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
 		E9240ACE2C9D209F00A47944 /* AlbumCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumCell.swift; sourceTree = "<group>"; };
 		E9240AD02C9D216A00A47944 /* MyPostVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPostVC.swift; sourceTree = "<group>"; };
 		E9240AD22C9D442F00A47944 /* RecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordView.swift; sourceTree = "<group>"; };
@@ -198,6 +200,7 @@
 				E97C15E92C9166B7002B437C /* Assets.xcassets */,
 				E97C15EE2C9166B7002B437C /* Info.plist */,
 				E97C15F82C918944002B437C /* GoogleService-Info.plist */,
+				E91218C02CB0ED6A000521ED /* CustomTabBarController.swift */,
 			);
 			path = MindReader;
 			sourceTree = "<group>";
@@ -395,6 +398,7 @@
 				E9240ACF2C9D209F00A47944 /* AlbumCell.swift in Sources */,
 				E97C16062C91A0DF002B437C /* ChatCell.swift in Sources */,
 				E99142322C9FFABA00016C90 /* AlbumFullScreenVC.swift in Sources */,
+				E91218C12CB0ED6A000521ED /* CustomTabBarController.swift in Sources */,
 				E976549C2CAD0A5F003884AF /* Animation.swift in Sources */,
 				E90B5E512CA3B62900CA24F7 /* HideTabBarVC.swift in Sources */,
 				E9F6B6B62C9AA030008E9FBF /* ButtonExtension.swift in Sources */,

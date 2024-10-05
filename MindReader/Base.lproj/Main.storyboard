@@ -78,10 +78,10 @@
             </objects>
             <point key="canvasLocation" x="-103" y="2162"/>
         </scene>
-        <!--Tab Bar Controller-->
+        <!--Custom Tab Bar Controller-->
         <scene sceneID="3gL-lN-4A4">
             <objects>
-                <tabBarController storyboardIdentifier="MainTabBarController" automaticallyAdjustsScrollViewInsets="NO" id="AKU-dB-mXT" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="MainTabBarController" automaticallyAdjustsScrollViewInsets="NO" id="AKU-dB-mXT" customClass="CustomTabBarController" customModule="MindReader" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="79H-K1-TiA">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
@@ -132,7 +132,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rBV-a6-ds8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2521.3740458015268" y="710.56338028169023"/>
+            <point key="canvasLocation" x="1473" y="711"/>
         </scene>
         <!--SettingVC-->
         <scene sceneID="TAv-hp-YGV">
@@ -148,12 +148,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1ef-Jj-xhF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3521.3740458015268" y="710.56338028169023"/>
+            <point key="canvasLocation" x="2364" y="711"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="rV5-XY-N12">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="eSm-Kg-57I" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="mDq-pZ-rK6" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="" image="house.fill" catalog="system" id="sK2-cq-4eV"/>
                     <toolbarItems/>
@@ -166,6 +165,7 @@
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="Jtp-Es-ZPG"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eSm-Kg-57I" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1109.1603053435115" y="710.56338028169023"/>
         </scene>
