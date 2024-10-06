@@ -26,7 +26,7 @@ class BlockedListCell: UITableViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 25
         imageView.clipsToBounds = true
-        imageView.image = UIImage(systemName: "person.circle") // Placeholder image
+        imageView.image = UIImage(systemName: "person.circle") 
         imageView.tintColor = .gray
         return imageView
     }()
@@ -35,7 +35,7 @@ class BlockedListCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         label.textColor = .darkGray
-        label.numberOfLines = 0 // 允许多行显示
+        label.numberOfLines = 0
         return label
     }()
 

@@ -24,7 +24,7 @@ class WelcomeVC: UIViewController {
 
     private let nameTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Enter your name"
+        textField.placeholder = "請輸入你的名字（之後也還能修改）"
         textField.borderStyle = .none
         textField.backgroundColor = UIColor(white: 0.95, alpha: 1)
         textField.layer.cornerRadius = 8

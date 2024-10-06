@@ -28,7 +28,9 @@ class FirestoreService {
             "likePosts": [String](),
             "postIds": [String](),
             "translate": [String](),
-            "chatRoomId": chatRoomId // 將 chatRoomId 儲存在 user 資料中
+            "chatRoomId": chatRoomId, // 將 chatRoomId 儲存在 user 資料中
+            "createdAt": FieldValue.serverTimestamp(),
+            "isDeleted": false
         ]
 
         // 儲存用戶資料到 Firestore

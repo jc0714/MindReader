@@ -132,14 +132,14 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
                 sheet.prefersGrabberVisible = true
             }
             present(blockedListVC, animated: true, completion: nil)
-        case "回報問題":   
+        case "回報問題":
             print("回報問題")
         case "刪除帳號":
             showDeleteAccountAlert()
 
             print("刪除帳號")
         case "登出":
-            UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
+            showLogoutAlert()
             print("登出")
         default:
             break
@@ -176,7 +176,8 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 
         let confirmAction = UIAlertAction(title: "確認", style: .destructive) { [weak self] _ in
             self?.firestoreService.deleteAccount()
-            print("刪除帳號")
+
+            self?.showLoginVC()
         }
 
         let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
@@ -185,6 +186,35 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         alert.addAction(cancelAction)
 
         present(alert, animated: true, completion: nil)
+    }
+
+    private func showLogoutAlert() {
+        let alert = UIAlertController(title: "登出", message: "確定要登出嗎？期待你下次再登入。", preferredStyle: .alert)
+
+        let confirmAction = UIAlertAction(title: "確認", style: .destructive) { _ in
+            UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
+            UserDefaults.standard.set(nil, forKey: "userID")
+
+            self.showLoginVC()
+        }
+
+        let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+
+        alert.addAction(confirmAction)
+        alert.addAction(cancelAction)
+
+        present(alert, animated: true, completion: nil)
+    }
+
+    func showLoginVC() {
+        let loginVC = LoginVC()
+        loginVC.modalPresentationStyle = .fullScreen
+
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first {
+            window.rootViewController = loginVC
+            window.makeKeyAndVisible()
+        }
     }
 
     func didTapSubmitButton(newName: String, in cell: UserInfoCell) {

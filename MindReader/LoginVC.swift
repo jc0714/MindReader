@@ -75,22 +75,19 @@ extension LoginVC: ASAuthorizationControllerDelegate {
             let email = appleIDCredential.email
             let realUserStatus = appleIDCredential.realUserStatus.rawValue
 
-            let dispatchGroup = DispatchGroup()  // 用於追蹤所有操作的完成狀態
-
             // 查詢 Firestore 以確認用戶是否已存在
             let usersCollection = Firestore.firestore().collection("Users")
 
-            dispatchGroup.enter()  // 開始異步操作
             usersCollection.whereField("user", isEqualTo: userIdentifier).getDocuments { (snapshot, error) in
                 if let error = error {
                     print("Error checking if user exists: \(error.localizedDescription)")
-                    dispatchGroup.leave()  // 異步操作完成
                     return
                 }
 
                 if let snapshot = snapshot, snapshot.documents.isEmpty {
                     // 用戶不存在
                     self.presentNameInputViewController(userIdentifier: userIdentifier, userFullName: fullName, email: email, realUserStatus: realUserStatus)
+                    return
                 } else {
                     // 用戶已經存在
                     if let document = snapshot?.documents.first {
@@ -103,28 +100,30 @@ extension LoginVC: ASAuthorizationControllerDelegate {
                             let oldUserIdentifier = document.data()["appleUserIdentifier"] as? String ?? userIdentifier
                             let oldUserFullName = document.data()["appleUserFullName"] as? String ?? userIdentifier
                             let oldEmail = document.data()["email"] as? String ?? email
+
                             self.presentNameInputViewController(userIdentifier: oldUserIdentifier, userFullName: oldUserFullName, email: oldEmail, realUserStatus: realUserStatus)
+                            return
                         } else {
                             // 用戶已經存在，使用現有帳號
                             let existingUserId = document.documentID
                             let chatRoomId = document.data()["chatRoomId"] as? String ?? ""
+                            // 自行定義可改的名字
+                            let userName = document.data()["userFullName"] as? String ?? ""
+                            let appleUserIdentifier = document.data()["user"] as? String ?? ""
                             UserDefaults.standard.set(existingUserId, forKey: "userID")
                             UserDefaults.standard.set(chatRoomId, forKey: "chatRoomId")
+                            UserDefaults.standard.set(userName, forKey: "userLastName")
+                            UserDefaults.standard.set(appleUserIdentifier, forKey: "appleUserIdentifier")
                             print("User already exists in Firestore. UserId and chatRoomId saved to UserDefaults.")
+
+                            UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+                            UserDefaults.standard.synchronize()
+
+                            // 跳轉到 TabBarController
+                            self.navigateToMainTabBarController()
                         }
                     }
                 }
-                dispatchGroup.leave()  // 異步操作完成
-            }
-
-            // 監聽所有異步操作是否完成
-            dispatchGroup.notify(queue: .main) {
-                // 保存登入狀態並跳轉到主頁面
-                UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
-                UserDefaults.standard.synchronize()
-
-                // 跳轉到 TabBarController
-                self.navigateToMainTabBarController()
             }
         }
     }
@@ -136,8 +135,11 @@ extension LoginVC: ASAuthorizationControllerDelegate {
             self.firebaseService.saveUserInfoToFirestore(appleUserIdentifier: userIdentifier, appleUserFullName: userFullName, userFullName: name, email: email, realUserStatus: realUserStatus)
             UserDefaults.standard.set(name, forKey: "userLastName")
             UserDefaults.standard.set(userIdentifier, forKey: "appleUserIdentifier")
-            self.navigateToMainTabBarController()
 
+            UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+            UserDefaults.standard.synchronize()
+
+            self.navigateToMainTabBarController()
         }
         nameInputVC.modalPresentationStyle = .fullScreen
         // 顯示名稱輸入頁面
