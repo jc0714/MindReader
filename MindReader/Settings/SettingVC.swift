@@ -133,14 +133,11 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
             }
             present(blockedListVC, animated: true, completion: nil)
         case "回報問題":
-            print("回報問題")
+            showReportIssueVC()
         case "刪除帳號":
             showDeleteAccountAlert()
-
-            print("刪除帳號")
         case "登出":
             showLogoutAlert()
-            print("登出")
         default:
             break
         }
@@ -171,6 +168,14 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         return 0
     }
 
+    //MARK: 回報問題
+    private func showReportIssueVC() {
+        let reportVC = ReportIssueViewController()
+        reportVC.modalPresentationStyle = .formSheet
+        self.present(reportVC, animated: true, completion: nil)
+    }
+
+    //MARK: 刪除帳號
     private func showDeleteAccountAlert() {
         let alert = UIAlertController(title: "刪除帳號", message: "這將無法復原您的資料，您確定要繼續嗎？", preferredStyle: .alert)
 
@@ -188,6 +193,7 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         present(alert, animated: true, completion: nil)
     }
 
+    //MARK: 登出
     private func showLogoutAlert() {
         let alert = UIAlertController(title: "登出", message: "確定要登出嗎？期待你下次再登入。", preferredStyle: .alert)
 
