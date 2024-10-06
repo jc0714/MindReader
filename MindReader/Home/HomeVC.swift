@@ -99,9 +99,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                 style: .iOS17AppleMusic,
                 haptic: .error
             )
-
-            print("Prompt is empty")
-
             return
         }
 
@@ -244,7 +241,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     private func configureView(for tag: Int, isImageViewVisible: Bool) {
         homeView.submitButton.tag = tag
-        homeView.submitButton.backgroundColor = .pink3
         homeView.promptTextField.isHidden = isImageViewVisible
         homeView.imageView.isHidden = !isImageViewVisible
         homeView.promptTextField.text = nil

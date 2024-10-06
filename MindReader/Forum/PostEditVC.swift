@@ -9,12 +9,15 @@ import Foundation
 import UIKit
 import Firebase
 import FirebaseFirestore
+import AlertKit
 
 class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     private var editView: PostEditView!
 
     private let firestoreService = FirestoreService()
+
+    private var isPlaceholderImage = true
 
     private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7"]
     var selectedAvatarIndex = 0
@@ -71,7 +74,7 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
             do {
                 editView.publishButton.isUserInteractionEnabled = false
                 var imageURL: String?
-                if let image = editView.imageView.image?.jpegData(compressionQuality: 0.75) {
+                if !isPlaceholderImage, let image = editView.imageView.image?.jpegData(compressionQuality: 0.75) {
                     imageURL = try await firestoreService.uploadImage(imageData: image)
                     print("Image URL: \(imageURL ?? "")")
                 }
@@ -114,20 +117,30 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
                 DispatchQueue.main.async { [weak self] in
                     self?.navigationController?.popViewController(animated: true)
                 }
+
+                AlertKitAPI.present(
+                    title: "發文成功！",
+                    icon: .done,
+                    style: .iOS17AppleMusic,
+                    haptic: .success
+                )
+
                 editView.publishButton.isUserInteractionEnabled = true
             } catch {
-                DispatchQueue.main.async { [weak self] in
-                    let alert = UIAlertController(title: "錯誤", message: "圖片上傳或儲存過程中發生錯誤", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "確定", style: .default))
-                    self?.present(alert, animated: true, completion: nil)
-                }
+                AlertKitAPI.present(
+                    title: "請確認網路連線",
+                    icon: .error,
+                    style: .iOS17AppleMusic,
+                    haptic: .error
+                )
             }
         } else {
-            DispatchQueue.main.async { [weak self] in
-                let alert = UIAlertController(title: "資料不足😭", message: "填好以後再按下送出", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OKKKKK", style: .default))
-                self?.present(alert, animated: true, completion: nil)
-            }
+            AlertKitAPI.present(
+                title: "確認都填完，再發文唷",
+                icon: .error,
+                style: .iOS17AppleMusic,
+                haptic: .error
+            )
         }
     }
 
@@ -141,6 +154,7 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         if let selectedImage = info[.originalImage] as? UIImage {
             editView.imageView.image = selectedImage
+            isPlaceholderImage = false
         }
         picker.dismiss(animated: true, completion: nil)
     }

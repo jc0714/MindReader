@@ -61,6 +61,7 @@ class PostCell: UITableViewCell {
     }()
 
     let postImageView = UIImageView()
+
     let heartButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(systemName: "heart"), for: .normal)
@@ -105,15 +106,6 @@ class PostCell: UITableViewCell {
         return button
     }()
 
-    let coverImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "photo1") // 用覆蓋圖片的名稱替換 "coverImage"
-        imageView.contentMode = .scaleAspectFill
-        imageView.isHidden = true // 預設為隱藏
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-
     private let cardView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
@@ -137,7 +129,6 @@ class PostCell: UITableViewCell {
 
     private func setupViews() {
         contentView.addSubview(cardView)
-        contentView.addSubview(coverImageView)
         cardView.addSubview(reportButton)
         cardView.addSubview(avatarImageView)
         cardView.addSubview(articleTitle)
@@ -236,11 +227,6 @@ class PostCell: UITableViewCell {
 
             commentView.leadingAnchor.constraint(equalTo: heartView.trailingAnchor, constant: 30),
             commentView.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -15),
-
-//            coverImageView.topAnchor.constraint(equalTo: cardView.topAnchor),
-//            coverImageView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor),
-//            coverImageView.widthAnchor.constraint(equalToConstant: 200),
-//            coverImageView.heightAnchor.constraint(equalToConstant: 200),
         ])
 
         heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)

@@ -34,7 +34,6 @@ class SettingItemCell: UITableViewCell {
         return label
     }()
 
-    // 正确的 UITableViewCell 初始化方法
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
