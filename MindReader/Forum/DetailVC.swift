@@ -213,15 +213,49 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
     }
 
     // 留言刪除 UI Firebase 都要記得
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            let commentId = comments[indexPath.row - 1].id
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "刪除") { [weak self] (action, view, completionHandler) in
+            guard let self = self else { return }
 
-            let postRef = Firestore.firestore().collection("posts").document(postId).collection("Comments").document(commentId)
+            let alertController = UIAlertController(title: "確定刪除？", message: "此動作無法復原", preferredStyle: .alert)
 
-            postRef.delete()
+            let confirmAction = UIAlertAction(title: "確定", style: .destructive) { _ in
+                let commentId = self.comments[indexPath.row - 1].id
+                let postRef = Firestore.firestore().collection("posts").document(self.postId).collection("Comments").document(commentId)
+
+                postRef.delete { error in
+                    if let error = error {
+                        print("Error deleting document: \(error)")
+                    } else {
+                        print("Document successfully deleted")
+                    }
+                }
+                completionHandler(true)
+            }
+            alertController.addAction(confirmAction)
+
+            let cancelAction = UIAlertAction(title: "取消", style: .cancel) { _ in
+                completionHandler(false)
+            }
+            alertController.addAction(cancelAction)
+
+            self.present(alertController, animated: true, completion: nil)
         }
+
+        deleteAction.backgroundColor = .pink3
+
+        return UISwipeActionsConfiguration(actions: [deleteAction])
     }
+
+//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+//        if editingStyle == .delete {
+//            let commentId = comments[indexPath.row - 1].id
+//
+//            let postRef = Firestore.firestore().collection("posts").document(postId).collection("Comments").document(commentId)
+//
+//            postRef.delete()
+//        }
+//    }
 
     func updateHeartBtn(at indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as? PostCell

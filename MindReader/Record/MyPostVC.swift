@@ -141,12 +141,33 @@ class MyPostVC: BasePostVC {
 
         // 刪除動作
         let deleteAction = UIContextualAction(style: .destructive, title: "刪除") { (action, view, completionHandler) in
-            // 執行刪除操作
-            self.deletePost(at: indexPath)
-            completionHandler(true)
-            self.fetchPosts()
+            let alertController = UIAlertController(title: "確定刪除？", message: "此動作無法復原", preferredStyle: .alert)
+
+            let confirmAction = UIAlertAction(title: "確定", style: .destructive) { _ in
+                // 執行刪除操作
+                self.deletePost(at: indexPath)
+                completionHandler(true)
+                self.fetchPosts()
+            }
+            alertController.addAction(confirmAction)
+
+            let cancelAction = UIAlertAction(title: "取消", style: .cancel) { _ in
+                completionHandler(false)
+            }
+            alertController.addAction(cancelAction)
+
+            self.present(alertController, animated: true, completion: nil)
         }
+
         deleteAction.backgroundColor = .pink3
+
+//        let deleteAction = UIContextualAction(style: .destructive, title: "刪除") { (action, view, completionHandler) in
+//            // 執行刪除操作
+//            self.deletePost(at: indexPath)
+//            completionHandler(true)
+//            self.fetchPosts()
+//        }
+//        deleteAction.backgroundColor = .pink3
 
         // 分享動作
         let shareAction = UIContextualAction(style: .normal, title: "分享") { (action, view, completionHandler) in
