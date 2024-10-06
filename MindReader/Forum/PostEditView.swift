@@ -166,7 +166,7 @@ class PostEditView: UIView {
     }
 
     @objc private func selectCategory(_ sender: UIButton) {
-        HapticFeedbackManager.successFeedback()
+        HapticFeedbackManager.lightFeedback()
 
         // 原來選的要變回原樣
         selectedCategoryButton?.transform = CGAffineTransform.identity

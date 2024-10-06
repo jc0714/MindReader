@@ -126,7 +126,7 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
 
     // 改變文字顏色
     @objc private func colorButtonTapped(_ sender: UIButton) {
-        HapticFeedbackManager.successFeedback()
+        HapticFeedbackManager.lightFeedback()
 
         textColor = sender.backgroundColor ?? .white
         regenerateImage()
@@ -179,7 +179,6 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
 
     // MARK: - 分享圖片
     @objc private func shareImage() {
-        HapticFeedbackManager.successFeedback()
 
         guard let imageToShare = finalImageView.image else { return }
         let activityViewController = UIActivityViewController(activityItems: [imageToShare], applicationActivities: nil)

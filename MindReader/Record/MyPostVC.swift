@@ -146,7 +146,7 @@ class MyPostVC: BasePostVC {
             completionHandler(true)
             self.fetchPosts()
         }
-        deleteAction.backgroundColor = .pink2
+        deleteAction.backgroundColor = .pink3
 
         // 分享動作
         let shareAction = UIContextualAction(style: .normal, title: "分享") { (action, view, completionHandler) in
@@ -154,7 +154,7 @@ class MyPostVC: BasePostVC {
             self.sharePost(at: indexPath)
             completionHandler(true)
         }
-        shareAction.backgroundColor = .pink3
+        shareAction.backgroundColor = .pink2
 
         // 將兩個動作加到 swipe action configuration 中
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction, shareAction])
