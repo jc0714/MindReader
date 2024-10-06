@@ -90,12 +90,15 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         if indexPath.section == 0 && indexPath.row == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "UserInfoCell", for: indexPath) as? UserInfoCell
             cell?.backgroundColor = .clear
+            cell?.selectionStyle = .none
+
             cell?.configure(with: userName, icon: UIImage(named: "photo4"))
             cell?.delegate = self
             return cell!
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "SettingItemCell", for: indexPath) as? SettingItemCell
             cell?.backgroundColor = .clear
+            cell?.selectionStyle = .none
 
             cell?.configure(with: item)
             return cell!
