@@ -22,10 +22,18 @@ class LoginVC: UIViewController, ASAuthorizationControllerPresentationContextPro
 
     private func setupView() {
         // 設置背景顏色
-        self.view.backgroundColor = .white // 確保背景是白色
-
+        setupUI()
         // 配置蘋果登入按鈕
         configureAppleSignInButton()
+    }
+
+    private func setupUI() {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = view.bounds
+        gradientLayer.colors = [UIColor.milkYellow.cgColor, UIColor.pink3.cgColor]
+        gradientLayer.startPoint = CGPoint(x: 0, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 1)
+        view.layer.insertSublayer(gradientLayer, at: 0)
     }
 
     private func configureAppleSignInButton() {
