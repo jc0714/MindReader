@@ -47,7 +47,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         super.viewDidLoad()
         
         // 聊天室上方名字條、input container 下方一點點
-        view.backgroundColor = .pink2
+        view.backgroundColor = .pink1
 
         setUpNavigation()
 
@@ -67,7 +67,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         let titleLabel = UILabel()
         titleLabel.text = "阿雲"
         titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-        titleLabel.textColor = UIColor.systemBrown
+        titleLabel.textColor = UIColor.black
         titleLabel.textAlignment = .left
 
         self.navigationItem.titleView = titleLabel

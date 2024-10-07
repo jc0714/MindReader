@@ -142,16 +142,16 @@ class ChatCell: UITableViewCell {
             messageLeadingConstraint.isActive = true
             timeTrailingConstraint.isActive = true
             // 訊息匡顏色
-            bubbleBackgroundView.backgroundColor = .pink3
+            bubbleBackgroundView.backgroundColor = .pink2
             messageLabel.textColor = .white
 
             inComeMsgImageView.isHidden = false
-            inComeMsgImageView.image = UIImage(named: "photo4")
+            inComeMsgImageView.image = UIImage(named: "cloud")
         } else {
             readLabel.text = "Read"
             messageTrailingConstraint.isActive = true
             timeLeadingConstraint.isActive = true
-            bubbleBackgroundView.backgroundColor = .pink1
+            bubbleBackgroundView.backgroundColor = .white
 //            bubbleBackgroundView.layer.borderColor = UIColor.systemBrown.cgColor
 //            bubbleBackgroundView.layer.borderWidth = 3
 

@@ -47,7 +47,7 @@ class ChatView: UIView, UITextViewDelegate {
     }
 
     private func setupInputView() {
-        inputContainer.backgroundColor = .pink2
+        inputContainer.backgroundColor = .pink1
         inputContainer.translatesAutoresizingMaskIntoConstraints = false
         addSubview(inputContainer)
 
@@ -76,13 +76,11 @@ class ChatView: UIView, UITextViewDelegate {
             inputContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
             inputContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
 
-            // Send Button Constraints
             sendButton.trailingAnchor.constraint(equalTo: inputContainer.trailingAnchor, constant: -8),
             sendButton.bottomAnchor.constraint(equalTo: inputContainer.bottomAnchor, constant: -8),
             sendButton.widthAnchor.constraint(equalToConstant: 40),
             sendButton.heightAnchor.constraint(equalToConstant: 40),
 
-            // TextView Constraints
             textView.topAnchor.constraint(equalTo: inputContainer.topAnchor, constant: 8),
             textView.leadingAnchor.constraint(equalTo: inputContainer.leadingAnchor, constant: 8),
             textView.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -8),

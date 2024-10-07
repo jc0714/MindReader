@@ -67,22 +67,15 @@ class RecordVC: UIViewController {
         content.didMove(toParent: self)
         currentVC = content
     }
-
     private func switchToContentController(_ newVC: UIViewController) {
         guard let currentVC = currentVC else {
             displayContentController(newVC)
             return
         }
 
-        currentVC.willMove(toParent: nil)
+        // Prepare the new view controller
         addChild(newVC)
-
-        transition(from: currentVC, to: newVC, duration: 0.3, options: [.transitionCrossDissolve], animations: nil) { completed in
-            currentVC.view.removeFromSuperview()
-            currentVC.removeFromParent()
-            newVC.didMove(toParent: self)
-            self.currentVC = newVC
-        }
+        view.addSubview(newVC.view)
 
         newVC.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -91,7 +84,40 @@ class RecordVC: UIViewController {
             newVC.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             newVC.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+
+        // Perform the transition
+        transition(from: currentVC, to: newVC, duration: 0.3, options: [.transitionCrossDissolve], animations: nil) { completed in
+            // Cleanup the current view controller
+            currentVC.view.removeFromSuperview()
+            currentVC.removeFromParent()
+            newVC.didMove(toParent: self)
+            self.currentVC = newVC
+        }
     }
+//    private func switchToContentController(_ newVC: UIViewController) {
+//        guard let currentVC = currentVC else {
+//            displayContentController(newVC)
+//            return
+//        }
+//
+//        currentVC.willMove(toParent: nil)
+//        addChild(newVC)
+//
+//        transition(from: currentVC, to: newVC, duration: 0.3, options: [.transitionCrossDissolve], animations: nil) { completed in
+//            currentVC.view.removeFromSuperview()
+//            currentVC.removeFromParent()
+//            newVC.didMove(toParent: self)
+//            self.currentVC = newVC
+//        }
+//
+//        newVC.view.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            newVC.view.topAnchor.constraint(equalTo: RView.bottomAnchor),
+//            newVC.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            newVC.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//            newVC.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+//        ])
+//    }
 }
 
 // 因為手勢會衝突，所以先不使用 pageView controller

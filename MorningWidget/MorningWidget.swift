@@ -39,7 +39,7 @@ struct SimpleEntry: TimelineEntry {
     let emoji: String
 }
 
-struct MorningWidgetEntryView : View {
+struct MorningWidgetEntryView: View {
     var entry: Provider.Entry
 
     var body: some View {

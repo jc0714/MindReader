@@ -27,6 +27,8 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        view.backgroundColor = .milkYellow
+
         imageCollectionView.delegate = self
 
         setupViews()
@@ -56,7 +58,7 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
             imageCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             imageCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             imageCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            imageCollectionView.heightAnchor.constraint(equalToConstant: 120),
+            imageCollectionView.heightAnchor.constraint(equalToConstant: 150),
 
             finalImageView.topAnchor.constraint(equalTo: imageCollectionView.bottomAnchor, constant: 40),
             finalImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -64,21 +66,20 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
             finalImageView.heightAnchor.constraint(equalToConstant: 300),
 
             stackView.topAnchor.constraint(equalTo: finalImageView.bottomAnchor, constant: 30),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            stackView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -20),
+            stackView.centerXAnchor.constraint(equalTo: finalImageView.centerXAnchor),
             stackView.heightAnchor.constraint(equalToConstant: 30),
 
-            // saveButton constraints
-            saveButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            saveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-
             // shareButton constraints
-            shareButton.leadingAnchor.constraint(equalTo: saveButton.trailingAnchor, constant: 20),
-            shareButton.bottomAnchor.constraint(equalTo: saveButton.bottomAnchor),
+            shareButton.centerXAnchor.constraint(equalTo: finalImageView.centerXAnchor),
+            shareButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+
+            // saveButton constraints
+            saveButton.trailingAnchor.constraint(equalTo: shareButton.leadingAnchor, constant: -20),
+            saveButton.bottomAnchor.constraint(equalTo: shareButton.bottomAnchor),
 
             // saveToFireBaseButton constraints
-            saveToFireBaseButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            saveToFireBaseButton.bottomAnchor.constraint(equalTo: saveButton.bottomAnchor)
+            saveToFireBaseButton.leadingAnchor.constraint(equalTo: shareButton.trailingAnchor, constant: 20),
+            saveToFireBaseButton.bottomAnchor.constraint(equalTo: shareButton.bottomAnchor)
         ])
     }
 

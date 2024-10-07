@@ -84,7 +84,7 @@ class ImageCollectionView: UIView, UICollectionViewDelegate, UICollectionViewDat
     // MARK: - UICollectionViewDelegateFlowLayout
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 100, height: 100)
+        return CGSize(width: 120, height: 120)
     }
 
     // MARK: - ScrollView Delegate
@@ -95,8 +95,12 @@ class ImageCollectionView: UIView, UICollectionViewDelegate, UICollectionViewDat
             let cellCenter = collectionView.convert(cell.center, to: nil)
             let screenCenter = collectionView.superview!.center
             let distance = abs(screenCenter.x - cellCenter.x)
-            let scale = max(1 - distance / screenCenter.x, 0.85)
+            let scale = max(1 - distance / screenCenter.x, 0.9)
             cell.transform = CGAffineTransform(scaleX: scale, y: scale)
+
+            if scale >= 1.0 {
+                HapticFeedbackManager.lightFeedback()
+            }
         }
     }
 }
