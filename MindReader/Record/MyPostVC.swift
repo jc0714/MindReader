@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 import FirebaseFirestore
 
-class MyPostVC: BasePostVC {
+class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
 
     private var listener: ListenerRegistration?
 
@@ -29,6 +29,16 @@ class MyPostVC: BasePostVC {
         NotificationCenter.default.addObserver(self, selector: #selector(reloadTableData), name: NSNotification.Name("NewPostAdded"), object: nil)
 
         refreshControl.addTarget(self, action: #selector(fetchPosts), for: UIControl.Event.valueChanged)
+
+        // 讓 PageViewController 的手勢也能被監測
+        if let pageViewController = parent as? UIPageViewController {
+            pageViewController.view.gestureRecognizers?.forEach { gesture in
+                if let panGesture = gesture as? UIPanGestureRecognizer {
+                    panGesture.delegate = self
+                }
+            }
+        }
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -40,6 +50,22 @@ class MyPostVC: BasePostVC {
         super.viewWillDisappear(animated)
         listener?.remove()
     }
+
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//
+//        if let recordVC = parent as? RecordVC, let pageViewController = recordVC.pageViewController {
+//            pageViewController.view.gestureRecognizers?.forEach { gesture in
+//                gesture.delegate = self
+//            }
+//        }
+//    }
+
+//    func configureWithPageViewController(_ pageViewController: UIPageViewController) {
+//        pageViewController.view.gestureRecognizers?.forEach { gesture in
+//            gesture.delegate = self
+//        }
+//    }
 
     @objc func reloadTableData() {
         fetchPosts()
@@ -161,14 +187,6 @@ class MyPostVC: BasePostVC {
 
         deleteAction.backgroundColor = .pink3
 
-//        let deleteAction = UIContextualAction(style: .destructive, title: "刪除") { (action, view, completionHandler) in
-//            // 執行刪除操作
-//            self.deletePost(at: indexPath)
-//            completionHandler(true)
-//            self.fetchPosts()
-//        }
-//        deleteAction.backgroundColor = .pink3
-
         // 分享動作
         let shareAction = UIContextualAction(style: .normal, title: "分享") { (action, view, completionHandler) in
             // 執行分享操作
@@ -214,4 +232,32 @@ class MyPostVC: BasePostVC {
         let activityViewController = UIActivityViewController(activityItems: [screenshot], applicationActivities: nil)
         present(activityViewController, animated: true, completion: nil)
     }
+
+//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+//        if let pageViewController = parent as? UIPageViewController,
+//           let recordVC = pageViewController.parent as? RecordVC {
+//
+//            // 判断是否是 PageViewController 的滑动手势
+//            if ((pageViewController.view.gestureRecognizers?.contains(gestureRecognizer)) != nil),
+//               let panGesture = gestureRecognizer as? UIPanGestureRecognizer {
+//                let velocity = panGesture.velocity(in: view)
+//
+//                // 如果已经在最右边并且试图右滑
+//                if recordVC.currentPageIndex == recordVC.viewControllers.count - 1 && velocity.x < 0 {
+//                    return false
+//                }
+//            }
+//        }
+//
+//        // TableView 滑动手势允许
+//        if let tableView = view as? UITableView {
+//            if gestureRecognizer == tableView.panGestureRecognizer {
+//                return true
+//            }
+//        }
+//
+//        // 允许其他情况的手势
+//        return true
+//    }
+
 }
