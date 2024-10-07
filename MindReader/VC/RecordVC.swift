@@ -57,7 +57,7 @@ class RecordVC: UIViewController, UIPageViewControllerDataSource, UIPageViewCont
             pageViewController.view.topAnchor.constraint(equalTo: RView.bottomAnchor),
             pageViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             pageViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            pageViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            pageViewController.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
         pageViewController.didMove(toParent: self)
         pageViewController.setViewControllers([albumVC], direction: .forward, animated: false, completion: nil)

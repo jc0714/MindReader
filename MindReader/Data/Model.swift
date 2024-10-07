@@ -65,4 +65,3 @@ struct Message {
     let createdTime: String
     let createdDate: Date
 }
-

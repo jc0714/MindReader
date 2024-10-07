@@ -45,7 +45,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // 聊天室上方名字條、input container 下方一點點
         view.backgroundColor = .pink1
 
@@ -134,7 +134,6 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
     }
 
     @objc private func sendMessage(_ sender: UIButton) {
-        
         guard var text = chatView.textView.text?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty else { return }
         let senderName = "0"
 

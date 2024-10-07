@@ -66,7 +66,7 @@ extension MorningWidgetAttributes.ContentState {
     fileprivate static var smiley: MorningWidgetAttributes.ContentState {
         MorningWidgetAttributes.ContentState(emoji: "😀")
      }
-     
+
      fileprivate static var starEyes: MorningWidgetAttributes.ContentState {
          MorningWidgetAttributes.ContentState(emoji: "🤩")
      }

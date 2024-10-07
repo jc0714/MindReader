@@ -296,7 +296,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         userRef.updateData([
             "reportedPostList": FieldValue.arrayUnion([postID])
         ]) { error in
-            if let error = error {
+            if error != nil {
             } else {
                 print("檢舉貼文已成功更新到 User 的 Firebase")
                 self.saveReportedPostToCollection(postID: postID, reporterID: currentUserID, reason: reason)
@@ -356,7 +356,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         userRef.updateData([
             "blockedList": FieldValue.arrayUnion([userId])
         ]) { error in
-            if let error = error {
+            if error != nil {
             } else {
                 print("封鎖名單已成功更新到 Firebase")
             }

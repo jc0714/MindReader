@@ -167,4 +167,3 @@ class ChatCell: UITableViewCell {
         inComeMsgImageView.isHidden = true // 重置頭貼狀態
     }
 }
-

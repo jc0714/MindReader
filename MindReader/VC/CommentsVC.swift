@@ -35,7 +35,6 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(CommentCell.self, forCellReuseIdentifier: "CommentCell")
-        
         view.backgroundColor = UIColor.white.withAlphaComponent(1)
 
         setupTableView()

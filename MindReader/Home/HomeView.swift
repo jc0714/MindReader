@@ -43,8 +43,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let view = UIView()
         view.backgroundColor = .white
         view.layer.cornerRadius = 12
-//        view.layer.borderWidth = 5
-//        view.layer.borderColor = UIColor.milkYellowww.cgColor
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -53,8 +51,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let view = UIView()
         view.backgroundColor = .white
         view.layer.cornerRadius = 12
-//        view.layer.borderWidth = 5
-//        view.layer.borderColor = UIColor.milkYellowww.cgColor
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -72,8 +68,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let view = UIView()
         view.backgroundColor = .white
         view.layer.cornerRadius = 12
-//        view.layer.borderWidth = 5
-//        view.layer.borderColor = UIColor.milkYellowww.cgColor
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -91,8 +85,11 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "ellipsis.message"), for: .normal)
-        button.tintColor = .pink3
-        button.layer.cornerRadius = 10
+        button.tintColor = .white
+        button.layer.cornerRadius = 20
+        button.backgroundColor = .pink1
+        button.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 40).isActive = true
         return button
     }()
 

@@ -56,13 +56,13 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     private func setupActions() {
         homeView.chatButton.addTarget(self, action: #selector(toChatButtonTapped), for: .touchUpInside)
+        let chatBarButtonItem = UIBarButtonItem(customView: homeView.chatButton)
+        navigationItem.rightBarButtonItem = chatBarButtonItem
+
         homeView.imageButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
         homeView.textButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
 
         homeView.submitButton.addTarget(self, action: #selector(didTapSubmit), for: .touchUpInside)
-
-//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-//        view.addGestureRecognizer(tapGesture)
 
         let tapGestureToAlbum = UITapGestureRecognizer(target: self, action: #selector(selectImageFromAlbum))
         homeView.imageView.addGestureRecognizer(tapGestureToAlbum)
@@ -113,7 +113,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                 let existingResponse = try await self.firestoreService.fetchResponse(for: prompt)
 
                 if let possibleMeanings = existingResponse?["possible_meanings"] as? [String],
-                   let responseMethods = existingResponse?["response_methods"] as? [String]{
+                   let responseMethods = existingResponse?["response_methods"] as? [String] {
                     self.updateResponseLabels(possibleMeanings: possibleMeanings, responseMethods: responseMethods)
 
                     sender.isUserInteractionEnabled = true

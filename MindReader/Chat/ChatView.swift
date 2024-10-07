@@ -93,7 +93,7 @@ class ChatView: UIView, UITextViewDelegate {
         ])
 
         typingAnimationView.isHidden = true
-        
+
         textViewHeightConstraint = textView.heightAnchor.constraint(equalToConstant: 36)
         textViewHeightConstraint.isActive = true
 

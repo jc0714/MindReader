@@ -147,4 +147,3 @@ class CommentCell: UITableViewCell {
         }
     }
 }
-

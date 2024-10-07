@@ -226,7 +226,7 @@ class PostCell: UITableViewCell {
             heartView.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -15),
 
             commentView.leadingAnchor.constraint(equalTo: heartView.trailingAnchor, constant: 30),
-            commentView.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -15),
+            commentView.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -15)
         ])
 
         heartButton.addTarget(self, action: #selector(heartButtonTapped), for: .touchUpInside)

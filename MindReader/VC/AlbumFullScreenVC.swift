@@ -78,7 +78,7 @@ class AlbumFullScreenVC: UIViewController, UICollectionViewDelegate, UICollectio
         saveButton.translatesAutoresizingMaskIntoConstraints = false
         shareButton.translatesAutoresizingMaskIntoConstraints = false
         deleteButton.translatesAutoresizingMaskIntoConstraints = false
-    
+
         NSLayoutConstraint.activate([
             // shareButton constraints
             shareButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
