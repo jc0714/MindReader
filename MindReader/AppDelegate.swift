@@ -12,18 +12,14 @@ import IQKeyboardManagerSwift
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
         IQKeyboardManager.shared.enable = true
-        UserDefaults.standard.removeObject(forKey: "ForumVC_selectedTag")
-        UserDefaults.standard.removeObject(forKey: "MyPostVC_selectedTag")
-//        IQKeyboardManager.shared.keyboardDistanceFromTextField = -10
-
-//        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
-
-        
+        DispatchQueue.global(qos: .background).async {
+            UserDefaults.standard.removeObject(forKey: "ForumVC_selectedTag")
+            UserDefaults.standard.removeObject(forKey: "MyPostVC_selectedTag")
+        }
         return true
     }
 

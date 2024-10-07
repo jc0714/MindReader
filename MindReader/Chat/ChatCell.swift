@@ -141,16 +141,21 @@ class ChatCell: UITableViewCell {
             readLabel.text = nil
             messageLeadingConstraint.isActive = true
             timeTrailingConstraint.isActive = true
-            bubbleBackgroundView.backgroundColor = .yelloww.withAlphaComponent(0.5)
+            // 訊息匡顏色
+            bubbleBackgroundView.backgroundColor = .pink2
+            messageLabel.textColor = .white
 
             inComeMsgImageView.isHidden = false
-            inComeMsgImageView.image = UIImage(named: "photo4")
+            inComeMsgImageView.image = UIImage(named: "cloud")
         } else {
             readLabel.text = "Read"
             messageTrailingConstraint.isActive = true
             timeLeadingConstraint.isActive = true
-            bubbleBackgroundView.backgroundColor = UIColor.brown
-            messageLabel.textColor = .white
+            bubbleBackgroundView.backgroundColor = .white
+//            bubbleBackgroundView.layer.borderColor = UIColor.systemBrown.cgColor
+//            bubbleBackgroundView.layer.borderWidth = 3
+
+            messageLabel.textColor = .black
 
             inComeMsgImageView.isHidden = true
         }
@@ -162,4 +167,3 @@ class ChatCell: UITableViewCell {
         inComeMsgImageView.isHidden = true // 重置頭貼狀態
     }
 }
-

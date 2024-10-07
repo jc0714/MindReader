@@ -1,5 +1,5 @@
 //
-//  EditView.swift
+//  PostEditView.swift
 //  MindReader
 //
 //  Created by J oyce on 2024/9/15.
@@ -12,10 +12,41 @@ class PostEditView: UIView {
     let avatarImage = UIImageView()
     let titleTextField = UITextField()
     let categoryStackView = UIStackView()
+
+    let contentLabel: UILabel = {
+        let label = UILabel()
+        label.text = "歡迎分享任何事："
+        label.font = UIFont.systemFont(ofSize: 18)
+        label.textColor = .pink3
+        return label
+    }()
+
     let contentTextView = UITextView()
-    let imageView = UIImageView()
-    let placeHolderImageView = UIImageView()
-    let publishButton = UIButton()
+
+    let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.layer.borderColor = UIColor.black.cgColor
+        imageView.contentMode = .scaleAspectFit
+        imageView.layer.borderWidth = 1
+        imageView.layer.borderColor = UIColor.pink1.cgColor
+        imageView.layer.cornerRadius = 10
+        imageView.image = UIImage(named: "uploadImage")
+        imageView.isUserInteractionEnabled = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+
+//    let publishButton = UIButton()
+    let publishButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(" 發佈貼文 ", for: .normal)
+        button.backgroundColor = .pink3
+        button.layer.cornerRadius = 10
+        button.layer.borderWidth = 5
+        button.layer.borderColor = UIColor.milkYellowww.cgColor
+        return button
+    }()
 
     // Buttons for categories
     let categoryButton1 = UIButton(type: .system)
@@ -47,18 +78,9 @@ class PostEditView: UIView {
         titleTextField.borderStyle = .roundedRect
 
         contentTextView.font = UIFont.systemFont(ofSize: 18)
-        contentTextView.layer.borderColor = UIColor.lightGray.cgColor
+        contentTextView.layer.borderColor = UIColor.pink3.cgColor
         contentTextView.layer.borderWidth = 1.0
-
-        imageView.backgroundColor = UIColor(named: "pink1")?.withAlphaComponent(0.5)
-        imageView.isUserInteractionEnabled = true
-        imageView.contentMode = .scaleAspectFit
-        
-        placeHolderImageView.image = UIImage(systemName: "photo.on.rectangle.angled")
-        placeHolderImageView.tintColor = .white
-
-        publishButton.setTitle("Publish", for: .normal)
-        publishButton.backgroundColor = .pink1
+        contentTextView.layer.cornerRadius = 10
 
         // Setup category buttons
         categoryButton1.setTitle("友情", for: .normal)
@@ -93,8 +115,8 @@ class PostEditView: UIView {
         addSubview(avatarImage)
         addSubview(titleTextField)
         addSubview(categoryStackView)
+        addSubview(contentLabel)
         addSubview(contentTextView)
-        addSubview(placeHolderImageView)
         addSubview(imageView)
         addSubview(publishButton)
 
@@ -102,9 +124,8 @@ class PostEditView: UIView {
         titleTextField.translatesAutoresizingMaskIntoConstraints = false
         categoryStackView.translatesAutoresizingMaskIntoConstraints = false
         contentTextView.translatesAutoresizingMaskIntoConstraints = false
-        placeHolderImageView.translatesAutoresizingMaskIntoConstraints = false
+        contentLabel.translatesAutoresizingMaskIntoConstraints = false
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        publishButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             avatarImage.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16),
@@ -122,15 +143,15 @@ class PostEditView: UIView {
             categoryStackView.rightAnchor.constraint(equalTo: rightAnchor, constant: -15),
             categoryStackView.heightAnchor.constraint(equalToConstant: 40),
 
-            contentTextView.topAnchor.constraint(equalTo: categoryStackView.bottomAnchor, constant: 16),
+            contentLabel.topAnchor.constraint(equalTo: categoryStackView.bottomAnchor, constant: 15),
+            contentLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 16),
+            contentLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -15),
+            contentLabel.heightAnchor.constraint(equalToConstant: 40),
+
+            contentTextView.topAnchor.constraint(equalTo: contentLabel.bottomAnchor, constant: 5),
             contentTextView.leftAnchor.constraint(equalTo: leftAnchor, constant: 16),
             contentTextView.rightAnchor.constraint(equalTo: rightAnchor, constant: -16),
             contentTextView.heightAnchor.constraint(equalToConstant: 200),
-
-            placeHolderImageView.topAnchor.constraint(equalTo: contentTextView.bottomAnchor, constant: 16),
-            placeHolderImageView.leftAnchor.constraint(equalTo: leftAnchor, constant: 16),
-            placeHolderImageView.rightAnchor.constraint(equalTo: rightAnchor, constant: -16),
-            placeHolderImageView.heightAnchor.constraint(equalToConstant: 200),
 
             imageView.topAnchor.constraint(equalTo: contentTextView.bottomAnchor, constant: 16),
             imageView.leftAnchor.constraint(equalTo: leftAnchor, constant: 16),
@@ -138,17 +159,23 @@ class PostEditView: UIView {
             imageView.heightAnchor.constraint(equalToConstant: 200),
 
             publishButton.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16),
-            publishButton.leftAnchor.constraint(equalTo: leftAnchor, constant: 16),
-            publishButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -16),
-            publishButton.heightAnchor.constraint(equalToConstant: 50)
+            publishButton.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
+            publishButton.widthAnchor.constraint(equalToConstant: 150),
+            publishButton.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
 
     @objc private func selectCategory(_ sender: UIButton) {
-        selectedCategoryButton?.transform = CGAffineTransform.identity
+        HapticFeedbackManager.lightFeedback()
 
+        // 原來選的要變回原樣
+        selectedCategoryButton?.transform = CGAffineTransform.identity
+        selectedCategoryButton?.backgroundColor = .pink1
+
+        // 新選的變樣式
         selectedCategoryButton = sender
         sender.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+        sender.backgroundColor = .pink3
         selectedCategory = sender.currentTitle
     }
 }

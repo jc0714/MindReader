@@ -11,21 +11,92 @@ import Lottie
 
 class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
-    private var waitingAnimationView: LottieAnimationView = LottieAnimationView(name: "runningBird")
+    private var waitingAnimationView: LottieAnimationView = {
+        // 使用自定義的 LottieConfiguration，指定 renderingEngine 為 .mainThread
+        let configuration = LottieConfiguration(renderingEngine: .mainThread)
+        let animationView = LottieAnimationView(
+            name: "runningDoggy",
+            configuration: configuration
+        )
+        return animationView
+    }()
+
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "人性翻譯機"
+        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        label.textColor = .pink3
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    private let messageLabel: UILabel = {
+        let label = UILabel()
+        label.text = "訊息內容"
+        label.font = UIFont.systemFont(ofSize: 20)
+        label.textColor = .pink3
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    private let messageCardView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 12
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    private let audianceCardView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 12
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    let audianceLabel: UILabel = {
+        let label = UILabel()
+        label.text = "這封訊息來自..."
+        label.font = UIFont.systemFont(ofSize: 20)
+        label.textColor = .pink3
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    private let replyStyleCardView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 12
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    let replyStyleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "你想要的回覆風格"
+        label.font = UIFont.systemFont(ofSize: 20)
+        label.textColor = .pink3
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
 
     let chatButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "ellipsis.message"), for: .normal)
-        button.tintColor = .pink3
-        button.layer.cornerRadius = 10
+        button.tintColor = .white
+        button.layer.cornerRadius = 20
+        button.backgroundColor = .pink1
+        button.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 40).isActive = true
         return button
     }()
 
     let imageButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Image", for: .normal)
+        button.setTitle("截圖", for: .normal)
         button.backgroundColor = .pink1
         button.layer.cornerRadius = 10
         return button
@@ -34,54 +105,18 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
     let textButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Text", for: .normal)
+        button.setTitle("文字", for: .normal)
         button.backgroundColor = .pink1
         button.layer.cornerRadius = 10
         return button
-    }()
-
-    let responseLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        return label
-    }()
-
-    let replyLabel1: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        label.backgroundColor = .pink1
-        label.layer.cornerRadius = 5
-        label.layer.masksToBounds = true
-        return label
-    }()
-
-    let replyLabel2: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        label.backgroundColor = .pink1
-        label.layer.cornerRadius = 5
-        label.layer.masksToBounds = true
-        return label
-    }()
-
-    let replyLabel3: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        label.backgroundColor = .pink1
-        label.layer.cornerRadius = 5
-        label.layer.masksToBounds = true
-        return label
     }()
 
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.borderColor = UIColor.black.cgColor
         imageView.contentMode = .scaleAspectFit
-        imageView.backgroundColor = .pink1
+        imageView.layer.borderWidth = 1
+        imageView.layer.borderColor = UIColor.pink1.cgColor
         imageView.layer.cornerRadius = 10
         imageView.image = UIImage(named: "uploadImage")
         imageView.isUserInteractionEnabled = true
@@ -96,9 +131,9 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         field.autocorrectionType = .no
         field.layer.cornerRadius = 10
         field.clipsToBounds = true
-        field.backgroundColor = .milkYellow
+        field.backgroundColor = .white
         field.layer.borderWidth = 1
-        field.layer.borderColor = UIColor.secondaryLabel.cgColor
+        field.layer.borderColor = UIColor.pink1.cgColor
         field.returnKeyType = .done
         field.font = UIFont.systemFont(ofSize: 16)
         field.isHidden = true
@@ -108,40 +143,89 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
     let submitButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Generate", for: .normal)
-        button.backgroundColor = .pink1
+        button.setTitle("開始分析...", for: .normal)
+        button.backgroundColor = .pink3
         button.layer.cornerRadius = 10
+        button.layer.borderWidth = 5
+        button.layer.borderColor = UIColor.milkYellowww.cgColor
         button.tag = 0 // 初始設定在圖片
-        return button
-    }()
-
-    let generateImageButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(systemName: "photo.artframe"), for: .normal)
-        button.backgroundColor = .pink1
-        button.layer.cornerRadius = 10
         return button
     }()
 
     let indicatorView = UIView()
     let activityIndicator = UIActivityIndicatorView(style: .large)
 
+    private let audienceOptions = ["不指定", "朋友", "家人", "伴侶", "同事", "陌生人"]
+    private let replyStyleOptions = ["不指定", "直接", "溫和", "幽默", "正式", "婉拒"]
+
+    var selectedAudienceIndex: IndexPath?
+    var selectedReplyStyleIndex: IndexPath?
+
+    var selectedAudienceText: String? {
+        guard let index = selectedAudienceIndex?.item else { return nil }
+        return audienceOptions[index]
+    }
+
+    var selectedReplyStyleText: String? {
+        guard let index = selectedReplyStyleIndex?.item else { return nil }
+        return replyStyleOptions[index]
+    }
+
+    private let audienceCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 10
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .clear
+        return collectionView
+    }()
+
+    private let replyStyleCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 10
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .clear
+        return collectionView
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureUI()
+        configureCollectionViews()
+
+        selectedAudienceIndex = IndexPath(item: 0, section: 0)
+        selectedReplyStyleIndex = IndexPath(item: 0, section: 0)
+
+        audienceCollectionView.reloadData()
+        replyStyleCollectionView.reloadData()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         configureUI()
+        configureCollectionViews()
+
+        selectedAudienceIndex = IndexPath(item: 0, section: 0)
+        selectedReplyStyleIndex = IndexPath(item: 0, section: 0)
+
+        audienceCollectionView.reloadData()
+        replyStyleCollectionView.reloadData()
     }
 
     private func configureUI() {
         backgroundColor = .systemBackground
 
         waitingAnimationView.translatesAutoresizingMaskIntoConstraints = false
+
         addSubview(waitingAnimationView)
+        addSubview(titleLabel)
+
+        addSubview(messageCardView)
+
+        addSubview(messageLabel)
 
         addSubview(chatButton)
         addSubview(imageButton)
@@ -151,15 +235,17 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         addSubview(imageView)
 
+        addSubview(audianceCardView)
+        addSubview(audianceLabel)
+        addSubview(audienceCollectionView)
+        addSubview(replyStyleCardView)
+        addSubview(replyStyleLabel)
+        addSubview(replyStyleCollectionView)
+
         addSubview(submitButton)
         addSubview(indicatorView)
-        addSubview(responseLabel)
 
-        addSubview(replyLabel1)
-        addSubview(replyLabel2)
-        addSubview(replyLabel3)
-
-        addSubview(generateImageButton)
+//        addSubview(generateImageButton)
 
         indicatorView.isHidden = true
         indicatorView.frame = bounds
@@ -173,88 +259,194 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             chatButton.topAnchor.constraint(equalTo: topAnchor, constant: 120),
             chatButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20),
 
-            imageButton.topAnchor.constraint(equalTo: topAnchor, constant: 100),
+            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 60),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
+
+            messageCardView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+            messageCardView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            messageCardView.widthAnchor.constraint(equalToConstant: 340),
+            messageCardView.heightAnchor.constraint(equalToConstant: 255),
+
+            messageLabel.topAnchor.constraint(equalTo: messageCardView.topAnchor, constant: 10),
+            messageLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            messageLabel.widthAnchor.constraint(equalToConstant: 300),
+
+            imageButton.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 10),
             imageButton.leadingAnchor.constraint(equalTo: centerXAnchor, constant: -120),
             imageButton.widthAnchor.constraint(equalToConstant: 100),
             imageButton.heightAnchor.constraint(equalToConstant: 30),
 
-            textButton.topAnchor.constraint(equalTo: topAnchor, constant: 100),
+            textButton.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 10),
             textButton.leadingAnchor.constraint(equalTo: centerXAnchor, constant: 20),
             textButton.widthAnchor.constraint(equalToConstant: 100),
             textButton.heightAnchor.constraint(equalToConstant: 30),
 
-            promptTextField.topAnchor.constraint(equalTo: imageButton.bottomAnchor, constant: 30),
+            promptTextField.topAnchor.constraint(equalTo: imageButton.bottomAnchor, constant: 15),
             promptTextField.centerXAnchor.constraint(equalTo: centerXAnchor),
             promptTextField.widthAnchor.constraint(equalToConstant: 300),
             promptTextField.heightAnchor.constraint(equalToConstant: 150),
 
-            imageView.topAnchor.constraint(equalTo: imageButton.bottomAnchor, constant: 30),
+            imageView.topAnchor.constraint(equalTo: imageButton.bottomAnchor, constant: 15),
             imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
             imageView.widthAnchor.constraint(equalToConstant: 300),
             imageView.heightAnchor.constraint(equalToConstant: 150),
 
-            submitButton.topAnchor.constraint(equalTo: promptTextField.bottomAnchor, constant: 20),
+            audianceCardView.topAnchor.constraint(equalTo: messageCardView.bottomAnchor, constant: 10),
+            audianceCardView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            audianceCardView.widthAnchor.constraint(equalToConstant: 340),
+            audianceCardView.heightAnchor.constraint(equalToConstant: 100),
+
+            audianceLabel.topAnchor.constraint(equalTo: audianceCardView.topAnchor, constant: 10),
+            audianceLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            audianceLabel.widthAnchor.constraint(equalToConstant: 300),
+
+            audienceCollectionView.topAnchor.constraint(equalTo: audianceLabel.bottomAnchor, constant: 10),
+            audienceCollectionView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            audienceCollectionView.widthAnchor.constraint(equalToConstant: 300),
+            audienceCollectionView.heightAnchor.constraint(equalToConstant: 50),
+
+            replyStyleCardView.topAnchor.constraint(equalTo: audianceCardView.bottomAnchor, constant: 10),
+            replyStyleCardView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            replyStyleCardView.widthAnchor.constraint(equalToConstant: 340),
+            replyStyleCardView.heightAnchor.constraint(equalToConstant: 100),
+
+            replyStyleLabel.topAnchor.constraint(equalTo: replyStyleCardView.topAnchor, constant: 10),
+            replyStyleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            replyStyleLabel.widthAnchor.constraint(equalToConstant: 300),
+
+            replyStyleCollectionView.topAnchor.constraint(equalTo: replyStyleLabel.bottomAnchor, constant: 10),
+            replyStyleCollectionView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            replyStyleCollectionView.widthAnchor.constraint(equalToConstant: 300),
+            replyStyleCollectionView.heightAnchor.constraint(equalToConstant: 50),
+
+            submitButton.topAnchor.constraint(equalTo: replyStyleCardView.bottomAnchor, constant: 20),
             submitButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            submitButton.widthAnchor.constraint(equalToConstant: 300),
-            submitButton.heightAnchor.constraint(equalToConstant: 50),
+            submitButton.widthAnchor.constraint(equalToConstant: 200),
+            submitButton.heightAnchor.constraint(equalToConstant: 45),
 
-            responseLabel.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 30),
-            responseLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            responseLabel.widthAnchor.constraint(equalToConstant: 300),
-
-            replyLabel1.topAnchor.constraint(equalTo: responseLabel.bottomAnchor, constant: 15),
-            replyLabel1.centerXAnchor.constraint(equalTo: centerXAnchor),
-            replyLabel1.widthAnchor.constraint(equalToConstant: 300),
-
-            replyLabel2.topAnchor.constraint(equalTo: replyLabel1.bottomAnchor, constant: 15),
-            replyLabel2.centerXAnchor.constraint(equalTo: centerXAnchor),
-            replyLabel2.widthAnchor.constraint(equalToConstant: 300),
-
-            replyLabel3.topAnchor.constraint(equalTo: replyLabel2.bottomAnchor, constant: 15),
-            replyLabel3.centerXAnchor.constraint(equalTo: centerXAnchor),
-            replyLabel3.widthAnchor.constraint(equalToConstant: 300),
-
-            generateImageButton.bottomAnchor.constraint(equalTo: responseLabel.bottomAnchor),
-            generateImageButton.trailingAnchor.constraint(equalTo: responseLabel.trailingAnchor, constant: 15),
-
-            //waitingAnimationView.leadingAnchor.constraint(equalTo: submitButton.leadingAnchor, constant: 8),
             waitingAnimationView.centerXAnchor.constraint(equalTo: promptTextField.centerXAnchor, constant: 0),
-            waitingAnimationView.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 30),
-            waitingAnimationView.widthAnchor.constraint(equalToConstant: 200),
-            waitingAnimationView.heightAnchor.constraint(equalToConstant: 200)
+            waitingAnimationView.topAnchor.constraint(equalTo: submitButton.bottomAnchor),
+            waitingAnimationView.widthAnchor.constraint(equalToConstant: 150),
+            waitingAnimationView.heightAnchor.constraint(equalToConstant: 150)
         ])
-        responseLabel.preferredMaxLayoutWidth = 300
-
         waitingAnimationView.isHidden = true
 
         bringSubviewToFront(chatButton)
         bringSubviewToFront(waitingAnimationView)
-
     }
 
-    func setupLabelGestures(target: Any, action: Selector) {
-        replyLabel1.isUserInteractionEnabled = true
-        replyLabel2.isUserInteractionEnabled = true
-        replyLabel3.isUserInteractionEnabled = true
+    private func configureCollectionViews() {
+        // Register cell class for both collection views
+        audienceCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "AudienceCell")
+        replyStyleCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "ReplyStyleCell")
 
-        replyLabel1.addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
-        replyLabel2.addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
-        replyLabel3.addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
+        // Set delegates and data sources
+        audienceCollectionView.delegate = self
+        audienceCollectionView.dataSource = self
+
+        replyStyleCollectionView.delegate = self
+        replyStyleCollectionView.dataSource = self
     }
 
+    // MARK: - Helper Methods to Configure Cells
+    private func configureCell(_ cell: UICollectionViewCell, withText text: String, isSelected: Bool, at indexPath: IndexPath) {
+
+        // 設置背景顏色
+        cell.contentView.layer.cornerRadius = 10
+//        cell.contentView.layer.borderWidth = isSelected ? 2 : 0
+//        cell.contentView.layer.borderColor = isSelected ? UIColor.orange.cgColor : UIColor.clear.cgColor
+        cell.contentView.backgroundColor = isSelected ? .pink3 : .pink2
+
+        // 移除現有的 label 再添加新的
+        cell.contentView.subviews.forEach { $0.removeFromSuperview() }
+
+        let label = UILabel()
+        label.text = text
+        label.textColor = .white
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        cell.contentView.addSubview(label)
+
+        NSLayoutConstraint.activate([
+            label.centerXAnchor.constraint(equalTo: cell.contentView.centerXAnchor),
+            label.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor)
+        ])
+
+        // 點按放大效果
+        cell.contentView.transform = isSelected ? CGAffineTransform(scaleX: 1.1, y: 1.1) : .identity
+
+        // 添加動畫
+        if isSelected {
+            UIView.animate(withDuration: 0.3, animations: {
+                cell.contentView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+            })
+        } else {
+            UIView.animate(withDuration: 0.3, animations: {
+                cell.contentView.transform = .identity
+            })
+        }
+    }
+
+    // 顯示動畫
     func showLoadingAnimation() {
         self.bringSubviewToFront(self.waitingAnimationView)
         waitingAnimationView.isHidden = false
         waitingAnimationView.loopMode = .loop
-        waitingAnimationView.play()
+        self.waitingAnimationView.play()
         self.layoutIfNeeded()
     }
 
     // 隱藏動畫
     func hideLoadingAnimation() {
-        waitingAnimationView.stop()
-        waitingAnimationView.isHidden = true
+        UIView.animate(withDuration: 0.5, animations: {
+            self.waitingAnimationView.alpha = 0
+        }) { _ in
+            self.waitingAnimationView.stop()
+            self.waitingAnimationView.isHidden = true
+            self.waitingAnimationView.alpha = 1
+        }
     }
-
 }
 
+extension HomeView: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return collectionView == audienceCollectionView ? audienceOptions.count : replyStyleOptions.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: collectionView == audienceCollectionView ? "AudienceCell" : "ReplyStyleCell", for: indexPath)
+
+        let text = collectionView == audienceCollectionView ? audienceOptions[indexPath.item] : replyStyleOptions[indexPath.item]
+        let isSelected = (collectionView == audienceCollectionView && selectedAudienceIndex == indexPath) ||
+                         (collectionView == replyStyleCollectionView && selectedReplyStyleIndex == indexPath)
+        configureCell(cell, withText: text, isSelected: isSelected, at: indexPath)
+
+        return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView == audienceCollectionView {
+            // Deselect previously selected item
+            if let previousIndex = selectedAudienceIndex {
+                collectionView.deselectItem(at: previousIndex, animated: true)
+            }
+            selectedAudienceIndex = indexPath
+        } else {
+            // Deselect previously selected item
+            if let previousIndex = selectedReplyStyleIndex {
+                collectionView.deselectItem(at: previousIndex, animated: true)
+            }
+            selectedReplyStyleIndex = indexPath
+        }
+
+        // Reload the collection view to update the selection state
+        collectionView.reloadData()
+    }
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout
+extension HomeView: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 70, height: 40)
+    }
+}

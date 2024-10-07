@@ -35,8 +35,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             rootViewController = LoginVC()
         }
 
-        // 創建 UINavigationController 並設置為 rootViewController
-//        let navigationController = UINavigationController(rootViewController: rootViewController)
         window?.rootViewController = rootViewController
 
         // 顯示視窗
@@ -46,7 +44,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         // swiftlint:disable:next unused_optional_binding
-
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

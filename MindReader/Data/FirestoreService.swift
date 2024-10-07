@@ -15,20 +15,22 @@ class FirestoreService {
 
     // MARK: Login
 
-    func saveUserInfoToFirestore(appleUserIdentifier: String, appleUserFullName: String?, email: String?, realUserStatus: Int) {
+    func saveUserInfoToFirestore(appleUserIdentifier: String, appleUserFullName: String?, userFullName: String?, email: String?, realUserStatus: Int) {
         let documentID = UUID().uuidString
         let chatRoomId = UUID().uuidString // 固定 chatRoomId
 
         let userData: [String: Any] = [
             "appleUserIdentifier": appleUserIdentifier,
             "appleUserFullName": appleUserFullName,
-            "userFullName": appleUserFullName,
+            "userFullName": userFullName,
             "email": email,
             "realUserStatus": realUserStatus,
             "likePosts": [String](),
             "postIds": [String](),
             "translate": [String](),
-            "chatRoomId": chatRoomId // 將 chatRoomId 儲存在 user 資料中
+            "chatRoomId": chatRoomId, // 將 chatRoomId 儲存在 user 資料中
+            "createdAt": FieldValue.serverTimestamp(),
+            "isDeleted": false
         ]
 
         // 儲存用戶資料到 Firestore
@@ -214,14 +216,18 @@ class FirestoreService {
                 let date = createdTime.dateValue()
                 let timeString = DateFormatter.sharedFormatter.string(from: date)
 
-                let message = Message(content: content, sender: sender, createdTime: timeString)
+                let message = Message(content: content, sender: sender, createdTime: timeString, createdDate: date)
                 messages.append(message)
             }
             completion(messages)
         }
     }
 
+    // 監聽留言
     func setupFirestoreListener(for postId: String, completion: @escaping ([Comment]) -> Void) -> ListenerRegistration {
+        let blockedList = UserDefaults.standard.stringArray(forKey: "BlockedList") ?? []
+        let reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
+
         let commentsRef = db.collection("posts").document(postId).collection("Comments").order(by: "timestamp", descending: true)
 
         let listener = commentsRef.addSnapshotListener { [weak self] querySnapshot, error in
@@ -239,6 +245,10 @@ class FirestoreService {
                     return nil
                 }
 
+                if blockedList.contains(authorId) || reportedList.contains(document.documentID) {
+                    return nil
+                }
+
                 let documentId = document.documentID
 
                 return Comment(id: documentId, author: author, authorId: authorId, content: content, timestamp: timestamp.dateValue())
@@ -250,5 +260,22 @@ class FirestoreService {
 
         }
         return listener
+    }
+
+    // MARK: -刪除帳號
+    func deleteAccount() {
+        guard let userId = UserDefaults.standard.string(forKey: "userID") else { return }
+        let usersCollection = Firestore.firestore().collection("Users")
+
+        usersCollection.document(userId).updateData(["isDeleted": true]) { error in
+            if error == nil {
+                print("帳號標記為刪除")
+                UserDefaults.standard.removeObject(forKey: "userID")
+                UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
+//                UserDefaults.standard.removeObject(forKey: "userLastName")
+            } else {
+                print("刪除出錯了啊啊啊: \(error!.localizedDescription)")
+            }
+        }
     }
 }
