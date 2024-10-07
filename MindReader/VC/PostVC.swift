@@ -247,8 +247,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         case "檢舉":
             // 處理檢舉的邏輯
             showReportReasonSelection(forPostId: postId)
-//            addToReportedPostList(postID: postId)
-//            updateReportedPostListInFirebase(postID: postId)
         case "封鎖":
             // 彈出確認框
             showBlockConfirmation(forUserId: authorId)

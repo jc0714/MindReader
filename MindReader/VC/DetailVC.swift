@@ -68,9 +68,6 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
 
     func setUpNavigation() {
 
-         // 設置導航欄背景顏色
-//        navigationController?.setNavigationBarHidden(false, animated: true)
-
         navigationController?.navigationBar.isTranslucent = false
 
         let appearance = UINavigationBarAppearance()
@@ -195,7 +192,136 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
             cell.selectionStyle = .none
             cell.configure(author: comment.author, content: comment.content, timestamp: comment.timestamp)
 
+            cell.reportButtonTappedClosure = { [weak self] action in
+                self?.handleOptionSelection(action: action, forCommentAt: indexPath)
+            }
+
             return cell
+        }
+    }
+
+    func handleOptionSelection(action: String, forCommentAt indexPath: IndexPath) {
+        let comment = comments[indexPath.row - 1]
+        let authorId = comment.authorId
+        let commentId = comment.id
+
+        switch action {
+        case "檢舉":
+            // 處理檢舉的邏輯
+            showReportReasonSelection(forCommentID: commentId)
+        case "封鎖":
+            // 彈出確認框
+            showBlockConfirmation(forUserId: authorId)
+
+        default:
+            break
+        }
+    }
+
+    // 檢舉
+    private func showReportReasonSelection(forCommentID commentID: String) {
+        let alertController = UIAlertController(title: "選擇檢舉原因", message: nil, preferredStyle: .actionSheet)
+
+        let reasons = ["不感興趣", "謾罵", "人身攻擊", "其他"]
+
+        for reason in reasons {
+            let action = UIAlertAction(title: reason, style: .default) { _ in
+                // 根據選擇的原因處理檢舉邏輯
+                self.addToReportedCommentList(commentID: commentID)
+                self.updateReportedCommentListInFirebase(commentID: commentID, reason: reason)
+                print("檢舉原因：\(reason)")
+            }
+            alertController.addAction(action)
+        }
+
+        let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+
+        // 呈現視窗
+        self.present(alertController, animated: true, completion: nil)
+    }
+
+    private func addToReportedCommentList(commentID: String) {
+        var reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
+
+        if !reportedList.contains(commentID) {
+            reportedList.append(commentID)
+            UserDefaults.standard.set(reportedList, forKey: "ReportedList")
+        }
+    }
+
+    private func updateReportedCommentListInFirebase(commentID: String, reason: String) {
+        guard let currentUserID = UserDefaults.standard.string(forKey: "userID") else { return }
+
+        let userRef = Firestore.firestore().collection("Users").document(currentUserID)
+
+        userRef.updateData([
+            "reportedCommentList": FieldValue.arrayUnion([commentID])
+        ]) { error in
+            if let error = error {
+            } else {
+                print("檢舉留言已成功更新到 User 的 Firebase")
+                self.saveReportedPostToCollection(postID: commentID, reporterID: currentUserID, reason: reason)
+            }
+        }
+    }
+
+    private func saveReportedPostToCollection(postID: String, reporterID: String, reason: String) {
+        let reportData: [String: Any] = [
+            "commentID": postID,
+            "reporter": reporterID,
+            "reason": reason,
+            "timestamp": Timestamp() // 加入檢舉的時間
+        ]
+
+        let reportsRef = Firestore.firestore().collection("ReportedComments")
+        reportsRef.addDocument(data: reportData) { error in
+            if let error = error {
+                print("Error saving reported post: \(error)")
+            } else {
+                print("檢舉資訊已成功存入 ReportedComments collection")
+            }
+        }
+    }
+
+    // 封鎖
+    private func showBlockConfirmation(forUserId userId: String) {
+        let alertController = UIAlertController(title: "封鎖用戶", message: "您確定要封鎖這位用戶嗎？", preferredStyle: .alert)
+
+        let confirmAction = UIAlertAction(title: "確定", style: .destructive) { _ in
+            self.addToBlockedList(userID: userId)
+            self.updateBlockedListInFirebase(userId: userId)
+        }
+
+        let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+
+        alertController.addAction(confirmAction)
+        alertController.addAction(cancelAction)
+
+        self.present(alertController, animated: true, completion: nil)
+    }
+
+    private func addToBlockedList(userID: String) {
+        var blockedList = UserDefaults.standard.stringArray(forKey: "BlockedList") ?? []
+
+        if !blockedList.contains(userID) {
+            blockedList.append(userID)
+            UserDefaults.standard.set(blockedList, forKey: "BlockedList")
+        }
+    }
+
+    private func updateBlockedListInFirebase(userId: String) {
+        guard let currentUserID = UserDefaults.standard.string(forKey: "userID") else { return }
+
+        let userRef = Firestore.firestore().collection("Users").document(currentUserID)
+
+        userRef.updateData([
+            "blockedList": FieldValue.arrayUnion([userId])
+        ]) { error in
+            if let error = error {
+            } else {
+                print("封鎖名單已成功更新到 Firebase")
+            }
         }
     }
 
@@ -246,16 +372,6 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
 
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
-
-//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-//        if editingStyle == .delete {
-//            let commentId = comments[indexPath.row - 1].id
-//
-//            let postRef = Firestore.firestore().collection("posts").document(postId).collection("Comments").document(commentId)
-//
-//            postRef.delete()
-//        }
-//    }
 
     func updateHeartBtn(at indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as? PostCell

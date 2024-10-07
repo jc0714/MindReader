@@ -193,10 +193,13 @@
 		E90B5E4C2CA39DCC00CA24F7 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				E91218C02CB0ED6A000521ED /* CustomTabBarController.swift */,
+				E90B5E502CA3B62900CA24F7 /* HideTabBarVC.swift */,
 				E99142572CA2D03500016C90 /* DateFormatterExtension.swift */,
 				E97C16142C95536B002B437C /* TextRecognition.swift */,
 				E9F6B6B52C9AA030008E9FBF /* ButtonExtension.swift */,
-				E90B5E502CA3B62900CA24F7 /* HideTabBarVC.swift */,
+				E9521C242CAD43C000BFCAEF /* Haptic.swift */,
+				E976549B2CAD0A5F003884AF /* Animation.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -232,6 +235,30 @@
 			path = MorningWidget;
 			sourceTree = "<group>";
 		};
+		E91218DF2CB3CD95000521ED /* VC */ = {
+			isa = PBXGroup;
+			children = (
+				E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */,
+				E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */,
+				E97C15E42C9166B5002B437C /* HomeVC.swift */,
+				E9F6B6B12C997482008E9FBF /* ImageVC.swift */,
+				E991422A2C9F24C300016C90 /* PostVC.swift */,
+				E9F6B6852C96EB14008E9FBF /* ForumVC.swift */,
+				E9F6B6892C971788008E9FBF /* PostEditVC.swift */,
+				E90B5E4E2CA3A22000CA24F7 /* DetailVC.swift */,
+				E9F6B6B92C9AC4D2008E9FBF /* CommentsVC.swift */,
+				E97C16032C919FFF002B437C /* ChatVC.swift */,
+				E9F6B6C42C9C694D008E9FBF /* RecordVC.swift */,
+				E9240AD02C9D216A00A47944 /* MyPostVC.swift */,
+				E9F6B6BF2C9C194E008E9FBF /* AlbumVC.swift */,
+				E99142312C9FFABA00016C90 /* AlbumFullScreenVC.swift */,
+				E9C668B32CA5407400C0EE1D /* SettingVC.swift */,
+				E9521C282CAE43D200BFCAEF /* BlockedListVC.swift */,
+				E91218C22CB294FE000521ED /* ReportIssueVC.swift */,
+			);
+			path = VC;
+			sourceTree = "<group>";
+		};
 		E97C15D42C9166B4002B437C = {
 			isa = PBXGroup;
 			children = (
@@ -255,26 +282,23 @@
 			isa = PBXGroup;
 			children = (
 				E9C668B52CA5444C00C0EE1D /* MindReader.entitlements */,
-				E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */,
+				E9240AD22C9D442F00A47944 /* RecordView.swift */,
 				E97C15E02C9166B5002B437C /* AppDelegate.swift */,
 				E97C15E22C9166B5002B437C /* SceneDelegate.swift */,
-				E976549B2CAD0A5F003884AF /* Animation.swift */,
-				E9521C242CAD43C000BFCAEF /* Haptic.swift */,
-				E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */,
+				E97C16072C92BC88002B437C /* APIKeys.swift */,
+				E91218DF2CB3CD95000521ED /* VC */,
 				E90B5E4D2CA39DFE00CA24F7 /* Data */,
 				E90B5E4C2CA39DCC00CA24F7 /* Extension */,
-				E97C16072C92BC88002B437C /* APIKeys.swift */,
 				E97C161A2C956447002B437C /* Home */,
 				E9F6B6842C96EAD2008E9FBF /* Forum */,
 				E97C161B2C95647F002B437C /* Chat */,
 				E9F6B6BB2C9B1C3B008E9FBF /* Record */,
 				E9F6B6BC2C9B1C4D008E9FBF /* Settings */,
-				E97C15E62C9166B5002B437C /* Main.storyboard */,
 				E97C15EB2C9166B7002B437C /* LaunchScreen.storyboard */,
+				E97C15E62C9166B5002B437C /* Main.storyboard */,
 				E97C15E92C9166B7002B437C /* Assets.xcassets */,
 				E97C15EE2C9166B7002B437C /* Info.plist */,
 				E97C15F82C918944002B437C /* GoogleService-Info.plist */,
-				E91218C02CB0ED6A000521ED /* CustomTabBarController.swift */,
 			);
 			path = MindReader;
 			sourceTree = "<group>";
@@ -282,9 +306,7 @@
 		E97C161A2C956447002B437C /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				E97C15E42C9166B5002B437C /* HomeVC.swift */,
 				E97C15F42C91810A002B437C /* HomeView.swift */,
-				E9F6B6B12C997482008E9FBF /* ImageVC.swift */,
 				E99142262C9EEDCE00016C90 /* ImageCollectionView.swift */,
 				E9521C2C2CAE507000BFCAEF /* ToastView.swift */,
 				E9521C2E2CAE91C000BFCAEF /* ResponseCopyCell.swift */,
@@ -295,7 +317,6 @@
 		E97C161B2C95647F002B437C /* Chat */ = {
 			isa = PBXGroup;
 			children = (
-				E97C16032C919FFF002B437C /* ChatVC.swift */,
 				E97C16052C91A0DF002B437C /* ChatCell.swift */,
 				E9F6B67D2C95800F008E9FBF /* ChatView.swift */,
 			);
@@ -305,14 +326,9 @@
 		E9F6B6842C96EAD2008E9FBF /* Forum */ = {
 			isa = PBXGroup;
 			children = (
-				E991422A2C9F24C300016C90 /* PostVC.swift */,
 				E9F6B6872C96EFC9008E9FBF /* PostCell.swift */,
-				E9F6B6852C96EB14008E9FBF /* ForumVC.swift */,
-				E9F6B6892C971788008E9FBF /* PostEditVC.swift */,
 				E9F6B68B2C9717A9008E9FBF /* PostEditView.swift */,
-				E9F6B6B92C9AC4D2008E9FBF /* CommentsVC.swift */,
 				E9F6B6BD2C9BCF7C008E9FBF /* CommentCell.swift */,
-				E90B5E4E2CA3A22000CA24F7 /* DetailVC.swift */,
 				E90B5E542CA509AB00CA24F7 /* TagFilterView.swift */,
 			);
 			path = Forum;
@@ -321,12 +337,7 @@
 		E9F6B6BB2C9B1C3B008E9FBF /* Record */ = {
 			isa = PBXGroup;
 			children = (
-				E9F6B6C42C9C694D008E9FBF /* RecordVC.swift */,
-				E9240AD02C9D216A00A47944 /* MyPostVC.swift */,
-				E9F6B6BF2C9C194E008E9FBF /* AlbumVC.swift */,
 				E9240ACE2C9D209F00A47944 /* AlbumCell.swift */,
-				E9240AD22C9D442F00A47944 /* RecordView.swift */,
-				E99142312C9FFABA00016C90 /* AlbumFullScreenVC.swift */,
 				E99142332CA0042200016C90 /* ImageCell.swift */,
 			);
 			path = Record;
@@ -335,12 +346,9 @@
 		E9F6B6BC2C9B1C4D008E9FBF /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				E9C668B32CA5407400C0EE1D /* SettingVC.swift */,
 				E97654972CACD853003884AF /* SettingItemCell.swift */,
 				E97654992CACE9AC003884AF /* UserInfoCell.swift */,
-				E9521C282CAE43D200BFCAEF /* BlockedListVC.swift */,
 				E9521C2A2CAE486700BFCAEF /* BlockedListCell.swift */,
-				E91218C22CB294FE000521ED /* ReportIssueVC.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";

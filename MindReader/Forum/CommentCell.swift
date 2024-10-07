@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 class CommentCell: UITableViewCell {
+    var reportButtonTappedClosure: ((String) -> Void)?
 
     // MARK: - Properties
     private let authorLabel: UILabel = {
@@ -35,7 +36,6 @@ class CommentCell: UITableViewCell {
         return label
     }()
 
-    // 卡片容器視圖
     private let cardView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
@@ -45,6 +45,12 @@ class CommentCell: UITableViewCell {
         view.layer.shadowOffset = CGSize(width: 0, height: 2)
         view.layer.shadowRadius = 4
         return view
+    }()
+
+    let reportButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
+        return button
     }()
 
     // MARK: - Initializer
@@ -61,12 +67,13 @@ class CommentCell: UITableViewCell {
     private func setupViews() {
         contentView.backgroundColor = .white
         contentView.addSubview(cardView)
-
+        cardView.addSubview(reportButton)
         cardView.addSubview(authorLabel)
         cardView.addSubview(contentLabel)
         cardView.addSubview(timestampLabel)
 
         cardView.translatesAutoresizingMaskIntoConstraints = false
+        reportButton.translatesAutoresizingMaskIntoConstraints = false
         authorLabel.translatesAutoresizingMaskIntoConstraints = false
         contentLabel.translatesAutoresizingMaskIntoConstraints = false
         timestampLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -76,6 +83,9 @@ class CommentCell: UITableViewCell {
             cardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
             cardView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             cardView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+
+            reportButton.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 10),
+            reportButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
 
             authorLabel.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 10),
             authorLabel.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 15),
@@ -90,6 +100,22 @@ class CommentCell: UITableViewCell {
             timestampLabel.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -15),
             timestampLabel.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -10)
         ])
+
+        setupReportMenu()
+    }
+
+    private func setupReportMenu() {
+        let reportAction = UIAction(title: "檢舉", image: UIImage(systemName: "exclamationmark.bubble")) { _ in
+            self.reportButtonTappedClosure?("檢舉")
+        }
+
+        let blockAction = UIAction(title: "封鎖", image: UIImage(systemName: "hand.raised")) { _ in
+            self.reportButtonTappedClosure?("封鎖")
+        }
+
+        let menu = UIMenu(title: "", children: [reportAction, blockAction])
+        reportButton.menu = menu
+        reportButton.showsMenuAsPrimaryAction = true
     }
 
     // MARK: - Configuration

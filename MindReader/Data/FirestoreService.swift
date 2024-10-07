@@ -226,6 +226,7 @@ class FirestoreService {
     // 監聽留言
     func setupFirestoreListener(for postId: String, completion: @escaping ([Comment]) -> Void) -> ListenerRegistration {
         let blockedList = UserDefaults.standard.stringArray(forKey: "BlockedList") ?? []
+        let reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
 
         let commentsRef = db.collection("posts").document(postId).collection("Comments").order(by: "timestamp", descending: true)
 
@@ -244,7 +245,7 @@ class FirestoreService {
                     return nil
                 }
 
-                if blockedList.contains(authorId) {
+                if blockedList.contains(authorId) || reportedList.contains(document.documentID) {
                     return nil
                 }
 
