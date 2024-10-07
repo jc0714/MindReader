@@ -118,11 +118,10 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
                 }
             }
 
-            // 所有圖片連結加載完成後，更新 UI
             DispatchQueue.main.async {
                 self.imageUrls = newImageUrls
                 self.collectionView.reloadData()
-                self.refreshControl.endRefreshing()  // 成功時停止刷新動畫
+                self.refreshControl.endRefreshing()
 
                 self.placeholderImageView.isHidden = !self.imageUrls.isEmpty
             }

@@ -49,7 +49,7 @@ class AlbumFullScreenVC: UIViewController, UICollectionViewDelegate, UICollectio
     func setupCloseButton() {
         let closeButton = UIButton(type: .system)
         closeButton.setTitle("✕", for: .normal)
-        closeButton.titleLabel?.font = UIFont.systemFont(ofSize: 30)
+        closeButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         closeButton.setTitleColor(.white, for: .normal)
         closeButton.addTarget(self, action: #selector(closeFullScreen), for: .touchUpInside)
 
@@ -67,27 +67,30 @@ class AlbumFullScreenVC: UIViewController, UICollectionViewDelegate, UICollectio
     }
 
     func setupToolbar() {
-        let toolbar = UIToolbar()
-        toolbar.translatesAutoresizingMaskIntoConstraints = false
-        toolbar.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        toolbar.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        view.addSubview(toolbar)
+        let saveButton = createButton(title: "儲存", backgroundColor: .pink3, action: #selector(saveImage))
+        let shareButton = createButton(title: "分享", backgroundColor: .pink3, action: #selector(shareImage))
+        let deleteButton = createButton(title: "刪除", backgroundColor: .pink3, action: #selector(deleteImage))
 
-        toolbar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
-        toolbar.setShadowImage(UIImage(), forToolbarPosition: .any)
+        view.addSubview(saveButton)
+        view.addSubview(shareButton)
+        view.addSubview(deleteButton)
 
-        let saveButton = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveImage))
-        let shareButton = UIBarButtonItem(title: "Share", style: .plain, target: self, action: #selector(shareImage))
-        let deleteButton = UIBarButtonItem(title: "Delete", style: .plain, target: self, action: #selector(deleteImage))
-
-        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        toolbar.setItems([saveButton, flexibleSpace, shareButton, flexibleSpace, deleteButton], animated: false)
-
+        saveButton.translatesAutoresizingMaskIntoConstraints = false
+        shareButton.translatesAutoresizingMaskIntoConstraints = false
+        deleteButton.translatesAutoresizingMaskIntoConstraints = false
+    
         NSLayoutConstraint.activate([
-            toolbar.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            toolbar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            toolbar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            toolbar.heightAnchor.constraint(equalToConstant: 50)
+            // shareButton constraints
+            shareButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            shareButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
+
+            // saveButton constraints
+            saveButton.trailingAnchor.constraint(equalTo: shareButton.leadingAnchor, constant: -20),
+            saveButton.bottomAnchor.constraint(equalTo: shareButton.bottomAnchor),
+
+            // saveToFireBaseButton constraints
+            deleteButton.leadingAnchor.constraint(equalTo: shareButton.trailingAnchor, constant: 20),
+            deleteButton.bottomAnchor.constraint(equalTo: shareButton.bottomAnchor)
         ])
     }
 
