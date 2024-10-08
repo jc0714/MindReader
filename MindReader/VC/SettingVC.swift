@@ -35,7 +35,7 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         view.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
 
@@ -44,7 +44,6 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UserInfoCell.self, forCellReuseIdentifier: "UserInfoCell")
-        tableView.register(SettingItemCell.self, forCellReuseIdentifier: "SettingItemCell")
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 60
         tableView.separatorStyle = .none
@@ -70,48 +69,59 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return settingsItems[section].count
+        if section == 0 {
+            return settingsItems[section].count
+        }
+        return 1 // 第二和第三個 section 只返回一行
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let item = settingsItems[indexPath.section][indexPath.row]
-
         if indexPath.section == 0 && indexPath.row == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "UserInfoCell", for: indexPath) as? UserInfoCell
-            cell?.backgroundColor = .clear
-            cell?.selectionStyle = .none
-
-            cell?.configure(with: userName, icon: UIImage(named: "photo4"))
-            cell?.delegate = self
-            return cell!
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "UserInfoCell", for: indexPath) as? UserInfoCell else {
+                return UITableViewCell()
+            }
+            cell.backgroundColor = .clear
+            cell.selectionStyle = .none
+            cell.configure(with: userName, icon: UIImage(named: "photo4"))
+            cell.delegate = self
+            return cell
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "SettingItemCell", for: indexPath) as? SettingItemCell
-            cell?.backgroundColor = .clear
-            cell?.selectionStyle = .none
+            let cell = UITableViewCell()
+            cell.selectionStyle = .none
 
-            cell?.configure(with: item)
-            return cell!
+            let stackView = UIStackView()
+            stackView.axis = .vertical
+            stackView.spacing = 10
+            stackView.translatesAutoresizingMaskIntoConstraints = false
+
+            for (index, item) in settingsItems[indexPath.section].enumerated() {
+                let button = UIButton(type: .system)
+                button.setTitle(item, for: .normal)
+                button.setTitleColor(.darkGray, for: .normal)
+                button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
+                button.contentHorizontalAlignment = .left
+                button.tag = indexPath.section * 100 + index  // 將 section 和 row 組合存儲
+                button.addTarget(self, action: #selector(settingItemTapped(_:)), for: .touchUpInside)
+                stackView.addArrangedSubview(button)
+            }
+
+            cell.contentView.addSubview(stackView)
+            NSLayoutConstraint.activate([
+                stackView.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 10),
+                stackView.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 20),
+                stackView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -20),
+                stackView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -10)
+            ])
+
+            return cell
         }
     }
 
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        switch section {
-        case 0:
-            return "帳號資訊"
-        case 1:
-            return "其他"
-        case 2:
-            return "想離開"
-        default:
-            return nil
-        }
-    }
+    @objc private func settingItemTapped(_ sender: UIButton) {
+        let section = sender.tag / 100 // 取得 section
+        let row = sender.tag % 100
 
-    // MARK: - UITableViewDelegate 方法
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-
-        let selectedItem = settingsItems[indexPath.section][indexPath.row]
+        let selectedItem = settingsItems[section][row]
 
         switch selectedItem {
         case "封鎖名單":
@@ -134,11 +144,24 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         }
     }
 
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case 0:
+            return "帳號資訊"
+        case 1:
+            return "其他"
+        case 2:
+            return "想離開"
+        default:
+            return nil
+        }
+    }
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 && indexPath.row == 0 {
             return 150
         } else {
-            return 60
+            return UITableView.automaticDimension // 自動計算高度
         }
     }
 

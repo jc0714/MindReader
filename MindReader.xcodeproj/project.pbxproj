@@ -32,7 +32,6 @@
 		E9521C322CAFB28300BFCAEF /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = E9521C312CAFB28300BFCAEF /* Lottie */; };
 		E9521C342CAFC28300BFCAEF /* WelcomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */; };
 		E97654962CABC4A7003884AF /* AlertKit in Frameworks */ = {isa = PBXBuildFile; productRef = E97654952CABC4A7003884AF /* AlertKit */; };
-		E97654982CACD854003884AF /* SettingItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97654972CACD853003884AF /* SettingItemCell.swift */; };
 		E976549A2CACE9AC003884AF /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97654992CACE9AC003884AF /* UserInfoCell.swift */; };
 		E976549C2CAD0A5F003884AF /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E976549B2CAD0A5F003884AF /* Animation.swift */; };
 		E97C15E12C9166B5002B437C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C15E02C9166B5002B437C /* AppDelegate.swift */; };
@@ -125,7 +124,6 @@
 		E9521C2C2CAE507000BFCAEF /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		E9521C2E2CAE91C000BFCAEF /* ResponseCopyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseCopyCell.swift; sourceTree = "<group>"; };
 		E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeVC.swift; sourceTree = "<group>"; };
-		E97654972CACD853003884AF /* SettingItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingItemCell.swift; sourceTree = "<group>"; };
 		E97654992CACE9AC003884AF /* UserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
 		E976549B2CAD0A5F003884AF /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		E97C15DD2C9166B5002B437C /* MindReader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MindReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -352,7 +350,6 @@
 		E9F6B6BC2C9B1C4D008E9FBF /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				E97654972CACD853003884AF /* SettingItemCell.swift */,
 				E97654992CACE9AC003884AF /* UserInfoCell.swift */,
 				E9521C2A2CAE486700BFCAEF /* BlockedListCell.swift */,
 			);
@@ -548,7 +545,6 @@
 				E9F6B6C02C9C194F008E9FBF /* AlbumVC.swift in Sources */,
 				E97C15E12C9166B5002B437C /* AppDelegate.swift in Sources */,
 				E9F6B68C2C9717A9008E9FBF /* PostEditView.swift in Sources */,
-				E97654982CACD854003884AF /* SettingItemCell.swift in Sources */,
 				E99142272C9EEDCE00016C90 /* ImageCollectionView.swift in Sources */,
 				E97C16152C95536B002B437C /* TextRecognition.swift in Sources */,
 				E97C15E32C9166B5002B437C /* SceneDelegate.swift in Sources */,
