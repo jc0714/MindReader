@@ -60,6 +60,8 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         listenForMessages()
 
         setupKeyboardObservers()
+
+        chatView.textView.text = "失戀好傷心 我要快點去找下一個對象嗎？"
     }
 
     func setUpNavigation() {
