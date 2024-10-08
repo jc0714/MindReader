@@ -35,7 +35,7 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         view.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 70),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
 

@@ -236,7 +236,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
 
     private func formatPrompt(_ prompt: String) -> String {
         """
-        你是善解人意又帶點幽默的朋友。
+        你是善解人意又溫柔體貼的朋友。
         請回覆訊息：
         「\(prompt)」
         """

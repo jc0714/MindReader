@@ -107,8 +107,12 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         Task {
             do {
+                homeView.showLoadingAnimation()
+
                 sender.isUserInteractionEnabled = false
                 sender.backgroundColor = .milkYellow
+
+                try await Task.sleep(nanoseconds: 2_000_000_000)
 
                 let existingResponse = try await self.firestoreService.fetchResponse(for: prompt)
 
@@ -118,10 +122,13 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
                     sender.isUserInteractionEnabled = true
                     sender.backgroundColor = .pink3
+
+                    homeView.hideLoadingAnimation()
+
                     return
                 }
 
-                homeView.showLoadingAnimation()
+//                homeView.showLoadingAnimation()
 
                 let formatedPrompt = formatPrompt(prompt, audiance: audiance, replyStyle: replyStyle)
                 print("打出去的 prompt: \(formatedPrompt)")
