@@ -98,8 +98,8 @@ class ChatView: UIView, UITextViewDelegate {
         textViewHeightConstraint.isActive = true
 
         NotificationCenter.default.addObserver(self, selector: #selector(textViewDidChange), name: UITextView.textDidChangeNotification, object: textView)
-        bringSubviewToFront(typingAnimationView)
 
+        bringSubviewToFront(typingAnimationView)
     }
 
     func updateInputContainerBottomConstraint(by constant: CGFloat) {

@@ -23,7 +23,7 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
     private let placeholderImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "AlbumPlaceHolder") 
+        imageView.image = UIImage(named: "AlbumPlaceHolder")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
