@@ -68,7 +68,7 @@ class RecordVC: UIViewController, UIPageViewControllerDataSource, UIPageViewCont
     }
 
     @objc private func handleSwipeGesture(_ gesture: UISwipeGestureRecognizer) {
-        if currentPageIndex == 1 { // 只在第二頁（索引 1）時觸發
+        if currentPageIndex == 1 { // 只在第二頁（index 1）時觸發
             pageViewController.setViewControllers([viewControllers[0]], direction: .reverse, animated: true, completion: nil)
             RView.updateIndicator(forIndex: 0)
             currentPageIndex = 0

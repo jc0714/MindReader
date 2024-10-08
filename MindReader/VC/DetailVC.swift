@@ -8,12 +8,16 @@
 import Foundation
 import UIKit
 import FirebaseFirestore
+import IQKeyboardManagerSwift
 
-class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
+class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, KeyboardHandler {
 
     var post: Post? // 用來接收傳遞的 post 物件
     var comments: [Comment] = [] // 留言數組
     var heartCount: Int = 0
+
+    private let inputContainer = UIView()
+    var inputAreaBottomConstraint: NSLayoutConstraint?
 
     private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7"]
 
@@ -40,6 +44,8 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
 
         setupTableView()
 
+        setupKeyboardObservers()
+
         if let postId = post?.id {
             self.postId = postId
         }
@@ -56,14 +62,36 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.tabBarController?.tabBar.isHidden = true
+        IQKeyboardManager.shared.enable = false
         navigationController?.setNavigationBarHidden(false, animated: true)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         listener?.remove()
+        self.tabBarController?.tabBar.isHidden = false
+        IQKeyboardManager.shared.enable = true
         navigationController?.setNavigationBarHidden(true, animated: true)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("LikeCountUpdated"), object: nil)
+    }
+
+    func keyboardWillShow(keyboardHeight: CGFloat) {
+        DispatchQueue.main.async {
+            self.inputAreaBottomConstraint?.constant = -keyboardHeight + 20
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    func keyboardWillHide() {
+        DispatchQueue.main.async {
+            self.inputAreaBottomConstraint?.constant = -10
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    deinit {
+        removeKeyboardObservers()
     }
 
     func setUpNavigation() {
@@ -95,7 +123,7 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100)
+            tableView.bottomAnchor.constraint(equalTo: inputContainer.topAnchor, constant: -10)
         ])
     }
 
@@ -104,22 +132,36 @@ class DetailVC: HideTabBarVC, UITableViewDelegate, UITableViewDataSource {
         commentTextField.borderStyle = .roundedRect
         sendButton.setTitle("送出", for: .normal)
 
-        view.addSubview(commentTextField)
-        view.addSubview(sendButton)
+        inputContainer.backgroundColor = .milkYellow
+
+        inputContainer.addSubview(commentTextField)
+        inputContainer.addSubview(sendButton)
+
+        view.addSubview(inputContainer)
 
         commentTextField.translatesAutoresizingMaskIntoConstraints = false
         sendButton.translatesAutoresizingMaskIntoConstraints = false
+        inputContainer.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            commentTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            commentTextField.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
+            commentTextField.leadingAnchor.constraint(equalTo: inputContainer.leadingAnchor, constant: 10),
+            commentTextField.topAnchor.constraint(equalTo: inputContainer.topAnchor, constant: 5),
+            commentTextField.bottomAnchor.constraint(equalTo: inputContainer.bottomAnchor, constant: -5),
             commentTextField.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -10),
             commentTextField.heightAnchor.constraint(equalToConstant: 40),
 
-            sendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-            sendButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
+            sendButton.trailingAnchor.constraint(equalTo: inputContainer.trailingAnchor, constant: -10),
+            sendButton.centerYAnchor.constraint(equalTo: inputContainer.centerYAnchor),
             sendButton.widthAnchor.constraint(equalToConstant: 60),
             sendButton.heightAnchor.constraint(equalToConstant: 40)
+        ])
+
+        inputAreaBottomConstraint = inputContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10)
+        NSLayoutConstraint.activate([
+            inputContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            inputContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            inputAreaBottomConstraint!,
+            inputContainer.heightAnchor.constraint(greaterThanOrEqualToConstant: 50)
         ])
 
         sendButton.addTarget(self, action: #selector(sendComment), for: .touchUpInside)
