@@ -32,22 +32,24 @@ class PostCell: UITableViewCell {
     let authorName: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .pink1
+        label.textColor = .systemBrown
         label.isUserInteractionEnabled = true
         return label
     }()
 
     let categoryLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 14)
         label.backgroundColor = .milkYellow
         label.textAlignment = .center
+        label.layer.cornerRadius = 8
+        label.layer.masksToBounds = true
         return label
     }()
 
     let createdTimeLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .lightGray
         return label
     }()
@@ -208,7 +210,8 @@ class PostCell: UITableViewCell {
 
             categoryLabel.topAnchor.constraint(equalTo: authorName.bottomAnchor, constant: 5),
             categoryLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
-            categoryLabel.widthAnchor.constraint(equalToConstant: 80),
+            categoryLabel.widthAnchor.constraint(equalToConstant: 60),
+            categoryLabel.heightAnchor.constraint(equalToConstant: 25),
 
             createdTimeLabel.bottomAnchor.constraint(equalTo: categoryLabel.bottomAnchor),
             createdTimeLabel.leadingAnchor.constraint(equalTo: categoryLabel.trailingAnchor, constant: 10),
