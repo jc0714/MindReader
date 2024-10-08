@@ -19,21 +19,9 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 
     private var settingsItems: [[String]] = [
         ["名字"], // 第一组
-        ["封鎖名單", "回報問題"], // 第二组
+        ["封鎖名單", "回報問題", "隱私權政策"], // 第二组
         ["刪除帳號", "登出"] // 第三组
     ]
-
-//    private var settingsItems: [[(title: String, icon: UIImage?)]] = [
-//        [("名字", UIImage(systemName: "pencil"))], // 第一组
-//        [
-//            ("封鎖名單", UIImage(systemName: "paintpalette.fill")),
-//            ("回報問題", UIImage(systemName: "exclamationmark.bubble.fill"))
-//        ], // 第二组
-//        [
-//            ("刪除帳號", UIImage(systemName: "trash.fill")),
-//            ("登出", UIImage(systemName: "heart.fill"))
-//        ] // 第三组
-//    ]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,7 +39,7 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
 
-        tableView = UITableView(frame: .zero, style: .grouped) // 使用 grouped 样式
+        tableView = UITableView(frame: .zero, style: .grouped)
         tableView.backgroundColor = .clear
         tableView.delegate = self
         tableView.dataSource = self
@@ -60,6 +48,7 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 60
         tableView.separatorStyle = .none
+        tableView.isScrollEnabled = false
 
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -134,6 +123,8 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
             present(blockedListVC, animated: true, completion: nil)
         case "回報問題":
             showReportIssueVC()
+        case "隱私權政策":
+            showPrivacyPolicyVC()
         case "刪除帳號":
             showDeleteAccountAlert()
         case "登出":
@@ -173,6 +164,12 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         let reportVC = ReportIssueViewController()
         reportVC.modalPresentationStyle = .formSheet
         self.present(reportVC, animated: true, completion: nil)
+    }
+
+    private func showPrivacyPolicyVC() {
+        let privacyPolicyVC = PrivacyPolicyViewController()
+        privacyPolicyVC.title = "隱私權政策"
+        navigationController?.pushViewController(privacyPolicyVC, animated: true)
     }
 
     // MARK: 刪除帳號

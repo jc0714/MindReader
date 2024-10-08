@@ -142,5 +142,4 @@ class ChatView: UIView, UITextViewDelegate {
         typingAnimationView.stop()
         typingAnimationView.isHidden = true
     }
-
 }
