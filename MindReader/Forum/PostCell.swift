@@ -25,6 +25,7 @@ class PostCell: UITableViewCell {
     let articleTitle: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
+        label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 20)
         return label
     }()
@@ -59,6 +60,7 @@ class PostCell: UITableViewCell {
         label.font = UIFont.systemFont(ofSize: 16)
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
+        label.textColor = .black
         return label
     }()
 
@@ -68,8 +70,22 @@ class PostCell: UITableViewCell {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(systemName: "heart"), for: .normal)
         button.tintColor = .orange
+        button.backgroundColor = .white
         return button
     }()
+
+//    let heartButton: UIButton = {
+//        let button = UIButton(type: .system)
+//
+//        var configuration = UIButton.Configuration.plain()
+//        configuration.image = UIImage(systemName: "heart")
+//        configuration.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10)
+//
+//        button.configuration = configuration
+//        button.tintColor = .orange
+//
+//        return button
+//    }()
 
     let heartCount: UILabel = {
         let label = UILabel()

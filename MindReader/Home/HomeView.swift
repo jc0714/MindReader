@@ -143,10 +143,10 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
     let submitButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("開始分析...", for: .normal)
+        button.setTitle("開始分析", for: .normal)
         button.backgroundColor = .pink3
         button.layer.cornerRadius = 10
-        button.layer.borderWidth = 5
+        button.layer.borderWidth = 2
         button.layer.borderColor = UIColor.milkYellowww.cgColor
         button.tag = 0 // 初始設定在圖片
         return button

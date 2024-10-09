@@ -118,29 +118,14 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
                     self?.navigationController?.popViewController(animated: true)
                 }
 
-                AlertKitAPI.present(
-                    title: "發文成功！",
-                    icon: .done,
-                    style: .iOS17AppleMusic,
-                    haptic: .success
-                )
+                AlertKitManager.presentSuccessAlert(in: self, title: "發文成功！")
 
                 editView.publishButton.isUserInteractionEnabled = true
             } catch {
-                AlertKitAPI.present(
-                    title: "請確認網路連線",
-                    icon: .error,
-                    style: .iOS17AppleMusic,
-                    haptic: .error
-                )
+                AlertKitManager.presentErrorAlert(in: self, title: "請確認網路連線")
             }
         } else {
-            AlertKitAPI.present(
-                title: "確認都填完，再發文唷",
-                icon: .error,
-                style: .iOS17AppleMusic,
-                haptic: .error
-            )
+            AlertKitManager.presentErrorAlert(in: self, title: "確認都填完，再發文唷")
         }
     }
 
