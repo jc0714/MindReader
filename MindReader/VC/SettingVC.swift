@@ -245,9 +245,15 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         if isNightMode {
             // 從夜間轉回日間 (播放後半段 0.5 -> 1.0)
             animationView.play(fromProgress: 0.5, toProgress: 1.0)
+            if let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate {
+                sceneDelegate.switchAppearance(to: .light) // 切換為夜間模式
+            }
         } else {
             // 從日間轉到夜間 (播放前半段 0.0 -> 0.5)
             animationView.play(fromProgress: 0.0, toProgress: 0.5)
+            if let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate {
+                sceneDelegate.switchAppearance(to: .dark) // 切換為夜間模式
+            }
         }
         isNightMode.toggle()  // 切換模式狀態
     }
