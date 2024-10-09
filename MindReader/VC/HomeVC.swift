@@ -14,88 +14,7 @@ import AlertKit
 
 class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
 
-//    let dataToUpload: [[String: Any]] = []
-
-    let dataToUpload: [[String: Any]] = [
-        [
-            "prompt": "早安，你今天要幹嘛？",
-            "possible_meanings": [
-                "想知道你今天的安排",
-                "可能想約你一起做點什麼",
-                "對方想知道你的近況"
-            ],
-            "response_methods": [
-                "我還沒想好耶，你呢？",
-                "我打算放鬆一下，你呢？",
-                "早安！今天還沒確定要做什麼。"
-            ]
-        ],
-        [
-            "prompt": "今天在幹嘛",
-            "possible_meanings": [
-                "想知道你今天的安排",
-                "可能想約你一起做點什麼",
-                "對方想知道你的近況"
-            ],
-            "response_methods": [
-                "睡覺看書吃飯，你呢？",
-                "在規劃週末的小旅行，你要一起去玩嗎！",
-                "我才剛起床，還沒確定要做什麼。"
-            ]
-        ],
-        [
-            "prompt": "晚上要一起看電影嗎？",
-            "possible_meanings": [
-                "想和你一起看電影，可能有點期待。",
-                "對方找不到其他人一起看電影。",
-                "對方只是隨口問問，想試探你是否會赴約。"
-            ],
-            "response_methods": [
-                "當然好啊，你想看哪一部？",
-                "好可惜我今晚有事，你這週還有哪天有空！",
-                "我今天不行，之後再看看吧！。"
-            ]
-        ],
-        [
-            "prompt": "你喜歡吃日式料理嗎？",
-            "possible_meanings": [
-                "想約你吃日式料理。",
-                "在試探你的飲食習慣，或許為未來的約會做準備。",
-                "可能只是隨便聊天，並不一定有特別的意圖。"
-            ],
-            "response_methods": [
-                "我很喜歡，你有推薦的餐廳嗎？",
-                "還不錯，但我更喜歡義式料理。",
-                "日式料理很讚耶，有什麼推薦的餐廳嗎？"
-            ]
-        ],
-        [
-            "prompt": "你今天看起來很累，是不是有心事？",
-            "possible_meanings": [
-                "關心你的狀態，想知道你是否有什麼煩惱。",
-                "覺得你可能需要休息，想提醒你保重自己。",
-                "對方想展現心思細膩的一面"
-            ],
-            "response_methods": [
-                "謝謝你的關心，有點累，但沒什麼大問題。",
-                "的確最近有點煩心事，謝謝你。",
-                "可能是昨晚沒睡好。"
-            ]
-        ],
-        [
-            "prompt": "今天要不要一起去散步？",
-            "possible_meanings": [
-                "想和你一起度過一些時間。",
-                "可能想陪你放鬆心情，特意邀你去散步。",
-                "想找人一起散散步。"
-            ],
-            "response_methods": [
-                "好啊，我也正好想散散心！",
-                "謝謝你的邀請，但我今天有事，改天吧。",
-                "好欸，我們去哪裡散步？大稻埕嗎"
-            ]
-        ]
-    ]
+    let dataToUpload: [[String: Any]] = []
 
     // MARK: - Properties
 
@@ -128,9 +47,9 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         homeView.imageButton.backgroundColor = .pink3
         homeView.imageButton.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
 
-        Task {
-            await firestoreService.batchUploadData(for: dataToUpload)
-        }
+//        Task {
+//            await firestoreService.batchUploadData(for: dataToUpload)
+//        }
     }
 
     // MARK: - Setup Actions
@@ -325,7 +244,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     @objc func enterText() {
         configureView(for: 1, isImageViewVisible: false)
-        homeView.promptTextField.text = "主管問我有沒有想升職"
     }
 
     private func configureView(for tag: Int, isImageViewVisible: Bool) {

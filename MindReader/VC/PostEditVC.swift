@@ -40,10 +40,6 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
 
         let avatarTapGesture = UITapGestureRecognizer(target: self, action: #selector(changeAvatar))
         editView.avatarImage.addGestureRecognizer(avatarTapGesture)
-
-        // demo 示範
-        editView.contentTextView.text = "願你每一天都被陽光照耀，內心充滿溫暖與希望！不論生活有多忙碌，記得停下來欣賞一下身邊的美好。無論今天發生了什麼，明天都會更好。加油，你已經很棒了！笑一笑，所有的煩惱都會隨風而去。祝福你每一天都充滿快樂與成就！🌟😊"
-        editView.titleTextField.text = "10/9 Demo"
     }
 
     override func viewWillAppear(_ animated: Bool) {

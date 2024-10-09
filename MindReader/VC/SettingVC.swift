@@ -8,8 +8,12 @@
 import Foundation
 import UIKit
 import Firebase
+import Lottie
 
 class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, UserInfoCellDelegate {
+
+    let animationView = LottieAnimationView(name: "dayAndNight")
+    var isNightMode = false
 
     private let titleLabel = createLabel(text: "設定", fontSize: 24, fontWeight: .bold, textColor: .pink3)
     private var tableView: UITableView!
@@ -19,8 +23,8 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 
     private var settingsItems: [[String]] = [
         ["名字"], // 第一组
-        ["封鎖名單", "回報問題", "隱私權政策"], // 第二组
-        ["刪除帳號", "登出"] // 第三组
+        ["  封鎖名單", "  淺色/深色模式", "  回報問題", "  隱私權政策"], // 第二组
+        ["  刪除帳號", "  登出"] // 第三组
     ]
 
     override func viewDidLoad() {
@@ -88,33 +92,87 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         } else {
             let cell = UITableViewCell()
             cell.selectionStyle = .none
+            cell.backgroundColor = .clear
 
-            let stackView = UIStackView()
-            stackView.axis = .vertical
-            stackView.spacing = 10
-            stackView.translatesAutoresizingMaskIntoConstraints = false
+            let stackView = createStackView()
 
             for (index, item) in settingsItems[indexPath.section].enumerated() {
-                let button = UIButton(type: .system)
-                button.setTitle(item, for: .normal)
-                button.setTitleColor(.darkGray, for: .normal)
-                button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
-                button.contentHorizontalAlignment = .left
-                button.tag = indexPath.section * 100 + index  // 將 section 和 row 組合存儲
-                button.addTarget(self, action: #selector(settingItemTapped(_:)), for: .touchUpInside)
-                stackView.addArrangedSubview(button)
+                let button = createButton(withTitle: item, section: indexPath.section, row: index)
+
+                // 檢查是否是 "淺色/深色模式"，是的話添加動畫
+                if item == "  淺色/深色模式" {
+                    button.isUserInteractionEnabled = false
+                    let horizontalStack = createHorizontalStackView(with: button)
+                    stackView.addArrangedSubview(horizontalStack)
+                } else {
+                    stackView.addArrangedSubview(button)
+                }
             }
 
             cell.contentView.addSubview(stackView)
             NSLayoutConstraint.activate([
                 stackView.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 10),
-                stackView.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 20),
-                stackView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -20),
+                stackView.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 15),
+                stackView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -15),
                 stackView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -10)
             ])
-
             return cell
         }
+    }
+
+    // MARK: - 輔助方法
+    private func createStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 10
+        stackView.backgroundColor = .white
+        stackView.layer.cornerRadius = 15
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }
+
+    private func createButton(withTitle title: String, section: Int, row: Int) -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle(title, for: .normal)
+        button.setTitleColor(.darkGray, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
+        button.contentHorizontalAlignment = .left
+        button.tag = section * 100 + row  // 將 section 和 row 組合存儲
+        button.addTarget(self, action: #selector(settingItemTapped(_:)), for: .touchUpInside)
+        return button
+    }
+
+    private func createHorizontalStackView(with button: UIButton) -> UIStackView {
+        let horizontalStack = UIStackView()
+        horizontalStack.axis = .horizontal
+        horizontalStack.spacing = 10
+        horizontalStack.alignment = .center
+        horizontalStack.translatesAutoresizingMaskIntoConstraints = false
+
+        animationView.contentMode = .scaleAspectFit
+        animationView.loopMode = .playOnce
+        animationView.translatesAutoresizingMaskIntoConstraints = false
+        animationView.transform = CGAffineTransform(scaleX: 2.0, y: 2.0)
+        animationView.clipsToBounds = true
+        animationView.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        animationView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+
+        let transparentButton = UIButton(type: .system)
+        transparentButton.backgroundColor = .clear  // 設置背景為透明
+        transparentButton.addTarget(self, action: #selector(turnDayAndNight), for: .touchUpInside)
+        transparentButton.translatesAutoresizingMaskIntoConstraints = false
+
+        horizontalStack.addArrangedSubview(button)
+        horizontalStack.addArrangedSubview(animationView)
+
+        animationView.addSubview(transparentButton)
+        NSLayoutConstraint.activate([
+            transparentButton.centerXAnchor.constraint(equalTo: animationView.centerXAnchor),
+            transparentButton.centerYAnchor.constraint(equalTo: animationView.centerYAnchor),
+            transparentButton.widthAnchor.constraint(equalToConstant: 50),
+            transparentButton.heightAnchor.constraint(equalToConstant: 25)
+        ])
+        return horizontalStack
     }
 
     @objc private func settingItemTapped(_ sender: UIButton) {
@@ -124,20 +182,20 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         let selectedItem = settingsItems[section][row]
 
         switch selectedItem {
-        case "封鎖名單":
+        case "  封鎖名單":
             let blockedListVC = BlockedListVC()
             if let sheet = blockedListVC.sheetPresentationController {
                 sheet.detents = [.medium(), .large()]
                 sheet.prefersGrabberVisible = true
             }
             present(blockedListVC, animated: true, completion: nil)
-        case "回報問題":
+        case "  回報問題":
             showReportIssueVC()
-        case "隱私權政策":
+        case "  隱私權政策":
             showPrivacyPolicyVC()
-        case "刪除帳號":
+        case "  刪除帳號":
             showDeleteAccountAlert()
-        case "登出":
+        case "  登出":
             showLogoutAlert()
         default:
             break
@@ -180,6 +238,18 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 0
+    }
+
+    //MARK: 淺色/深色模式
+    @objc private func turnDayAndNight() {
+        if isNightMode {
+            // 從夜間轉回日間 (播放後半段 0.5 -> 1.0)
+            animationView.play(fromProgress: 0.5, toProgress: 1.0)
+        } else {
+            // 從日間轉到夜間 (播放前半段 0.0 -> 0.5)
+            animationView.play(fromProgress: 0.0, toProgress: 0.5)
+        }
+        isNightMode.toggle()  // 切換模式狀態
     }
 
     // MARK: 回報問題
