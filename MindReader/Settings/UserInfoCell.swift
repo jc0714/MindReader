@@ -102,8 +102,8 @@ class UserInfoCell: UITableViewCell {
         contentView.addSubview(cardView)
         cardView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            cardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            cardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            cardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+            cardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
             cardView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
             cardView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5)
         ])
