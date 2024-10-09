@@ -242,6 +242,7 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 
     //MARK: 淺色/深色模式
     @objc private func turnDayAndNight() {
+        HapticFeedbackManager.lightFeedback()
         if isNightMode {
             // 從夜間轉回日間 (播放後半段 0.5 -> 1.0)
             animationView.play(fromProgress: 0.5, toProgress: 1.0)

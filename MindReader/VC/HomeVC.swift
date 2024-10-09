@@ -81,24 +81,14 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         homeView.promptTextField.resignFirstResponder()
 
         if sender.tag == 2 {
-            AlertKitAPI.present(
-                title: "我沒有讀到文字哦，請上傳有文字的圖片",
-                icon: .error,
-                style: .iOS17AppleMusic,
-                haptic: .error
-            )
+            AlertKitManager.presentErrorAlert(in: self, title: "我沒有讀到文字哦，請上傳有文字的圖片")
             return
         }
 
         let prompt = sender.tag == 1 ? homeView.promptTextField.text : recognizedText
 
         guard let prompt = prompt?.trimmingCharacters(in: .whitespacesAndNewlines), !prompt.isEmpty else {
-            AlertKitAPI.present(
-                title: "我沒有讀到文字哦",
-                icon: .error,
-                style: .iOS17AppleMusic,
-                haptic: .error
-            )
+            AlertKitManager.presentErrorAlert(in: self, title: "我沒有讀到文字哦")
             return
         }
 
@@ -107,12 +97,10 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         Task {
             do {
-                homeView.showLoadingAnimation()
-
                 sender.isUserInteractionEnabled = false
                 sender.backgroundColor = .milkYellow
 
-                try await Task.sleep(nanoseconds: 2_000_000_000)
+//                try await Task.sleep(nanoseconds: 2_000_000_000)
 
                 let existingResponse = try await self.firestoreService.fetchResponse(for: prompt)
 
@@ -124,11 +112,11 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                     sender.backgroundColor = .pink3
 
                     homeView.hideLoadingAnimation()
-
+                    recognizedText = ""
                     return
                 }
 
-//                homeView.showLoadingAnimation()
+                homeView.showLoadingAnimation()
 
                 let formatedPrompt = formatPrompt(prompt, audiance: audiance, replyStyle: replyStyle)
                 print("打出去的 prompt: \(formatedPrompt)")
@@ -153,11 +141,12 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                 } else {
                     try await firestoreService.saveToFirestore(prompt: prompt, response: response, imageURL: nil)
                 }
+                recognizedText = ""
                 homeView.hideLoadingAnimation()
                 sender.isUserInteractionEnabled = true
                 sender.backgroundColor = .pink3
-
             } catch {
+                AlertKitManager.presentErrorAlert(in: self, title: "網路異常，請確認連線")
                 homeView.hideLoadingAnimation()
                 print("Failed to get response: \(error)")
                 sender.isUserInteractionEnabled = true
@@ -263,14 +252,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - Copy Label Text
 
     func handleCopiedText(_ text: String) {
-        // 展示複製成功的提示
-        AlertKitAPI.present(
-            title: "複製成功",
-            icon: .done,
-            style: .iOS17AppleMusic,
-            haptic: .success
-        )
-
+        AlertKitManager.presentSuccessAlert(in: self, title: "複製成功")
+        
         UIPasteboard.general.string = text
         copiedText = text
         print("Text copied: \(text)")
