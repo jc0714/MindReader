@@ -16,7 +16,6 @@ class ForumVC: BasePostVC {
     let goEditButton = UIButton()
 
     private var refreshControl: UIRefreshControl!
-//    private var lottieAnimationView: LottieAnimationView!
 
     private let tag = "All"
 
@@ -24,10 +23,9 @@ class ForumVC: BasePostVC {
         super.viewDidLoad()
 
         self.VCid = "ForumVC"
-//        setupRefreshControl()
 
         fetchPosts()
-//
+
         refreshControl = UIRefreshControl()
         tableView.addSubview(refreshControl)
 
@@ -38,8 +36,6 @@ class ForumVC: BasePostVC {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        navigationController?.setNavigationBarHidden(true, animated: false)
-
         navigationController?.navigationBar.isHidden = true
 
         fetchPosts()
@@ -57,6 +53,9 @@ class ForumVC: BasePostVC {
 
         let blockedList = UserDefaults.standard.dictionary(forKey: "BlockedList") as? [String: String] ?? [:]
         let reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
+
+        print("Blocked List: \(blockedList)")
+        print("Reported List: \(reportedList)")
 
         Firestore.firestore().collection("posts")
             .order(by: "createdTime", descending: true)
@@ -95,6 +94,9 @@ class ForumVC: BasePostVC {
                     else { return nil }
 
                     if blockedList.keys.contains(authorId) || reportedList.contains(id) {
+                        print("Blocked List: \(blockedList)")
+                        print("Reported List: \(reportedList)")
+
                         return nil
                     }
 
