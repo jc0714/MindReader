@@ -239,10 +239,17 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
 
     func handleOptionSelection(action: String, forPostAt indexPath: IndexPath) {
+        let currentUserId = UserDefaults.standard.string(forKey: "userID")
+
         let post = posts[indexPath.row]
         let authorId = post.author.id
         let authorName = post.author.name
         let postId = post.id
+
+        if authorId == currentUserId {
+            AlertKitManager.presentErrorAlert(in: self, title: "不要檢舉/封鎖自己啦")
+            return
+        }
 
         switch action {
         case "檢舉":

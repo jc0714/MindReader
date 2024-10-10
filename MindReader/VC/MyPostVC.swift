@@ -51,22 +51,6 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
         listener?.remove()
     }
 
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//
-//        if let recordVC = parent as? RecordVC, let pageViewController = recordVC.pageViewController {
-//            pageViewController.view.gestureRecognizers?.forEach { gesture in
-//                gesture.delegate = self
-//            }
-//        }
-//    }
-
-//    func configureWithPageViewController(_ pageViewController: UIPageViewController) {
-//        pageViewController.view.gestureRecognizers?.forEach { gesture in
-//            gesture.delegate = self
-//        }
-//    }
-
     @objc func reloadTableData() {
         fetchPosts()
     }
@@ -229,32 +213,4 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
         let activityViewController = UIActivityViewController(activityItems: [screenshot], applicationActivities: nil)
         present(activityViewController, animated: true, completion: nil)
     }
-
-//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-//        if let pageViewController = parent as? UIPageViewController,
-//           let recordVC = pageViewController.parent as? RecordVC {
-//
-//            // 判断是否是 PageViewController 的滑动手势
-//            if ((pageViewController.view.gestureRecognizers?.contains(gestureRecognizer)) != nil),
-//               let panGesture = gestureRecognizer as? UIPanGestureRecognizer {
-//                let velocity = panGesture.velocity(in: view)
-//
-//                // 如果已经在最右边并且试图右滑
-//                if recordVC.currentPageIndex == recordVC.viewControllers.count - 1 && velocity.x < 0 {
-//                    return false
-//                }
-//            }
-//        }
-//
-//        // TableView 滑动手势允许
-//        if let tableView = view as? UITableView {
-//            if gestureRecognizer == tableView.panGestureRecognizer {
-//                return true
-//            }
-//        }
-//
-//        // 允许其他情况的手势
-//        return true
-//    }
-
 }
