@@ -222,6 +222,10 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
                 cell.heartButtonTappedClosure = { [weak self] in
                     self?.updateHeartBtn(at: indexPath)
                 }
+
+                cell.reportButtonTappedClosure = { [weak self] action in
+                    self?.handleOptionSelection(action: action, at: indexPath)
+                }
             }
             return cell
         } else {
@@ -235,33 +239,51 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
             cell.configure(author: comment.author, content: comment.content, timestamp: comment.timestamp)
 
             cell.reportButtonTappedClosure = { [weak self] action in
-                self?.handleOptionSelection(action: action, forCommentAt: indexPath)
+                self?.handleOptionSelection(action: action, at: indexPath)
             }
 
             return cell
         }
     }
 
-    func handleOptionSelection(action: String, forCommentAt indexPath: IndexPath) {
-        let comment = comments[indexPath.row - 1]
-        let authorId = comment.authorId
-        let commentId = comment.id
+    func handleOptionSelection(action: String, at indexPath: IndexPath) {
+        if indexPath.row == 0 {
+            // 第一個 cell 是貼文
+            guard let post = post else { return }
+            let authorId = post.author.id
+            let authorName = post.author.name
+            let postId = post.id
 
-        switch action {
-        case "檢舉":
-            // 處理檢舉的邏輯
-            showReportReasonSelection(forCommentID: commentId)
-        case "封鎖":
-            // 彈出確認框
-            showBlockConfirmation(forUserId: authorId)
+            switch action {
+            case "檢舉":
+                showReportReasonSelection(forID: postId, isPost: true)
+            case "封鎖":
+                showBlockConfirmation(forUserId: authorId, authorName: authorName)
+            default:
+                break
+            }
+        } else {
+            // 其他 cell 是留言
+            let comment = comments[indexPath.row - 1]
+            let authorId = comment.authorId
+            let authorName = comment.author
+            let commentId = comment.id
 
-        default:
-            break
+            switch action {
+            case "檢舉":
+                // 處理留言的檢舉邏輯
+                showReportReasonSelection(forID: commentId, isPost: false)
+            case "封鎖":
+                // 彈出確認框
+                showBlockConfirmation(forUserId: authorId, authorName: authorName)
+            default:
+                break
+            }
         }
     }
 
-    // 檢舉
-    private func showReportReasonSelection(forCommentID commentID: String) {
+    // 檢舉（貼文或留言）
+    private func showReportReasonSelection(forID id: String, isPost: Bool) {
         let alertController = UIAlertController(title: "選擇檢舉原因", message: nil, preferredStyle: .actionSheet)
 
         let reasons = ["不感興趣", "謾罵", "人身攻擊", "其他"]
@@ -269,9 +291,15 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
         for reason in reasons {
             let action = UIAlertAction(title: reason, style: .default) { _ in
                 // 根據選擇的原因處理檢舉邏輯
-                self.addToReportedCommentList(commentID: commentID)
-                self.updateReportedCommentListInFirebase(commentID: commentID, reason: reason)
-                print("檢舉原因：\(reason)")
+                if isPost {
+                    ReportPostManager.shared.addToReportedPostList(postID: id)
+                    ReportPostManager.shared.updateReportedPostListInFirebase(postID: id, reason: reason)
+                    print("檢舉貼文原因：\(reason)")
+                } else {
+                    ReportCommentManager.shared.addToReportedCommentList(commentID: id)
+                    ReportCommentManager.shared.updateReportedCommentListInFirebase(commentID: id, reason: reason)
+                    print("檢舉留言原因：\(reason)")
+                }
             }
             alertController.addAction(action)
         }
@@ -283,56 +311,12 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
         self.present(alertController, animated: true, completion: nil)
     }
 
-    private func addToReportedCommentList(commentID: String) {
-        var reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
-
-        if !reportedList.contains(commentID) {
-            reportedList.append(commentID)
-            UserDefaults.standard.set(reportedList, forKey: "ReportedList")
-        }
-    }
-
-    private func updateReportedCommentListInFirebase(commentID: String, reason: String) {
-        guard let currentUserID = UserDefaults.standard.string(forKey: "userID") else { return }
-
-        let userRef = Firestore.firestore().collection("Users").document(currentUserID)
-
-        userRef.updateData([
-            "reportedCommentList": FieldValue.arrayUnion([commentID])
-        ]) { error in
-            if let error = error {
-            } else {
-                print("檢舉留言已成功更新到 User 的 Firebase")
-                self.saveReportedPostToCollection(postID: commentID, reporterID: currentUserID, reason: reason)
-            }
-        }
-    }
-
-    private func saveReportedPostToCollection(postID: String, reporterID: String, reason: String) {
-        let reportData: [String: Any] = [
-            "commentID": postID,
-            "reporter": reporterID,
-            "reason": reason,
-            "timestamp": Timestamp() // 加入檢舉的時間
-        ]
-
-        let reportsRef = Firestore.firestore().collection("ReportedComments")
-        reportsRef.addDocument(data: reportData) { error in
-            if let error = error {
-                print("Error saving reported post: \(error)")
-            } else {
-                print("檢舉資訊已成功存入 ReportedComments collection")
-            }
-        }
-    }
-
     // 封鎖
-    private func showBlockConfirmation(forUserId userId: String) {
+    private func showBlockConfirmation(forUserId userId: String, authorName: String) {
         let alertController = UIAlertController(title: "封鎖用戶", message: "您確定要封鎖這位用戶嗎？", preferredStyle: .alert)
 
         let confirmAction = UIAlertAction(title: "確定", style: .destructive) { _ in
-            self.addToBlockedList(userID: userId)
-            self.updateBlockedListInFirebase(userId: userId)
+            BlockManager.shared.blockUser(authorID: userId, authorName: authorName)
         }
 
         let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
@@ -341,30 +325,6 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
         alertController.addAction(cancelAction)
 
         self.present(alertController, animated: true, completion: nil)
-    }
-
-    private func addToBlockedList(userID: String) {
-        var blockedList = UserDefaults.standard.stringArray(forKey: "BlockedList") ?? []
-
-        if !blockedList.contains(userID) {
-            blockedList.append(userID)
-            UserDefaults.standard.set(blockedList, forKey: "BlockedList")
-        }
-    }
-
-    private func updateBlockedListInFirebase(userId: String) {
-        guard let currentUserID = UserDefaults.standard.string(forKey: "userID") else { return }
-
-        let userRef = Firestore.firestore().collection("Users").document(currentUserID)
-
-        userRef.updateData([
-            "blockedList": FieldValue.arrayUnion([userId])
-        ]) { error in
-            if let error = error {
-            } else {
-                print("封鎖名單已成功更新到 Firebase")
-            }
-        }
     }
 
     // 留言刪除 誰可以

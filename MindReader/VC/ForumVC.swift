@@ -75,7 +75,7 @@ class ForumVC: BasePostVC {
         let dispatchGroup = DispatchGroup()
         var commentCounts = [String: Int]() // 用來儲存每篇貼文的評論數量
 
-        let blockedList = UserDefaults.standard.stringArray(forKey: "BlockedList") ?? []
+        let blockedList = UserDefaults.standard.dictionary(forKey: "BlockedList") as? [String: String] ?? [:]
         let reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
 
         Firestore.firestore().collection("posts")
@@ -114,7 +114,7 @@ class ForumVC: BasePostVC {
                           let authorName = authorData["name"] as? String
                     else { return nil }
 
-                    if blockedList.contains(authorId) || reportedList.contains(id) {
+                    if blockedList.keys.contains(authorId) || reportedList.contains(id) {
                         return nil
                     }
 

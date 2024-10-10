@@ -11,7 +11,7 @@ import Firebase
 
 class BlockedListVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
-    private var blockedList: [String] = [] // 封鎖名單數據源
+    private var blockedList: [String: String] = [:]
     private let tableView = UITableView()
 
     override func viewDidLoad() {
@@ -59,7 +59,7 @@ class BlockedListVC: UIViewController, UITableViewDataSource, UITableViewDelegat
     }
 
     private func loadBlockedList() {
-        blockedList = UserDefaults.standard.stringArray(forKey: "BlockedList") ?? []
+        blockedList = UserDefaults.standard.dictionary(forKey: "BlockedList") as? [String: String] ?? [:]
         tableView.reloadData()
     }
 
@@ -71,7 +71,7 @@ class BlockedListVC: UIViewController, UITableViewDataSource, UITableViewDelegat
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "BlockedListCell", for: indexPath) as? BlockedListCell
-        let userName = blockedList[indexPath.row]
+        let userName = Array(blockedList.values)[indexPath.row]
 
         cell!.configure(with: userName)
 
@@ -81,7 +81,7 @@ class BlockedListVC: UIViewController, UITableViewDataSource, UITableViewDelegat
     // MARK: - UITableViewDelegate
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let userToUnblock = blockedList[indexPath.row]
+        let userToUnblock = Array(blockedList.keys)[indexPath.row]
 
         // 確認解除封鎖的彈出框
         let alert = UIAlertController(title: "解除封鎖", message: "確定要解除對 \(userToUnblock) 的封鎖嗎？", preferredStyle: .alert)
@@ -93,10 +93,10 @@ class BlockedListVC: UIViewController, UITableViewDataSource, UITableViewDelegat
     }
 
     private func unblockUser(at indexPath: IndexPath) {
-        let userId = blockedList[indexPath.row]
+        let userId = Array(blockedList.keys)[indexPath.row]
 
-        // 移除封鎖名單中的用戶
-        blockedList.remove(at: indexPath.row)
+        // 更新 UserDefaults
+        blockedList.removeValue(forKey: userId)
 
         // 更新 UserDefaults
         UserDefaults.standard.set(blockedList, forKey: "BlockedList")
