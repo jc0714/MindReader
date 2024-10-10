@@ -95,15 +95,12 @@ class BlockedListVC: UIViewController, UITableViewDataSource, UITableViewDelegat
     private func unblockUser(at indexPath: IndexPath) {
         let userId = Array(blockedList.keys)[indexPath.row]
 
-        // 更新 UserDefaults
         blockedList.removeValue(forKey: userId)
 
-        // 更新 UserDefaults
         UserDefaults.standard.set(blockedList, forKey: "BlockedList")
 
         updateBlockedListInFirebase(userId: userId)
 
-        // 刷新 TableView
         tableView.deleteRows(at: [indexPath], with: .automatic)
     }
 
