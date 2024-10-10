@@ -16,6 +16,8 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
 
     private var refreshControl: UIRefreshControl!
 
+    private let placeholderView = PlaceholderView(symbol: "person.2.fill", label1Text: "尚無貼文，", label2Text: "快去交流版發出你的貼文吧！")
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -128,7 +130,12 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
 
                             DispatchQueue.main.async {
                                 print("Post IDs: \(postIds)")
-//                                self.filterPosts(by: "All")
+
+                                if self.posts.isEmpty {
+                                    self.placeholderView.show(in: self.view)
+                                } else {
+                                    self.placeholderView.hide()
+                                }
                                 self.tableView.reloadData()
                                 self.refreshControl.endRefreshing()
                             }
@@ -137,7 +144,7 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
             } else {
                 print("No postIds found or postIds array is empty")
                 self.posts.removeAll()
-//                self.filterPosts(by: "All")
+                self.placeholderView.show(in: self.view)
                 self.tableView.reloadData()
                 self.refreshControl.endRefreshing()
             }
