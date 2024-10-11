@@ -33,6 +33,20 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
         return button
     }()
 
+    let hintLabel: UILabel = {
+        let label = UILabel()
+        label.text = "點按喜歡的回覆可以複製、製作早安圖！"
+        label.font = UIFont.systemFont(ofSize: 12) // 設置小字體
+        label.textColor = .white
+        label.backgroundColor = UIColor.orange.withAlphaComponent(0.7) // 半透明的橘色
+        label.numberOfLines = 0 // 允許多行
+        label.textAlignment = .center // 文字居中
+        label.layer.cornerRadius = 10
+        label.layer.masksToBounds = true // 確保 cornerRadius 生效
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
     private let closeButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("✕", for: .normal)
@@ -126,7 +140,7 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
             cell.textLabel?.text = "\(indexPath.row + 1). \(possibleMeanings[indexPath.row])"
 
             return cell
-        } else {          
+          } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "ResponseCopyCell", for: indexPath) as? ResponseCopyCell
 
             let text = "\(responseMethods[indexPath.row])"
@@ -170,12 +184,19 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
                 generateImageButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
                 generateImageButton.widthAnchor.constraint(equalToConstant: 100)
             ])
+
+            headerView.addSubview(hintLabel)
+            NSLayoutConstraint.activate([
+                hintLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
+                hintLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+                hintLabel.widthAnchor.constraint(equalToConstant: 150)
+            ])
         }
 
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-            titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+            titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)
         ])
 
         if section == 0 {
@@ -183,7 +204,6 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
         } else {
             titleLabel.text = "推薦回覆"
         }
-
         return headerView
     }
 
