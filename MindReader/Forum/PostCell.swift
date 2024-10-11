@@ -64,7 +64,13 @@ class PostCell: UITableViewCell {
         return label
     }()
 
-    let postImageView = UIImageView()
+    let postImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.isUserInteractionEnabled = true
+        return imageView
+    }()
 
     let heartButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -73,19 +79,6 @@ class PostCell: UITableViewCell {
         button.backgroundColor = .white
         return button
     }()
-
-//    let heartButton: UIButton = {
-//        let button = UIButton(type: .system)
-//
-//        var configuration = UIButton.Configuration.plain()
-//        configuration.image = UIImage(systemName: "heart")
-//        configuration.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10)
-//
-//        button.configuration = configuration
-//        button.tintColor = .orange
-//
-//        return button
-//    }()
 
     let heartCount: UILabel = {
         let label = UILabel()
@@ -162,10 +155,10 @@ class PostCell: UITableViewCell {
         avatarImageView.clipsToBounds = true
         avatarImageView.layer.cornerRadius = 35
 
-        postImageView.contentMode = .scaleAspectFit
-        postImageView.clipsToBounds = true
-
         heartButton.isUserInteractionEnabled = true
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showFullScreenImage))
+        postImageView.addGestureRecognizer(tapGesture)
 
         setupConstraints()
         setupReportMenu()
@@ -333,5 +326,68 @@ class PostCell: UITableViewCell {
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
         return view
+    }
+}
+
+extension PostCell: UIScrollViewDelegate {
+    @objc private func showFullScreenImage() {
+        guard let image = postImageView.image else { return }
+
+        let fullScreenView = UIView(frame: UIScreen.main.bounds)
+        fullScreenView.backgroundColor = .black
+        fullScreenView.alpha = 0.0
+
+        let scrollView = UIScrollView(frame: fullScreenView.bounds)
+        scrollView.backgroundColor = .black
+        scrollView.maximumZoomScale = 3.0
+        scrollView.minimumZoomScale = 1.0
+        scrollView.delegate = self
+
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .scaleAspectFit
+        imageView.frame = scrollView.bounds
+        scrollView.addSubview(imageView)
+
+        let closeButton = UIButton(frame: CGRect(x: fullScreenView.bounds.width - 50, y: 50, width: 30, height: 30))
+        closeButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
+        closeButton.tintColor = .white
+        closeButton.backgroundColor = UIColor.black.withAlphaComponent(0.5) // 半透明黑色背景
+        closeButton.layer.cornerRadius = 15 // 圓角，與按鈕寬高一致
+        closeButton.addTarget(self, action: #selector(dismissFullScreenView(_:)), for: .touchUpInside)
+
+        fullScreenView.addSubview(scrollView)
+        fullScreenView.addSubview(closeButton)
+
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(dismissFullScreenView(_:)))
+        swipeGesture.direction = .down
+        fullScreenView.addGestureRecognizer(swipeGesture)
+
+        // 加到視圖上
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first {
+            window.addSubview(fullScreenView)
+            UIView.animate(withDuration: 0.3) {
+                fullScreenView.alpha = 1.0
+            }
+        }
+    }
+
+    @objc private func dismissFullScreenView(_ sender: Any) {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first else {
+            return
+        }
+
+        if let fullScreenView = window.subviews.last {
+            UIView.animate(withDuration: 0.3, animations: {
+                fullScreenView.alpha = 0.0
+            }, completion: { _ in
+                fullScreenView.removeFromSuperview()
+            })
+        }
+    }
+
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return scrollView.subviews.first
     }
 }

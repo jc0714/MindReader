@@ -76,7 +76,6 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
             print("User ID is nil")
             return
         }
-        
         let morningImageRef = db.collection("Users").document(userId).collection("MorningImage")
 
         // 按 createdTime 排序
