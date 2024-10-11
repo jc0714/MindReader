@@ -19,7 +19,7 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
 
     var isPlaceholderImage = true
 
-    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7"]
+    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7", "avatar8"]
     var selectedAvatarIndex = 0
 
     override func loadView() {
@@ -87,7 +87,7 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
                 let document = articles.document()
                 var data: [String: Any] = [
                     "author": [
-                        "email": "JJ",
+                        "email": "",
                         "id": userId,
                         "name": userName
                     ],
@@ -154,6 +154,7 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     }
 
     @objc func changeAvatar() {
+        HapticFeedbackManager.lightFeedback()
         selectedAvatarIndex = (selectedAvatarIndex + 1) % imageNames.count
         editView.avatarImage.image = UIImage(named: imageNames[selectedAvatarIndex])
     }

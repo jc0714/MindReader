@@ -19,7 +19,7 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
     private let inputContainer = UIView()
     var inputAreaBottomConstraint: NSLayoutConstraint?
 
-    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7"]
+    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7", "avatar8"]
 
     var postId: String = ""
 
