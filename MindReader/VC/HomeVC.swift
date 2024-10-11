@@ -163,7 +163,11 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
             toastView.onCopyTap = { [weak self] text in
                 self?.handleCopiedText(text)
                 toastView.generateImageButton.isHidden = false
+                toastView.hintLabel.isHidden = true
             }
+
+            self.homeView.promptTextField.text = nil
+            self.homeView.imageView.image = UIImage(named: "uploadImage")
 
             toastView.configure(with: possibleMeanings, responseMethods: responseMethods)
 
