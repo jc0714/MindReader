@@ -36,13 +36,10 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
     let hintLabel: UILabel = {
         let label = UILabel()
         label.text = "點按喜歡的回覆可以複製、製作早安圖！"
-        label.font = UIFont.systemFont(ofSize: 12) // 設置小字體
-        label.textColor = .white
-        label.backgroundColor = UIColor.orange.withAlphaComponent(0.7) // 半透明的橘色
-        label.numberOfLines = 0 // 允許多行
-        label.textAlignment = .center // 文字居中
-        label.layer.cornerRadius = 10
-        label.layer.masksToBounds = true // 確保 cornerRadius 生效
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = .brown
+        label.numberOfLines = 0
+        label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -189,7 +186,7 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
             NSLayoutConstraint.activate([
                 hintLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
                 hintLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-                hintLabel.widthAnchor.constraint(equalToConstant: 150)
+                hintLabel.widthAnchor.constraint(equalToConstant: 180)
             ])
         }
 
@@ -243,5 +240,4 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
             parentView.layoutIfNeeded()
         })
     }
-
 }

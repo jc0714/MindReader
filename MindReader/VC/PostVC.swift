@@ -29,7 +29,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
 
-    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7"]
+    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7", "avatar8"]
 
     override func viewDidLoad() {
         super.viewDidLoad()

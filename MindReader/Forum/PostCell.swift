@@ -11,7 +11,7 @@ import Kingfisher
 
 class PostCell: UITableViewCell {
 
-    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7"]
+    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7", "avatar8"]
     private var isHeartSelected: Bool = false
 
     var heartButtonTappedClosure: (() -> Void)?

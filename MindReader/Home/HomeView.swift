@@ -353,7 +353,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         // 設置背景顏色
         cell.contentView.layer.cornerRadius = 10
-        cell.contentView.backgroundColor = isSelected ? .pink3 : .pink2
+        cell.contentView.backgroundColor = isSelected ? .pink3 : .pink1
 
         // 移除現有的 label 再添加新的
         cell.contentView.subviews.forEach { $0.removeFromSuperview() }

@@ -11,6 +11,14 @@ class PostEditView: UIView {
 
     var onImageDeleted: (() -> Void)?
 
+    let avatarHintLabel: UILabel = {
+        let label = UILabel()
+        label.text = "👇🏼點按頭貼可以更換哦，挑張最符合心情的吧！"
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = .brown
+        return label
+    }()
+
     let avatarImage: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .pink3
@@ -80,7 +88,7 @@ class PostEditView: UIView {
         button.setTitle(" 發佈貼文 ", for: .normal)
         button.backgroundColor = .pink3
         button.layer.cornerRadius = 10
-        button.layer.borderWidth = 5
+        button.layer.borderWidth = 2
         button.layer.borderColor = UIColor.milkYellowww.cgColor
         return button
     }()
@@ -105,6 +113,7 @@ class PostEditView: UIView {
 
     private func setupUI() {
         // Add subviews
+        addSubview(avatarHintLabel)
         addSubview(avatarImage)
         addSubview(titleTextField)
         addSubview(categoryStackView)
@@ -115,6 +124,7 @@ class PostEditView: UIView {
         addSubview(publishButton)
 
         // Constraints
+        avatarHintLabel.translatesAutoresizingMaskIntoConstraints = false
         avatarImage.translatesAutoresizingMaskIntoConstraints = false
         titleTextField.translatesAutoresizingMaskIntoConstraints = false
         categoryStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -125,12 +135,15 @@ class PostEditView: UIView {
         publishButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            avatarImage.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16),
+            avatarHintLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
+            avatarHintLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 16),
+
+            avatarImage.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 24),
             avatarImage.leftAnchor.constraint(equalTo: leftAnchor, constant: 16),
             avatarImage.heightAnchor.constraint(equalToConstant: 100),
             avatarImage.widthAnchor.constraint(equalToConstant: 100),
 
-            titleTextField.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16),
+            titleTextField.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 24),
             titleTextField.leadingAnchor.constraint(equalTo: avatarImage.trailingAnchor, constant: 16),
             titleTextField.rightAnchor.constraint(equalTo: rightAnchor, constant: -16),
             titleTextField.heightAnchor.constraint(equalToConstant: 50),
@@ -165,6 +178,16 @@ class PostEditView: UIView {
             publishButton.widthAnchor.constraint(equalToConstant: 150),
             publishButton.heightAnchor.constraint(equalToConstant: 40)
         ])
+
+        UIView.animate(withDuration: 1.0, animations: {
+            self.avatarHintLabel.alpha = 1.0 // 顯示 Label
+        }, completion: { (completed) in
+            UIView.animate(withDuration: 1.0, delay: 5.0, options: [], animations: {
+                self.avatarHintLabel.alpha = 0.0
+            }, completion: { (completed) in
+                self.avatarHintLabel.removeFromSuperview()
+            })
+        })
 
         deleteButton.addTarget(self, action: #selector(deleteImage), for: .touchUpInside)
     }
