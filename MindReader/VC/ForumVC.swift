@@ -22,6 +22,8 @@ class ForumVC: BasePostVC {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.navigationItem.backButtonTitle = ""
+
         self.VCid = "ForumVC"
 
         fetchPosts()

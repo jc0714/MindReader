@@ -17,7 +17,7 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
 
     private let firestoreService = FirestoreService()
 
-    private var isPlaceholderImage = true
+    var isPlaceholderImage = true
 
     private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7"]
     var selectedAvatarIndex = 0
@@ -40,6 +40,10 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
 
         let avatarTapGesture = UITapGestureRecognizer(target: self, action: #selector(changeAvatar))
         editView.avatarImage.addGestureRecognizer(avatarTapGesture)
+
+        editView.onImageDeleted = { [weak self] in
+            self?.isPlaceholderImage = true
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -140,6 +144,7 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
         if let selectedImage = info[.originalImage] as? UIImage {
             editView.imageView.image = selectedImage
             isPlaceholderImage = false
+            editView.userDidUploadImage(selectedImage)
         }
         picker.dismiss(animated: true, completion: nil)
     }
