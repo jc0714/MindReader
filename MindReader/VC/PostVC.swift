@@ -230,6 +230,11 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     // 連結到留言 VC
     func showCommentsForPost(at indexPath: IndexPath) {
+        guard indexPath.row < currentPosts.count else {
+            print("Index out of range: \(indexPath.row)")
+            return
+        }
+
         let commentsVC = CommentsVC(postId: currentPosts[indexPath.row].id)
         if let sheet = commentsVC.sheetPresentationController {
             sheet.detents = [.medium(), .large()]
@@ -286,7 +291,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         // 呈現視窗
         self.present(alertController, animated: true, completion: nil)
     }
-
 
     // 封鎖
     private func showBlockConfirmation(forUserId userId: String, authorName: String) {

@@ -336,16 +336,16 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
     }
 
     private func configureCollectionViews() {
-        // Register cell class for both collection views
         audienceCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "AudienceCell")
         replyStyleCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "ReplyStyleCell")
 
-        // Set delegates and data sources
         audienceCollectionView.delegate = self
         audienceCollectionView.dataSource = self
+        audienceCollectionView.showsHorizontalScrollIndicator = false
 
         replyStyleCollectionView.delegate = self
         replyStyleCollectionView.dataSource = self
+        replyStyleCollectionView.showsHorizontalScrollIndicator = false
     }
 
     // MARK: - Helper Methods to Configure Cells
@@ -353,8 +353,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         // 設置背景顏色
         cell.contentView.layer.cornerRadius = 10
-//        cell.contentView.layer.borderWidth = isSelected ? 2 : 0
-//        cell.contentView.layer.borderColor = isSelected ? UIColor.orange.cgColor : UIColor.clear.cgColor
         cell.contentView.backgroundColor = isSelected ? .pink3 : .pink2
 
         // 移除現有的 label 再添加新的
@@ -400,11 +398,11 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
     func hideLoadingAnimation() {
         UIView.animate(withDuration: 0.5, animations: {
             self.waitingAnimationView.alpha = 0
-        }) { _ in
+        }, completion: { _ in
             self.waitingAnimationView.stop()
             self.waitingAnimationView.isHidden = true
             self.waitingAnimationView.alpha = 1
-        }
+        })
     }
 }
 
@@ -426,20 +424,17 @@ extension HomeView: UICollectionViewDelegate, UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == audienceCollectionView {
-            // Deselect previously selected item
             if let previousIndex = selectedAudienceIndex {
                 collectionView.deselectItem(at: previousIndex, animated: true)
             }
             selectedAudienceIndex = indexPath
         } else {
-            // Deselect previously selected item
             if let previousIndex = selectedReplyStyleIndex {
                 collectionView.deselectItem(at: previousIndex, animated: true)
             }
             selectedReplyStyleIndex = indexPath
         }
 
-        // Reload the collection view to update the selection state
         collectionView.reloadData()
     }
 }

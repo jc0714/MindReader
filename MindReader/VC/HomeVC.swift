@@ -253,7 +253,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     func handleCopiedText(_ text: String) {
         AlertKitManager.presentSuccessAlert(in: self, title: "複製成功")
-        
         UIPasteboard.general.string = text
         copiedText = text
         print("Text copied: \(text)")
