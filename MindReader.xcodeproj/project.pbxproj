@@ -14,7 +14,6 @@
 		E91218CB2CB2DD08000521ED /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E91218CA2CB2DD07000521ED /* WidgetKit.framework */; };
 		E91218CD2CB2DD08000521ED /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E91218CC2CB2DD08000521ED /* SwiftUI.framework */; };
 		E91218D02CB2DD08000521ED /* MorningWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91218CF2CB2DD08000521ED /* MorningWidgetBundle.swift */; };
-		E91218D22CB2DD08000521ED /* MorningWidgetLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91218D12CB2DD08000521ED /* MorningWidgetLiveActivity.swift */; };
 		E91218D42CB2DD08000521ED /* MorningWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91218D32CB2DD08000521ED /* MorningWidget.swift */; };
 		E91218D62CB2DD0A000521ED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E91218D52CB2DD0A000521ED /* Assets.xcassets */; };
 		E91218DA2CB2DD0A000521ED /* MorningWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E91218C82CB2DD07000521ED /* MorningWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -36,6 +35,7 @@
 		E9521C2F2CAE91C000BFCAEF /* ResponseCopyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9521C2E2CAE91C000BFCAEF /* ResponseCopyCell.swift */; };
 		E9521C322CAFB28300BFCAEF /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = E9521C312CAFB28300BFCAEF /* Lottie */; };
 		E9521C342CAFC28300BFCAEF /* WelcomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */; };
+		E9638CA52CBAD8A70004A728 /* EncouragementProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9638CA42CBAD8A70004A728 /* EncouragementProvider.swift */; };
 		E97654962CABC4A7003884AF /* AlertKit in Frameworks */ = {isa = PBXBuildFile; productRef = E97654952CABC4A7003884AF /* AlertKit */; };
 		E976549A2CACE9AC003884AF /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97654992CACE9AC003884AF /* UserInfoCell.swift */; };
 		E976549C2CAD0A5F003884AF /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E976549B2CAD0A5F003884AF /* Animation.swift */; };
@@ -113,7 +113,6 @@
 		E91218CA2CB2DD07000521ED /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		E91218CC2CB2DD08000521ED /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		E91218CF2CB2DD08000521ED /* MorningWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorningWidgetBundle.swift; sourceTree = "<group>"; };
-		E91218D12CB2DD08000521ED /* MorningWidgetLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorningWidgetLiveActivity.swift; sourceTree = "<group>"; };
 		E91218D32CB2DD08000521ED /* MorningWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorningWidget.swift; sourceTree = "<group>"; };
 		E91218D52CB2DD0A000521ED /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E91218D72CB2DD0A000521ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -134,6 +133,7 @@
 		E9521C2C2CAE507000BFCAEF /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		E9521C2E2CAE91C000BFCAEF /* ResponseCopyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseCopyCell.swift; sourceTree = "<group>"; };
 		E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeVC.swift; sourceTree = "<group>"; };
+		E9638CA42CBAD8A70004A728 /* EncouragementProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncouragementProvider.swift; sourceTree = "<group>"; };
 		E97654992CACE9AC003884AF /* UserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
 		E976549B2CAD0A5F003884AF /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		E97C15DD2C9166B5002B437C /* MindReader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MindReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -240,8 +240,8 @@
 			isa = PBXGroup;
 			children = (
 				E91218CF2CB2DD08000521ED /* MorningWidgetBundle.swift */,
-				E91218D12CB2DD08000521ED /* MorningWidgetLiveActivity.swift */,
 				E91218D32CB2DD08000521ED /* MorningWidget.swift */,
+				E9638CA42CBAD8A70004A728 /* EncouragementProvider.swift */,
 				E91218D52CB2DD0A000521ED /* Assets.xcassets */,
 				E91218D72CB2DD0A000521ED /* Info.plist */,
 			);
@@ -515,7 +515,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E91218D02CB2DD08000521ED /* MorningWidgetBundle.swift in Sources */,
-				E91218D22CB2DD08000521ED /* MorningWidgetLiveActivity.swift in Sources */,
 				E91218D42CB2DD08000521ED /* MorningWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -558,6 +557,7 @@
 				E9F6B6862C96EB14008E9FBF /* ForumVC.swift in Sources */,
 				E91218E12CB4CCB4000521ED /* KeyboardHandler.swift in Sources */,
 				E91218E52CB51465000521ED /* PrivacyPolicyVC.swift in Sources */,
+				E9638CA52CBAD8A70004A728 /* EncouragementProvider.swift in Sources */,
 				E9F6B6BA2C9AC4D2008E9FBF /* CommentsVC.swift in Sources */,
 				E9521C2F2CAE91C000BFCAEF /* ResponseCopyCell.swift in Sources */,
 				E9521C2D2CAE507000BFCAEF /* ToastView.swift in Sources */,

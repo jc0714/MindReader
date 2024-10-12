@@ -35,24 +35,21 @@ struct Provider: TimelineProvider {
 
     func dailyEncouragement(for date: Date) -> String {
         let dayOfWeek = Calendar.current.component(.weekday, from: date)
-        switch dayOfWeek {
-        case 1:
-            return "放鬆心情，享受生活！🐷"
-        case 2:
-            return "週一來了！新的一週也加油🌱"
-        case 3:
-            return "週二適合吃個好吃的午餐，配上一杯健康果汁🍹"
-        case 4:
-            return "這週已經過了一半，耶吼～🤩"
-        case 5:
-            return "週四，快要到週末了，撐住！（酪梨健康好吃🥑）"
-        case 6:
-            return "Happy Friday，一定要吃個好吃晚餐，配個好看電影🎬"
-        case 7:
-            return "今天可以睡飽一點，做點喜歡的事情！🍺"
-        default:
-            return "每天都是好日子，一起快樂過生活"
-        }
+        return EncouragementProvider.getEncouragement(for: dayOfWeek)
+    }
+
+    // 每日隨機背景圖片的邏輯
+    func dailyBackgroundImage(for date: Date) -> String {
+        let backgroundImages = ["photo1", "photo2", "photo3", "photo4", "photo5", "photo6", "photo7", "photo8", "photo9", "photo10", "photo11"]
+
+        // 使用日期的 day, month, year 組成一個隨機但固定的索引
+        let day = Calendar.current.component(.day, from: date)
+        let month = Calendar.current.component(.month, from: date)
+        let year = Calendar.current.component(.year, from: date)
+
+        let index = (day + month + year) % backgroundImages.count
+
+        return backgroundImages[index]
     }
 }
 
@@ -67,29 +64,35 @@ struct MorningWidgetEntryView: View {
 
     var body: some View {
         ZStack {
-            Color.yellow // 使用單一背景色，便於文字顯示清晰
+            // 每日隨機背景圖
+            Image(dailyBackgroundImage(for: entry.date))
+                .resizable()
+                .scaledToFill()
+                .frame(width: widgetFamily == .systemSmall ? 158 : 340, height: widgetFamily == .systemSmall ? 158 : 158) // 放大一點圖片
+                .clipped()
+                .ignoresSafeArea()
+                .overlay(Color.black.opacity(0.2))
 
-            VStack(spacing: 8) { // 設置字行間距
-                // 顯示「星期幾」並讓它佔滿第一行
+            VStack(spacing: 8) {
+                // 顯示「星期幾」
                 Text(weekdayInChinese(from: entry.date))
-                    .font(.system(size: widgetFamily == .systemSmall ? 36 : 30, weight: .bold)) // 調整字體大小和粗細
-                    .lineLimit(1) // 確保文字佔一行
-                    .minimumScaleFactor(0.5) // 文字自動縮放以適應空間
-                    .frame(maxWidth: .infinity) // 佔滿整個寬度
+                    .font(.system(size: widgetFamily == .systemSmall ? 30 : 30, weight: .bold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
+                    .frame(maxWidth: .infinity)
                     .foregroundColor(.white)
 
                 // 顯示本日鼓勵語
                 Text(entry.encouragement)
-                    .font(.body)
+                    .font(.system(size: widgetFamily == .systemSmall ? 22 : 22, weight: .bold))
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
-                    .lineLimit(3) // 最多顯示三行
-                    .minimumScaleFactor(0.8) // 文字自動縮小以適應空間
-                    .padding([.leading, .trailing], 0.01) // 加入左右邊距，讓文字不貼邊
+                    .lineLimit(3)
+                    .minimumScaleFactor(0.8)
+                    .padding([.leading, .trailing], 0.01)
             }
-            .padding(.vertical, 10) // 減少上下 padding，避免過多空間
+            .padding(0)
         }
-        .containerBackground(Color.yellow, for: .widget) // 設定背景顏色
     }
 
     // 自定義方法來顯示中文的星期幾
@@ -98,6 +101,26 @@ struct MorningWidgetEntryView: View {
         let dayOfWeek = calendar.component(.weekday, from: date)
         let weekdays = ["星期天☀️", "星期一⛽️", "星期二🍀", "星期三💪🏻", "星期四💡", "星期五🍕", "星期六🏖️"]
         return weekdays[dayOfWeek - 1]
+    }
+
+    // 每日隨機圖片
+    private func dailyBackgroundImage(for date: Date) -> String {
+        // 把圖片名稱的初始化和計算分開
+        let imageNames: [String] = [
+            "photo1", "photo2", "photo3", "photo4",
+            "photo5", "photo6", "photo7", "photo8",
+            "photo9", "photo10", "photo11"
+        ]
+
+        // 根據日期計算一個索引
+        let day = Calendar.current.component(.day, from: date)
+        let month = Calendar.current.component(.month, from: date)
+        let year = Calendar.current.component(.year, from: date)
+
+        // 計算圖片索引，確保範圍在 imageNames 數組內
+        let index = (day + month + year) % imageNames.count
+
+        return imageNames[index]
     }
 }
 
