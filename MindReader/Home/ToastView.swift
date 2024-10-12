@@ -135,6 +135,7 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
             cell.selectionStyle = .none
 
             cell.textLabel?.text = "\(indexPath.row + 1). \(possibleMeanings[indexPath.row])"
+            cell.textLabel?.textColor = .black
 
             return cell
           } else {

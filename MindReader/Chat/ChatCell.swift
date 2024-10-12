@@ -152,9 +152,6 @@ class ChatCell: UITableViewCell {
             messageTrailingConstraint.isActive = true
             timeLeadingConstraint.isActive = true
             bubbleBackgroundView.backgroundColor = .white
-//            bubbleBackgroundView.layer.borderColor = UIColor.systemBrown.cgColor
-//            bubbleBackgroundView.layer.borderWidth = 3
-
             messageLabel.textColor = .black
 
             inComeMsgImageView.isHidden = true

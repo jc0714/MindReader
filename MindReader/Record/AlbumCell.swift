@@ -26,12 +26,12 @@ class AlbumCell: UICollectionViewCell {
     }
 
     func configure(with url: URL) {
-        imageView.kf.setImage(with: url, placeholder: UIImage(named: "photo7"))
+        imageView.kf.setImage(with: url, placeholder: UIImage(named: "photo2"))
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        imageView.image = UIImage(named: "photo7")
+        imageView.image = UIImage(named: "photo2")
     }
 }

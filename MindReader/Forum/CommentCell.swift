@@ -65,7 +65,8 @@ class CommentCell: UITableViewCell {
 
     // MARK: - Setup
     private func setupViews() {
-        contentView.backgroundColor = .white
+        contentView.backgroundColor = .clear
+        backgroundColor = .clear
         contentView.addSubview(cardView)
         cardView.addSubview(reportButton)
         cardView.addSubview(authorLabel)

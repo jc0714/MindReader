@@ -35,7 +35,7 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(CommentCell.self, forCellReuseIdentifier: "CommentCell")
-        view.backgroundColor = UIColor.white.withAlphaComponent(1)
+        view.backgroundColor = UIColor.albumBackground
 
         setupTableView()
         setupCloseButton()
@@ -59,6 +59,7 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none
+        tableView.backgroundColor = .albumBackground
 
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -150,6 +151,7 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         let comment = comments[indexPath.row]
 
         cell?.configure(author: comment.author, content: comment.content, timestamp: comment.timestamp)
+        cell?.selectionStyle = .none
 
         return cell!
     }

@@ -136,6 +136,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         field.layer.borderColor = UIColor.pink1.cgColor
         field.returnKeyType = .done
         field.font = UIFont.systemFont(ofSize: 16)
+        field.textColor = .black
         field.isHidden = true
         return field
     }()
@@ -147,7 +148,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         button.backgroundColor = .pink3
         button.layer.cornerRadius = 10
         button.layer.borderWidth = 2
-        button.layer.borderColor = UIColor.milkYellowww.cgColor
+        button.layer.borderColor = UIColor.milkYellow.cgColor
         button.tag = 0 // 初始設定在圖片
         return button
     }()

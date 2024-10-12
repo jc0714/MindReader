@@ -31,10 +31,12 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         super.viewDidLoad()
         setupUI()
         loadUserName()
+
+        updateModeForCurrentTraitCollection()
     }
 
     private func setupUI() {
-        view.backgroundColor = UIColor(red: 255/255, green: 245/255, blue: 238/255, alpha: 1)
+        view.backgroundColor = .milkYellow
 
         view.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -240,23 +242,40 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         return 0
     }
 
-    //MARK: 淺色/深色模式
+    // MARK: 淺色/深色模式
+    // 更新模式的通用邏輯
+    private func updateAppearance(to mode: UIUserInterfaceStyle) {
+        if mode == .dark {
+            // 從日間轉到夜間
+            animationView.play(fromProgress: 0.0, toProgress: 0.5)
+            if let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate {
+                sceneDelegate.switchAppearance(to: .dark)
+            }
+            isNightMode = true
+        } else {
+            // 從夜間轉回日間
+            animationView.play(fromProgress: 0.5, toProgress: 1.0)
+            if let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate {
+                sceneDelegate.switchAppearance(to: .light)
+            }
+            isNightMode = false
+        }
+    }
+
+    // 系統模式發生變化時自動更新
+    private func updateModeForCurrentTraitCollection() {
+        let currentStyle = traitCollection.userInterfaceStyle
+        updateAppearance(to: currentStyle)
+    }
+
+    // 手動切換模式
     @objc private func turnDayAndNight() {
         HapticFeedbackManager.lightFeedback()
         if isNightMode {
-            // 從夜間轉回日間 (播放後半段 0.5 -> 1.0)
-            animationView.play(fromProgress: 0.5, toProgress: 1.0)
-            if let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate {
-                sceneDelegate.switchAppearance(to: .light) // 切換為夜間模式
-            }
+            updateAppearance(to: .light)
         } else {
-            // 從日間轉到夜間 (播放前半段 0.0 -> 0.5)
-            animationView.play(fromProgress: 0.0, toProgress: 0.5)
-            if let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate {
-                sceneDelegate.switchAppearance(to: .dark) // 切換為夜間模式
-            }
+            updateAppearance(to: .dark)
         }
-        isNightMode.toggle()  // 切換模式狀態
     }
 
     // MARK: 回報問題
