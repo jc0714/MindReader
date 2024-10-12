@@ -36,6 +36,7 @@
 		E9521C322CAFB28300BFCAEF /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = E9521C312CAFB28300BFCAEF /* Lottie */; };
 		E9521C342CAFC28300BFCAEF /* WelcomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */; };
 		E9638CA52CBAD8A70004A728 /* EncouragementProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9638CA42CBAD8A70004A728 /* EncouragementProvider.swift */; };
+		E9638CA62CBADBBE0004A728 /* EncouragementProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9638CA42CBAD8A70004A728 /* EncouragementProvider.swift */; };
 		E97654962CABC4A7003884AF /* AlertKit in Frameworks */ = {isa = PBXBuildFile; productRef = E97654952CABC4A7003884AF /* AlertKit */; };
 		E976549A2CACE9AC003884AF /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97654992CACE9AC003884AF /* UserInfoCell.swift */; };
 		E976549C2CAD0A5F003884AF /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E976549B2CAD0A5F003884AF /* Animation.swift */; };
@@ -516,6 +517,7 @@
 			files = (
 				E91218D02CB2DD08000521ED /* MorningWidgetBundle.swift in Sources */,
 				E91218D42CB2DD08000521ED /* MorningWidget.swift in Sources */,
+				E9638CA62CBADBBE0004A728 /* EncouragementProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
