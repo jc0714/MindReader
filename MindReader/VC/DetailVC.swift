@@ -381,7 +381,7 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
             self.present(alertController, animated: true, completion: nil)
         }
 
-        deleteAction.backgroundColor = .pink3
+        deleteAction.backgroundColor = UIColor.delete
 
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }

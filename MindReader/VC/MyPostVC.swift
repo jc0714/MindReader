@@ -129,8 +129,6 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
                             }
 
                             DispatchQueue.main.async {
-                                print("Post IDs: \(postIds)")
-
                                 if self.posts.isEmpty {
                                     self.placeholderView.show(in: self.view)
                                 } else {
@@ -173,7 +171,7 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
             self.present(alertController, animated: true, completion: nil)
         }
 
-        deleteAction.backgroundColor = .pink3
+        deleteAction.backgroundColor = .delete
 
         // 分享動作
         let shareAction = UIContextualAction(style: .normal, title: "分享") { (action, view, completionHandler) in
@@ -181,7 +179,7 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
             self.sharePost(at: indexPath)
             completionHandler(true)
         }
-        shareAction.backgroundColor = .pink2
+        shareAction.backgroundColor = .pink1
 
         // 將兩個動作加到 swipe action configuration 中
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction, shareAction])

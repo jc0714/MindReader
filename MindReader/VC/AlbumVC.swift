@@ -24,7 +24,7 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor.albumBackground
 
         setupCollectionView()
 

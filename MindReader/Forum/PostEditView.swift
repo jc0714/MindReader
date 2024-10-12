@@ -89,7 +89,7 @@ class PostEditView: UIView {
         button.backgroundColor = .pink3
         button.layer.cornerRadius = 10
         button.layer.borderWidth = 2
-        button.layer.borderColor = UIColor.milkYellowww.cgColor
+        button.layer.borderColor = UIColor.milkYellow.cgColor
         return button
     }()
 
