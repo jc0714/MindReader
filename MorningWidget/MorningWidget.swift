@@ -84,7 +84,7 @@ struct MorningWidgetEntryView: View {
 
                 // 顯示本日鼓勵語
                 Text(entry.encouragement)
-                    .font(.system(size: widgetFamily == .systemSmall ? 22 : 22, weight: .bold))
+                    .font(.system(size: widgetFamily == .systemSmall ? 20 : 22, weight: .bold))
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
                     .lineLimit(3)
