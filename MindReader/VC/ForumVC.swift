@@ -23,8 +23,10 @@ class ForumVC: BasePostVC {
         super.viewDidLoad()
 
         self.navigationItem.backButtonTitle = ""
-        self.navigationItem.title = "交流版"
-
+//        self.navigationItem.title = "交流版"
+//        self.navigationController?.navigationBar.titleTextAttributes = [
+//            NSAttributedString.Key.foregroundColor: UIColor.pink3
+//        ]
         self.VCid = "ForumVC"
 
         fetchPosts()
@@ -39,9 +41,9 @@ class ForumVC: BasePostVC {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: false)
+//        navigationController?.setNavigationBarHidden(false, animated: false)
 
-//        navigationController?.navigationBar.isHidden = true
+        navigationController?.navigationBar.isHidden = true
 
         fetchPosts()
     }
@@ -58,9 +60,6 @@ class ForumVC: BasePostVC {
 
         let blockedList = UserDefaults.standard.dictionary(forKey: "BlockedList") as? [String: String] ?? [:]
         let reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
-
-        print("Blocked List: \(blockedList)")
-        print("Reported List: \(reportedList)")
 
         Firestore.firestore().collection("posts")
             .order(by: "createdTime", descending: true)
@@ -99,9 +98,6 @@ class ForumVC: BasePostVC {
                     else { return nil }
 
                     if blockedList.keys.contains(authorId) || reportedList.contains(id) {
-                        print("Blocked List: \(blockedList)")
-                        print("Reported List: \(reportedList)")
-
                         return nil
                     }
 
@@ -127,26 +123,42 @@ class ForumVC: BasePostVC {
     }
 
     private func setupEditButton() {
+        // 使用 UIButton.Configuration 來設置 SF Symbol 的大小和內邊距
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "plus.circle")
+        config.imagePadding = 0 // 不要任何內邊距
+        config.imagePlacement = .all // 圖片占滿整個按鈕
+        config.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 45)
+
         goEditButton.backgroundColor = UIColor.white
-        goEditButton.setTitle("➕", for: .normal)
-        goEditButton.layer.cornerRadius = 30
-        goEditButton.layer.borderColor = UIColor.brown.cgColor
-        goEditButton.layer.borderWidth = 3
+        goEditButton.tintColor = UIColor.brown // 設置 SF Symbol 的顏色
+        goEditButton.imageView?.contentMode = .scaleToFill
+
+        goEditButton.configuration = config
+
+        goEditButton.layer.cornerRadius = 22.5
+
+        goEditButton.layer.shadowColor = UIColor.black.cgColor
+        goEditButton.layer.shadowOpacity = 0.3
+        goEditButton.layer.shadowOffset = CGSize(width: 4, height: 4)
+        goEditButton.layer.shadowRadius = 6
 
         goEditButton.translatesAutoresizingMaskIntoConstraints = false
+
         view.addSubview(goEditButton)
 
         NSLayoutConstraint.activate([
-            goEditButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            goEditButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             goEditButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100),
-            goEditButton.widthAnchor.constraint(equalToConstant: 60),
-            goEditButton.heightAnchor.constraint(equalToConstant: 60)
+            goEditButton.widthAnchor.constraint(equalToConstant: 48),
+            goEditButton.heightAnchor.constraint(equalToConstant: 48)
         ])
 
         goEditButton.addTarget(self, action: #selector(navigateToEditPage), for: .touchUpInside)
     }
 
     @objc func navigateToEditPage() {
+        HapticFeedbackManager.lightFeedback()
         performSegue(withIdentifier: "toEditPage", sender: self)
     }
 }

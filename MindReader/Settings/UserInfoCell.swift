@@ -47,6 +47,16 @@ class UserInfoCell: UITableViewCell {
         return imageView
     }()
 
+    private let randomAvatarLabel: UILabel = {
+        let label = UILabel()
+        label.text = "頭貼會隨機更換，每次都是小驚喜！"
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor.brown
+        label.textAlignment = .center
+        label.alpha = 1.0 // 初始為可見
+        return label
+    }()
+
     private let userInfoLabel: UILabel = {
         let label = UILabel()
         label.text = "您的名字："
@@ -92,6 +102,7 @@ class UserInfoCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
+        showAndHideRandomAvatarLabel()
     }
 
     required init?(coder: NSCoder) {
@@ -124,6 +135,14 @@ class UserInfoCell: UITableViewCell {
             avatarImageView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 16),
             avatarImageView.widthAnchor.constraint(equalToConstant: 80),
             avatarImageView.heightAnchor.constraint(equalToConstant: 80)
+        ])
+
+        cardView.addSubview(randomAvatarLabel)
+        randomAvatarLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            randomAvatarLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 12),
+            randomAvatarLabel.leadingAnchor.constraint(equalTo: avatarImageView.leadingAnchor)
+//            randomAvatarLabel.trailingAnchor.constraint(equalTo: cardView.trailingAnchor)
         ])
 
         cardView.addSubview(userInfoLabel)
@@ -165,6 +184,20 @@ class UserInfoCell: UITableViewCell {
             submitButton.heightAnchor.constraint(equalToConstant: 30)
         ])
     }
+
+    private func showAndHideRandomAvatarLabel() {
+        UIView.animate(withDuration: 1.0, animations: {
+            self.randomAvatarLabel.alpha = 1.0 // 顯示 Label
+        }, completion: { _ in
+            UIView.animate(withDuration: 1.0, delay: 5.0, options: [], animations: {
+                self.randomAvatarLabel.alpha = 0.0 // 隱藏 Label
+            }, completion: { _ in
+                self.randomAvatarLabel.removeFromSuperview() // 移除 Label
+            })
+        })
+    }
+
+
 
     func configure(with title: String, icon: UIImage?) {
         nameLabel.text = title

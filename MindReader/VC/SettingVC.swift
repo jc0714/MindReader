@@ -88,7 +88,9 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
             }
             cell.backgroundColor = .clear
             cell.selectionStyle = .none
-            cell.configure(with: userName, icon: UIImage(named: "photo4"))
+            let randomAvatarIndex = Int.random(in: 1...8)
+            let randomAvatarName = "avatar\(randomAvatarIndex)"
+            cell.configure(with: userName, icon: UIImage(named: randomAvatarName))
             cell.delegate = self
             return cell
         } else {
