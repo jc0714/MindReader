@@ -7,8 +7,16 @@
 
 import WidgetKit
 import SwiftUI
+import FirebaseCore
 
 struct Provider: TimelineProvider {
+
+    init() {
+        if FirebaseApp.app() == nil {
+            FirebaseApp.configure()
+        }
+    }
+
     func placeholder(in context: Context) -> SimpleEntry {
         SimpleEntry(date: Date(), encouragement: "今天也順心❤️")
     }
@@ -19,23 +27,24 @@ struct Provider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        var entries: [SimpleEntry] = []
+        Task {
+            var entries: [SimpleEntry] = []
+            let currentDate = Date()
 
-        let currentDate = Date()
-        for dayOffset in 0 ..< 7 {
-            let entryDate = Calendar.current.date(byAdding: .day, value: dayOffset, to: currentDate)!
-            let encouragement = dailyEncouragement(for: entryDate)
-            let entry = SimpleEntry(date: entryDate, encouragement: encouragement)
-            entries.append(entry)
+            for dayOffset in 0 ..< 7 {
+                let entryDate = Calendar.current.date(byAdding: .day, value: dayOffset, to: currentDate)!
+
+                // 使用 async/await 來處理異步操作
+                let encouragement = await EncouragementService.dailyEncouragement(for: entryDate)
+
+                let entry = SimpleEntry(date: entryDate, encouragement: encouragement)
+                entries.append(entry)
+            }
+
+            // 建立時間軸並回傳
+            let timeline = Timeline(entries: entries, policy: .atEnd)
+            completion(timeline)
         }
-
-        let timeline = Timeline(entries: entries, policy: .atEnd)
-        completion(timeline)
-    }
-
-    func dailyEncouragement(for date: Date) -> String {
-        let dayOfWeek = Calendar.current.component(.weekday, from: date)
-        return EncouragementProvider.getEncouragement(for: dayOfWeek)
     }
 
     // 每日隨機背景圖片的邏輯

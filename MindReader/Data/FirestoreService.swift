@@ -71,13 +71,24 @@ class FirestoreService {
     // MARK: HomeVC
 
     // 批次打翻譯紀錄進去
-    func batchUploadData(for dataToUpload: [[String: Any]]) async {
+    func batchUploadData(for dataToUpload: [String: [String]]) async {
         let batch = db.batch()
 
-        for data in dataToUpload {
-            let documentRef = db.collection("TranslateDB").document() // 這裡自動生成新的 document ID
+        for (day, messages) in dataToUpload {
+            let documentRef = db.collection("WidgetDB").document() // 這裡自動生成新的 document ID
+
+            // 構建 Firebase 中接受的 [String: Any] 格式
+            let data: [String: Any] = [
+                "day": day,  // 將 key 放入字串作為 "day"
+                "messages": messages // 這裡是 [String]
+            ]
+
             batch.setData(data, forDocument: documentRef)
         }
+//        for data in dataToUpload {
+//            let documentRef = db.collection("TranslateDB").document() // 這裡自動生成新的 document ID
+//            batch.setData(data, forDocument: documentRef)
+//        }
 
         do {
             try await batch.commit()

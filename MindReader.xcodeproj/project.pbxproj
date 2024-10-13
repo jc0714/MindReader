@@ -37,6 +37,9 @@
 		E9521C342CAFC28300BFCAEF /* WelcomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */; };
 		E9638CA52CBAD8A70004A728 /* EncouragementProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9638CA42CBAD8A70004A728 /* EncouragementProvider.swift */; };
 		E9638CA62CBADBBE0004A728 /* EncouragementProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9638CA42CBAD8A70004A728 /* EncouragementProvider.swift */; };
+		E9638CA82CBB63B00004A728 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E9638CA72CBB63B00004A728 /* FirebaseAnalytics */; };
+		E9638CAA2CBB63B00004A728 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = E9638CA92CBB63B00004A728 /* FirebaseFirestore */; };
+		E9638CAD2CBB65640004A728 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E97C15F82C918944002B437C /* GoogleService-Info.plist */; };
 		E97654962CABC4A7003884AF /* AlertKit in Frameworks */ = {isa = PBXBuildFile; productRef = E97654952CABC4A7003884AF /* AlertKit */; };
 		E976549A2CACE9AC003884AF /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97654992CACE9AC003884AF /* UserInfoCell.swift */; };
 		E976549C2CAD0A5F003884AF /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E976549B2CAD0A5F003884AF /* Animation.swift */; };
@@ -181,7 +184,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E91218CD2CB2DD08000521ED /* SwiftUI.framework in Frameworks */,
+				E9638CAA2CBB63B00004A728 /* FirebaseFirestore in Frameworks */,
 				E91218CB2CB2DD08000521ED /* WidgetKit.framework in Frameworks */,
+				E9638CA82CBB63B00004A728 /* FirebaseAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,6 +393,10 @@
 			dependencies = (
 			);
 			name = MorningWidgetExtension;
+			packageProductDependencies = (
+				E9638CA72CBB63B00004A728 /* FirebaseAnalytics */,
+				E9638CA92CBB63B00004A728 /* FirebaseFirestore */,
+			);
 			productName = MorningWidgetExtension;
 			productReference = E91218C82CB2DD07000521ED /* MorningWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -472,6 +481,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E91218D62CB2DD0A000521ED /* Assets.xcassets in Resources */,
+				E9638CAD2CBB65640004A728 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -931,6 +941,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E9521C302CAFB28300BFCAEF /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
+		};
+		E9638CA72CBB63B00004A728 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E97C15FA2C9189FF002B437C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		E9638CA92CBB63B00004A728 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E97C15FA2C9189FF002B437C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
 		};
 		E97654952CABC4A7003884AF /* AlertKit */ = {
 			isa = XCSwiftPackageProductDependency;
