@@ -12,6 +12,5 @@ import SwiftUI
 struct MorningWidgetBundle: WidgetBundle {
     var body: some Widget {
         MorningWidget()
-//        MorningWidgetLiveActivity()
     }
 }

@@ -14,7 +14,7 @@ import AlertKit
 
 class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
 
-    let dataToUpload: [[String: Any]] = []
+//    let dataToUpload: [[String: Any]] = []
 
     // MARK: - Properties
 

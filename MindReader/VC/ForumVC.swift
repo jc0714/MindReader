@@ -23,6 +23,7 @@ class ForumVC: BasePostVC {
         super.viewDidLoad()
 
         self.navigationItem.backButtonTitle = ""
+        self.navigationItem.title = "交流版"
 
         self.VCid = "ForumVC"
 
@@ -38,7 +39,9 @@ class ForumVC: BasePostVC {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.isHidden = true
+        navigationController?.setNavigationBarHidden(false, animated: false)
+
+//        navigationController?.navigationBar.isHidden = true
 
         fetchPosts()
     }
