@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 import Firebase
 import FirebaseFirestore
-import AlertKit
 
 class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 

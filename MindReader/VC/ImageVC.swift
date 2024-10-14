@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import AlertKit
 
 class ImageVC: UIViewController, ImageCollectionViewDelegate {
 

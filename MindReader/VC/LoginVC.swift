@@ -50,7 +50,9 @@ class LoginVC: UIViewController, ASAuthorizationControllerPresentationContextPro
         // 設置按鈕在背景視圖的中心
         NSLayoutConstraint.activate([
             appleSignInButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            appleSignInButton.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
+            appleSignInButton.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            appleSignInButton.widthAnchor.constraint(equalToConstant: 200),  // 設定寬度
+            appleSignInButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
 

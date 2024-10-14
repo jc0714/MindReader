@@ -125,7 +125,6 @@ struct MorningWidgetEntryView: View {
     }
 }
 
-
 struct MorningWidget: Widget {
     let kind: String = "MorningWidget"
 
@@ -135,7 +134,7 @@ struct MorningWidget: Widget {
         }
         .configurationDisplayName("早安圖")
         .description("日日是好日，來點力量！")
-        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+        .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
 

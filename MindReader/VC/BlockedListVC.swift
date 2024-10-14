@@ -43,7 +43,8 @@ class BlockedListVC: UIViewController, UITableViewDataSource, UITableViewDelegat
 
     private func setupCloseButton() {
         let closeButton = UIButton(type: .system)
-        closeButton.setTitle("close", for: .normal)
+        closeButton.setTitle("✕", for: .normal)
+        closeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24)
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
 
         view.addSubview(closeButton)

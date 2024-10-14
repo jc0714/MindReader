@@ -10,7 +10,7 @@ import Firebase
 import FirebaseFirestore
 import FirebaseStorage
 import Lottie
-import AlertKit
+import FirebaseCrashlytics
 
 class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
 
