@@ -257,14 +257,14 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     private func updateAppearance(to mode: UIUserInterfaceStyle) {
         if mode == .dark {
             // 從日間轉到夜間
-            animationView.play(fromProgress: 0.0, toProgress: 0.5)
+//            animationView.play(fromProgress: 0.0, toProgress: 0.5)
             if let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate {
                 sceneDelegate.switchAppearance(to: .dark)
             }
             isNightMode = true
         } else {
             // 從夜間轉回日間
-            animationView.play(fromProgress: 0.5, toProgress: 1.0)
+//            animationView.play(fromProgress: 0.5, toProgress: 1.0)
             if let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate {
                 sceneDelegate.switchAppearance(to: .light)
             }
@@ -282,8 +282,10 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     @objc private func turnDayAndNight() {
         HapticFeedbackManager.lightFeedback()
         if isNightMode {
+            animationView.play(fromProgress: 0.5, toProgress: 1.0)
             updateAppearance(to: .light)
         } else {
+            animationView.play(fromProgress: 0.0, toProgress: 0.5)
             updateAppearance(to: .dark)
         }
     }

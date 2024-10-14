@@ -43,6 +43,7 @@
 		E9638CAF2CBCBDC00004A728 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = E9638CAE2CBCBDC00004A728 /* FirebaseCrashlytics */; };
 		E9638CB12CBCC3720004A728 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E9638CB02CBCC3720004A728 /* FirebaseAnalytics */; };
 		E9638CB32CBCF22E0004A728 /* TextAdjustmentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9638CB22CBCF22E0004A728 /* TextAdjustmentVC.swift */; };
+		E9638CB52CBD5F3B0004A728 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9638CB42CBD5F3B0004A728 /* LoginView.swift */; };
 		E97654962CABC4A7003884AF /* AlertKit in Frameworks */ = {isa = PBXBuildFile; productRef = E97654952CABC4A7003884AF /* AlertKit */; };
 		E976549A2CACE9AC003884AF /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97654992CACE9AC003884AF /* UserInfoCell.swift */; };
 		E976549C2CAD0A5F003884AF /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E976549B2CAD0A5F003884AF /* Animation.swift */; };
@@ -142,6 +143,7 @@
 		E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeVC.swift; sourceTree = "<group>"; };
 		E9638CA42CBAD8A70004A728 /* EncouragementProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncouragementProvider.swift; sourceTree = "<group>"; };
 		E9638CB22CBCF22E0004A728 /* TextAdjustmentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAdjustmentVC.swift; sourceTree = "<group>"; };
+		E9638CB42CBD5F3B0004A728 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		E97654992CACE9AC003884AF /* UserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
 		E976549B2CAD0A5F003884AF /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		E97C15DD2C9166B5002B437C /* MindReader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MindReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -331,6 +333,7 @@
 				E912190D2CB79133000521ED /* ReportCommentManager.swift */,
 				E912190F2CB79617000521ED /* ReportPostManager.swift */,
 				E91219112CB81CBC000521ED /* PlaceholderView.swift */,
+				E9638CB42CBD5F3B0004A728 /* LoginView.swift */,
 			);
 			path = MindReader;
 			sourceTree = "<group>";
@@ -592,6 +595,7 @@
 				E97C15E32C9166B5002B437C /* SceneDelegate.swift in Sources */,
 				E9F6B6882C96EFC9008E9FBF /* PostCell.swift in Sources */,
 				E9240AD32C9D442F00A47944 /* RecordView.swift in Sources */,
+				E9638CB52CBD5F3B0004A728 /* LoginView.swift in Sources */,
 				E9F6B6BE2C9BCF7C008E9FBF /* CommentCell.swift in Sources */,
 				E90B5E552CA509AB00CA24F7 /* TagFilterView.swift in Sources */,
 				E9240AD12C9D216A00A47944 /* MyPostVC.swift in Sources */,

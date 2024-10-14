@@ -51,7 +51,7 @@ class ReportIssueViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle("送出", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .pink3.withAlphaComponent(0.7)
+        button.backgroundColor = .pink3.withAlphaComponent(0.8)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 20
         button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
