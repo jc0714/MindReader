@@ -74,15 +74,15 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     private func setupCloseButton() {
         let closeButton = UIButton(type: .system)
-        closeButton.setTitle("✕", for: .normal)
-        closeButton.titleLabel?.font = UIFont.systemFont(ofSize: 24)
+        closeButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
+        closeButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
 
         view.addSubview(closeButton)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+            closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15),
+            closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15)
         ])
     }
 
