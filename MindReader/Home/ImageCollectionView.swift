@@ -77,6 +77,7 @@ class ImageCollectionView: UIView, UICollectionViewDelegate, UICollectionViewDat
     // MARK: - UICollectionViewDelegate
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        HapticFeedbackManager.lightFeedback()
         let selectedImageName = imageNames[indexPath.item]
         delegate?.didSelectImage(named: selectedImageName)
     }

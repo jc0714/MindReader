@@ -31,17 +31,11 @@ struct Provider: TimelineProvider {
             var entries: [SimpleEntry] = []
             let currentDate = Date()
 
-            for dayOffset in 0 ..< 7 {
-                let entryDate = Calendar.current.date(byAdding: .day, value: dayOffset, to: currentDate)!
+            let encouragement = await EncouragementService.dailyEncouragement(for: currentDate)
 
-                // 使用 async/await 來處理異步操作
-                let encouragement = await EncouragementService.dailyEncouragement(for: entryDate)
+            let entry = SimpleEntry(date: currentDate, encouragement: encouragement)
+            entries.append(entry)
 
-                let entry = SimpleEntry(date: entryDate, encouragement: encouragement)
-                entries.append(entry)
-            }
-
-            // 建立時間軸並回傳
             let timeline = Timeline(entries: entries, policy: .atEnd)
             completion(timeline)
         }
@@ -102,6 +96,7 @@ struct MorningWidgetEntryView: View {
             }
             .padding(0)
         }
+        .containerBackground(Color.white, for: .widget) // 使用背景 API
     }
 
     // 自定義方法來顯示中文的星期幾
@@ -114,24 +109,22 @@ struct MorningWidgetEntryView: View {
 
     // 每日隨機圖片
     private func dailyBackgroundImage(for date: Date) -> String {
-        // 把圖片名稱的初始化和計算分開
         let imageNames: [String] = [
             "photo1", "photo2", "photo3", "photo4",
             "photo5", "photo6", "photo7", "photo8",
             "photo9", "photo10", "photo11"
         ]
 
-        // 根據日期計算一個索引
         let day = Calendar.current.component(.day, from: date)
         let month = Calendar.current.component(.month, from: date)
         let year = Calendar.current.component(.year, from: date)
 
-        // 計算圖片索引，確保範圍在 imageNames 數組內
         let index = (day + month + year) % imageNames.count
 
         return imageNames[index]
     }
 }
+
 
 struct MorningWidget: Widget {
     let kind: String = "MorningWidget"

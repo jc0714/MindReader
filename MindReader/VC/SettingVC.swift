@@ -31,7 +31,9 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         super.viewDidLoad()
         setupUI()
         loadUserName()
+    }
 
+    override func viewWillAppear(_ animated: Bool) {
         updateModeForCurrentTraitCollection()
     }
 
@@ -237,7 +239,7 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 20
+        return 30
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {

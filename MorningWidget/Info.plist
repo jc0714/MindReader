@@ -6,6 +6,19 @@
 	<dict>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.widgetkit-extension</string>
+        <key>NSExtensionAttributes</key>
+            <dict>
+                <key>SupportedFamilies</key>
+                <array>
+                    <string>NCWidgetFamilySmall</string>
+                    <string>NCWidgetFamilyMedium</string>
+                </array>
+            </dict>
+	</dict>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
 	</dict>
 </dict>
 </plist>
