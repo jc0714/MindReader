@@ -302,10 +302,12 @@ class PostCell: UITableViewCell {
 
     @objc private func heartButtonTapped() {
         AnimationUtility.playHeartAnimation(above: heartButton)
+        HapticFeedbackManager.lightFeedback()
         heartButtonTappedClosure?()
     }
 
     @objc private func commentButtonTapped() {
+        HapticFeedbackManager.lightFeedback()
         commentButtonTappedClosure?()
     }
 

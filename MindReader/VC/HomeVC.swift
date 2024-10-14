@@ -70,6 +70,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     }
 
     @objc func toChatButtonTapped(_ sender: UIButton) {
+        HapticFeedbackManager.lightFeedback()
         let chatVC = ChatVC()
         navigationController?.pushViewController(chatVC, animated: true)
     }
@@ -77,6 +78,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - Submit Action
 
     @objc private func didTapSubmit(_ sender: UIButton) {
+        HapticFeedbackManager.lightFeedback()
 
         homeView.promptTextField.resignFirstResponder()
 
@@ -178,6 +180,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - Image Picker
 
     @objc func selectImageFromAlbum(_ sender: UIButton) {
+        HapticFeedbackManager.lightFeedback()
+
         let imagePicker = UIImagePickerController()
         imagePicker.sourceType = .photoLibrary
         imagePicker.delegate = self
@@ -207,6 +211,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - View Configuration
 
     @objc private func buttonTapped(_ sender: UIButton) {
+        HapticFeedbackManager.lightFeedback()
+
         guard sender != selectedButton else { return }
 
         if let previousButton = selectedButton {
@@ -230,12 +236,12 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         }
     }
 
-    @objc func showImageView() {
+    private func showImageView() {
         configureView(for: 0, isImageViewVisible: true)
         homeView.imageView.image = UIImage(named: "uploadImage")
     }
 
-    @objc func enterText() {
+    private func enterText() {
         configureView(for: 1, isImageViewVisible: false)
     }
 

@@ -424,6 +424,7 @@ extension HomeView: UICollectionViewDelegate, UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        HapticFeedbackManager.lightFeedback()
         if collectionView == audienceCollectionView {
             if let previousIndex = selectedAudienceIndex {
                 collectionView.deselectItem(at: previousIndex, animated: true)

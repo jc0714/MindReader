@@ -1,5 +1,5 @@
 //
-//  EncouragementProvider.swift
+//  EncouragementService.swift
 //  MindReader
 //
 //  Created by J oyce on 2024/10/13.
@@ -11,6 +11,16 @@ import FirebaseFirestore
 
 class EncouragementService {
 
+    static let documentIDMap: [Int: String] = [
+        1: "gMyAUg8kw0i3rkjiiK3e",  // 星期日
+        2: "76gNPWk49uakrmN1FBPj",  // 星期一
+        3: "LX0gzXKLJ2zn8nEUG346",  // 星期二
+        4: "amSwVjsS8446Ot9vLONv",  // 星期三
+        5: "5gpxJwezEirG8U4LIXMf",  // 星期四
+        6: "5ld9RQQS3pRGpjDGjLNd",  // 星期五
+        7: "3fjilVR8XPiDefHhLhaV"  // 星期六
+    ]
+
     static func dailyEncouragement(for date: Date) async -> String {
         let dayOfWeek = Calendar.current.component(.weekday, from: date)
 
@@ -21,7 +31,10 @@ class EncouragementService {
         if lastFetchDate < today {
             // 如果今天還沒有抓取資料，從 Firebase 抓取
             let db = Firestore.firestore()
-            let documentRef = db.collection("WidgetDB").document("\(dayOfWeek)") // 使用 dayOfWeek 作為 document ID
+            print(lastFetchDate)
+            print(today)
+            print(dayOfWeek)
+            let documentRef = db.collection("WidgetDB").document("\(documentIDMap[dayOfWeek] ?? "EBFrMoxIGSjfXEGK7RpR")")
 
             do {
                 let document = try await documentRef.getDocument()
