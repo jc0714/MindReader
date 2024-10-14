@@ -14,6 +14,7 @@ class LoginVC: UIViewController, ASAuthorizationControllerPresentationContextPro
 
     let appleSignInButton = ASAuthorizationAppleIDButton()
     private let firebaseService = FirestoreService()
+    private let mindReaderView = MindReaderAnimationView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,12 +29,16 @@ class LoginVC: UIViewController, ASAuthorizationControllerPresentationContextPro
     }
 
     private func setupUI() {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = view.bounds
-        gradientLayer.colors = [UIColor.milkYellow.cgColor, UIColor.pink3.cgColor]
-        gradientLayer.startPoint = CGPoint(x: 0, y: 0)
-        gradientLayer.endPoint = CGPoint(x: 1, y: 1)
-        view.layer.insertSublayer(gradientLayer, at: 0)
+        view.backgroundColor = UIColor.login
+
+        mindReaderView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(mindReaderView)
+        NSLayoutConstraint.activate([
+            mindReaderView.topAnchor.constraint(equalTo: view.topAnchor),
+            mindReaderView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            mindReaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            mindReaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
     }
 
     private func configureAppleSignInButton() {
@@ -50,7 +55,7 @@ class LoginVC: UIViewController, ASAuthorizationControllerPresentationContextPro
         // 設置按鈕在背景視圖的中心
         NSLayoutConstraint.activate([
             appleSignInButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            appleSignInButton.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            appleSignInButton.centerYAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -150),
             appleSignInButton.widthAnchor.constraint(equalToConstant: 200),  // 設定寬度
             appleSignInButton.heightAnchor.constraint(equalToConstant: 50)
         ])
