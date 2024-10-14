@@ -254,17 +254,26 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 
     // MARK: 淺色/深色模式
     // 更新模式的通用邏輯
-    private func updateAppearance(to mode: UIUserInterfaceStyle) {
+    private func updateAppearance(to mode: UIUserInterfaceStyle, isAnimated: Bool = false) {
         if mode == .dark {
             // 從日間轉到夜間
-//            animationView.play(fromProgress: 0.0, toProgress: 0.5)
+            if isAnimated {
+                animationView.play(fromProgress: 0.0, toProgress: 0.5)
+            } else {
+                animationView.currentProgress = 0.5
+            }
+
             if let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate {
                 sceneDelegate.switchAppearance(to: .dark)
             }
             isNightMode = true
         } else {
             // 從夜間轉回日間
-//            animationView.play(fromProgress: 0.5, toProgress: 1.0)
+            if isAnimated {
+                animationView.play(fromProgress: 0.5, toProgress: 1.0)
+            } else {
+                animationView.currentProgress = 1.0
+            }
             if let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate {
                 sceneDelegate.switchAppearance(to: .light)
             }
@@ -275,18 +284,16 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     // 系統模式發生變化時自動更新
     private func updateModeForCurrentTraitCollection() {
         let currentStyle = traitCollection.userInterfaceStyle
-        updateAppearance(to: currentStyle)
+        updateAppearance(to: currentStyle, isAnimated: false)
     }
 
     // 手動切換模式
     @objc private func turnDayAndNight() {
         HapticFeedbackManager.lightFeedback()
         if isNightMode {
-            animationView.play(fromProgress: 0.5, toProgress: 1.0)
-            updateAppearance(to: .light)
+            self.updateAppearance(to: .light, isAnimated: true)
         } else {
-            animationView.play(fromProgress: 0.0, toProgress: 0.5)
-            updateAppearance(to: .dark)
+            self.updateAppearance(to: .dark, isAnimated: true)
         }
     }
 

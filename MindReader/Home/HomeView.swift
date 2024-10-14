@@ -148,7 +148,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         button.backgroundColor = .pink3.withAlphaComponent(0.8)
         button.layer.cornerRadius = 10
         button.layer.borderWidth = 2
-        button.layer.borderColor = UIColor.milkYellow.cgColor
+        button.layer.borderColor = UIColor.chat.cgColor
         button.tag = 0 // 初始設定在圖片
         return button
     }()
