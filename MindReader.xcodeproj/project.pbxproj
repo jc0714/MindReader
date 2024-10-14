@@ -42,6 +42,7 @@
 		E9638CAD2CBB65640004A728 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E97C15F82C918944002B437C /* GoogleService-Info.plist */; };
 		E9638CAF2CBCBDC00004A728 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = E9638CAE2CBCBDC00004A728 /* FirebaseCrashlytics */; };
 		E9638CB12CBCC3720004A728 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E9638CB02CBCC3720004A728 /* FirebaseAnalytics */; };
+		E9638CB32CBCF22E0004A728 /* TextAdjustmentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9638CB22CBCF22E0004A728 /* TextAdjustmentVC.swift */; };
 		E97654962CABC4A7003884AF /* AlertKit in Frameworks */ = {isa = PBXBuildFile; productRef = E97654952CABC4A7003884AF /* AlertKit */; };
 		E976549A2CACE9AC003884AF /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97654992CACE9AC003884AF /* UserInfoCell.swift */; };
 		E976549C2CAD0A5F003884AF /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E976549B2CAD0A5F003884AF /* Animation.swift */; };
@@ -140,6 +141,7 @@
 		E9521C2E2CAE91C000BFCAEF /* ResponseCopyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseCopyCell.swift; sourceTree = "<group>"; };
 		E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeVC.swift; sourceTree = "<group>"; };
 		E9638CA42CBAD8A70004A728 /* EncouragementProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncouragementProvider.swift; sourceTree = "<group>"; };
+		E9638CB22CBCF22E0004A728 /* TextAdjustmentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAdjustmentVC.swift; sourceTree = "<group>"; };
 		E97654992CACE9AC003884AF /* UserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
 		E976549B2CAD0A5F003884AF /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		E97C15DD2C9166B5002B437C /* MindReader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MindReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -264,6 +266,7 @@
 				E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */,
 				E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */,
 				E97C15E42C9166B5002B437C /* HomeVC.swift */,
+				E9638CB22CBCF22E0004A728 /* TextAdjustmentVC.swift */,
 				E9F6B6B12C997482008E9FBF /* ImageVC.swift */,
 				E991422A2C9F24C300016C90 /* PostVC.swift */,
 				E9F6B6852C96EB14008E9FBF /* ForumVC.swift */,
@@ -574,6 +577,7 @@
 				E99142342CA0042200016C90 /* ImageCell.swift in Sources */,
 				E9F6B6862C96EB14008E9FBF /* ForumVC.swift in Sources */,
 				E91218E12CB4CCB4000521ED /* KeyboardHandler.swift in Sources */,
+				E9638CB32CBCF22E0004A728 /* TextAdjustmentVC.swift in Sources */,
 				E91218E52CB51465000521ED /* PrivacyPolicyVC.swift in Sources */,
 				E9638CA52CBAD8A70004A728 /* EncouragementProvider.swift in Sources */,
 				E9F6B6BA2C9AC4D2008E9FBF /* CommentsVC.swift in Sources */,

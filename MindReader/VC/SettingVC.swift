@@ -131,7 +131,7 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = 10
-        stackView.backgroundColor = .white
+        stackView.backgroundColor = .white.withAlphaComponent(0.3)
         stackView.layer.cornerRadius = 15
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -140,7 +140,13 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     private func createButton(withTitle title: String, section: Int, row: Int) -> UIButton {
         let button = UIButton(type: .system)
         button.setTitle(title, for: .normal)
-        button.setTitleColor(.darkGray, for: .normal)
+//        button.setTitleColor(.darkGray, for: .normal)
+//        button.setTitleColor(UIColor.label, for: .normal)
+        let dynamicColor = UIColor { traitCollection in
+            return traitCollection.userInterfaceStyle == .dark ? .white : .darkGray
+        }
+        button.setTitleColor(dynamicColor, for: .normal)
+
         button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         button.contentHorizontalAlignment = .left
         button.tag = section * 100 + row  // 將 section 和 row 組合存儲

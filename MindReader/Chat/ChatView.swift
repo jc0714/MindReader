@@ -133,6 +133,7 @@ class ChatView: UIView, UITextViewDelegate {
     func showLoadingAnimation() {
         self.bringSubviewToFront(self.typingAnimationView)
         typingAnimationView.isHidden = false
+        typingAnimationView.loopMode = .loop
         typingAnimationView.play()
         self.layoutIfNeeded()
     }

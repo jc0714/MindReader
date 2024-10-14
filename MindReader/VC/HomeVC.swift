@@ -44,7 +44,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         setupActions()
 
         selectedButton = homeView.imageButton
-        homeView.imageButton.backgroundColor = .pink3
+        homeView.imageButton.backgroundColor = .pink3.withAlphaComponent(0.7)
         homeView.imageButton.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
 
 //        Task {
@@ -111,7 +111,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                     self.updateResponseLabels(possibleMeanings: possibleMeanings, responseMethods: responseMethods)
 
                     sender.isUserInteractionEnabled = true
-                    sender.backgroundColor = .pink3
+                    sender.backgroundColor = .pink3.withAlphaComponent(0.7)
 
                     homeView.hideLoadingAnimation()
                     recognizedText = ""
@@ -146,13 +146,13 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                 recognizedText = ""
                 homeView.hideLoadingAnimation()
                 sender.isUserInteractionEnabled = true
-                sender.backgroundColor = .pink3
+                sender.backgroundColor = .pink3.withAlphaComponent(0.7)
             } catch {
                 AlertKitManager.presentErrorAlert(in: self, title: "網路異常，請確認連線")
                 homeView.hideLoadingAnimation()
                 print("Failed to get response: \(error)")
                 sender.isUserInteractionEnabled = true
-                sender.backgroundColor = .pink3
+                sender.backgroundColor = .pink3.withAlphaComponent(0.7)
             }
         }
     }
@@ -226,7 +226,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         UIView.animate(withDuration: 0.2, animations: {
             sender.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
-            sender.backgroundColor = .pink3
+            sender.backgroundColor = .pink3.withAlphaComponent(0.7)
         })
 
         if sender == homeView.imageButton {
@@ -269,7 +269,15 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     }
 
     @objc func toGenerateButtonTapped(_ sender: UIButton) {
-        performSegue(withIdentifier: "toGenerateImage", sender: copiedText)
+        let textAdjustmentVC = TextAdjustmentVC()
+        textAdjustmentVC.copiedText = copiedText
+        textAdjustmentVC.modalPresentationStyle = .fullScreen // 設置全螢幕顯示
+
+        textAdjustmentVC.onConfirm = { [weak self] updatedText in
+            self?.performSegue(withIdentifier: "toGenerateImage", sender: updatedText)
+        }
+
+        present(textAdjustmentVC, animated: true, completion: nil)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -279,6 +287,17 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
             destinationVC.copiedText = text
         }
     }
+//    @objc func toGenerateButtonTapped(_ sender: UIButton) {
+//        performSegue(withIdentifier: "toGenerateImage", sender: copiedText)
+//    }
+//
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "toGenerateImage",
+//           let destinationVC = segue.destination as? ImageVC,
+//           let text = sender as? String {
+//            destinationVC.copiedText = text
+//        }
+//    }
 
     private func formatPrompt(_ prompt: String, audiance: String, replyStyle: String) -> String {
         """

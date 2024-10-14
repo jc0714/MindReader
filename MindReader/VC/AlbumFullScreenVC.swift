@@ -48,7 +48,7 @@ class AlbumFullScreenVC: UIViewController, UICollectionViewDelegate, UICollectio
 
     func setupCloseButton() {
         let closeButton = UIButton(type: .system)
-        closeButton.setTitle("✕", for: .normal)
+        closeButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
         closeButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         closeButton.setTitleColor(.white, for: .normal)
         closeButton.addTarget(self, action: #selector(closeFullScreen), for: .touchUpInside)
