@@ -145,7 +145,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("開始分析", for: .normal)
-        button.backgroundColor = .pink3.withAlphaComponent(0.7)
+        button.backgroundColor = .pink3.withAlphaComponent(0.8)
         button.layer.cornerRadius = 10
         button.layer.borderWidth = 2
         button.layer.borderColor = UIColor.milkYellow.cgColor
@@ -354,7 +354,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         // 設置背景顏色
         cell.contentView.layer.cornerRadius = 10
-        cell.contentView.backgroundColor = isSelected ? .pink3.withAlphaComponent(0.7) : .pink1
+        cell.contentView.backgroundColor = isSelected ? .pink3.withAlphaComponent(0.8) : .pink1
 
         // 移除現有的 label 再添加新的
         cell.contentView.subviews.forEach { $0.removeFromSuperview() }

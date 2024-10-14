@@ -44,7 +44,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         setupActions()
 
         selectedButton = homeView.imageButton
-        homeView.imageButton.backgroundColor = .pink3.withAlphaComponent(0.7)
+        homeView.imageButton.backgroundColor = .pink3.withAlphaComponent(0.8)
         homeView.imageButton.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
 
 //        Task {
@@ -111,7 +111,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                     self.updateResponseLabels(possibleMeanings: possibleMeanings, responseMethods: responseMethods)
 
                     sender.isUserInteractionEnabled = true
-                    sender.backgroundColor = .pink3.withAlphaComponent(0.7)
+                    sender.backgroundColor = .pink3.withAlphaComponent(0.8)
 
                     homeView.hideLoadingAnimation()
                     recognizedText = ""
@@ -146,13 +146,13 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                 recognizedText = ""
                 homeView.hideLoadingAnimation()
                 sender.isUserInteractionEnabled = true
-                sender.backgroundColor = .pink3.withAlphaComponent(0.7)
+                sender.backgroundColor = .pink3.withAlphaComponent(0.8)
             } catch {
                 AlertKitManager.presentErrorAlert(in: self, title: "網路異常，請確認連線")
                 homeView.hideLoadingAnimation()
                 print("Failed to get response: \(error)")
                 sender.isUserInteractionEnabled = true
-                sender.backgroundColor = .pink3.withAlphaComponent(0.7)
+                sender.backgroundColor = .pink3.withAlphaComponent(0.8)
             }
         }
     }
@@ -226,7 +226,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         UIView.animate(withDuration: 0.2, animations: {
             sender.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
-            sender.backgroundColor = .pink3.withAlphaComponent(0.7)
+            sender.backgroundColor = .pink3.withAlphaComponent(0.8)
         })
 
         if sender == homeView.imageButton {

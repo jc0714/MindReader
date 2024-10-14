@@ -66,6 +66,7 @@ extension TagFilterView: UICollectionViewDelegate, UICollectionViewDataSource, U
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        HapticFeedbackManager.lightFeedback()
         selectedIndex = indexPath
         collectionView.reloadData()
 
@@ -124,7 +125,7 @@ class TagCell: UICollectionViewCell {
 
     func configure(with text: String, isSelected: Bool) {
         label.text = text
-        background.backgroundColor = isSelected ? .pink3.withAlphaComponent(0.7) : .pink1
+        background.backgroundColor = isSelected ? .pink3.withAlphaComponent(0.8) : .pink1
 
         if isSelected {
             UIView.animate(withDuration: 0.3) {
