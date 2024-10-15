@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E90ADECD2CBEAFD8001745C1 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E90ADECC2CBEAFD8001745C1 /* IQKeyboardManagerSwift */; };
 		E90B5E4F2CA3A22000CA24F7 /* DetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90B5E4E2CA3A22000CA24F7 /* DetailVC.swift */; };
 		E90B5E552CA509AB00CA24F7 /* TagFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90B5E542CA509AB00CA24F7 /* TagFilterView.swift */; };
 		E91218C12CB0ED6A000521ED /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91218C02CB0ED6A000521ED /* CustomTabBarController.swift */; };
@@ -86,7 +87,6 @@
 		E9F6B6BA2C9AC4D2008E9FBF /* CommentsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6B92C9AC4D2008E9FBF /* CommentsVC.swift */; };
 		E9F6B6BE2C9BCF7C008E9FBF /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6BD2C9BCF7C008E9FBF /* CommentCell.swift */; };
 		E9F6B6C02C9C194F008E9FBF /* AlbumVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6BF2C9C194E008E9FBF /* AlbumVC.swift */; };
-		E9F6B6C32C9C247B008E9FBF /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E9F6B6C22C9C247B008E9FBF /* IQKeyboardManagerSwift */; };
 		E9F6B6C52C9C694D008E9FBF /* RecordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B6C42C9C694D008E9FBF /* RecordVC.swift */; };
 /* End PBXBuildFile section */
 
@@ -206,10 +206,10 @@
 			files = (
 				E97654962CABC4A7003884AF /* AlertKit in Frameworks */,
 				E99142302C9FF8F200016C90 /* Kingfisher in Frameworks */,
-				E9F6B6C32C9C247B008E9FBF /* IQKeyboardManagerSwift in Frameworks */,
 				E97C15FE2C9189FF002B437C /* FirebaseDatabase in Frameworks */,
 				E97C16022C9189FF002B437C /* FirebaseStorage in Frameworks */,
 				E97C15FC2C9189FF002B437C /* FirebaseAuth in Frameworks */,
+				E90ADECD2CBEAFD8001745C1 /* IQKeyboardManagerSwift in Frameworks */,
 				E9638CAF2CBCBDC00004A728 /* FirebaseCrashlytics in Frameworks */,
 				E97C16002C9189FF002B437C /* FirebaseFirestore in Frameworks */,
 				E9638CB12CBCC3720004A728 /* FirebaseAnalytics in Frameworks */,
@@ -440,12 +440,12 @@
 				E97C15FD2C9189FF002B437C /* FirebaseDatabase */,
 				E97C15FF2C9189FF002B437C /* FirebaseFirestore */,
 				E97C16012C9189FF002B437C /* FirebaseStorage */,
-				E9F6B6C22C9C247B008E9FBF /* IQKeyboardManagerSwift */,
 				E991422F2C9FF8F200016C90 /* Kingfisher */,
 				E97654952CABC4A7003884AF /* AlertKit */,
 				E9521C312CAFB28300BFCAEF /* Lottie */,
 				E9638CAE2CBCBDC00004A728 /* FirebaseCrashlytics */,
 				E9638CB02CBCC3720004A728 /* FirebaseAnalytics */,
+				E90ADECC2CBEAFD8001745C1 /* IQKeyboardManagerSwift */,
 			);
 			productName = MindReader;
 			productReference = E97C15DD2C9166B5002B437C /* MindReader.app */;
@@ -480,10 +480,10 @@
 			mainGroup = E97C15D42C9166B4002B437C;
 			packageReferences = (
 				E97C15FA2C9189FF002B437C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				E9F6B6C12C9C247B008E9FBF /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				E991422E2C9FF8F200016C90 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				E97654942CABC4A6003884AF /* XCRemoteSwiftPackageReference "AlertKit" */,
 				E9521C302CAFB28300BFCAEF /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				E90ADECB2CBEAFD8001745C1 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 			);
 			productRefGroup = E97C15DE2C9166B5002B437C /* Products */;
 			projectDirPath = "";
@@ -879,7 +879,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yunchen.MindReader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -912,7 +912,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yunchen.MindReader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -954,6 +954,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		E90ADECB2CBEAFD8001745C1 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.2.0;
+			};
+		};
 		E9521C302CAFB28300BFCAEF /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-ios";
@@ -986,17 +994,14 @@
 				minimumVersion = 8.0.3;
 			};
 		};
-		E9F6B6C12C9C247B008E9FBF /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 7.1.1;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E90ADECC2CBEAFD8001745C1 /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E90ADECB2CBEAFD8001745C1 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
+		};
 		E9521C312CAFB28300BFCAEF /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E9521C302CAFB28300BFCAEF /* XCRemoteSwiftPackageReference "lottie-ios" */;
@@ -1051,11 +1056,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E991422E2C9FF8F200016C90 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
-		};
-		E9F6B6C22C9C247B008E9FBF /* IQKeyboardManagerSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E9F6B6C12C9C247B008E9FBF /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
-			productName = IQKeyboardManagerSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
