@@ -24,7 +24,7 @@ class BlockedListVC: UIViewController, UITableViewDataSource, UITableViewDelegat
     }
 
     private func setupUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .albumBackground
         title = "封鎖名單"
 
         tableView.dataSource = self

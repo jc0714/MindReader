@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import FirebaseFirestore
+import AlertKit
 
 protocol UserInfoCellDelegate: AnyObject {
     func didTapSubmitButton(newName: String, in cell: UserInfoCell)
@@ -220,6 +221,16 @@ class UserInfoCell: UITableViewCell {
 
     @objc private func submitButtonTapped() {
         guard let newName = nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !newName.isEmpty else { return }
+
+        if newName.count > 10 {
+            AlertKitAPI.present(
+                title: "名字不要超過十個字哦",
+                icon: .error,
+                style: .iOS17AppleMusic,
+                haptic: .error
+            )
+            return
+        }
         delegate?.didTapSubmitButton(newName: newName, in: self)
         nameTextField.isHidden = true
         submitButton.isHidden = true
