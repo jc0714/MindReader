@@ -187,20 +187,43 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
     }
 
     func deletePost(at indexPath: IndexPath) {
-
         guard let userId = UserDefaults.standard.string(forKey: "userID") else {
             print("User ID is nil")
             return
         }
 
-        let postId = posts[indexPath.row].id
+        let selectedPost = currentPosts[indexPath.row]
+        let postId = selectedPost.id
 
-        Firestore.firestore().collection("posts").document(postId).delete()
+        if let actualIndex = posts.firstIndex(where: { $0.id == postId }) {
+            Firestore.firestore().collection("posts").document(postId).delete()
 
-        Firestore.firestore().collection("Users").document(userId).updateData([
-            "postIds": FieldValue.arrayRemove([postId])
-        ])
+            Firestore.firestore().collection("Users").document(userId).updateData([
+                "postIds": FieldValue.arrayRemove([postId])
+            ]) { error in
+                if error == nil {
+                    self.posts.remove(at: actualIndex)
+                    self.tableView.reloadData()
+                }
+            }
+        }
     }
+
+//    func deletePost(at indexPath: IndexPath) {
+//
+//        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
+//            print("User ID is nil")
+//            return
+//        }
+//
+//        let postId = posts[indexPath.row].id
+//
+//        Firestore.firestore().collection("posts").document(postId).delete()
+//
+//        Firestore.firestore().collection("Users").document(userId).updateData([
+//            "postIds": FieldValue.arrayRemove([postId])
+//        ])
+//    }
 
     // 分享操作
     func sharePost(at indexPath: IndexPath) {
