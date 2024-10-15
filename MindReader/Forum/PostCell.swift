@@ -11,7 +11,7 @@ import Kingfisher
 
 class PostCell: UITableViewCell {
 
-    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7"]
+    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7", "avatar8"]
     private var isHeartSelected: Bool = false
 
     var heartButtonTappedClosure: (() -> Void)?
@@ -25,6 +25,7 @@ class PostCell: UITableViewCell {
     let articleTitle: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
+        label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 20)
         return label
     }()
@@ -32,22 +33,24 @@ class PostCell: UITableViewCell {
     let authorName: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .pink1
+        label.textColor = .systemBrown
         label.isUserInteractionEnabled = true
         return label
     }()
 
     let categoryLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 14)
         label.backgroundColor = .milkYellow
         label.textAlignment = .center
+        label.layer.cornerRadius = 8
+        label.layer.masksToBounds = true
         return label
     }()
 
     let createdTimeLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .lightGray
         return label
     }()
@@ -57,15 +60,23 @@ class PostCell: UITableViewCell {
         label.font = UIFont.systemFont(ofSize: 16)
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
+        label.textColor = .black
         return label
     }()
 
-    let postImageView = UIImageView()
+    let postImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.isUserInteractionEnabled = true
+        return imageView
+    }()
 
     let heartButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(systemName: "heart"), for: .normal)
         button.tintColor = .orange
+        button.backgroundColor = .white
         return button
     }()
 
@@ -144,10 +155,10 @@ class PostCell: UITableViewCell {
         avatarImageView.clipsToBounds = true
         avatarImageView.layer.cornerRadius = 35
 
-        postImageView.contentMode = .scaleAspectFit
-        postImageView.clipsToBounds = true
-
         heartButton.isUserInteractionEnabled = true
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showFullScreenImage))
+        postImageView.addGestureRecognizer(tapGesture)
 
         setupConstraints()
         setupReportMenu()
@@ -208,7 +219,8 @@ class PostCell: UITableViewCell {
 
             categoryLabel.topAnchor.constraint(equalTo: authorName.bottomAnchor, constant: 5),
             categoryLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
-            categoryLabel.widthAnchor.constraint(equalToConstant: 80),
+            categoryLabel.widthAnchor.constraint(equalToConstant: 60),
+            categoryLabel.heightAnchor.constraint(equalToConstant: 25),
 
             createdTimeLabel.bottomAnchor.constraint(equalTo: categoryLabel.bottomAnchor),
             createdTimeLabel.leadingAnchor.constraint(equalTo: categoryLabel.trailingAnchor, constant: 10),
@@ -290,6 +302,7 @@ class PostCell: UITableViewCell {
 
     @objc private func heartButtonTapped() {
         AnimationUtility.playHeartAnimation(above: heartButton)
+        HapticFeedbackManager.lightFeedback()
         heartButtonTappedClosure?()
     }
 
@@ -314,5 +327,68 @@ class PostCell: UITableViewCell {
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
         return view
+    }
+}
+
+extension PostCell: UIScrollViewDelegate {
+    @objc private func showFullScreenImage() {
+        guard let image = postImageView.image else { return }
+
+        let fullScreenView = UIView(frame: UIScreen.main.bounds)
+        fullScreenView.backgroundColor = .black
+        fullScreenView.alpha = 0.0
+
+        let scrollView = UIScrollView(frame: fullScreenView.bounds)
+        scrollView.backgroundColor = .black
+        scrollView.maximumZoomScale = 3.0
+        scrollView.minimumZoomScale = 1.0
+        scrollView.delegate = self
+
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .scaleAspectFit
+        imageView.frame = scrollView.bounds
+        scrollView.addSubview(imageView)
+
+        let closeButton = UIButton(frame: CGRect(x: fullScreenView.bounds.width - 50, y: 50, width: 30, height: 30))
+        closeButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
+        closeButton.tintColor = .white
+        closeButton.backgroundColor = UIColor.black.withAlphaComponent(0.5) // 半透明黑色背景
+        closeButton.layer.cornerRadius = 15 // 圓角，與按鈕寬高一致
+        closeButton.addTarget(self, action: #selector(dismissFullScreenView(_:)), for: .touchUpInside)
+
+        fullScreenView.addSubview(scrollView)
+        fullScreenView.addSubview(closeButton)
+
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(dismissFullScreenView(_:)))
+        swipeGesture.direction = .down
+        fullScreenView.addGestureRecognizer(swipeGesture)
+
+        // 加到視圖上
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first {
+            window.addSubview(fullScreenView)
+            UIView.animate(withDuration: 0.3) {
+                fullScreenView.alpha = 1.0
+            }
+        }
+    }
+
+    @objc private func dismissFullScreenView(_ sender: Any) {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first else {
+            return
+        }
+
+        if let fullScreenView = window.subviews.last {
+            UIView.animate(withDuration: 0.3, animations: {
+                fullScreenView.alpha = 0.0
+            }, completion: { _ in
+                fullScreenView.removeFromSuperview()
+            })
+        }
+    }
+
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return scrollView.subviews.first
     }
 }

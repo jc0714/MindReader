@@ -5,7 +5,6 @@
 //  Created by J oyce on 2024/10/6.
 //
 
-import AlertKit
 import UIKit
 import Firebase
 
@@ -52,7 +51,7 @@ class ReportIssueViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle("送出", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .pink3.withAlphaComponent(0.7)
+        button.backgroundColor = .pink3.withAlphaComponent(0.8)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 20
         button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
@@ -62,7 +61,7 @@ class ReportIssueViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .albumBackground
         setupUI()
     }
 
@@ -101,13 +100,7 @@ class ReportIssueViewController: UIViewController {
 
     @objc private func submitButtonTapped() {
         guard let issueText = issueTextView.text?.trimmingCharacters(in: .whitespacesAndNewlines), !issueText.isEmpty else {
-            AlertKitAPI.present(
-                title: "請填入您的問題再送出",
-                icon: .error,
-                style: .iOS17AppleMusic,
-                haptic: .error
-            )
-            print("Issue text is empty")
+            AlertKitManager.presentErrorAlert(in: self, title: "請填入您的問題再送出")
             return
         }
 
@@ -127,12 +120,7 @@ class ReportIssueViewController: UIViewController {
             if let error = error {
                 print("Error uploading issue: \(error.localizedDescription)")
             } else {
-                AlertKitAPI.present(
-                    title: "謝謝您的寶貴意見",
-                    icon: .heart,
-                    style: .iOS17AppleMusic,
-                    haptic: .success
-                )
+                AlertKitManager.presentHeartAlert(in: self, title: "謝謝您的寶貴意見")
                 print("Issue successfully uploaded")
                 self.dismiss(animated: true, completion: nil)
             }

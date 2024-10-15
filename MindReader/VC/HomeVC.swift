@@ -10,11 +10,11 @@ import Firebase
 import FirebaseFirestore
 import FirebaseStorage
 import Lottie
-import AlertKit
+import FirebaseCrashlytics
 
 class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
 
-    let dataToUpload: [[String: Any]] = []
+//    let dataToUpload: [[String: Any]] = []
 
     // MARK: - Properties
 
@@ -44,7 +44,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         setupActions()
 
         selectedButton = homeView.imageButton
-        homeView.imageButton.backgroundColor = .pink3
+        homeView.imageButton.backgroundColor = .pink3.withAlphaComponent(0.8)
         homeView.imageButton.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
 
 //        Task {
@@ -70,6 +70,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     }
 
     @objc func toChatButtonTapped(_ sender: UIButton) {
+        HapticFeedbackManager.lightFeedback()
         let chatVC = ChatVC()
         navigationController?.pushViewController(chatVC, animated: true)
     }
@@ -77,28 +78,19 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - Submit Action
 
     @objc private func didTapSubmit(_ sender: UIButton) {
+        HapticFeedbackManager.lightFeedback()
 
         homeView.promptTextField.resignFirstResponder()
 
         if sender.tag == 2 {
-            AlertKitAPI.present(
-                title: "我沒有讀到文字哦，請上傳有文字的圖片",
-                icon: .error,
-                style: .iOS17AppleMusic,
-                haptic: .error
-            )
+            AlertKitManager.presentErrorAlert(in: self, title: "我沒有讀到文字哦，請上傳有文字的圖片")
             return
         }
 
         let prompt = sender.tag == 1 ? homeView.promptTextField.text : recognizedText
 
         guard let prompt = prompt?.trimmingCharacters(in: .whitespacesAndNewlines), !prompt.isEmpty else {
-            AlertKitAPI.present(
-                title: "我沒有讀到文字哦",
-                icon: .error,
-                style: .iOS17AppleMusic,
-                haptic: .error
-            )
+            AlertKitManager.presentErrorAlert(in: self, title: "我沒有讀到文字哦")
             return
         }
 
@@ -110,6 +102,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                 sender.isUserInteractionEnabled = false
                 sender.backgroundColor = .milkYellow
 
+//                try await Task.sleep(nanoseconds: 2_000_000_000)
+
                 let existingResponse = try await self.firestoreService.fetchResponse(for: prompt)
 
                 if let possibleMeanings = existingResponse?["possible_meanings"] as? [String],
@@ -117,7 +111,10 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                     self.updateResponseLabels(possibleMeanings: possibleMeanings, responseMethods: responseMethods)
 
                     sender.isUserInteractionEnabled = true
-                    sender.backgroundColor = .pink3
+                    sender.backgroundColor = .pink3.withAlphaComponent(0.8)
+
+                    homeView.hideLoadingAnimation()
+                    recognizedText = ""
                     return
                 }
 
@@ -146,15 +143,16 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                 } else {
                     try await firestoreService.saveToFirestore(prompt: prompt, response: response, imageURL: nil)
                 }
+                recognizedText = ""
                 homeView.hideLoadingAnimation()
                 sender.isUserInteractionEnabled = true
-                sender.backgroundColor = .pink3
-
+                sender.backgroundColor = .pink3.withAlphaComponent(0.8)
             } catch {
+                AlertKitManager.presentErrorAlert(in: self, title: "網路異常，請確認連線")
                 homeView.hideLoadingAnimation()
                 print("Failed to get response: \(error)")
                 sender.isUserInteractionEnabled = true
-                sender.backgroundColor = .pink3
+                sender.backgroundColor = .pink3.withAlphaComponent(0.8)
             }
         }
     }
@@ -167,17 +165,23 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
             toastView.onCopyTap = { [weak self] text in
                 self?.handleCopiedText(text)
                 toastView.generateImageButton.isHidden = false
+                toastView.hintLabel.isHidden = true
             }
 
             toastView.configure(with: possibleMeanings, responseMethods: responseMethods)
 
-            toastView.showInView(self.view)
+            toastView.showInView(self.view) {
+                self.homeView.promptTextField.text = nil
+                self.homeView.imageView.image = UIImage(named: "uploadImage")
+            }
         }
     }
 
     // MARK: - Image Picker
 
     @objc func selectImageFromAlbum(_ sender: UIButton) {
+        HapticFeedbackManager.lightFeedback()
+
         let imagePicker = UIImagePickerController()
         imagePicker.sourceType = .photoLibrary
         imagePicker.delegate = self
@@ -207,6 +211,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - View Configuration
 
     @objc private func buttonTapped(_ sender: UIButton) {
+        HapticFeedbackManager.lightFeedback()
+
         guard sender != selectedButton else { return }
 
         if let previousButton = selectedButton {
@@ -220,7 +226,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         UIView.animate(withDuration: 0.2, animations: {
             sender.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
-            sender.backgroundColor = .pink3
+            sender.backgroundColor = .pink3.withAlphaComponent(0.8)
         })
 
         if sender == homeView.imageButton {
@@ -230,12 +236,12 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         }
     }
 
-    @objc func showImageView() {
+    private func showImageView() {
         configureView(for: 0, isImageViewVisible: true)
         homeView.imageView.image = UIImage(named: "uploadImage")
     }
 
-    @objc func enterText() {
+    private func enterText() {
         configureView(for: 1, isImageViewVisible: false)
     }
 
@@ -256,21 +262,22 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - Copy Label Text
 
     func handleCopiedText(_ text: String) {
-        // 展示複製成功的提示
-        AlertKitAPI.present(
-            title: "複製成功",
-            icon: .done,
-            style: .iOS17AppleMusic,
-            haptic: .success
-        )
-
+        AlertKitManager.presentSuccessAlert(in: self, title: "複製成功")
         UIPasteboard.general.string = text
         copiedText = text
         print("Text copied: \(text)")
     }
 
     @objc func toGenerateButtonTapped(_ sender: UIButton) {
-        performSegue(withIdentifier: "toGenerateImage", sender: copiedText)
+        let textAdjustmentVC = TextAdjustmentVC()
+        textAdjustmentVC.copiedText = copiedText
+        textAdjustmentVC.modalPresentationStyle = .fullScreen // 設置全螢幕顯示
+
+        textAdjustmentVC.onConfirm = { [weak self] updatedText in
+            self?.performSegue(withIdentifier: "toGenerateImage", sender: updatedText)
+        }
+
+        present(textAdjustmentVC, animated: true, completion: nil)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

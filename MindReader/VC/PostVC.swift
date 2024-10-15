@@ -29,7 +29,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
 
-    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7"]
+    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7", "avatar8"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -230,6 +230,11 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     // 連結到留言 VC
     func showCommentsForPost(at indexPath: IndexPath) {
+        guard indexPath.row < currentPosts.count else {
+            print("Index out of range: \(indexPath.row)")
+            return
+        }
+
         let commentsVC = CommentsVC(postId: currentPosts[indexPath.row].id)
         if let sheet = commentsVC.sheetPresentationController {
             sheet.detents = [.medium(), .large()]
@@ -239,9 +244,17 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
 
     func handleOptionSelection(action: String, forPostAt indexPath: IndexPath) {
+        let currentUserId = UserDefaults.standard.string(forKey: "userID")
+
         let post = posts[indexPath.row]
         let authorId = post.author.id
+        let authorName = post.author.name
         let postId = post.id
+
+        if authorId == currentUserId {
+            AlertKitManager.presentErrorAlert(in: self, title: "不要檢舉/封鎖自己啦")
+            return
+        }
 
         switch action {
         case "檢舉":
@@ -249,7 +262,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             showReportReasonSelection(forPostId: postId)
         case "封鎖":
             // 彈出確認框
-            showBlockConfirmation(forUserId: authorId)
+            showBlockConfirmation(forUserId: authorId, authorName: authorName)
 
         default:
             break
@@ -265,8 +278,8 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         for reason in reasons {
             let action = UIAlertAction(title: reason, style: .default) { _ in
                 // 根據選擇的原因處理檢舉邏輯
-                self.addToReportedPostList(postID: postId)
-                self.updateReportedPostListInFirebase(postID: postId, reason: reason)
+                ReportPostManager.shared.addToReportedPostList(postID: postId)
+                ReportPostManager.shared.updateReportedPostListInFirebase(postID: postId, reason: reason)
                 print("檢舉原因：\(reason)")
             }
             alertController.addAction(action)
@@ -279,56 +292,13 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.present(alertController, animated: true, completion: nil)
     }
 
-    private func addToReportedPostList(postID: String) {
-        var reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
-
-        if !reportedList.contains(postID) {
-            reportedList.append(postID)
-            UserDefaults.standard.set(reportedList, forKey: "ReportedList")
-        }
-    }
-
-    private func updateReportedPostListInFirebase(postID: String, reason: String) {
-        guard let currentUserID = UserDefaults.standard.string(forKey: "userID") else { return }
-
-        let userRef = Firestore.firestore().collection("Users").document(currentUserID)
-
-        userRef.updateData([
-            "reportedPostList": FieldValue.arrayUnion([postID])
-        ]) { error in
-            if error != nil {
-            } else {
-                print("檢舉貼文已成功更新到 User 的 Firebase")
-                self.saveReportedPostToCollection(postID: postID, reporterID: currentUserID, reason: reason)
-            }
-        }
-    }
-
-    private func saveReportedPostToCollection(postID: String, reporterID: String, reason: String) {
-        let reportData: [String: Any] = [
-            "postID": postID,
-            "reporter": reporterID,
-            "reason": reason,
-            "timestamp": Timestamp() // 加入檢舉的時間
-        ]
-
-        let reportsRef = Firestore.firestore().collection("ReportedPosts")
-        reportsRef.addDocument(data: reportData) { error in
-            if let error = error {
-                print("Error saving reported post: \(error)")
-            } else {
-                print("檢舉資訊已成功存入 ReportedPosts collection")
-            }
-        }
-    }
-
     // 封鎖
-    private func showBlockConfirmation(forUserId userId: String) {
+    private func showBlockConfirmation(forUserId userId: String, authorName: String) {
         let alertController = UIAlertController(title: "封鎖用戶", message: "您確定要封鎖這位用戶嗎？", preferredStyle: .alert)
 
         let confirmAction = UIAlertAction(title: "確定", style: .destructive) { _ in
-            self.addToBlockedList(userID: userId)
-            self.updateBlockedListInFirebase(userId: userId)
+            BlockManager.shared.addToBlockedList(authorID: userId, authorName: authorName)
+            BlockManager.shared.updateBlockedListInFirebase(userId: userId)
         }
 
         let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
@@ -337,30 +307,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         alertController.addAction(cancelAction)
 
         self.present(alertController, animated: true, completion: nil)
-    }
-
-    private func addToBlockedList(userID: String) {
-        var blockedList = UserDefaults.standard.stringArray(forKey: "BlockedList") ?? []
-
-        if !blockedList.contains(userID) {
-            blockedList.append(userID)
-            UserDefaults.standard.set(blockedList, forKey: "BlockedList")
-        }
-    }
-
-    private func updateBlockedListInFirebase(userId: String) {
-        guard let currentUserID = UserDefaults.standard.string(forKey: "userID") else { return }
-
-        let userRef = Firestore.firestore().collection("Users").document(currentUserID)
-
-        userRef.updateData([
-            "blockedList": FieldValue.arrayUnion([userId])
-        ]) { error in
-            if error != nil {
-            } else {
-                print("封鎖名單已成功更新到 Firebase")
-            }
-        }
     }
 
     // 留言數量計算

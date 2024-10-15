@@ -35,7 +35,7 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(CommentCell.self, forCellReuseIdentifier: "CommentCell")
-        view.backgroundColor = UIColor.white.withAlphaComponent(1)
+        view.backgroundColor = UIColor.albumBackground
 
         setupTableView()
         setupCloseButton()
@@ -59,6 +59,7 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none
+        tableView.backgroundColor = .albumBackground
 
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -73,14 +74,15 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     private func setupCloseButton() {
         let closeButton = UIButton(type: .system)
-        closeButton.setTitle("close", for: .normal)
+        closeButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
+        closeButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
 
         view.addSubview(closeButton)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+            closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15),
+            closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15)
         ])
     }
 
@@ -150,6 +152,7 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         let comment = comments[indexPath.row]
 
         cell?.configure(author: comment.author, content: comment.content, timestamp: comment.timestamp)
+        cell?.selectionStyle = .none
 
         return cell!
     }

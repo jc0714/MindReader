@@ -43,12 +43,12 @@ class RecordView: UIView {
     }
 
     func setData() {
-        let titles = ["相片牆", "我的POSTs"]
+        let titles = ["相片牆", "我的貼文"]
 
         for (index, title) in titles.enumerated() {
             let button = UIButton(type: .system)
             button.setTitle(title, for: .normal)
-            button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+            button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
             button.tag = index
             button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
 

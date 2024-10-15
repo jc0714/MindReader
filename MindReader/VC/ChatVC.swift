@@ -8,7 +8,7 @@
 import UIKit
 import IQKeyboardManagerSwift
 
-class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UITextViewDelegate {
+class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UITextViewDelegate, KeyboardHandler {
 
     private var chatView: ChatView!
     private var messages: [Message] = []
@@ -47,7 +47,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         super.viewDidLoad()
 
         // 聊天室上方名字條、input container 下方一點點
-        view.backgroundColor = .pink1
+        view.backgroundColor = .chat
 
         setUpNavigation()
 
@@ -85,24 +85,16 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
         tabBarController?.tabBar.isHidden = false
     }
 
-    private func setupKeyboardObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    func keyboardWillShow(keyboardHeight: CGFloat) {
+        chatView.updateInputContainerBottomConstraint(by: -keyboardHeight + view.safeAreaInsets.bottom)
     }
 
-    @objc func keyboardWillShow(_ notification: Notification) {
-        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
-            let keyboardHeight = keyboardFrame.height
-            chatView.updateInputContainerBottomConstraint(by: -keyboardHeight + view.safeAreaInsets.bottom)
-        }
-    }
-
-    @objc func keyboardWillHide(_ notification: Notification) {
+    func keyboardWillHide() {
         chatView.updateInputContainerBottomConstraint(by: 0)
     }
 
     deinit {
-        NotificationCenter.default.removeObserver(self)
+        removeKeyboardObservers()
     }
 
     @objc func backButtonTapped() {
@@ -244,7 +236,7 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
 
     private func formatPrompt(_ prompt: String) -> String {
         """
-        你是善解人意又帶點幽默的朋友。
+        你是善解人意又溫柔體貼的朋友。
         請回覆訊息：
         「\(prompt)」
         """

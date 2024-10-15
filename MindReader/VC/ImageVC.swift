@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import AlertKit
 
 class ImageVC: UIViewController, ImageCollectionViewDelegate {
 
@@ -159,12 +158,7 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
     @objc private func saveImageToAlbum() {
         HapticFeedbackManager.successFeedback()
 
-        AlertKitAPI.present(
-            title: "儲存成功",
-            icon: .done,
-            style: .iOS17AppleMusic,
-            haptic: .success
-        )
+        AlertKitManager.presentSuccessAlert(in: self, title: "儲存成功")
 
         guard let imageToSave = finalImageView.image else { return }
         UIImageWriteToSavedPhotosAlbum(imageToSave, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
@@ -190,12 +184,7 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
     @objc private func saveToFireBase() {
         HapticFeedbackManager.successFeedback()
 
-        AlertKitAPI.present(
-            title: "貼到相片牆！",
-            icon: .done,
-            style: .iOS17AppleMusic,
-            haptic: .success
-        )
+        AlertKitManager.presentSuccessAlert(in: self, title: "貼到相片牆！")
 
         guard let imageData = finalImageView.image?.jpegData(compressionQuality: 0.75) else { return }
 

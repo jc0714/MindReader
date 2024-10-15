@@ -47,7 +47,7 @@ class ChatView: UIView, UITextViewDelegate {
     }
 
     private func setupInputView() {
-        inputContainer.backgroundColor = .pink1
+        inputContainer.backgroundColor = UIColor.chat
         inputContainer.translatesAutoresizingMaskIntoConstraints = false
         addSubview(inputContainer)
 
@@ -98,8 +98,8 @@ class ChatView: UIView, UITextViewDelegate {
         textViewHeightConstraint.isActive = true
 
         NotificationCenter.default.addObserver(self, selector: #selector(textViewDidChange), name: UITextView.textDidChangeNotification, object: textView)
-        bringSubviewToFront(typingAnimationView)
 
+        bringSubviewToFront(typingAnimationView)
     }
 
     func updateInputContainerBottomConstraint(by constant: CGFloat) {
@@ -133,6 +133,7 @@ class ChatView: UIView, UITextViewDelegate {
     func showLoadingAnimation() {
         self.bringSubviewToFront(self.typingAnimationView)
         typingAnimationView.isHidden = false
+        typingAnimationView.loopMode = .loop
         typingAnimationView.play()
         self.layoutIfNeeded()
     }
@@ -142,5 +143,4 @@ class ChatView: UIView, UITextViewDelegate {
         typingAnimationView.stop()
         typingAnimationView.isHidden = true
     }
-
 }

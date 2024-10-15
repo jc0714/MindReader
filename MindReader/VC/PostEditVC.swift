@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 import Firebase
 import FirebaseFirestore
-import AlertKit
 
 class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
@@ -17,9 +16,9 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
 
     private let firestoreService = FirestoreService()
 
-    private var isPlaceholderImage = true
+    var isPlaceholderImage = true
 
-    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7"]
+    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7", "avatar8"]
     var selectedAvatarIndex = 0
 
     override func loadView() {
@@ -40,6 +39,10 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
 
         let avatarTapGesture = UITapGestureRecognizer(target: self, action: #selector(changeAvatar))
         editView.avatarImage.addGestureRecognizer(avatarTapGesture)
+
+        editView.onImageDeleted = { [weak self] in
+            self?.isPlaceholderImage = true
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -83,7 +86,7 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
                 let document = articles.document()
                 var data: [String: Any] = [
                     "author": [
-                        "email": "JJ",
+                        "email": "",
                         "id": userId,
                         "name": userName
                     ],
@@ -118,29 +121,14 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
                     self?.navigationController?.popViewController(animated: true)
                 }
 
-                AlertKitAPI.present(
-                    title: "發文成功！",
-                    icon: .done,
-                    style: .iOS17AppleMusic,
-                    haptic: .success
-                )
+                AlertKitManager.presentSuccessAlert(in: self, title: "發文成功！")
 
                 editView.publishButton.isUserInteractionEnabled = true
             } catch {
-                AlertKitAPI.present(
-                    title: "請確認網路連線",
-                    icon: .error,
-                    style: .iOS17AppleMusic,
-                    haptic: .error
-                )
+                AlertKitManager.presentErrorAlert(in: self, title: "請確認網路連線")
             }
         } else {
-            AlertKitAPI.present(
-                title: "確認都填完，再發文唷",
-                icon: .error,
-                style: .iOS17AppleMusic,
-                haptic: .error
-            )
+            AlertKitManager.presentErrorAlert(in: self, title: "確認都填完，再發文唷")
         }
     }
 
@@ -155,6 +143,7 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
         if let selectedImage = info[.originalImage] as? UIImage {
             editView.imageView.image = selectedImage
             isPlaceholderImage = false
+            editView.userDidUploadImage(selectedImage)
         }
         picker.dismiss(animated: true, completion: nil)
     }
@@ -164,6 +153,7 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     }
 
     @objc func changeAvatar() {
+        HapticFeedbackManager.lightFeedback()
         selectedAvatarIndex = (selectedAvatarIndex + 1) % imageNames.count
         editView.avatarImage.image = UIImage(named: imageNames[selectedAvatarIndex])
     }

@@ -8,12 +8,12 @@
 import Foundation
 import UIKit
 
-class CustomTabBarController: UITabBarController {
+class CustomTabBarController: UITabBarController, UITabBarControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // 自定義 Tab Bar
         setupTabBar()
+        self.delegate = self
     }
 
     private func setupTabBar() {
@@ -31,5 +31,9 @@ class CustomTabBarController: UITabBarController {
         newFrame.size.height = 70
         newFrame.origin.y = self.view.frame.height - 70
         tabBar.frame = newFrame
+    }
+
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        HapticFeedbackManager.lightFeedback()
     }
 }

@@ -16,6 +16,8 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
 
     private var refreshControl: UIRefreshControl!
 
+    private let placeholderView = PlaceholderView(symbol: "person.2.fill", label1Text: "尚無貼文，", label2Text: "快去交流版發出你的貼文吧！")
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -50,22 +52,6 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
         super.viewWillDisappear(animated)
         listener?.remove()
     }
-
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//
-//        if let recordVC = parent as? RecordVC, let pageViewController = recordVC.pageViewController {
-//            pageViewController.view.gestureRecognizers?.forEach { gesture in
-//                gesture.delegate = self
-//            }
-//        }
-//    }
-
-//    func configureWithPageViewController(_ pageViewController: UIPageViewController) {
-//        pageViewController.view.gestureRecognizers?.forEach { gesture in
-//            gesture.delegate = self
-//        }
-//    }
 
     @objc func reloadTableData() {
         fetchPosts()
@@ -135,19 +121,19 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
                                 let commentCount = commentCounts[document.documentID] ?? 0 // 正確的留言數量
 
                                 let image = data["image"] as? String
-                                let createdTimeString = DateFormatter.localizedString(
-                                    from: timestamp.dateValue(),
-                                    dateStyle: .medium, timeStyle: .none
-                                )
-
+                                let date = timestamp.dateValue()
+                                let createdTimeString = DateFormatter.yyyyMMddFormatter.string(from: date)
                                 let author = Author(email: authorEmail, id: authorId, name: authorName)
 
                                 return Post(avatar: avatar, title: title, createdTime: createdTimeString, id: document.documentID, category: category, content: content, image: image, author: author, like: like, comment: commentCount)
                             }
 
                             DispatchQueue.main.async {
-                                print("Post IDs: \(postIds)")
-//                                self.filterPosts(by: "All")
+                                if self.posts.isEmpty {
+                                    self.placeholderView.show(in: self.view)
+                                } else {
+                                    self.placeholderView.hide()
+                                }
                                 self.tableView.reloadData()
                                 self.refreshControl.endRefreshing()
                             }
@@ -156,7 +142,7 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
             } else {
                 print("No postIds found or postIds array is empty")
                 self.posts.removeAll()
-//                self.filterPosts(by: "All")
+                self.placeholderView.show(in: self.view)
                 self.tableView.reloadData()
                 self.refreshControl.endRefreshing()
             }
@@ -185,7 +171,7 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
             self.present(alertController, animated: true, completion: nil)
         }
 
-        deleteAction.backgroundColor = .pink3
+        deleteAction.backgroundColor = .delete
 
         // 分享動作
         let shareAction = UIContextualAction(style: .normal, title: "分享") { (action, view, completionHandler) in
@@ -193,7 +179,7 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
             self.sharePost(at: indexPath)
             completionHandler(true)
         }
-        shareAction.backgroundColor = .pink2
+        shareAction.backgroundColor = .pink1
 
         // 將兩個動作加到 swipe action configuration 中
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction, shareAction])
@@ -232,32 +218,4 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
         let activityViewController = UIActivityViewController(activityItems: [screenshot], applicationActivities: nil)
         present(activityViewController, animated: true, completion: nil)
     }
-
-//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-//        if let pageViewController = parent as? UIPageViewController,
-//           let recordVC = pageViewController.parent as? RecordVC {
-//
-//            // 判断是否是 PageViewController 的滑动手势
-//            if ((pageViewController.view.gestureRecognizers?.contains(gestureRecognizer)) != nil),
-//               let panGesture = gestureRecognizer as? UIPanGestureRecognizer {
-//                let velocity = panGesture.velocity(in: view)
-//
-//                // 如果已经在最右边并且试图右滑
-//                if recordVC.currentPageIndex == recordVC.viewControllers.count - 1 && velocity.x < 0 {
-//                    return false
-//                }
-//            }
-//        }
-//
-//        // TableView 滑动手势允许
-//        if let tableView = view as? UITableView {
-//            if gestureRecognizer == tableView.panGestureRecognizer {
-//                return true
-//            }
-//        }
-//
-//        // 允许其他情况的手势
-//        return true
-//    }
-
 }

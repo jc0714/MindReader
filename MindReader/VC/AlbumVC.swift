@@ -20,17 +20,11 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
 
     var refreshControl = UIRefreshControl()
 
-    private let placeholderImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "AlbumPlaceHolder") 
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
+    private let placeholderView = PlaceholderView(symbol: "photo.on.rectangle.angled", label1Text: "尚無早安圖，", label2Text: "快去首頁翻譯機製作早安圖吧！")
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor.albumBackground
 
         setupCollectionView()
 
@@ -50,14 +44,6 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
     }
 
     func setupCollectionView() {
-        view.addSubview(placeholderImageView)
-
-        NSLayoutConstraint.activate([
-            placeholderImageView.topAnchor.constraint(equalTo: view.topAnchor),
-            placeholderImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            placeholderImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            placeholderImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 200)
-        ])
 
         layout.itemSize = CGSize(width: 100, height: 100)
         layout.minimumInteritemSpacing = 10
@@ -90,7 +76,6 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
             print("User ID is nil")
             return
         }
-        
         let morningImageRef = db.collection("Users").document(userId).collection("MorningImage")
 
         // 按 createdTime 排序
@@ -123,7 +108,11 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
                 self.collectionView.reloadData()
                 self.refreshControl.endRefreshing()
 
-                self.placeholderImageView.isHidden = !self.imageUrls.isEmpty
+                if self.imageUrls.isEmpty {
+                    self.placeholderView.show(in: self.view)
+                } else {
+                    self.placeholderView.hide()
+                }
             }
         }
     }
@@ -153,7 +142,6 @@ class AlbumVC: UIViewController, UICollectionViewDataSource, UICollectionViewDel
         let fullScreenVC = AlbumFullScreenVC()
         fullScreenVC.imageUrls = imageUrls // 傳遞所有圖片的 URL 列表
         fullScreenVC.currentIndex = indexPath.row // 傳遞當前選中的圖片
-//        fullScreenVC.imageUrl = imageUrls[indexPath.row] // 傳遞當前選中的圖片的 URL
         fullScreenVC.modalPresentationStyle = .fullScreen
 
         present(fullScreenVC, animated: true, completion: nil) // 顯示全螢幕圖片檢視
