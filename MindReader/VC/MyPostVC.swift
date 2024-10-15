@@ -195,16 +195,13 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
         let selectedPost = currentPosts[indexPath.row]
         let postId = selectedPost.id
 
-        if let actualIndex = posts.firstIndex(where: { $0.id == postId }) {
-            Firestore.firestore().collection("posts").document(postId).delete()
+        Firestore.firestore().collection("posts").document(postId).delete()
 
-            Firestore.firestore().collection("Users").document(userId).updateData([
-                "postIds": FieldValue.arrayRemove([postId])
-            ]) { error in
-                if error == nil {
-                    self.posts.remove(at: actualIndex)
-                    self.tableView.reloadData()
-                }
+        Firestore.firestore().collection("Users").document(userId).updateData([
+            "postIds": FieldValue.arrayRemove([postId])
+        ]) { error in
+            if error == nil {
+                self.tableView.reloadData()
             }
         }
     }
