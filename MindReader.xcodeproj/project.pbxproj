@@ -44,6 +44,8 @@
 		E9638CB12CBCC3720004A728 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E9638CB02CBCC3720004A728 /* FirebaseAnalytics */; };
 		E9638CB32CBCF22E0004A728 /* TextAdjustmentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9638CB22CBCF22E0004A728 /* TextAdjustmentVC.swift */; };
 		E9638CB52CBD5F3B0004A728 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9638CB42CBD5F3B0004A728 /* LoginView.swift */; };
+		E9638CD92CBE162B0004A728 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9638CD82CBE162B0004A728 /* WelcomeView.swift */; };
+		E9638CDB2CBE170A0004A728 /* UITextField+Padding.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9638CDA2CBE170A0004A728 /* UITextField+Padding.swift */; };
 		E97654962CABC4A7003884AF /* AlertKit in Frameworks */ = {isa = PBXBuildFile; productRef = E97654952CABC4A7003884AF /* AlertKit */; };
 		E976549A2CACE9AC003884AF /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97654992CACE9AC003884AF /* UserInfoCell.swift */; };
 		E976549C2CAD0A5F003884AF /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E976549B2CAD0A5F003884AF /* Animation.swift */; };
@@ -144,6 +146,8 @@
 		E9638CA42CBAD8A70004A728 /* EncouragementProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncouragementProvider.swift; sourceTree = "<group>"; };
 		E9638CB22CBCF22E0004A728 /* TextAdjustmentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAdjustmentVC.swift; sourceTree = "<group>"; };
 		E9638CB42CBD5F3B0004A728 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		E9638CD82CBE162B0004A728 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		E9638CDA2CBE170A0004A728 /* UITextField+Padding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Padding.swift"; sourceTree = "<group>"; };
 		E97654992CACE9AC003884AF /* UserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
 		E976549B2CAD0A5F003884AF /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		E97C15DD2C9166B5002B437C /* MindReader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MindReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -227,6 +231,7 @@
 				E976549B2CAD0A5F003884AF /* Animation.swift */,
 				E91218E02CB4CCB4000521ED /* KeyboardHandler.swift */,
 				E91219092CB6BA45000521ED /* AlertKitManager.swift */,
+				E9638CDA2CBE170A0004A728 /* UITextField+Padding.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -334,6 +339,7 @@
 				E912190F2CB79617000521ED /* ReportPostManager.swift */,
 				E91219112CB81CBC000521ED /* PlaceholderView.swift */,
 				E9638CB42CBD5F3B0004A728 /* LoginView.swift */,
+				E9638CD82CBE162B0004A728 /* WelcomeView.swift */,
 			);
 			path = MindReader;
 			sourceTree = "<group>";
@@ -420,6 +426,8 @@
 				E97C15DA2C9166B5002B437C /* Frameworks */,
 				E97C15DB2C9166B5002B437C /* Resources */,
 				E91218DE2CB2DD0A000521ED /* Embed Foundation Extensions */,
+				E9638CB62CBE00E80004A728 /* ShellScript */,
+				E9638CB72CBE00FE0004A728 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -512,6 +520,40 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		E9638CB62CBE00E80004A728 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n";
+		};
+		E9638CB72CBE00FE0004A728 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${BUILD_DIR%Build/*}SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
 		E97C160E2C948382002B437C /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -580,6 +622,7 @@
 				E99142342CA0042200016C90 /* ImageCell.swift in Sources */,
 				E9F6B6862C96EB14008E9FBF /* ForumVC.swift in Sources */,
 				E91218E12CB4CCB4000521ED /* KeyboardHandler.swift in Sources */,
+				E9638CD92CBE162B0004A728 /* WelcomeView.swift in Sources */,
 				E9638CB32CBCF22E0004A728 /* TextAdjustmentVC.swift in Sources */,
 				E91218E52CB51465000521ED /* PrivacyPolicyVC.swift in Sources */,
 				E9638CA52CBAD8A70004A728 /* EncouragementProvider.swift in Sources */,
@@ -599,6 +642,7 @@
 				E9F6B6BE2C9BCF7C008E9FBF /* CommentCell.swift in Sources */,
 				E90B5E552CA509AB00CA24F7 /* TagFilterView.swift in Sources */,
 				E9240AD12C9D216A00A47944 /* MyPostVC.swift in Sources */,
+				E9638CDB2CBE170A0004A728 /* UITextField+Padding.swift in Sources */,
 				E9C668BD2CA5A06300C0EE1D /* LoginVC.swift in Sources */,
 				E9F6B6C52C9C694D008E9FBF /* RecordVC.swift in Sources */,
 			);
@@ -726,7 +770,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;

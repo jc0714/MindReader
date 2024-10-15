@@ -168,12 +168,12 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                 toastView.hintLabel.isHidden = true
             }
 
-            self.homeView.promptTextField.text = nil
-            self.homeView.imageView.image = UIImage(named: "uploadImage")
-
             toastView.configure(with: possibleMeanings, responseMethods: responseMethods)
 
-            toastView.showInView(self.view)
+            toastView.showInView(self.view) {
+                self.homeView.promptTextField.text = nil
+                self.homeView.imageView.image = UIImage(named: "uploadImage")
+            }
         }
     }
 
@@ -287,17 +287,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
             destinationVC.copiedText = text
         }
     }
-//    @objc func toGenerateButtonTapped(_ sender: UIButton) {
-//        performSegue(withIdentifier: "toGenerateImage", sender: copiedText)
-//    }
-//
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "toGenerateImage",
-//           let destinationVC = segue.destination as? ImageVC,
-//           let text = sender as? String {
-//            destinationVC.copiedText = text
-//        }
-//    }
 
     private func formatPrompt(_ prompt: String, audiance: String, replyStyle: String) -> String {
         """

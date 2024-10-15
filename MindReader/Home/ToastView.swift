@@ -221,7 +221,7 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
         }
     }
 
-    func showInView(_ parentView: UIView) {
+    func showInView(_ parentView: UIView, completion: (() -> Void)? = nil) {
         parentView.addSubview(self)
         self.translatesAutoresizingMaskIntoConstraints = false
 
@@ -239,6 +239,9 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
         UIView.animate(withDuration: 2, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: {
             offScreenBottomConstraint.constant = -100
             parentView.layoutIfNeeded()
+        }, completion: { _ in
+            // 動畫結束時執行 completion 閉包
+            completion?()
         })
     }
 }
