@@ -44,33 +44,12 @@ class ForumVC: BasePostVC {
 
         fetchPosts()
     }
-//
-//    func setupRefreshControl() {
-//        refreshControl = UIRefreshControl()
-//        refreshControl.tintColor = .clear // Hide default spinner
-//
-//        // Create Lottie animation view
-//        lottieAnimationView = LottieAnimationView(name: "refreshing")
-//        lottieAnimationView.frame = CGRect(x: 0, y: 0, width: 300, height: 50)
-//        lottieAnimationView.contentMode = .scaleAspectFit
-//        lottieAnimationView.loopMode = .loop
-//
-//        // Add Lottie animation to refresh control
-//        refreshControl.addSubview(lottieAnimationView)
-//        lottieAnimationView.center = refreshControl.center
-//
-//        // Add target for refresh control
-//        refreshControl.addTarget(self, action: #selector(fetchPosts), for: .valueChanged)
-//        tableView.addSubview(refreshControl)
-//    }
 
     @objc func reloadTableData() {
         fetchPosts()
     }
 
     @objc private func fetchPosts() {
-//        lottieAnimationView.play()
-
         posts.removeAll()
         let dispatchGroup = DispatchGroup()
         var commentCounts = [String: Int]() // 用來儲存每篇貼文的評論數量
@@ -129,7 +108,6 @@ class ForumVC: BasePostVC {
                 }
                 self?.setupUI()
                 self?.tableView.reloadData()
-//                self?.lottieAnimationView.stop()
                 self?.refreshControl.endRefreshing()
             }
         }
