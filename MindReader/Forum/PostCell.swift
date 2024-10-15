@@ -307,7 +307,6 @@ class PostCell: UITableViewCell {
     }
 
     @objc private func commentButtonTapped() {
-        HapticFeedbackManager.lightFeedback()
         commentButtonTappedClosure?()
     }
 
