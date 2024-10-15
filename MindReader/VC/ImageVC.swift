@@ -185,7 +185,7 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
         HapticFeedbackManager.successFeedback()
 
         AlertKitManager.presentSuccessAlert(in: self, title: "貼到相片牆！")
-        
+
         guard let imageData = finalImageView.image?.jpegData(compressionQuality: 0.75) else { return }
 
         Task {

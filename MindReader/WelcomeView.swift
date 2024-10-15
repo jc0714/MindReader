@@ -12,7 +12,7 @@ class WelcomeView: UIView {
 
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "請輸入你的名字"
+        label.text = "請輸入你的名字："
         label.font = UIFont.systemFont(ofSize: 18)
         label.textColor = .brown
         label.textAlignment = .center
@@ -23,10 +23,13 @@ class WelcomeView: UIView {
         let textField = UITextField()
         textField.placeholder = "你的名字"
         textField.borderStyle = .none
-        textField.backgroundColor = UIColor(white: 0.95, alpha: 1)
-        textField.layer.cornerRadius = 8
-        textField.setLeftPaddingPoints(10)
-        textField.font = UIFont.systemFont(ofSize: 18)
+        textField.backgroundColor = UIColor.brown.withAlphaComponent(0.1)
+        textField.layer.cornerRadius = 8 // 圓角
+        textField.layer.borderWidth = 1.0 // 邊框寬度
+        textField.layer.borderColor = UIColor.brown.withAlphaComponent(0.5).cgColor // 邊框顏色與 label 字體一致
+        textField.setLeftPaddingPoints(10) // 左邊內邊距
+        textField.font = UIFont.systemFont(ofSize: 18) // 與 titleLabel 字體一致
+        textField.textColor = .brown // 文本顏色與 label 一致
         return textField
     }()
 
@@ -34,7 +37,7 @@ class WelcomeView: UIView {
         let button = UIButton(type: .system)
         button.setTitle("送出", for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        button.backgroundColor = UIColor.chat
+        button.backgroundColor = UIColor.brown.withAlphaComponent(0.8)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 8
         return button
@@ -44,7 +47,7 @@ class WelcomeView: UIView {
         let imageView = UIImageView()
         let cloudImage = UIImage(systemName: "cloud.fill")
         imageView.image = cloudImage
-        imageView.tintColor = .white.withAlphaComponent(0.7) // 設置雲朵顏色
+        imageView.tintColor = .white
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -60,7 +63,6 @@ class WelcomeView: UIView {
     }
 
     private func setupView() {
-        // 添加雲朵圖片作為背景
         addSubview(cloudImageView)
         cloudImageView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -80,17 +82,17 @@ class WelcomeView: UIView {
             cloudImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             cloudImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
 
-            titleLabel.topAnchor.constraint(equalTo: cloudImageView.topAnchor, constant: 60),
+            titleLabel.topAnchor.constraint(equalTo: cloudImageView.topAnchor, constant: 70),
             titleLabel.leadingAnchor.constraint(equalTo: nameTextField.leadingAnchor, constant: 0),
 
-            nameTextField.topAnchor.constraint(equalTo: cloudImageView.topAnchor, constant: 105),
+            nameTextField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 15),
             nameTextField.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            nameTextField.widthAnchor.constraint(equalToConstant: 150),
+            nameTextField.widthAnchor.constraint(equalToConstant: 180),
             nameTextField.heightAnchor.constraint(equalToConstant: 50),
 
             confirmButton.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 20),
             confirmButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            confirmButton.widthAnchor.constraint(equalToConstant: 100),
+            confirmButton.widthAnchor.constraint(equalToConstant: 80),
             confirmButton.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
