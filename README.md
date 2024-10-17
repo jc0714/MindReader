@@ -1,4 +1,4 @@
-![App Screenshot](https://drive.google.com/file/d/1SoPOGJQWi3vQ0LaDWcVSxRw-viaz9A07/view?usp=sharing)
+![App Screenshot](https://drive.google.com/file/d/1SoPOGJQWi3vQ0LaDWcVSxRw-viaz9A07/view)
 ![Platform](https://img.shields.io/badge/platform-iOS-lightgrey)
 ![Release](https://img.shields.io/badge/release-v1.1.2-brightgreen)
 
