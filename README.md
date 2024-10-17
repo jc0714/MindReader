@@ -63,7 +63,7 @@
 1. clone 這個專案到 local：
     
     ```bash
-git clone https://github.com/jc0714/MindReader.git
+    git clone https://github.com/jc0714/MindReader.git
     ```
     
 2. 使用 Xcode 打開專案。
