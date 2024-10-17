@@ -1,6 +1,11 @@
+![Platform](https://img.shields.io/badge/platform-iOS-lightgrey)
+![Release](https://img.shields.io/badge/release-v1.1.2-brightgreen)
+
 # MindReader - iOS App
 
 歡迎來到 **"MindReader"**，這款 app 可以幫您分析訊息、提供推薦回覆還能製作早安圖☀️！為您帶來聊天靈感。還有即時回覆的阿雲聊天室、交流板，快來挖掘聊天靈感吧～
+
+[![Download on the App Store](https://link-to-app-store-badge-image)](https://apps.apple.com/app/id6692625322)
 
 ## Features
 
