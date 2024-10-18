@@ -30,7 +30,6 @@ class ResponseCopyCell: UITableViewCell {
     private let copyButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "copy"), for: .normal)
-//        button.setImage(UIImage(systemName: "doc.on.doc"), for: .normal)
         button.tintColor = .systemBrown
         button.isUserInteractionEnabled = true
         return button

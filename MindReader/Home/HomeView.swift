@@ -397,13 +397,15 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
     // 隱藏動畫
     func hideLoadingAnimation() {
-        UIView.animate(withDuration: 0.5, animations: {
-            self.waitingAnimationView.alpha = 0
-        }, completion: { _ in
-            self.waitingAnimationView.stop()
-            self.waitingAnimationView.isHidden = true
-            self.waitingAnimationView.alpha = 1
-        })
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.5, animations: {
+                self.waitingAnimationView.alpha = 0
+            }, completion: { _ in
+                self.waitingAnimationView.stop()
+                self.waitingAnimationView.isHidden = true
+                self.waitingAnimationView.alpha = 1
+            })
+        }
     }
 }
 
