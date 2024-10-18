@@ -82,7 +82,7 @@ class BlockedListVC: UIViewController, UITableViewDataSource, UITableViewDelegat
     // MARK: - UITableViewDelegate
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let userToUnblock = Array(blockedList.keys)[indexPath.row]
+        let userToUnblock = Array(blockedList.values)[indexPath.row]
 
         // 確認解除封鎖的彈出框
         let alert = UIAlertController(title: "解除封鎖", message: "確定要解除對 \(userToUnblock) 的封鎖嗎？", preferredStyle: .alert)
