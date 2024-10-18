@@ -7,15 +7,21 @@
 
 import Foundation
 import UIKit
+import Combine
 
 class HomeViewModel {
 
     private let apiService: APIService
     private let firestoreService: FirestoreService
 
-    var onLoadingStateChange: ((Bool) -> Void)?
-    var onResponseReceived: (([String], [String]) -> Void)?
-    var onErrorOccurred: ((String) -> Void)?
+    // 使用 Combine 的 Subject
+    var loadingStatePublisher = PassthroughSubject<Bool, Never>()
+    var responsePublisher = PassthroughSubject<([String], [String]), Never>()
+    var errorPublisher = PassthroughSubject<String, Never>()
+
+//    var onLoadingStateChange: ((Bool) -> Void)?
+//    var onResponseReceived: (([String], [String]) -> Void)?
+//    var onErrorOccurred: ((String) -> Void)?
 
     init(apiService: APIService, firestoreService: FirestoreService) {
         self.apiService = apiService
@@ -25,22 +31,22 @@ class HomeViewModel {
     func submit(data: TranslateData) {
 
         guard data.selectedTag != 2 else {
-            onErrorOccurred?("我沒有讀到文字哦，請上傳有文字的圖片")
-            onLoadingStateChange?(false)
+            errorPublisher.send("我沒有讀到文字哦，請上傳有文字的圖片")
+            loadingStatePublisher.send(false)
             return
         }
 
         let finalPrompt = data.selectedTag == 1 ? data.prompt?.trimmingCharacters(in: .whitespacesAndNewlines) : data.recognizedText
         guard let prompt = finalPrompt, !prompt.isEmpty else {
-            onErrorOccurred?("我沒有讀到文字哦")
-            onLoadingStateChange?(false)
+            errorPublisher.send("我沒有讀到文字哦")
+            loadingStatePublisher.send(false)
             return
         }
 
         let formattedPrompt = formatPrompt(prompt, audience: data.audience, replyStyle: data.replyStyle)
         print("Formatted prompt: \(formattedPrompt)")
 
-        onLoadingStateChange?(true)
+        loadingStatePublisher.send(true)
 
         Task {
             do {
@@ -48,8 +54,8 @@ class HomeViewModel {
 
                 if let possibleMeanings = existingResponse?["possible_meanings"] as? [String],
                    let responseMethods = existingResponse?["response_methods"] as? [String] {
-                    onResponseReceived?(possibleMeanings, responseMethods)
-                    onLoadingStateChange?(false)
+                    responsePublisher.send((possibleMeanings, responseMethods))
+                    loadingStatePublisher.send(false)
                     return
                 }
 
@@ -59,7 +65,7 @@ class HomeViewModel {
                    let content = json["content"] as? [String: Any],
                    let possibleMeanings = content["possible_meanings"] as? [String],
                    let responseMethods = content["response_methods"] as? [String] {
-                    onResponseReceived?(possibleMeanings, responseMethods)
+                    responsePublisher.send((possibleMeanings, responseMethods))
                 }
 
                 if let imageData = data.selectedImage?.jpegData(compressionQuality: 0.75) {
@@ -69,11 +75,11 @@ class HomeViewModel {
                     try await firestoreService.saveToFirestore(prompt: prompt, response: response, imageURL: nil)
                 }
 
-                onLoadingStateChange?(false)
+                loadingStatePublisher.send(false)
 
             } catch {
-                onErrorOccurred?("網路異常，請確認連線")
-                onLoadingStateChange?(false)
+                errorPublisher.send("網路異常，請確認連線")
+                loadingStatePublisher.send(false)
             }
         }
     }
