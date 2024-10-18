@@ -5,7 +5,7 @@
 //  Created by J oyce on 2024/9/11.
 
 import UIKit
-import Vision
+import Combine
 import Lottie
 import FirebaseCrashlytics
 
@@ -17,6 +17,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     private let homeView = HomeView()
     private var viewModel: HomeViewModel!
+    private var cancellables = Set<AnyCancellable>() // Combine 取消綁定用
 
     private var selectedButton: UIButton?
 
@@ -45,8 +46,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         viewModel = HomeViewModel(apiService: APIService(), firestoreService: FirestoreService())
         setupViewModelBindings()
-        setupActions()
-//        Task {
+
+        //        Task {
 //            await firestoreService.batchUploadData(for: dataToUpload)
 //        }
     }
@@ -77,8 +78,10 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - ViewModel Bindings
 
     private func setupViewModelBindings() {
-        viewModel.onLoadingStateChange = { [weak self] isLoading in
-            DispatchQueue.main.async {
+        // 訂閱 loading 狀態
+        viewModel.loadingStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
                 if isLoading {
                     self?.homeView.showLoadingAnimation()
                     self?.homeView.submitButton.isUserInteractionEnabled = false
@@ -89,15 +92,32 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                     self?.homeView.submitButton.backgroundColor = .pink3.withAlphaComponent(0.8)
                 }
             }
-        }
+            .store(in: &cancellables)
 
-        viewModel.onResponseReceived = { [weak self] possibleMeanings, responseMethods in
-            self?.updateResponseLabels(possibleMeanings: possibleMeanings, responseMethods: responseMethods)
-        }
+        // 訂閱回應資料
+        viewModel.responsePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] possibleMeanings, responseMethods in
+                self?.updateResponseLabels(possibleMeanings: possibleMeanings, responseMethods: responseMethods)
+            }
+            .store(in: &cancellables)
 
-        viewModel.onErrorOccurred = { [weak self] errorMessage in
-            AlertKitManager.presentErrorAlert(in: self!, title: errorMessage)
-        }
+        // 訂閱錯誤訊息
+        viewModel.errorPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] errorMessage in
+                AlertKitManager.presentErrorAlert(in: self!, title: errorMessage)
+            }
+            .store(in: &cancellables)
+        
+        // 清除 recognizedText
+        viewModel.recognizedTextClearPublisher
+            .sink { shouldClear in
+                if shouldClear {
+                    self.recognizedText = "" // 清除 recognizedText
+                }
+            }
+            .store(in: &cancellables)
     }
 
     @objc private func didTapSubmit(_ sender: UIButton) {
@@ -109,7 +129,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         let replyStyle = homeView.selectedReplyStyleText
         let selectedImage = homeView.imageView.image
 
-        let submissionData = TranslateData(
+        var submissionData = TranslateData(
             prompt: prompt,
             recognizedText: recognizedText,
             selectedImage: selectedImage,
@@ -154,7 +174,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
 
-        configureView(for: 0, isImageViewVisible: true)
+        configureView(tag: 0, isImageViewVisible: true)
 
         picker.dismiss(animated: true, completion: nil)
 
@@ -170,7 +190,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
             }
         }
     }
-
     // MARK: - View Configuration
 
     @objc private func buttonTapped(_ sender: UIButton) {
@@ -178,42 +197,42 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         guard sender != selectedButton else { return }
 
-        if let previousButton = selectedButton {
+        updateButtonAppearance(previousButton: selectedButton, newButton: sender)
+
+        selectedButton = sender
+
+        switch sender {
+        case homeView.imageButton:
+            configureView(tag: 0, isImageViewVisible: true, imageName: "uploadImage")
+        case homeView.textButton:
+            configureView(tag: 1, isImageViewVisible: false)
+        default:
+            break
+        }
+    }
+
+    private func updateButtonAppearance(previousButton: UIButton?, newButton: UIButton) {
+        // 恢復之前按鈕的外觀
+        if let previousButton = previousButton {
             UIView.animate(withDuration: 0.2) {
                 previousButton.transform = .identity
                 previousButton.backgroundColor = .pink1
             }
         }
 
-        selectedButton = sender
-
-        UIView.animate(withDuration: 0.2, animations: {
-            sender.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
-            sender.backgroundColor = .pink3.withAlphaComponent(0.8)
-        })
-
-        if sender == homeView.imageButton {
-            showImageView()
-        } else if sender == homeView.textButton {
-            enterText()
+        // 設定新的按鈕外觀
+        UIView.animate(withDuration: 0.2) {
+            newButton.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+            newButton.backgroundColor = .pink3.withAlphaComponent(0.8)
         }
     }
 
-    private func showImageView() {
-        configureView(for: 0, isImageViewVisible: true)
-        homeView.imageView.image = UIImage(named: "uploadImage")
-    }
-
-    private func enterText() {
-        configureView(for: 1, isImageViewVisible: false)
-    }
-
-    private func configureView(for tag: Int, isImageViewVisible: Bool) {
+    private func configureView(tag: Int, isImageViewVisible: Bool, imageName: String? = nil) {
         homeView.submitButton.tag = tag
         homeView.promptTextField.isHidden = isImageViewVisible
         homeView.imageView.isHidden = !isImageViewVisible
         homeView.promptTextField.text = nil
-        homeView.imageView.image = nil
+        homeView.imageView.image = imageName != nil ? UIImage(named: imageName!) : nil
     }
 
     // MARK: - Keyboard Handling
