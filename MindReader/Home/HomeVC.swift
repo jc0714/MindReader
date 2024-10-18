@@ -6,9 +6,6 @@
 
 import UIKit
 import Vision
-import Firebase
-import FirebaseFirestore
-import FirebaseStorage
 import Lottie
 import FirebaseCrashlytics
 
@@ -19,10 +16,9 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     // MARK: - Properties
 
     private let homeView = HomeView()
-    private var selectedButton: UIButton?
+    private var viewModel: HomeViewModel!
 
-    private let apiService = APIService()
-    private let firestoreService = FirestoreService()
+    private var selectedButton: UIButton?
 
     private let textRecognizeService = TextRecognitionService()
 
@@ -47,6 +43,9 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         homeView.imageButton.backgroundColor = .pink3.withAlphaComponent(0.8)
         homeView.imageButton.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
 
+        viewModel = HomeViewModel(apiService: APIService(), firestoreService: FirestoreService())
+        setupViewModelBindings()
+        setupActions()
 //        Task {
 //            await firestoreService.batchUploadData(for: dataToUpload)
 //        }
@@ -75,86 +74,51 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         navigationController?.pushViewController(chatVC, animated: true)
     }
 
-    // MARK: - Submit Action
+    // MARK: - ViewModel Bindings
+
+    private func setupViewModelBindings() {
+        viewModel.onLoadingStateChange = { [weak self] isLoading in
+            DispatchQueue.main.async {
+                if isLoading {
+                    self?.homeView.showLoadingAnimation()
+                    self?.homeView.submitButton.isUserInteractionEnabled = false
+                    self?.homeView.submitButton.backgroundColor = .milkYellow
+                } else {
+                    self?.homeView.hideLoadingAnimation()
+                    self?.homeView.submitButton.isUserInteractionEnabled = true
+                    self?.homeView.submitButton.backgroundColor = .pink3.withAlphaComponent(0.8)
+                }
+            }
+        }
+
+        viewModel.onResponseReceived = { [weak self] possibleMeanings, responseMethods in
+            self?.updateResponseLabels(possibleMeanings: possibleMeanings, responseMethods: responseMethods)
+        }
+
+        viewModel.onErrorOccurred = { [weak self] errorMessage in
+            AlertKitManager.presentErrorAlert(in: self!, title: errorMessage)
+        }
+    }
 
     @objc private func didTapSubmit(_ sender: UIButton) {
         HapticFeedbackManager.lightFeedback()
-
         homeView.promptTextField.resignFirstResponder()
 
-        if sender.tag == 2 {
-            AlertKitManager.presentErrorAlert(in: self, title: "我沒有讀到文字哦，請上傳有文字的圖片")
-            return
-        }
-
         let prompt = sender.tag == 1 ? homeView.promptTextField.text : recognizedText
+        let audience = homeView.selectedAudienceText
+        let replyStyle = homeView.selectedReplyStyleText
+        let selectedImage = homeView.imageView.image
 
-        guard let prompt = prompt?.trimmingCharacters(in: .whitespacesAndNewlines), !prompt.isEmpty else {
-            AlertKitManager.presentErrorAlert(in: self, title: "我沒有讀到文字哦")
-            return
-        }
+        let submissionData = TranslateData(
+            prompt: prompt,
+            recognizedText: recognizedText,
+            selectedImage: selectedImage,
+            selectedTag: sender.tag,
+            audience: audience,
+            replyStyle: replyStyle
+        )
 
-        let audiance = homeView.selectedAudienceText ?? "不限"
-        let replyStyle = homeView.selectedReplyStyleText ?? "不限"
-
-        Task {
-            do {
-                sender.isUserInteractionEnabled = false
-                sender.backgroundColor = .milkYellow
-
-//                try await Task.sleep(nanoseconds: 2_000_000_000)
-
-                let existingResponse = try await self.firestoreService.fetchResponse(for: prompt)
-
-                if let possibleMeanings = existingResponse?["possible_meanings"] as? [String],
-                   let responseMethods = existingResponse?["response_methods"] as? [String] {
-                    self.updateResponseLabels(possibleMeanings: possibleMeanings, responseMethods: responseMethods)
-
-                    sender.isUserInteractionEnabled = true
-                    sender.backgroundColor = .pink3.withAlphaComponent(0.8)
-
-                    homeView.hideLoadingAnimation()
-                    recognizedText = ""
-                    return
-                }
-
-                homeView.showLoadingAnimation()
-
-                let formatedPrompt = formatPrompt(prompt, audiance: audiance, replyStyle: replyStyle)
-                print("打出去的 prompt: \(formatedPrompt)")
-                let response = try await apiService.generateTextResponse(for: formatedPrompt)
-
-                if let data = response.data(using: .utf8),
-                   let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-                   let content = json["content"] as? [String: Any],
-                   let possibleMeanings = content["possible_meanings"] as? [String],
-                   let responseMethods = content["response_methods"] as? [String] {
-
-                    print("Possible Meanings: \(possibleMeanings)")
-                    print("Response Methods: \(responseMethods)")
-
-                    self.updateResponseLabels(possibleMeanings: possibleMeanings, responseMethods: responseMethods)
-
-                }
-
-                if let imageData = homeView.imageView.image?.jpegData(compressionQuality: 0.75) {
-                    let imageURL = try await firestoreService.uploadImage(imageData: imageData)
-                    try await firestoreService.saveToFirestore(prompt: prompt, response: response, imageURL: imageURL)
-                } else {
-                    try await firestoreService.saveToFirestore(prompt: prompt, response: response, imageURL: nil)
-                }
-                recognizedText = ""
-                homeView.hideLoadingAnimation()
-                sender.isUserInteractionEnabled = true
-                sender.backgroundColor = .pink3.withAlphaComponent(0.8)
-            } catch {
-                AlertKitManager.presentErrorAlert(in: self, title: "網路異常，請確認連線")
-                homeView.hideLoadingAnimation()
-                print("Failed to get response: \(error)")
-                sender.isUserInteractionEnabled = true
-                sender.backgroundColor = .pink3.withAlphaComponent(0.8)
-            }
-        }
+        viewModel.submit(data: submissionData)
     }
 
     private func updateResponseLabels(possibleMeanings: [String], responseMethods: [String]) {
@@ -169,7 +133,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
             }
 
             toastView.configure(with: possibleMeanings, responseMethods: responseMethods)
-
             toastView.showInView(self.view) {
                 self.homeView.promptTextField.text = nil
                 self.homeView.imageView.image = UIImage(named: "uploadImage")
@@ -286,30 +249,5 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
            let text = sender as? String {
             destinationVC.copiedText = text
         }
-    }
-
-    private func formatPrompt(_ prompt: String, audiance: String, replyStyle: String) -> String {
-        """
-        你是「另一半翻譯機」，請分析這封訊息的意圖，並針對「該對象」提供「特定風格」的回覆訊息。
-        用下方訊息內容分析「possible_meanings：訊息背後隱含意義」和「response_methods：推薦回覆訊息」兩個部分，各三個。
-
-        訊息內容：\(prompt)
-        對象：\(audiance)
-        回覆風格：\(replyStyle)
-
-        用繁體中文，以 JSON 格式：
-        "content": {
-            "possible_meanings": [
-                "",
-                "",
-                ""
-            ],
-            "response_methods": [
-                "訊息1",
-                "訊息2",
-                "訊息3"
-            ]
-        }
-        """
     }
 }

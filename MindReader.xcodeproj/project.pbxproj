@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		E90ADECD2CBEAFD8001745C1 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E90ADECC2CBEAFD8001745C1 /* IQKeyboardManagerSwift */; };
+		E90ADED12CC24399001745C1 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90ADED02CC24399001745C1 /* HomeViewModel.swift */; };
+		E90ADED32CC25DB4001745C1 /* TranslateData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90ADED22CC25DB4001745C1 /* TranslateData.swift */; };
 		E90B5E4F2CA3A22000CA24F7 /* DetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90B5E4E2CA3A22000CA24F7 /* DetailVC.swift */; };
 		E90B5E552CA509AB00CA24F7 /* TagFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90B5E542CA509AB00CA24F7 /* TagFilterView.swift */; };
 		E91218C12CB0ED6A000521ED /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91218C02CB0ED6A000521ED /* CustomTabBarController.swift */; };
@@ -115,6 +117,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E90ADED02CC24399001745C1 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		E90ADED22CC25DB4001745C1 /* TranslateData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslateData.swift; sourceTree = "<group>"; };
 		E90B5E4E2CA3A22000CA24F7 /* DetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailVC.swift; sourceTree = "<group>"; };
 		E90B5E542CA509AB00CA24F7 /* TagFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFilterView.swift; sourceTree = "<group>"; };
 		E91218C02CB0ED6A000521ED /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
@@ -220,6 +224,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E90ADECE2CC23745001745C1 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				E9638CB42CBD5F3B0004A728 /* LoginView.swift */,
+				E9638CD82CBE162B0004A728 /* WelcomeView.swift */,
+				E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */,
+				E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
 		E90B5E4C2CA39DCC00CA24F7 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
@@ -267,32 +282,6 @@
 			path = MorningWidget;
 			sourceTree = "<group>";
 		};
-		E91218DF2CB3CD95000521ED /* VC */ = {
-			isa = PBXGroup;
-			children = (
-				E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */,
-				E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */,
-				E97C15E42C9166B5002B437C /* HomeVC.swift */,
-				E9638CB22CBCF22E0004A728 /* TextAdjustmentVC.swift */,
-				E9F6B6B12C997482008E9FBF /* ImageVC.swift */,
-				E991422A2C9F24C300016C90 /* PostVC.swift */,
-				E9F6B6852C96EB14008E9FBF /* ForumVC.swift */,
-				E9F6B6892C971788008E9FBF /* PostEditVC.swift */,
-				E90B5E4E2CA3A22000CA24F7 /* DetailVC.swift */,
-				E9F6B6B92C9AC4D2008E9FBF /* CommentsVC.swift */,
-				E97C16032C919FFF002B437C /* ChatVC.swift */,
-				E9F6B6C42C9C694D008E9FBF /* RecordVC.swift */,
-				E9240AD02C9D216A00A47944 /* MyPostVC.swift */,
-				E9F6B6BF2C9C194E008E9FBF /* AlbumVC.swift */,
-				E99142312C9FFABA00016C90 /* AlbumFullScreenVC.swift */,
-				E9C668B32CA5407400C0EE1D /* SettingVC.swift */,
-				E9521C282CAE43D200BFCAEF /* BlockedListVC.swift */,
-				E91218C22CB294FE000521ED /* ReportIssueVC.swift */,
-				E91218E42CB51465000521ED /* PrivacyPolicyVC.swift */,
-			);
-			path = VC;
-			sourceTree = "<group>";
-		};
 		E97C15D42C9166B4002B437C = {
 			isa = PBXGroup;
 			children = (
@@ -316,17 +305,16 @@
 			isa = PBXGroup;
 			children = (
 				E9C668B52CA5444C00C0EE1D /* MindReader.entitlements */,
-				E9240AD22C9D442F00A47944 /* RecordView.swift */,
 				E97C15E02C9166B5002B437C /* AppDelegate.swift */,
 				E97C15E22C9166B5002B437C /* SceneDelegate.swift */,
 				E97C16072C92BC88002B437C /* APIKeys.swift */,
-				E91218DF2CB3CD95000521ED /* VC */,
 				E90B5E4D2CA39DFE00CA24F7 /* Data */,
-				E90B5E4C2CA39DCC00CA24F7 /* Extension */,
+				E90ADECE2CC23745001745C1 /* Login */,
 				E97C161A2C956447002B437C /* Home */,
-				E9F6B6842C96EAD2008E9FBF /* Forum */,
 				E97C161B2C95647F002B437C /* Chat */,
+				E9F6B6842C96EAD2008E9FBF /* Forum */,
 				E9F6B6BB2C9B1C3B008E9FBF /* Record */,
+				E90B5E4C2CA39DCC00CA24F7 /* Extension */,
 				E9F6B6BC2C9B1C4D008E9FBF /* Settings */,
 				E97C15EB2C9166B7002B437C /* LaunchScreen.storyboard */,
 				E97C15E62C9166B5002B437C /* Main.storyboard */,
@@ -338,8 +326,6 @@
 				E912190D2CB79133000521ED /* ReportCommentManager.swift */,
 				E912190F2CB79617000521ED /* ReportPostManager.swift */,
 				E91219112CB81CBC000521ED /* PlaceholderView.swift */,
-				E9638CB42CBD5F3B0004A728 /* LoginView.swift */,
-				E9638CD82CBE162B0004A728 /* WelcomeView.swift */,
 			);
 			path = MindReader;
 			sourceTree = "<group>";
@@ -347,10 +333,15 @@
 		E97C161A2C956447002B437C /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				E97C15E42C9166B5002B437C /* HomeVC.swift */,
+				E90ADED02CC24399001745C1 /* HomeViewModel.swift */,
+				E9F6B6B12C997482008E9FBF /* ImageVC.swift */,
+				E9638CB22CBCF22E0004A728 /* TextAdjustmentVC.swift */,
 				E97C15F42C91810A002B437C /* HomeView.swift */,
 				E99142262C9EEDCE00016C90 /* ImageCollectionView.swift */,
 				E9521C2C2CAE507000BFCAEF /* ToastView.swift */,
 				E9521C2E2CAE91C000BFCAEF /* ResponseCopyCell.swift */,
+				E90ADED22CC25DB4001745C1 /* TranslateData.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -358,6 +349,7 @@
 		E97C161B2C95647F002B437C /* Chat */ = {
 			isa = PBXGroup;
 			children = (
+				E97C16032C919FFF002B437C /* ChatVC.swift */,
 				E97C16052C91A0DF002B437C /* ChatCell.swift */,
 				E9F6B67D2C95800F008E9FBF /* ChatView.swift */,
 			);
@@ -367,6 +359,11 @@
 		E9F6B6842C96EAD2008E9FBF /* Forum */ = {
 			isa = PBXGroup;
 			children = (
+				E991422A2C9F24C300016C90 /* PostVC.swift */,
+				E9F6B6852C96EB14008E9FBF /* ForumVC.swift */,
+				E9F6B6892C971788008E9FBF /* PostEditVC.swift */,
+				E90B5E4E2CA3A22000CA24F7 /* DetailVC.swift */,
+				E9F6B6B92C9AC4D2008E9FBF /* CommentsVC.swift */,
 				E9F6B6872C96EFC9008E9FBF /* PostCell.swift */,
 				E9F6B68B2C9717A9008E9FBF /* PostEditView.swift */,
 				E9F6B6BD2C9BCF7C008E9FBF /* CommentCell.swift */,
@@ -378,6 +375,11 @@
 		E9F6B6BB2C9B1C3B008E9FBF /* Record */ = {
 			isa = PBXGroup;
 			children = (
+				E9240AD22C9D442F00A47944 /* RecordView.swift */,
+				E9F6B6C42C9C694D008E9FBF /* RecordVC.swift */,
+				E9240AD02C9D216A00A47944 /* MyPostVC.swift */,
+				E9F6B6BF2C9C194E008E9FBF /* AlbumVC.swift */,
+				E99142312C9FFABA00016C90 /* AlbumFullScreenVC.swift */,
 				E9240ACE2C9D209F00A47944 /* AlbumCell.swift */,
 				E99142332CA0042200016C90 /* ImageCell.swift */,
 			);
@@ -387,6 +389,10 @@
 		E9F6B6BC2C9B1C4D008E9FBF /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				E9C668B32CA5407400C0EE1D /* SettingVC.swift */,
+				E9521C282CAE43D200BFCAEF /* BlockedListVC.swift */,
+				E91218C22CB294FE000521ED /* ReportIssueVC.swift */,
+				E91218E42CB51465000521ED /* PrivacyPolicyVC.swift */,
 				E97654992CACE9AC003884AF /* UserInfoCell.swift */,
 				E9521C2A2CAE486700BFCAEF /* BlockedListCell.swift */,
 			);
@@ -594,6 +600,7 @@
 				E97C16172C955CBB002B437C /* FirestoreService.swift in Sources */,
 				E976549A2CACE9AC003884AF /* UserInfoCell.swift in Sources */,
 				E91218C32CB294FE000521ED /* ReportIssueVC.swift in Sources */,
+				E90ADED32CC25DB4001745C1 /* TranslateData.swift in Sources */,
 				E97C15E52C9166B5002B437C /* HomeVC.swift in Sources */,
 				E97C15F72C91812F002B437C /* APIService.swift in Sources */,
 				E9521C342CAFC28300BFCAEF /* WelcomeVC.swift in Sources */,
@@ -644,6 +651,7 @@
 				E9240AD12C9D216A00A47944 /* MyPostVC.swift in Sources */,
 				E9638CDB2CBE170A0004A728 /* UITextField+Padding.swift in Sources */,
 				E9C668BD2CA5A06300C0EE1D /* LoginVC.swift in Sources */,
+				E90ADED12CC24399001745C1 /* HomeViewModel.swift in Sources */,
 				E9F6B6C52C9C694D008E9FBF /* RecordVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
