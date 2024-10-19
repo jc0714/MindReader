@@ -10,6 +10,8 @@
 		E90ADECD2CBEAFD8001745C1 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E90ADECC2CBEAFD8001745C1 /* IQKeyboardManagerSwift */; };
 		E90ADED12CC24399001745C1 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90ADED02CC24399001745C1 /* HomeViewModel.swift */; };
 		E90ADED32CC25DB4001745C1 /* TranslateData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90ADED22CC25DB4001745C1 /* TranslateData.swift */; };
+		E90ADEDB2CC3F81F001745C1 /* MindReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90ADEDA2CC3F81F001745C1 /* MindReaderTests.swift */; };
+		E90ADEE22CC3F96D001745C1 /* PostLikeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90ADEE12CC3F96D001745C1 /* PostLikeManager.swift */; };
 		E90B5E4F2CA3A22000CA24F7 /* DetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90B5E4E2CA3A22000CA24F7 /* DetailVC.swift */; };
 		E90B5E552CA509AB00CA24F7 /* TagFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90B5E542CA509AB00CA24F7 /* TagFilterView.swift */; };
 		E91218C12CB0ED6A000521ED /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91218C02CB0ED6A000521ED /* CustomTabBarController.swift */; };
@@ -93,6 +95,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		E90ADEDC2CC3F81F001745C1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E97C15D52C9166B4002B437C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E97C15DC2C9166B5002B437C;
+			remoteInfo = MindReader;
+		};
 		E91218D82CB2DD0A000521ED /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E97C15D52C9166B4002B437C /* Project object */;
@@ -119,6 +128,9 @@
 /* Begin PBXFileReference section */
 		E90ADED02CC24399001745C1 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		E90ADED22CC25DB4001745C1 /* TranslateData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslateData.swift; sourceTree = "<group>"; };
+		E90ADED82CC3F81F001745C1 /* MindReaderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MindReaderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E90ADEDA2CC3F81F001745C1 /* MindReaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MindReaderTests.swift; sourceTree = "<group>"; };
+		E90ADEE12CC3F96D001745C1 /* PostLikeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostLikeManager.swift; sourceTree = "<group>"; };
 		E90B5E4E2CA3A22000CA24F7 /* DetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailVC.swift; sourceTree = "<group>"; };
 		E90B5E542CA509AB00CA24F7 /* TagFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFilterView.swift; sourceTree = "<group>"; };
 		E91218C02CB0ED6A000521ED /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
@@ -193,6 +205,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		E90ADED52CC3F81F001745C1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E91218C52CB2DD07000521ED /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -235,6 +254,14 @@
 			path = Login;
 			sourceTree = "<group>";
 		};
+		E90ADED92CC3F81F001745C1 /* MindReaderTests */ = {
+			isa = PBXGroup;
+			children = (
+				E90ADEDA2CC3F81F001745C1 /* MindReaderTests.swift */,
+			);
+			path = MindReaderTests;
+			sourceTree = "<group>";
+		};
 		E90B5E4C2CA39DCC00CA24F7 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
@@ -257,6 +284,7 @@
 				E9F6B6822C968743008E9FBF /* Model.swift */,
 				E97C15F62C91812F002B437C /* APIService.swift */,
 				E97C16162C955CBB002B437C /* FirestoreService.swift */,
+				E90ADEE12CC3F96D001745C1 /* PostLikeManager.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -287,6 +315,7 @@
 			children = (
 				E97C15DF2C9166B5002B437C /* MindReader */,
 				E91218CE2CB2DD08000521ED /* MorningWidget */,
+				E90ADED92CC3F81F001745C1 /* MindReaderTests */,
 				E91218C92CB2DD07000521ED /* Frameworks */,
 				E97C15DE2C9166B5002B437C /* Products */,
 			);
@@ -297,6 +326,7 @@
 			children = (
 				E97C15DD2C9166B5002B437C /* MindReader.app */,
 				E91218C82CB2DD07000521ED /* MorningWidgetExtension.appex */,
+				E90ADED82CC3F81F001745C1 /* MindReaderTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -402,6 +432,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		E90ADED72CC3F81F001745C1 /* MindReaderTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E90ADEE02CC3F81F001745C1 /* Build configuration list for PBXNativeTarget "MindReaderTests" */;
+			buildPhases = (
+				E90ADED42CC3F81F001745C1 /* Sources */,
+				E90ADED52CC3F81F001745C1 /* Frameworks */,
+				E90ADED62CC3F81F001745C1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E90ADEDD2CC3F81F001745C1 /* PBXTargetDependency */,
+			);
+			name = MindReaderTests;
+			productName = MindReaderTests;
+			productReference = E90ADED82CC3F81F001745C1 /* MindReaderTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		E91218C72CB2DD07000521ED /* MorningWidgetExtension */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E91218DB2CB2DD0A000521ED /* Build configuration list for PBXNativeTarget "MorningWidgetExtension" */;
@@ -467,6 +515,10 @@
 				LastSwiftUpdateCheck = 1530;
 				LastUpgradeCheck = 1530;
 				TargetAttributes = {
+					E90ADED72CC3F81F001745C1 = {
+						CreatedOnToolsVersion = 15.3;
+						TestTargetID = E97C15DC2C9166B5002B437C;
+					};
 					E91218C72CB2DD07000521ED = {
 						CreatedOnToolsVersion = 15.3;
 					};
@@ -497,11 +549,19 @@
 			targets = (
 				E97C15DC2C9166B5002B437C /* MindReader */,
 				E91218C72CB2DD07000521ED /* MorningWidgetExtension */,
+				E90ADED72CC3F81F001745C1 /* MindReaderTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		E90ADED62CC3F81F001745C1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E91218C62CB2DD07000521ED /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -581,6 +641,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		E90ADED42CC3F81F001745C1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E90ADEDB2CC3F81F001745C1 /* MindReaderTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E91218C42CB2DD07000521ED /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -636,6 +704,7 @@
 				E9F6B6BA2C9AC4D2008E9FBF /* CommentsVC.swift in Sources */,
 				E9521C2F2CAE91C000BFCAEF /* ResponseCopyCell.swift in Sources */,
 				E9521C2D2CAE507000BFCAEF /* ToastView.swift in Sources */,
+				E90ADEE22CC3F96D001745C1 /* PostLikeManager.swift in Sources */,
 				E9F6B6C02C9C194F008E9FBF /* AlbumVC.swift in Sources */,
 				E912190C2CB78DF4000521ED /* BlockManager.swift in Sources */,
 				E97C15E12C9166B5002B437C /* AppDelegate.swift in Sources */,
@@ -659,6 +728,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		E90ADEDD2CC3F81F001745C1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E97C15DC2C9166B5002B437C /* MindReader */;
+			targetProxy = E90ADEDC2CC3F81F001745C1 /* PBXContainerItemProxy */;
+		};
 		E91218D92CB2DD0A000521ED /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = E91218C72CB2DD07000521ED /* MorningWidgetExtension */;
@@ -686,6 +760,47 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		E90ADEDE2CC3F81F001745C1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 637F48P3P9;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yunchen.MindReaderTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MindReader.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MindReader";
+			};
+			name = Debug;
+		};
+		E90ADEDF2CC3F81F001745C1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 637F48P3P9;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yunchen.MindReaderTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MindReader.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MindReader";
+			};
+			name = Release;
+		};
 		E91218DC2CB2DD0A000521ED /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -932,6 +1047,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		E90ADEE02CC3F81F001745C1 /* Build configuration list for PBXNativeTarget "MindReaderTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E90ADEDE2CC3F81F001745C1 /* Debug */,
+				E90ADEDF2CC3F81F001745C1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		E91218DB2CB2DD0A000521ED /* Build configuration list for PBXNativeTarget "MorningWidgetExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
