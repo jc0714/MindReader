@@ -109,7 +109,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
                 AlertKitManager.presentErrorAlert(in: self!, title: errorMessage)
             }
             .store(in: &cancellables)
-        
+
         // 清除 recognizedText
         viewModel.recognizedTextClearPublisher
             .sink { shouldClear in
