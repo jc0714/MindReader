@@ -26,7 +26,7 @@ class BlockedListCell: UITableViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 25
         imageView.clipsToBounds = true
-        imageView.image = UIImage(systemName: "person.circle") 
+        imageView.image = UIImage(named: "BlockedAvatar")
         imageView.tintColor = .gray
         return imageView
     }()
@@ -63,8 +63,9 @@ class BlockedListCell: UITableViewCell {
         NSLayoutConstraint.activate([
             avatarImageView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 16),
             avatarImageView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 16),
-            avatarImageView.widthAnchor.constraint(equalToConstant: 50),
-            avatarImageView.heightAnchor.constraint(equalToConstant: 50)
+            avatarImageView.widthAnchor.constraint(equalToConstant: 60),
+            avatarImageView.heightAnchor.constraint(equalToConstant: 60),
+            avatarImageView.bottomAnchor.constraint(lessThanOrEqualTo: cardView.bottomAnchor, constant: -16)
         ])
 
         cardView.addSubview(userNameLabel)

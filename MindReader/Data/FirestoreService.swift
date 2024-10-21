@@ -71,13 +71,24 @@ class FirestoreService {
     // MARK: HomeVC
 
     // 批次打翻譯紀錄進去
-    func batchUploadData(for dataToUpload: [[String: Any]]) async {
+    func batchUploadData(for dataToUpload: [String: [String]]) async {
         let batch = db.batch()
 
-        for data in dataToUpload {
-            let documentRef = db.collection("TranslateDB").document() // 這裡自動生成新的 document ID
+        for (day, messages) in dataToUpload {
+            let documentRef = db.collection("WidgetDB").document() // 這裡自動生成新的 document ID
+
+            // 構建 Firebase 中接受的 [String: Any] 格式
+            let data: [String: Any] = [
+                "day": day,  // 將 key 放入字串作為 "day"
+                "messages": messages // 這裡是 [String]
+            ]
+
             batch.setData(data, forDocument: documentRef)
         }
+//        for data in dataToUpload {
+//            let documentRef = db.collection("TranslateDB").document() // 這裡自動生成新的 document ID
+//            batch.setData(data, forDocument: documentRef)
+//        }
 
         do {
             try await batch.commit()
@@ -225,7 +236,7 @@ class FirestoreService {
 
     // 監聽留言
     func setupFirestoreListener(for postId: String, completion: @escaping ([Comment]) -> Void) -> ListenerRegistration {
-        let blockedList = UserDefaults.standard.stringArray(forKey: "BlockedList") ?? []
+        let blockedList = UserDefaults.standard.dictionary(forKey: "BlockedList") as? [String: String] ?? [:]
         let reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
 
         let commentsRef = db.collection("posts").document(postId).collection("Comments").order(by: "timestamp", descending: true)
@@ -245,7 +256,7 @@ class FirestoreService {
                     return nil
                 }
 
-                if blockedList.contains(authorId) || reportedList.contains(document.documentID) {
+                if blockedList.keys.contains(authorId) || reportedList.contains(document.documentID) {
                     return nil
                 }
 
@@ -261,8 +272,7 @@ class FirestoreService {
         }
         return listener
     }
-
-    // MARK: -刪除帳號
+    // MARK: 刪除帳號
     func deleteAccount() {
         guard let userId = UserDefaults.standard.string(forKey: "userID") else { return }
         let usersCollection = Firestore.firestore().collection("Users")

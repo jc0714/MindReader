@@ -136,6 +136,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         field.layer.borderColor = UIColor.pink1.cgColor
         field.returnKeyType = .done
         field.font = UIFont.systemFont(ofSize: 16)
+        field.textColor = .black
         field.isHidden = true
         return field
     }()
@@ -143,11 +144,11 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
     let submitButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("開始分析...", for: .normal)
-        button.backgroundColor = .pink3
+        button.setTitle("開始分析", for: .normal)
+        button.backgroundColor = .pink3.withAlphaComponent(0.8)
         button.layer.cornerRadius = 10
-        button.layer.borderWidth = 5
-        button.layer.borderColor = UIColor.milkYellowww.cgColor
+        button.layer.borderWidth = 2
+        button.layer.borderColor = UIColor.chat.cgColor
         button.tag = 0 // 初始設定在圖片
         return button
     }()
@@ -336,16 +337,16 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
     }
 
     private func configureCollectionViews() {
-        // Register cell class for both collection views
         audienceCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "AudienceCell")
         replyStyleCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "ReplyStyleCell")
 
-        // Set delegates and data sources
         audienceCollectionView.delegate = self
         audienceCollectionView.dataSource = self
+        audienceCollectionView.showsHorizontalScrollIndicator = false
 
         replyStyleCollectionView.delegate = self
         replyStyleCollectionView.dataSource = self
+        replyStyleCollectionView.showsHorizontalScrollIndicator = false
     }
 
     // MARK: - Helper Methods to Configure Cells
@@ -353,9 +354,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         // 設置背景顏色
         cell.contentView.layer.cornerRadius = 10
-//        cell.contentView.layer.borderWidth = isSelected ? 2 : 0
-//        cell.contentView.layer.borderColor = isSelected ? UIColor.orange.cgColor : UIColor.clear.cgColor
-        cell.contentView.backgroundColor = isSelected ? .pink3 : .pink2
+        cell.contentView.backgroundColor = isSelected ? .pink3.withAlphaComponent(0.8) : .pink1
 
         // 移除現有的 label 再添加新的
         cell.contentView.subviews.forEach { $0.removeFromSuperview() }
@@ -398,12 +397,14 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
     // 隱藏動畫
     func hideLoadingAnimation() {
-        UIView.animate(withDuration: 0.5, animations: {
-            self.waitingAnimationView.alpha = 0
-        }) { _ in
-            self.waitingAnimationView.stop()
-            self.waitingAnimationView.isHidden = true
-            self.waitingAnimationView.alpha = 1
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.5, animations: {
+                self.waitingAnimationView.alpha = 0
+            }, completion: { _ in
+                self.waitingAnimationView.stop()
+                self.waitingAnimationView.isHidden = true
+                self.waitingAnimationView.alpha = 1
+            })
         }
     }
 }
@@ -425,21 +426,19 @@ extension HomeView: UICollectionViewDelegate, UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        HapticFeedbackManager.lightFeedback()
         if collectionView == audienceCollectionView {
-            // Deselect previously selected item
             if let previousIndex = selectedAudienceIndex {
                 collectionView.deselectItem(at: previousIndex, animated: true)
             }
             selectedAudienceIndex = indexPath
         } else {
-            // Deselect previously selected item
             if let previousIndex = selectedReplyStyleIndex {
                 collectionView.deselectItem(at: previousIndex, animated: true)
             }
             selectedReplyStyleIndex = indexPath
         }
 
-        // Reload the collection view to update the selection state
         collectionView.reloadData()
     }
 }

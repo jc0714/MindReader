@@ -33,6 +33,17 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
         return button
     }()
 
+    let hintLabel: UILabel = {
+        let label = UILabel()
+        label.text = "點按喜歡的回覆可以複製、製作早安圖！"
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = .brown
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
     private let closeButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("✕", for: .normal)
@@ -124,9 +135,10 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
             cell.selectionStyle = .none
 
             cell.textLabel?.text = "\(indexPath.row + 1). \(possibleMeanings[indexPath.row])"
+            cell.textLabel?.textColor = .black
 
             return cell
-        } else {          
+          } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "ResponseCopyCell", for: indexPath) as? ResponseCopyCell
 
             let text = "\(responseMethods[indexPath.row])"
@@ -170,12 +182,19 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
                 generateImageButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
                 generateImageButton.widthAnchor.constraint(equalToConstant: 100)
             ])
+
+            headerView.addSubview(hintLabel)
+            NSLayoutConstraint.activate([
+                hintLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
+                hintLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+                hintLabel.widthAnchor.constraint(equalToConstant: 180)
+            ])
         }
 
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-            titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+            titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)
         ])
 
         if section == 0 {
@@ -183,7 +202,6 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
         } else {
             titleLabel.text = "推薦回覆"
         }
-
         return headerView
     }
 
@@ -203,7 +221,7 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
         }
     }
 
-    func showInView(_ parentView: UIView) {
+    func showInView(_ parentView: UIView, completion: (() -> Void)? = nil) {
         parentView.addSubview(self)
         self.translatesAutoresizingMaskIntoConstraints = false
 
@@ -221,7 +239,9 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
         UIView.animate(withDuration: 2, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: {
             offScreenBottomConstraint.constant = -100
             parentView.layoutIfNeeded()
+        }, completion: { _ in
+            // 動畫結束時執行 completion 閉包
+            completion?()
         })
     }
-
 }

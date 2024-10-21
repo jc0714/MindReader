@@ -66,6 +66,7 @@ extension TagFilterView: UICollectionViewDelegate, UICollectionViewDataSource, U
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        HapticFeedbackManager.lightFeedback()
         selectedIndex = indexPath
         collectionView.reloadData()
 
@@ -74,7 +75,7 @@ extension TagFilterView: UICollectionViewDelegate, UICollectionViewDataSource, U
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let tag = tags[indexPath.item]
-        let width = tag.size(withAttributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)]).width + 32
+        let width = tag.size(withAttributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)]).width + 36
         return CGSize(width: width, height: collectionView.frame.height - 16)
     }
 }
@@ -124,7 +125,7 @@ class TagCell: UICollectionViewCell {
 
     func configure(with text: String, isSelected: Bool) {
         label.text = text
-        background.backgroundColor = isSelected ? .pink3 : .pink1
+        background.backgroundColor = isSelected ? .pink3.withAlphaComponent(0.8) : .pink1
 
         if isSelected {
             UIView.animate(withDuration: 0.3) {

@@ -4,6 +4,8 @@
 MindReader/APIKeys.swift
 MindReader/GoogleService-Info.plist
 
+.swiftlint.yml
+
 ### Swift ###
 # Xcode
 #
