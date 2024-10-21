@@ -79,13 +79,13 @@
     ```
     
 2. 使用 Xcode 打開專案。
-3. 如何生成 Firebase `GoogleService-Info.plist`
-    1. 前往 Firebase Console，登錄並創建一個新專案。
+3. 生成 `GoogleService-Info.plist`
+    1. 前往 Firebase Console，登入並創建一個新專案。
     2. 在專案中添加 iOS 應用，輸入 bundle identifier。
     3. 下載生成的 `GoogleService-Info.plist` 文件。
     4. 將該文件拖入 Xcode 專案的根目錄中。
-4. 加入 OpenAI API key。若有需要可寄信至 [0714joyce@gmail.com](mailto:0714joyce@gmail.com)，我可以提供給您。
-5. 在你的 iOS 設備或模擬器上編譯並運行應用程式。
+4. 加入 OpenAI API key。可寄信至 [0714joyce@gmail.com](mailto:0714joyce@gmail.com)，我可以提供給您。
+5. 在你的 iOS 設備或模擬器上運行應用程式。
 
 ## Feedback and Support
 
