@@ -434,7 +434,6 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
         }
 
     }
-    
     @objc private func handleCommentCountUpdate(_ notification: Notification) {
         // 獲取通知中的 postId 和新的留言數量
         guard let userInfo = notification.userInfo,
