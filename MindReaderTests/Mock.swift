@@ -28,7 +28,6 @@ class MockFirestoreService: FirestoreService {
     }
 
     override func saveToFirestore(prompt: String, response: String, imageURL: String?) async throws {
-        // Do nothing for now
     }
 
     override func uploadImage(imageData: Data) async throws -> String {

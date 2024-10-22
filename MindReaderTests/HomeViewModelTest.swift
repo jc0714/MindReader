@@ -86,7 +86,7 @@ class HomeViewModelTests: XCTestCase {
             prompt: emptyPrompt, // 空的 prompt
             recognizedText: "",
             selectedImage: nil,
-            selectedTag: 1, // 這個標記會讓我們使用 prompt 字段
+            selectedTag: 1, // 使用 prompt 字段
             audience: "對象",
             replyStyle: "風格"
         )
@@ -111,5 +111,4 @@ class HomeViewModelTests: XCTestCase {
         // Assert
         wait(for: [expectation], timeout: 1.0)
     }
-
 }

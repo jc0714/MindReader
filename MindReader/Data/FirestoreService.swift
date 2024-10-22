@@ -21,9 +21,9 @@ class FirestoreService {
 
         let userData: [String: Any] = [
             "appleUserIdentifier": appleUserIdentifier,
-            "appleUserFullName": appleUserFullName,
-            "userFullName": userFullName,
-            "email": email,
+            "appleUserFullName": appleUserFullName ?? "noAappleUserFullName",
+            "userFullName": userFullName ?? "noUserFullName",
+            "email": email ?? "noEmail",
             "realUserStatus": realUserStatus,
             "likePosts": [String](),
             "postIds": [String](),
@@ -115,7 +115,6 @@ class FirestoreService {
             print("User ID is nil")
             return
         }
-        
         let translateRef = db.collection("Translate")
 
         var data: [String: Any] = [

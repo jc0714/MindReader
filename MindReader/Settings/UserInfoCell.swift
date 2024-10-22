@@ -198,8 +198,6 @@ class UserInfoCell: UITableViewCell {
         })
     }
 
-
-
     func configure(with title: String, icon: UIImage?) {
         nameLabel.text = title
         avatarImageView.image = icon

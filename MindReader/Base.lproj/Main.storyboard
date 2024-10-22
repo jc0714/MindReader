@@ -100,23 +100,6 @@
             </objects>
             <point key="canvasLocation" x="723" y="-68"/>
         </scene>
-        <!--ChatVC-->
-        <scene sceneID="0VN-xg-ZJA">
-            <objects>
-                <viewController id="gyd-UF-umF" customClass="ChatVC" customModule="MindReader" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="NBL-La-9LN">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="gbJ-mB-1ew"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="" image="ellipsis.message.fill" catalog="system" id="v53-Lb-JUH"/>
-                    <navigationItem key="navigationItem" id="BP0-xC-8mn"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ouN-TC-FgO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-2010" y="2162"/>
-        </scene>
         <!--RecordVC-->
         <scene sceneID="Fu6-Vb-wcH">
             <objects>
@@ -209,7 +192,6 @@
     </scenes>
     <resources>
         <image name="cloud.fill" catalog="system" width="128" height="87"/>
-        <image name="ellipsis.message.fill" catalog="system" width="128" height="114"/>
         <image name="gearshape.fill" catalog="system" width="128" height="123"/>
         <image name="house.fill" catalog="system" width="128" height="104"/>
         <image name="person.2.fill" catalog="system" width="128" height="86"/>
