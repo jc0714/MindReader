@@ -2,10 +2,10 @@
 
 <div align="center">
 
-![Platform](https://img.shields.io/badge/platform-iOS-lightgrey)
+![Platform](https://img.shields.io/badge/platform-iOS-blue)
 ![Release](https://img.shields.io/badge/release-v1.1.2-brightgreen)
 ![Language](https://img.shields.io/badge/language-Swift-orange)
-![License](https://img.shields.io/badge/license-MIT-blue)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
 </div>
 
