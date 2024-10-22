@@ -60,7 +60,6 @@ class ReportPostManager {
         }
     }
 
-    // 一個方法來整合以上兩個功能
     func reportPost(postID: String, reason: String) {
         // 更新本地檢舉列表
         addToReportedPostList(postID: postID)

@@ -14,7 +14,6 @@ class HomeViewModel {
     private let apiService: APIService
     private let firestoreService: FirestoreService
 
-    // 使用 Combine 的 Subject
     var loadingStatePublisher = PassthroughSubject<Bool, Never>()
     var recognizedTextClearPublisher = PassthroughSubject<Bool, Never>()
     var responsePublisher = PassthroughSubject<([String], [String]), Never>()
@@ -31,6 +30,7 @@ class HomeViewModel {
 
         // 檢查是否有內容
         guard let prompt = promptText, !prompt.isEmpty else {
+            print("Error: 沒有讀到文字")  // 確認這裡被觸發
             errorPublisher.send("我沒有讀到文字哦")
             loadingStatePublisher.send(false)
             return
