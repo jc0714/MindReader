@@ -26,9 +26,9 @@
 阿雲聊天室隨時都在線！歡迎您分享生活點滴，阿雲會立即回覆給予滿滿支持。
 
 <div align="left">
-  <img src="https://github.com/user-attachments/assets/c7e693f2-d473-4bea-b425-d62d636a563c" alt="IMG_3504" width="30%" />
-  <img src="https://github.com/user-attachments/assets/df922486-da53-4245-a9ba-445d8202aece" alt="IMG_3507" width="30%" />
-  <img src="https://github.com/user-attachments/assets/afcef39e-0371-49ff-8fca-3b29432c5d48" alt="IMG_3506" width="30%" />
+  <img src="https://github.com/user-attachments/assets/c7e693f2-d473-4bea-b425-d62d636a563c" alt="IMG_3504" width="25%" />
+  <img src="https://github.com/user-attachments/assets/df922486-da53-4245-a9ba-445d8202aece" alt="IMG_3507" width="25%" />
+  <img src="https://github.com/user-attachments/assets/afcef39e-0371-49ff-8fca-3b29432c5d48" alt="IMG_3506" width="25%" />
 </div>
 
 ### 交流版
@@ -43,9 +43,11 @@
 
 收藏你的所有早安圖，未來也可以回來相簿找找聊天靈感。
 
-![IMG_3511](https://github.com/user-attachments/assets/f2364dbb-d199-460c-b230-d9d32758c6d8)
-![IMG_3510](https://github.com/user-attachments/assets/15d7db70-bfe2-4684-88ca-b0c8083b7a7d)
-![IMG_3509](https://github.com/user-attachments/assets/e51220c7-8f15-40d8-8567-7b31b686e694)
+<div align="left">
+  <img src="https://github.com/user-attachments/assets/f2364dbb-d199-460c-b230-d9d32758c6d8" alt="IMG_3504" width="25%" />
+  <img src="https://github.com/user-attachments/assets/15d7db70-bfe2-4684-88ca-b0c8083b7a7d" alt="IMG_3507" width="25%" />
+  <img src="https://github.com/user-attachments/assets/e51220c7-8f15-40d8-8567-7b31b686e694" alt="IMG_3506" width="25%" />
+</div>
 
 ### 貼文管理
 
