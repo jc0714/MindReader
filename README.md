@@ -71,7 +71,7 @@
 
 - **資料存取**：使用 Firebase Firestore 作為後端資料存儲服務，提供即時同步和安全的雲端管理。
 - **OpenAI API 整合**：結合 OpenAI API 提供訊息分析及推薦回覆。
-- **Vision**：透過 Vision 進行文字辨識。
+- **Vision**：透過 Vision framework 進行文字辨識。
 
 ## 運用套件
 
