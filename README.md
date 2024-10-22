@@ -1,7 +1,13 @@
 ![App Screenshot](https://drive.google.com/uc?export=view&id=1SoPOGJQWi3vQ0LaDWcVSxRw-viaz9A07)
 
+<div align="center">
+
 ![Platform](https://img.shields.io/badge/platform-iOS-lightgrey)
 ![Release](https://img.shields.io/badge/release-v1.1.2-brightgreen)
+![Language](https://img.shields.io/badge/language-Swift-orange)
+![License](https://img.shields.io/badge/license-MIT-blue)
+
+</div>
 
 # MindReader - 您的日常好朋友
 
