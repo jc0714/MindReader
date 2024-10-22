@@ -1,17 +1,13 @@
 ![App Screenshot](https://drive.google.com/uc?export=view&id=1SoPOGJQWi3vQ0LaDWcVSxRw-viaz9A07)
 
-<div align="center">
-
 ![Platform](https://img.shields.io/badge/platform-iOS-blue)
 ![Release](https://img.shields.io/badge/release-v1.1.2-brightgreen)
 ![Language](https://img.shields.io/badge/language-Swift-orange)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
-</div>
+# MindReader - 為您帶來聊天靈感
 
-# MindReader - 您的日常好朋友
-
-歡迎來到 **"MindReader 人性翻譯機"**，這款 app 可以幫您分析訊息、提供推薦回覆還能製作早安圖☀️！為您帶來聊天靈感。還有即時回覆的阿雲聊天室、交流板，快來挖掘聊天靈感吧～
+歡迎來到 **"MindReader 人性翻譯機"**，這款 app 可以幫您分析訊息、提供推薦回覆還能製作早安圖☀️！為您帶來滿滿的聊天靈感，還有即時回覆的阿雲聊天室、交流板，一起把聊天變好玩吧～
 
 [![Download on the App Store](https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-app-store.svg)](https://apps.apple.com/app/id6692625322)
 
