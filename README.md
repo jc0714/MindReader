@@ -11,7 +11,7 @@
 
 [![Download on the App Store](https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-app-store.svg)](https://apps.apple.com/app/id6692625322)
 
-## Features
+## 功能
 
 ### 訊息分析
 
@@ -25,6 +25,10 @@
 
 阿雲聊天室隨時都在線！歡迎您分享生活點滴，阿雲會立即回覆給予滿滿支持。
 
+![IMG_3504](https://github.com/user-attachments/assets/c7e693f2-d473-4bea-b425-d62d636a563c)
+![IMG_3507](https://github.com/user-attachments/assets/df922486-da53-4245-a9ba-445d8202aece)
+![IMG_3506](https://github.com/user-attachments/assets/afcef39e-0371-49ff-8fca-3b29432c5d48)
+
 ### 交流版
 
 可以與其他用戶互動，選擇自己有興趣的類別，留言加入討論。
@@ -37,6 +41,10 @@
 
 收藏你的所有早安圖，未來也可以回來相簿找找聊天靈感。
 
+![IMG_3511](https://github.com/user-attachments/assets/f2364dbb-d199-460c-b230-d9d32758c6d8)
+![IMG_3510](https://github.com/user-attachments/assets/15d7db70-bfe2-4684-88ca-b0c8083b7a7d)
+![IMG_3509](https://github.com/user-attachments/assets/e51220c7-8f15-40d8-8567-7b31b686e694)
+
 ### 貼文管理
 
 檢視、刪除或分享自己的貼文，分享時貼文將以圖像形式呈現。
@@ -45,7 +53,7 @@
 
 根據手機設定自動切換淺色或深色模式，提升視覺體驗。
 
-## How to Use
+## 如何使用
 
 - **使用翻譯機**：輸入文字到翻譯機或上傳截圖，點擊「開始分析」進行分析。
 - **按下即複製**：會分析出三種可能含義並提供三句推薦回覆，一鍵複製還可以搭配風景照製作早安圖。
@@ -55,13 +63,13 @@
 - **專屬相簿**：喜歡排版的大家一定要來相簿頁玩玩，設計專屬風格的早安圖相簿。
 - **每日鼓勵小語**：有兩款大小的 Widget 可以加到桌面上，每天接收驚喜早安圖。
 
-## Techniques
+## 技術
 
 - **資料存取**：使用 Firebase Firestore 作為後端資料存儲服務，提供即時同步和安全的雲端管理。
 - **OpenAI API 整合**：結合 OpenAI API 提供訊息分析及推薦回覆。
 - **Vision**：透過 Vision 進行文字辨識。
 
-## Libraries
+## 運用套件
 
 - [Firebase](https://github.com/firebase/firebase-ios-sdk)
 - [AlertKit](https://github.com/sparrowcode/AlertKit)
@@ -70,11 +78,11 @@
 - [SwiftLint](https://github.com/realm/SwiftLint)
 - [Lottie](https://github.com/airbnb/lottie-ios)
 
-## Requirements
+## 設備要求
 
 - iOS 設備運行 iOS 17.0
 
-## Installation
+## 安裝方式
 
 1. clone 這個專案到 local：
     
