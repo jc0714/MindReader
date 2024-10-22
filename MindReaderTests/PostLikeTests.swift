@@ -1,6 +1,6 @@
 //
-//  MindReaderTests.swift
-//  MindReaderTests
+//  PostLikeTests.swift
+//  PostLikeTests
 //
 //  Created by J oyce on 2024/10/19.
 //
@@ -8,7 +8,7 @@
 import XCTest
 @testable import MindReader
 
-final class MindReaderTests: XCTestCase {
+final class PostLikeTests: XCTestCase {
 
     var viewController: BasePostVC!
 
@@ -27,7 +27,7 @@ final class MindReaderTests: XCTestCase {
         BasePostVC.likedPosts = []
     }
 
-    func testUpdatePostLikesLocally_withPostId(_ postId: String, isLiked: Bool, initialLikeCount: Int) throws {
+    func performLikeAction(_ postId: String, isLiked: Bool, initialLikeCount: Int) throws {
         // Arrange: 準備測試資料
         let originalPost = Post(avatar: 1, title: "Test Title", createdTime: "2024-01-01", id: postId, category: "Test Category", content: "Test content", image: "testImageURL", author: Author(email: "", id: "", name: ""), like: initialLikeCount, comment: 0)
         viewController.posts = [originalPost]
@@ -52,11 +52,27 @@ final class MindReaderTests: XCTestCase {
         }
     }
 
+    // 測試按一下、兩下、三下
     func testLikePost() throws {
-        try testUpdatePostLikesLocally_withPostId("TestPostId1", isLiked: false, initialLikeCount: 3)
+        try performLikeAction("TestPostId", isLiked: false, initialLikeCount: 3)
     }
 
     func testUnlikePost() throws {
-        try testUpdatePostLikesLocally_withPostId("TestPostId2", isLiked: true, initialLikeCount: 3)
+        try performLikeAction("TestPostId", isLiked: true, initialLikeCount: 3)
     }
+
+    func testToggleLikeMultipleTimes() throws {
+        let postId = "TestPostId1"
+        let initialLikeCount = 0
+
+        // 第一次按：應該增加讚數並標記為已按讚
+        try performLikeAction(postId, isLiked: false, initialLikeCount: initialLikeCount)
+
+        // 第二次按：應該取消讚數並從 likedPosts 移除
+        try performLikeAction(postId, isLiked: true, initialLikeCount: initialLikeCount + 1)
+
+        // 第三次按：應該再次增加讚數並重新加入 likedPosts
+        try performLikeAction(postId, isLiked: false, initialLikeCount: initialLikeCount)
+    }
+
 }
