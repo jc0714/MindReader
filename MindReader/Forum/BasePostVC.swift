@@ -67,7 +67,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
 
     private func setupUI() {
-        view.addSubview(tagFilterView) 
+        view.addSubview(tagFilterView)
         view.addSubview(tableView)
 
         tagFilterView.translatesAutoresizingMaskIntoConstraints = false
@@ -141,7 +141,9 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
 
         cell.heartButtonTappedClosure = { [weak self] in
-            self?.updateHeartBtn(at: indexPath)
+            Task {
+                await self?.updateHeartBtn(at: indexPath)
+            }
         }
 
         cell.commentButtonTappedClosure = { [weak self] in
@@ -176,7 +178,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
 
     // 更新愛心實心空心狀態
-    func updateHeartBtn(at indexPath: IndexPath) {
+    func updateHeartBtn(at indexPath: IndexPath) async {
         guard let userId = UserDefaults.standard.string(forKey: "userID") else {
             print("User ID is nil")
             return
@@ -186,13 +188,18 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.cellForRow(at: indexPath) as? PostCell
         let batch = Firestore.firestore().batch()
 
-        let isLiked = toggleLike(for: postId, userId: userId, batch: batch)
+        let isLiked = await toggleLike(for: postId, userId: userId)
 
         Task {
             do {
                 try await batch.commit()
-                LikeManager.shared.updatePostLikesLocally(for: postId, isLiked: isLiked, posts: &posts)
-//                updatePostLikesLocally(for: postId, isLiked: isLiked)
+
+                LikeManager.shared.updatePostLikesLocally(for: postId, isLiked: isLiked)
+
+                if let originalIndex = posts.firstIndex(where: { $0.id == postId }) {
+                    posts[originalIndex].like += isLiked ? 1 : -1
+                }
+
                 updateUI(for: cell, at: indexPath, isLiked: isLiked)
             } catch {
                 print("Error updating likes: \(error.localizedDescription)")
@@ -200,35 +207,35 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
 
-    private func toggleLike(for postId: String, userId: String, batch: WriteBatch) -> Bool {
-        let postRef = Firestore.firestore().collection("posts").document(postId)
-        let userRef = Firestore.firestore().collection("Users").document(userId)
-
-        var isLiked = false
-
-        if BasePostVC.likedPosts.contains(postId) {
-            // 移除愛心
-            batch.updateData(["like": FieldValue.arrayRemove([userId])], forDocument: postRef)
-            batch.updateData(["likePosts": FieldValue.arrayRemove([postId])], forDocument: userRef)
-            isLiked = false
-        } else {
-            // 添加愛心
-            batch.updateData(["like": FieldValue.arrayUnion([userId])], forDocument: postRef)
-            batch.updateData(["likePosts": FieldValue.arrayUnion([postId])], forDocument: userRef)
-            isLiked = true
+    private func toggleLike(for postId: String, userId: String) async -> Bool {
+        do {
+            // 切換愛心狀態，使用 await
+            return try await LikeManager.shared.toggleLike(postId: postId, userId: userId)
+        } catch {
+            print("Error updating likes: \(error.localizedDescription)")
+            return false
         }
-        return isLiked
     }
 
-//    func updatePostLikesLocally(for postId: String, isLiked: Bool) {
-//        if let originalIndex = posts.firstIndex(where: { $0.id == postId }) {
-//            posts[originalIndex].like += isLiked ? 1 : -1
-//        }
-//        if isLiked {
-//            BasePostVC.likedPosts.insert(postId)
+//
+//    private func toggleLike(for postId: String, userId: String, batch: WriteBatch) -> Bool {
+//        let postRef = Firestore.firestore().collection("posts").document(postId)
+//        let userRef = Firestore.firestore().collection("Users").document(userId)
+//
+//        var isLiked = false
+//
+//        if BasePostVC.likedPosts.contains(postId) {
+//            // 移除愛心
+//            batch.updateData(["like": FieldValue.arrayRemove([userId])], forDocument: postRef)
+//            batch.updateData(["likePosts": FieldValue.arrayRemove([postId])], forDocument: userRef)
+//            isLiked = false
 //        } else {
-//            BasePostVC.likedPosts.remove(postId)
+//            // 添加愛心
+//            batch.updateData(["like": FieldValue.arrayUnion([userId])], forDocument: postRef)
+//            batch.updateData(["likePosts": FieldValue.arrayUnion([postId])], forDocument: userRef)
+//            isLiked = true
 //        }
+//        return isLiked
 //    }
 
     private func updateUI(for cell: PostCell?, at indexPath: IndexPath, isLiked: Bool) {
@@ -330,3 +337,15 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
 }
+
+
+//    func updatePostLikesLocally(for postId: String, isLiked: Bool) {
+//        if let originalIndex = posts.firstIndex(where: { $0.id == postId }) {
+//            posts[originalIndex].like += isLiked ? 1 : -1
+//        }
+//        if isLiked {
+//            BasePostVC.likedPosts.insert(postId)
+//        } else {
+//            BasePostVC.likedPosts.remove(postId)
+//        }
+//    }
