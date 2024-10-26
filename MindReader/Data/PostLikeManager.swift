@@ -8,17 +8,32 @@
 import Foundation
 import Firebase
 
-class LikeManager {
-    static let shared = LikeManager()
+protocol LikeStorage {
+    var likedPosts: Set<String> { get set }
+}
 
+class BaseLikeStorage: LikeStorage {
+    static let shared = BaseLikeStorage()
     private init() {}
+
+    var likedPosts = Set<String>()
+}
+
+class LikeManager {
+    static let shared = LikeManager(storage: BaseLikeStorage.shared)
+
+    private var storage: LikeStorage
+
+    init(storage: LikeStorage) {
+        self.storage = storage
+    }
 
     // 更新本地的愛心數量
     func updatePostLikesLocally(for postId: String, isLiked: Bool) {
         if isLiked {
-            BasePostVC.likedPosts.insert(postId)
+            storage.likedPosts.insert(postId)
         } else {
-            BasePostVC.likedPosts.remove(postId)
+            storage.likedPosts.remove(postId)
         }
     }
 
@@ -29,7 +44,7 @@ class LikeManager {
 
         var isLiked = false
 
-        if await BasePostVC.likedPosts.contains(postId) {
+        if await storage.likedPosts.contains(postId) {
             // 移除愛心
             batch.updateData(["like": FieldValue.arrayRemove([userId])], forDocument: postRef)
             batch.updateData(["likePosts": FieldValue.arrayRemove([postId])], forDocument: userRef)
