@@ -75,7 +75,7 @@
 		E97C16152C95536B002B437C /* TextRecognition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C16142C95536B002B437C /* TextRecognition.swift */; };
 		E97C16172C955CBB002B437C /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97C16162C955CBB002B437C /* FirestoreService.swift */; };
 		E99142272C9EEDCE00016C90 /* ImageCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99142262C9EEDCE00016C90 /* ImageCollectionView.swift */; };
-		E991422B2C9F24C300016C90 /* PostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E991422A2C9F24C300016C90 /* PostVC.swift */; };
+		E991422B2C9F24C300016C90 /* BasePostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E991422A2C9F24C300016C90 /* BasePostVC.swift */; };
 		E99142302C9FF8F200016C90 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = E991422F2C9FF8F200016C90 /* Kingfisher */; };
 		E99142322C9FFABA00016C90 /* AlbumFullScreenVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99142312C9FFABA00016C90 /* AlbumFullScreenVC.swift */; };
 		E99142342CA0042200016C90 /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99142332CA0042200016C90 /* ImageCell.swift */; };
@@ -187,7 +187,7 @@
 		E97C16142C95536B002B437C /* TextRecognition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextRecognition.swift; sourceTree = "<group>"; };
 		E97C16162C955CBB002B437C /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		E99142262C9EEDCE00016C90 /* ImageCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionView.swift; sourceTree = "<group>"; };
-		E991422A2C9F24C300016C90 /* PostVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostVC.swift; sourceTree = "<group>"; };
+		E991422A2C9F24C300016C90 /* BasePostVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasePostVC.swift; sourceTree = "<group>"; };
 		E99142312C9FFABA00016C90 /* AlbumFullScreenVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumFullScreenVC.swift; sourceTree = "<group>"; };
 		E99142332CA0042200016C90 /* ImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
 		E99142572CA2D03500016C90 /* DateFormatterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterExtension.swift; sourceTree = "<group>"; };
@@ -395,7 +395,7 @@
 		E9F6B6842C96EAD2008E9FBF /* Forum */ = {
 			isa = PBXGroup;
 			children = (
-				E991422A2C9F24C300016C90 /* PostVC.swift */,
+				E991422A2C9F24C300016C90 /* BasePostVC.swift */,
 				E9F6B6852C96EB14008E9FBF /* ForumVC.swift */,
 				E9F6B6892C971788008E9FBF /* PostEditVC.swift */,
 				E90B5E4E2CA3A22000CA24F7 /* DetailVC.swift */,
@@ -684,7 +684,7 @@
 				E9F6B6B22C997482008E9FBF /* ImageVC.swift in Sources */,
 				E9F6B67E2C95800F008E9FBF /* ChatView.swift in Sources */,
 				E91219102CB79617000521ED /* ReportPostManager.swift in Sources */,
-				E991422B2C9F24C300016C90 /* PostVC.swift in Sources */,
+				E991422B2C9F24C300016C90 /* BasePostVC.swift in Sources */,
 				E9F6B68A2C971788008E9FBF /* PostEditVC.swift in Sources */,
 				E9521C252CAD43C000BFCAEF /* Haptic.swift in Sources */,
 				E97C15F52C91810A002B437C /* HomeView.swift in Sources */,

@@ -129,7 +129,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
         let replyStyle = homeView.selectedReplyStyleText
         let selectedImage = homeView.imageView.image
 
-        var submissionData = TranslateData(
+        let submissionData = TranslateData(
             prompt: prompt,
             recognizedText: recognizedText,
             selectedImage: selectedImage,

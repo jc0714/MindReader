@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.enableAutoToolbar = true
         IQKeyboardManager.shared.resignOnTouchOutside = true
+
         DispatchQueue.global(qos: .background).async {
             UserDefaults.standard.removeObject(forKey: "ForumVC_selectedTag")
             UserDefaults.standard.removeObject(forKey: "MyPostVC_selectedTag")

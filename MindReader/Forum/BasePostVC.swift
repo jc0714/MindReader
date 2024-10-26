@@ -1,5 +1,5 @@
 //
-//  PostVC.swift
+//  BasePostVC.swift
 //  MindReader
 //
 //  Created by J oyce on 2024/9/21.
@@ -176,7 +176,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
 
     // 更新愛心實心空心狀態
-
     func updateHeartBtn(at indexPath: IndexPath) {
         guard let userId = UserDefaults.standard.string(forKey: "userID") else {
             print("User ID is nil")
@@ -192,7 +191,8 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         Task {
             do {
                 try await batch.commit()
-                updatePostLikesLocally(for: postId, isLiked: isLiked)
+                LikeManager.shared.updatePostLikesLocally(for: postId, isLiked: isLiked, posts: &posts)
+//                updatePostLikesLocally(for: postId, isLiked: isLiked)
                 updateUI(for: cell, at: indexPath, isLiked: isLiked)
             } catch {
                 print("Error updating likes: \(error.localizedDescription)")
@@ -217,21 +217,19 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             batch.updateData(["likePosts": FieldValue.arrayUnion([postId])], forDocument: userRef)
             isLiked = true
         }
-
         return isLiked
     }
 
-    func updatePostLikesLocally(for postId: String, isLiked: Bool) {
-        if let originalIndex = posts.firstIndex(where: { $0.id == postId }) {
-            posts[originalIndex].like += isLiked ? 1 : -1
-        }
-
-        if isLiked {
-            BasePostVC.likedPosts.insert(postId)
-        } else {
-            BasePostVC.likedPosts.remove(postId)
-        }
-    }
+//    func updatePostLikesLocally(for postId: String, isLiked: Bool) {
+//        if let originalIndex = posts.firstIndex(where: { $0.id == postId }) {
+//            posts[originalIndex].like += isLiked ? 1 : -1
+//        }
+//        if isLiked {
+//            BasePostVC.likedPosts.insert(postId)
+//        } else {
+//            BasePostVC.likedPosts.remove(postId)
+//        }
+//    }
 
     private func updateUI(for cell: PostCell?, at indexPath: IndexPath, isLiked: Bool) {
         cell?.heartButton.setImage(UIImage(systemName: isLiked ? "heart.fill" : "heart"), for: .normal)
@@ -244,7 +242,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             print("Index out of range: \(indexPath.row)")
             return
         }
-
         let commentsVC = CommentsVC(postId: currentPosts[indexPath.row].id)
         if let sheet = commentsVC.sheetPresentationController {
             sheet.detents = [.medium(), .large()]

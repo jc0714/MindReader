@@ -168,8 +168,13 @@ extension LoginVC: ASAuthorizationControllerDelegate {
             print("找不到 MainTabBarController")
             return
         }
-        UIApplication.shared.windows.first?.rootViewController = tabBarController
-        UIApplication.shared.windows.first?.makeKeyAndVisible()
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first {
+            window.rootViewController = tabBarController
+            window.makeKeyAndVisible()
+        }
+//        UIApplication.shared.windows.first?.rootViewController = tabBarController
+//        UIApplication.shared.windows.first?.makeKeyAndVisible()
     }
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
