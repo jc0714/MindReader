@@ -388,26 +388,74 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
     func updateHeartBtn(at indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as? PostCell
 
+        // 批次寫入操作
+        let batch = Firestore.firestore().batch()
+        let postRef = Firestore.firestore().collection("posts").document(postId)
+
         guard let userId = UserDefaults.standard.string(forKey: "userID") else {
             print("User ID is nil")
             return
         }
 
+        let userRef = Firestore.firestore().collection("Users").document(userId)
+
+        if BasePostVC.likedPosts.contains(postId) {
+            // 如果用戶已經按了讚，則移除讚
+            batch.updateData(["like": FieldValue.arrayRemove([userId])], forDocument: postRef)
+            batch.updateData(["likePosts": FieldValue.arrayRemove([postId])], forDocument: userRef)
+
+            // 更新本地數據，移除已按讚的文章
+            BasePostVC.likedPosts.remove(postId)
+            post?.like -= 1
+            cell?.heartButton.setImage(UIImage(systemName: "heart"), for: .normal)
+        } else {
+            // 如果用戶還未按讚，則添加讚
+            batch.updateData(["like": FieldValue.arrayUnion([userId])], forDocument: postRef)
+            batch.updateData(["likePosts": FieldValue.arrayUnion([postId])], forDocument: userRef)
+
+            // 更新本地數據，添加已按讚的文章
+            BasePostVC.likedPosts.insert(postId)
+            post?.like += 1
+            cell?.heartButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+        }
+
+        // 更新愛心數量顯示
+        cell?.heartCount.text = String(post!.like)
+
+        // 提交批次寫入操作
         Task {
             do {
-                // 切換愛心狀態
-                let isLiked = try await LikeManager.shared.toggleLike(postId: postId, userId: userId)
-
-                // 更新本地 UI
-                post?.like += isLiked ? 1 : -1
-                cell?.heartButton.setImage(UIImage(systemName: isLiked ? "heart.fill" : "heart"), for: .normal)
-                cell?.heartCount.text = String(post!.like)
+                try await batch.commit()
 
             } catch {
                 print("Error updating likes: \(error.localizedDescription)")
             }
         }
+
     }
+//    func updateHeartBtn(at indexPath: IndexPath) {
+//        let cell = tableView.cellForRow(at: indexPath) as? PostCell
+//
+//        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
+//            print("User ID is nil")
+//            return
+//        }
+//
+//        Task {
+//            do {
+//                // 切換愛心狀態
+//                let isLiked = try await LikeManager.shared.toggleLike(postId: postId, userId: userId)
+//
+//                // 更新本地 UI
+//                post?.like += isLiked ? 1 : -1
+//                cell?.heartButton.setImage(UIImage(systemName: isLiked ? "heart.fill" : "heart"), for: .normal)
+//                cell?.heartCount.text = String(post!.like)
+//
+//            } catch {
+//                print("Error updating likes: \(error.localizedDescription)")
+//            }
+//        }
+//    }
 
     @objc private func handleCommentCountUpdate(_ notification: Notification) {
         // 獲取通知中的 postId 和新的留言數量
