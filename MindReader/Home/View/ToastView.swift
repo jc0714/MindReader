@@ -157,7 +157,6 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         if indexPath.section == 1 {
-            print("TAPPEDDDDD")
             let text = "\(responseMethods[indexPath.row])"
             onCopyTap?(text) // 通過 closure 傳遞文字給 HomeVC
         }
@@ -217,7 +216,6 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
         if let cell = gesture.view as? UITableViewCell, let indexPath = tableView.indexPath(for: cell), indexPath.section == 1 {
             let responseToCopy = responseMethods[indexPath.row]
             UIPasteboard.general.string = responseToCopy
-            print("Copied to clipboard: \(responseToCopy)")
         }
     }
 
@@ -240,7 +238,6 @@ class ToastView: UIView, UITableViewDataSource, UITableViewDelegate {
             offScreenBottomConstraint.constant = -100
             parentView.layoutIfNeeded()
         }, completion: { _ in
-            // 動畫結束時執行 completion 閉包
             completion?()
         })
     }

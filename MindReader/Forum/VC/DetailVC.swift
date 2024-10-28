@@ -351,7 +351,6 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
         return false
     }
 
-    // 留言刪除 UI Firebase 都要記得
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "刪除") { [weak self] (action, view, completionHandler) in
             guard let self = self else { return }

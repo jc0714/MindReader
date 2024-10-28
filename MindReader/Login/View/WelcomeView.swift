@@ -24,12 +24,12 @@ class WelcomeView: UIView {
         textField.placeholder = "你的名字"
         textField.borderStyle = .none
         textField.backgroundColor = UIColor.brown.withAlphaComponent(0.1)
-        textField.layer.cornerRadius = 8 // 圓角
-        textField.layer.borderWidth = 1.0 // 邊框寬度
-        textField.layer.borderColor = UIColor.brown.withAlphaComponent(0.5).cgColor // 邊框顏色與 label 字體一致
-        textField.setLeftPaddingPoints(10) // 左邊內邊距
-        textField.font = UIFont.systemFont(ofSize: 18) // 與 titleLabel 字體一致
-        textField.textColor = .brown // 文本顏色與 label 一致
+        textField.layer.cornerRadius = 8
+        textField.layer.borderWidth = 1.0
+        textField.layer.borderColor = UIColor.brown.withAlphaComponent(0.5).cgColor
+        textField.setLeftPaddingPoints(10)
+        textField.font = UIFont.systemFont(ofSize: 18)
+        textField.textColor = .brown
         return textField
     }()
 
@@ -66,7 +66,6 @@ class WelcomeView: UIView {
         addSubview(cloudImageView)
         cloudImageView.translatesAutoresizingMaskIntoConstraints = false
 
-        // 添加輸入框和按鈕
         addSubview(titleLabel)
         addSubview(nameTextField)
         addSubview(confirmButton)
@@ -75,7 +74,6 @@ class WelcomeView: UIView {
         nameTextField.translatesAutoresizingMaskIntoConstraints = false
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
 
-        // 設置約束
         NSLayoutConstraint.activate([
             cloudImageView.topAnchor.constraint(equalTo: self.topAnchor),
             cloudImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),

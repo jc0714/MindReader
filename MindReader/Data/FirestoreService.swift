@@ -38,8 +38,6 @@ class FirestoreService {
             if let error = error {
                 print("Error saving user data to Firestore: \(error.localizedDescription)")
             } else {
-                print("User data successfully saved to Firestore!")
-
                 UserDefaults.standard.set(documentID, forKey: "userID")
                 UserDefaults.standard.set(chatRoomId, forKey: "chatRoomId")
                 UserDefaults.standard.synchronize()
@@ -62,8 +60,6 @@ class FirestoreService {
         messageRef.addDocument(data: chatData) { chatError in
             if let chatError = chatError {
                 print("Error creating chat message document: \(chatError.localizedDescription)")
-            } else {
-                print("Chat message document created successfully!")
             }
         }
     }
@@ -77,7 +73,6 @@ class FirestoreService {
         for (day, messages) in dataToUpload {
             let documentRef = db.collection("WidgetDB").document() // 這裡自動生成新的 document ID
 
-            // 構建 Firebase 中接受的 [String: Any] 格式
             let data: [String: Any] = [
                 "day": day,  // 將 key 放入字串作為 "day"
                 "messages": messages // 這裡是 [String]
@@ -102,7 +97,6 @@ class FirestoreService {
         let querySnapshot = try await db.collection("TranslateDB").whereField("prompt", isEqualTo: prompt).getDocuments()
 
         if let document = querySnapshot.documents.first {
-            print(document.data())
             return document.data()
         } else {
             return nil
@@ -112,7 +106,6 @@ class FirestoreService {
     func saveToFirestore(prompt: String, response: String, imageURL: String?) async throws {
 
         guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-            print("User ID is nil")
             return
         }
         let translateRef = db.collection("Translate")
@@ -141,7 +134,6 @@ class FirestoreService {
     func uploadImage(imageData: Data) async throws -> String {
 
         guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-            print("User ID is nil")
             return ""
         }
 
@@ -155,7 +147,6 @@ class FirestoreService {
     func uploadMorningImage(imageData: Data) async throws -> String {
 
         guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-            print("User ID is nil")
             return ""
         }
 
@@ -168,7 +159,6 @@ class FirestoreService {
     func saveToMorningImageToDatabase(imageURL: String) async throws {
 
         guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-            print("User ID is nil")
             return
         }
 
@@ -184,7 +174,6 @@ class FirestoreService {
     func saveMessage(message: String, sender: String, completion: @escaping (Error?) -> Void) {
 
         guard let userId = UserDefaults.standard.string(forKey: "userID"), let chatId = UserDefaults.standard.string(forKey: "chatRoomId") else {
-            print("User ID is nil")
             return
         }
 
@@ -204,7 +193,6 @@ class FirestoreService {
     func listenForMessages(completion: @escaping ([Message]) -> Void) {
 
         guard let userId = UserDefaults.standard.string(forKey: "userID"), let chatId = UserDefaults.standard.string(forKey: "chatRoomId") else {
-            print("User ID is nil")
             return
         }
 
@@ -278,12 +266,10 @@ class FirestoreService {
 
         usersCollection.document(userId).updateData(["isDeleted": true]) { error in
             if error == nil {
-                print("帳號標記為刪除")
                 UserDefaults.standard.removeObject(forKey: "userID")
                 UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
-//                UserDefaults.standard.removeObject(forKey: "userLastName")
             } else {
-                print("刪除出錯了啊啊啊: \(error!.localizedDescription)")
+                print("刪除出錯: \(error!.localizedDescription)")
             }
         }
     }

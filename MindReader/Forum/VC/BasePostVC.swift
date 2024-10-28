@@ -208,50 +208,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         cell.heartCount.text = String(currentPosts[indexPath.row].like)
     }
 
-//    func updateHeartBtn(at indexPath: IndexPath) async {
-//        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-//            print("User ID is nil")
-//            return
-//        }
-//
-//        let postId = currentPosts[indexPath.row].id
-//        let cell = tableView.cellForRow(at: indexPath) as? PostCell
-//        let batch = Firestore.firestore().batch()
-//
-//        let isLiked = await toggleLike(for: postId, userId: userId)
-//
-//        Task {
-//            do {
-//                try await batch.commit()
-//
-//                LikeManager.shared.updatePostLikesLocally(for: postId, isLiked: isLiked)
-//
-//                if let originalIndex = posts.firstIndex(where: { $0.id == postId }) {
-//                    posts[originalIndex].like += isLiked ? 1 : -1
-//                }
-//
-//                updateUI(for: cell, at: indexPath, isLiked: isLiked)
-//            } catch {
-//                print("Error updating likes: \(error.localizedDescription)")
-//            }
-//        }
-//    }
-//
-//    private func toggleLike(for postId: String, userId: String) async -> Bool {
-//        do {
-//            // 切換愛心狀態，使用 await
-//            return try await LikeManager.shared.toggleLike(postId: postId, userId: userId)
-//        } catch {
-//            print("Error updating likes: \(error.localizedDescription)")
-//            return false
-//        }
-//    }
-//
-//    private func updateUI(for cell: PostCell?, at indexPath: IndexPath, isLiked: Bool) {
-//        cell?.heartButton.setImage(UIImage(systemName: isLiked ? "heart.fill" : "heart"), for: .normal)
-//        cell?.heartCount.text = String(currentPosts[indexPath.row].like)
-//    }
-
     // 連結到留言 VC
     func showCommentsForPost(at indexPath: IndexPath) {
         guard indexPath.row < currentPosts.count else {
@@ -346,15 +302,3 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
 }
-
-
-//    func updatePostLikesLocally(for postId: String, isLiked: Bool) {
-//        if let originalIndex = posts.firstIndex(where: { $0.id == postId }) {
-//            posts[originalIndex].like += isLiked ? 1 : -1
-//        }
-//        if isLiked {
-//            BasePostVC.likedPosts.insert(postId)
-//        } else {
-//            BasePostVC.likedPosts.remove(postId)
-//        }
-//    }

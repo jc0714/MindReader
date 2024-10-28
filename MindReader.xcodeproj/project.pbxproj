@@ -250,10 +250,8 @@
 		E90ADECE2CC23745001745C1 /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				E9638CB42CBD5F3B0004A728 /* LoginView.swift */,
-				E9638CD82CBE162B0004A728 /* WelcomeView.swift */,
-				E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */,
-				E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */,
+				E95A994A2CCFE53C005E7A15 /* View */,
+				E95A99492CCFE532005E7A15 /* VC */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -271,7 +269,6 @@
 		E90B5E4C2CA39DCC00CA24F7 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				E91218C02CB0ED6A000521ED /* CustomTabBarController.swift */,
 				E99142572CA2D03500016C90 /* DateFormatterExtension.swift */,
 				E97C16142C95536B002B437C /* TextRecognition.swift */,
 				E9F6B6B52C9AA030008E9FBF /* ButtonExtension.swift */,
@@ -316,6 +313,161 @@
 			path = MorningWidget;
 			sourceTree = "<group>";
 		};
+		E95A99492CCFE532005E7A15 /* VC */ = {
+			isa = PBXGroup;
+			children = (
+				E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */,
+				E9521C332CAFC28300BFCAEF /* WelcomeVC.swift */,
+			);
+			path = VC;
+			sourceTree = "<group>";
+		};
+		E95A994A2CCFE53C005E7A15 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E9638CB42CBD5F3B0004A728 /* LoginView.swift */,
+				E9638CD82CBE162B0004A728 /* WelcomeView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E95A994B2CCFE560005E7A15 /* VC */ = {
+			isa = PBXGroup;
+			children = (
+				E97C15E42C9166B5002B437C /* HomeVC.swift */,
+				E9F6B6B12C997482008E9FBF /* ImageVC.swift */,
+				E9638CB22CBCF22E0004A728 /* TextAdjustmentVC.swift */,
+			);
+			path = VC;
+			sourceTree = "<group>";
+		};
+		E95A994C2CCFE569005E7A15 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				E90ADED02CC24399001745C1 /* HomeViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		E95A994D2CCFE57E005E7A15 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E90ADED22CC25DB4001745C1 /* TranslateData.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		E95A994E2CCFE58C005E7A15 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E97C15F42C91810A002B437C /* HomeView.swift */,
+				E99142262C9EEDCE00016C90 /* ImageCollectionView.swift */,
+				E9521C2C2CAE507000BFCAEF /* ToastView.swift */,
+				E9521C2E2CAE91C000BFCAEF /* ResponseCopyCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E95A994F2CCFE59D005E7A15 /* VC */ = {
+			isa = PBXGroup;
+			children = (
+				E991422A2C9F24C300016C90 /* BasePostVC.swift */,
+				E9F6B6852C96EB14008E9FBF /* ForumVC.swift */,
+				E9F6B6892C971788008E9FBF /* PostEditVC.swift */,
+				E90B5E4E2CA3A22000CA24F7 /* DetailVC.swift */,
+				E9F6B6B92C9AC4D2008E9FBF /* CommentsVC.swift */,
+			);
+			path = VC;
+			sourceTree = "<group>";
+		};
+		E95A99522CCFE5B9005E7A15 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E9F6B6872C96EFC9008E9FBF /* PostCell.swift */,
+				E9F6B68B2C9717A9008E9FBF /* PostEditView.swift */,
+				E9F6B6BD2C9BCF7C008E9FBF /* CommentCell.swift */,
+				E90B5E542CA509AB00CA24F7 /* TagFilterView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E95A99532CCFE5EB005E7A15 /* VC */ = {
+			isa = PBXGroup;
+			children = (
+				E97C16032C919FFF002B437C /* ChatVC.swift */,
+			);
+			path = VC;
+			sourceTree = "<group>";
+		};
+		E95A99542CCFE5F1005E7A15 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E9F6B67D2C95800F008E9FBF /* ChatView.swift */,
+				E97C16052C91A0DF002B437C /* ChatCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E95A99552CCFE617005E7A15 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E912190B2CB78DF3000521ED /* BlockManager.swift */,
+				E912190D2CB79133000521ED /* ReportCommentManager.swift */,
+				E912190F2CB79617000521ED /* ReportPostManager.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		E95A99562CCFE63C005E7A15 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E9240AD22C9D442F00A47944 /* RecordView.swift */,
+				E9240ACE2C9D209F00A47944 /* AlbumCell.swift */,
+				E99142332CA0042200016C90 /* ImageCell.swift */,
+				E91219112CB81CBC000521ED /* PlaceholderView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E95A99572CCFE648005E7A15 /* VC */ = {
+			isa = PBXGroup;
+			children = (
+				E9F6B6C42C9C694D008E9FBF /* RecordVC.swift */,
+				E9240AD02C9D216A00A47944 /* MyPostVC.swift */,
+				E9F6B6BF2C9C194E008E9FBF /* AlbumVC.swift */,
+				E99142312C9FFABA00016C90 /* AlbumFullScreenVC.swift */,
+			);
+			path = VC;
+			sourceTree = "<group>";
+		};
+		E95A99582CCFE66F005E7A15 /* VC */ = {
+			isa = PBXGroup;
+			children = (
+				E9C668B32CA5407400C0EE1D /* SettingVC.swift */,
+				E9521C282CAE43D200BFCAEF /* BlockedListVC.swift */,
+				E91218C22CB294FE000521ED /* ReportIssueVC.swift */,
+				E91218E42CB51465000521ED /* PrivacyPolicyVC.swift */,
+			);
+			path = VC;
+			sourceTree = "<group>";
+		};
+		E95A99592CCFE67B005E7A15 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E97654992CACE9AC003884AF /* UserInfoCell.swift */,
+				E9521C2A2CAE486700BFCAEF /* BlockedListCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E95A995A2CCFE6AF005E7A15 /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				E91218C02CB0ED6A000521ED /* CustomTabBarController.swift */,
+			);
+			path = TabBar;
+			sourceTree = "<group>";
+		};
 		E97C15D42C9166B4002B437C = {
 			isa = PBXGroup;
 			children = (
@@ -344,6 +496,7 @@
 				E97C15E02C9166B5002B437C /* AppDelegate.swift */,
 				E97C15E22C9166B5002B437C /* SceneDelegate.swift */,
 				E97C16072C92BC88002B437C /* APIKeys.swift */,
+				E95A995A2CCFE6AF005E7A15 /* TabBar */,
 				E90B5E4D2CA39DFE00CA24F7 /* Data */,
 				E90ADECE2CC23745001745C1 /* Login */,
 				E97C161A2C956447002B437C /* Home */,
@@ -358,10 +511,6 @@
 				E97C15EE2C9166B7002B437C /* Info.plist */,
 				E97C15F82C918944002B437C /* GoogleService-Info.plist */,
 				E91218E22CB51341000521ED /* privacy_policy.html */,
-				E912190B2CB78DF3000521ED /* BlockManager.swift */,
-				E912190D2CB79133000521ED /* ReportCommentManager.swift */,
-				E912190F2CB79617000521ED /* ReportPostManager.swift */,
-				E91219112CB81CBC000521ED /* PlaceholderView.swift */,
 			);
 			path = MindReader;
 			sourceTree = "<group>";
@@ -369,15 +518,10 @@
 		E97C161A2C956447002B437C /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				E97C15E42C9166B5002B437C /* HomeVC.swift */,
-				E90ADED02CC24399001745C1 /* HomeViewModel.swift */,
-				E9F6B6B12C997482008E9FBF /* ImageVC.swift */,
-				E9638CB22CBCF22E0004A728 /* TextAdjustmentVC.swift */,
-				E97C15F42C91810A002B437C /* HomeView.swift */,
-				E99142262C9EEDCE00016C90 /* ImageCollectionView.swift */,
-				E9521C2C2CAE507000BFCAEF /* ToastView.swift */,
-				E9521C2E2CAE91C000BFCAEF /* ResponseCopyCell.swift */,
-				E90ADED22CC25DB4001745C1 /* TranslateData.swift */,
+				E95A994E2CCFE58C005E7A15 /* View */,
+				E95A994D2CCFE57E005E7A15 /* Model */,
+				E95A994C2CCFE569005E7A15 /* ViewModel */,
+				E95A994B2CCFE560005E7A15 /* VC */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -385,9 +529,8 @@
 		E97C161B2C95647F002B437C /* Chat */ = {
 			isa = PBXGroup;
 			children = (
-				E97C16032C919FFF002B437C /* ChatVC.swift */,
-				E97C16052C91A0DF002B437C /* ChatCell.swift */,
-				E9F6B67D2C95800F008E9FBF /* ChatView.swift */,
+				E95A99542CCFE5F1005E7A15 /* View */,
+				E95A99532CCFE5EB005E7A15 /* VC */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -395,15 +538,9 @@
 		E9F6B6842C96EAD2008E9FBF /* Forum */ = {
 			isa = PBXGroup;
 			children = (
-				E991422A2C9F24C300016C90 /* BasePostVC.swift */,
-				E9F6B6852C96EB14008E9FBF /* ForumVC.swift */,
-				E9F6B6892C971788008E9FBF /* PostEditVC.swift */,
-				E90B5E4E2CA3A22000CA24F7 /* DetailVC.swift */,
-				E9F6B6B92C9AC4D2008E9FBF /* CommentsVC.swift */,
-				E9F6B6872C96EFC9008E9FBF /* PostCell.swift */,
-				E9F6B68B2C9717A9008E9FBF /* PostEditView.swift */,
-				E9F6B6BD2C9BCF7C008E9FBF /* CommentCell.swift */,
-				E90B5E542CA509AB00CA24F7 /* TagFilterView.swift */,
+				E95A99552CCFE617005E7A15 /* Model */,
+				E95A99522CCFE5B9005E7A15 /* View */,
+				E95A994F2CCFE59D005E7A15 /* VC */,
 			);
 			path = Forum;
 			sourceTree = "<group>";
@@ -411,13 +548,8 @@
 		E9F6B6BB2C9B1C3B008E9FBF /* Record */ = {
 			isa = PBXGroup;
 			children = (
-				E9240AD22C9D442F00A47944 /* RecordView.swift */,
-				E9F6B6C42C9C694D008E9FBF /* RecordVC.swift */,
-				E9240AD02C9D216A00A47944 /* MyPostVC.swift */,
-				E9F6B6BF2C9C194E008E9FBF /* AlbumVC.swift */,
-				E99142312C9FFABA00016C90 /* AlbumFullScreenVC.swift */,
-				E9240ACE2C9D209F00A47944 /* AlbumCell.swift */,
-				E99142332CA0042200016C90 /* ImageCell.swift */,
+				E95A99572CCFE648005E7A15 /* VC */,
+				E95A99562CCFE63C005E7A15 /* View */,
 			);
 			path = Record;
 			sourceTree = "<group>";
@@ -425,12 +557,8 @@
 		E9F6B6BC2C9B1C4D008E9FBF /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				E9C668B32CA5407400C0EE1D /* SettingVC.swift */,
-				E9521C282CAE43D200BFCAEF /* BlockedListVC.swift */,
-				E91218C22CB294FE000521ED /* ReportIssueVC.swift */,
-				E91218E42CB51465000521ED /* PrivacyPolicyVC.swift */,
-				E97654992CACE9AC003884AF /* UserInfoCell.swift */,
-				E9521C2A2CAE486700BFCAEF /* BlockedListCell.swift */,
+				E95A99592CCFE67B005E7A15 /* View */,
+				E95A99582CCFE66F005E7A15 /* VC */,
 			);
 			path = Settings;
 			sourceTree = "<group>";

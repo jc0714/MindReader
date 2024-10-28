@@ -22,7 +22,6 @@ class LoginVC: UIViewController, ASAuthorizationControllerPresentationContextPro
     }
 
     private func setupView() {
-        // 設置背景顏色
         setupUI()
         // 配置蘋果登入按鈕
         configureAppleSignInButton()
@@ -52,7 +51,6 @@ class LoginVC: UIViewController, ASAuthorizationControllerPresentationContextPro
             appleSignInButton.isHidden = true
         }
 
-        // 設置按鈕在背景視圖的中心
         NSLayoutConstraint.activate([
             appleSignInButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             appleSignInButton.centerYAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -150),

@@ -31,9 +31,6 @@ class EncouragementService {
         if lastFetchDate < today {
             // 如果今天還沒有抓取資料，從 Firebase 抓取
             let db = Firestore.firestore()
-            print(lastFetchDate)
-            print(today)
-            print(dayOfWeek)
             let documentRef = db.collection("WidgetDB").document("\(documentIDMap[dayOfWeek] ?? "EBFrMoxIGSjfXEGK7RpR")")
 
             do {

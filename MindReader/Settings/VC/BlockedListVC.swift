@@ -114,8 +114,6 @@ class BlockedListVC: UIViewController, UITableViewDataSource, UITableViewDelegat
             "blockedList": FieldValue.arrayRemove([userId])
         ]) { error in
             if let error = error {
-            } else {
-                print("封鎖名單已成功更新到 Firebase")
             }
         }
     }

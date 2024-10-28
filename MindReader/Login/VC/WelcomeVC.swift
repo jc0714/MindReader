@@ -95,7 +95,7 @@ class WelcomeVC: UIViewController {
         }
     }
 
-    // 創建小雲朵的 UIImageView，使用 SF Symbols
+    // 小雲朵的 UIImageView，使用 SF Symbols
     private func createCloudImageView(systemName: String, size: CGSize) -> UIImageView {
         let cloudImage = UIImage(systemName: systemName)
         let cloudImageView = UIImageView(image: cloudImage)

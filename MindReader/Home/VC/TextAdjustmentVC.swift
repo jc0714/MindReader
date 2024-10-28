@@ -12,7 +12,6 @@ class TextAdjustmentVC: UIViewController {
     var copiedText: String?
     var onConfirm: ((String) -> Void)?
 
-    // 新增標籤
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "早安圖文字"
@@ -53,31 +52,25 @@ class TextAdjustmentVC: UIViewController {
         view.addSubview(textView)
         view.addSubview(confirmButton)
 
-        // Auto Layout 設定
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         textView.translatesAutoresizingMaskIntoConstraints = false
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            // 設置 titleLabel 的位置
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 150),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
 
-            // 設置 textField 的位置
             textView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
             textView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             textView.widthAnchor.constraint(equalToConstant: 280),
             textView.heightAnchor.constraint(equalToConstant: 150),
 
-            // 設置 confirmButton 的位置
             confirmButton.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: 20),
             confirmButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
 
-        // 設定初始的文字
         textView.text = copiedText
 
-        // 按下確認按鈕
         confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
     }
 

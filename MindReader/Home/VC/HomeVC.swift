@@ -212,7 +212,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     }
 
     private func updateButtonAppearance(previousButton: UIButton?, newButton: UIButton) {
-        // 恢復之前按鈕的外觀
         if let previousButton = previousButton {
             UIView.animate(withDuration: 0.2) {
                 previousButton.transform = .identity
@@ -220,7 +219,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
             }
         }
 
-        // 設定新的按鈕外觀
         UIView.animate(withDuration: 0.2) {
             newButton.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
             newButton.backgroundColor = .pink3.withAlphaComponent(0.8)

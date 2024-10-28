@@ -12,7 +12,6 @@ import Lottie
 class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     private var waitingAnimationView: LottieAnimationView = {
-        // 使用自定義的 LottieConfiguration，指定 renderingEngine 為 .mainThread
         let configuration = LottieConfiguration(renderingEngine: .mainThread)
         let animationView = LottieAnimationView(
             name: "runningDoggy",

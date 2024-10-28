@@ -44,16 +44,15 @@ class MindReaderAnimationView: UIView {
             backgroundImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         ])
 
-        // 添加動畫
         addSubview(animationView)
         animationView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             animationView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             animationView.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 10),
-            animationView.widthAnchor.constraint(equalToConstant: 300),  // 調整動畫寬度
-            animationView.heightAnchor.constraint(equalToConstant: 300)  // 調整動畫高度
+            animationView.widthAnchor.constraint(equalToConstant: 300),
+            animationView.heightAnchor.constraint(equalToConstant: 300)
         ])
 
-        animationView.play()  // 循環播放動畫
+        animationView.play()
     }
 }
