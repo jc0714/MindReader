@@ -10,43 +10,23 @@ import Firebase
 import UIKit
 
 class PostLikeManager {
-    private let firestore: Firestore
-    private var likedPosts: Set<String>
+    static let shared = PostLikeManager()
 
-    init(firestore: Firestore = Firestore.firestore(), likedPosts: Set<String> = []) {
-        self.firestore = firestore
-        self.likedPosts = likedPosts
-    }
+    private init() {}
 
-    func updateHeart(for postId: String, userId: String, isLiked: Bool, completion: @escaping (Result<Bool, Error>) -> Void) {
-        let userRef = firestore.collection("Users").document(userId)
-        let postRef = firestore.collection("posts").document(postId)
+    func configureBatchOperation(_ batch: WriteBatch, isLiked: Bool, userId: String, postId: String) {
+        let postRef = Firestore.firestore().collection("posts").document(postId)
+        let userRef = Firestore.firestore().collection("Users").document(userId)
 
-        let batch = firestore.batch()
         if isLiked {
             // 移除愛心
             batch.updateData(["like": FieldValue.arrayRemove([userId])], forDocument: postRef)
             batch.updateData(["likePosts": FieldValue.arrayRemove([postId])], forDocument: userRef)
-            likedPosts.remove(postId)
         } else {
             // 添加愛心
             batch.updateData(["like": FieldValue.arrayUnion([userId])], forDocument: postRef)
             batch.updateData(["likePosts": FieldValue.arrayUnion([postId])], forDocument: userRef)
-            likedPosts.insert(postId)
         }
-
-        Task {
-            do {
-                try await batch.commit()
-                completion(.success(!isLiked))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-
-    func isPostLiked(postId: String) -> Bool {
-        return likedPosts.contains(postId)
     }
 }
 
