@@ -11,6 +11,7 @@ import FirebaseFirestore
 import IQKeyboardManagerSwift
 
 class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, KeyboardHandler {
+    var postLikeManager: PostLikeManager!
 
     var post: Post? // 用來接收傳遞的 post 物件
     var comments: [Comment] = [] // 留言數組
@@ -58,6 +59,8 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
         }
 
         NotificationCenter.default.addObserver(self, selector: #selector(handleCommentCountUpdate(_:)), name: NSNotification.Name("CommentCountUpdated"), object: nil)
+
+        self.postLikeManager = PostLikeManager(firestore: Firestore.firestore(), likedPosts: Set<String>())
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -220,7 +223,7 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
                 cell.heartCount.text = String(heartCount)
 
                 cell.heartButtonTappedClosure = { [weak self] in
-                    self?.updateHeartBtn(at: indexPath)
+//                    self?.updateHeartBtn(at: indexPath)
                 }
 
                 cell.reportButtonTappedClosure = { [weak self] action in
@@ -431,8 +434,8 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
                 print("Error updating likes: \(error.localizedDescription)")
             }
         }
-
     }
+
 //    func updateHeartBtn(at indexPath: IndexPath) {
 //        let cell = tableView.cellForRow(at: indexPath) as? PostCell
 //

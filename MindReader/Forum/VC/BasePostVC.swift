@@ -15,6 +15,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var posts: [Post] = []
 
     static var likedPosts: Set<String> = []
+    var postLikeManager: PostLikeManager!
 
     private let tagFilterView = TagFilterView()
     var selectedTag: String = "All"
@@ -53,6 +54,8 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
 
         NotificationCenter.default.addObserver(self, selector: #selector(handleCommentCountUpdate(_:)), name: NSNotification.Name("CommentCountUpdated"), object: nil)
+
+        self.postLikeManager = PostLikeManager(firestore: Firestore.firestore(), likedPosts: Set<String>())
     }
 
     override func viewWillAppear(_ animated: Bool) {

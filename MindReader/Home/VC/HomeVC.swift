@@ -76,10 +76,9 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     }
 
     // MARK: - ViewModel Bindings
-
     private func setupViewModelBindings() {
         // 訂閱 loading 狀態
-        viewModel.loadingStatePublisher
+        viewModel.$isLoading
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
                 if isLoading {
@@ -95,7 +94,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
             .store(in: &cancellables)
 
         // 訂閱回應資料
-        viewModel.responsePublisher
+        viewModel.$response
+            .dropFirst() // 忽略初始值
             .receive(on: DispatchQueue.main)
             .sink { [weak self] possibleMeanings, responseMethods in
                 self?.updateResponseLabels(possibleMeanings: possibleMeanings, responseMethods: responseMethods)
@@ -103,7 +103,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
             .store(in: &cancellables)
 
         // 訂閱錯誤訊息
-        viewModel.errorPublisher
+        viewModel.$errorMessage
+            .compactMap { $0 }  // 過濾掉 nil
             .receive(on: DispatchQueue.main)
             .sink { [weak self] errorMessage in
                 AlertKitManager.presentErrorAlert(in: self!, title: errorMessage)
@@ -111,14 +112,56 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
             .store(in: &cancellables)
 
         // 清除 recognizedText
-        viewModel.recognizedTextClearPublisher
-            .sink { shouldClear in
-                if shouldClear {
-                    self.recognizedText = "" // 清除 recognizedText
-                }
+        viewModel.$shouldClearRecognizedText
+            .filter { $0 }
+            .sink { [weak self] _ in
+                self?.recognizedText = ""  // 清除 recognizedText
             }
             .store(in: &cancellables)
     }
+
+//    private func setupViewModelBindings() {
+//        // 訂閱 loading 狀態
+//        viewModel.loadingStatePublisher
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] isLoading in
+//                if isLoading {
+//                    self?.homeView.showLoadingAnimation()
+//                    self?.homeView.submitButton.isUserInteractionEnabled = false
+//                    self?.homeView.submitButton.backgroundColor = .milkYellow
+//                } else {
+//                    self?.homeView.hideLoadingAnimation()
+//                    self?.homeView.submitButton.isUserInteractionEnabled = true
+//                    self?.homeView.submitButton.backgroundColor = .pink3.withAlphaComponent(0.8)
+//                }
+//            }
+//            .store(in: &cancellables)
+//
+//        // 訂閱回應資料
+//        viewModel.responsePublisher
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] possibleMeanings, responseMethods in
+//                self?.updateResponseLabels(possibleMeanings: possibleMeanings, responseMethods: responseMethods)
+//            }
+//            .store(in: &cancellables)
+//
+//        // 訂閱錯誤訊息
+//        viewModel.errorPublisher
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] errorMessage in
+//                AlertKitManager.presentErrorAlert(in: self!, title: errorMessage)
+//            }
+//            .store(in: &cancellables)
+//
+//        // 清除 recognizedText
+//        viewModel.recognizedTextClearPublisher
+//            .sink { shouldClear in
+//                if shouldClear {
+//                    self.recognizedText = "" // 清除 recognizedText
+//                }
+//            }
+//            .store(in: &cancellables)
+//    }
 
     @objc private func didTapSubmit(_ sender: UIButton) {
         HapticFeedbackManager.lightFeedback()
