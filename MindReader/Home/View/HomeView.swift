@@ -152,9 +152,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         return button
     }()
 
-    let indicatorView = UIView()
-    let activityIndicator = UIActivityIndicatorView(style: .large)
-
     private let audienceOptions = ["不指定", "朋友", "家人", "伴侶", "同事", "陌生人"]
     private let replyStyleOptions = ["不指定", "直接", "溫和", "幽默", "正式", "婉拒"]
 
@@ -243,17 +240,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         addSubview(replyStyleCollectionView)
 
         addSubview(submitButton)
-        addSubview(indicatorView)
-
-//        addSubview(generateImageButton)
-
-        indicatorView.isHidden = true
-        indicatorView.frame = bounds
-        indicatorView.backgroundColor = .milkYellow
-        indicatorView.alpha = 0.95
-
-        indicatorView.addSubview(activityIndicator)
-        activityIndicator.center = center
 
         NSLayoutConstraint.activate([
             chatButton.topAnchor.constraint(equalTo: topAnchor, constant: 120),
@@ -384,8 +370,11 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             })
         }
     }
+}
 
-    // 顯示動畫
+// MARK: - Loading Animation Control
+
+extension HomeView {
     func showLoadingAnimation() {
         self.bringSubviewToFront(self.waitingAnimationView)
         waitingAnimationView.isHidden = false
@@ -394,7 +383,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         self.layoutIfNeeded()
     }
 
-    // 隱藏動畫
     func hideLoadingAnimation() {
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.5, animations: {
@@ -407,6 +395,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         }
     }
 }
+
 
 extension HomeView: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

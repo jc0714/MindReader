@@ -120,49 +120,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
             .store(in: &cancellables)
     }
 
-//    private func setupViewModelBindings() {
-//        // 訂閱 loading 狀態
-//        viewModel.loadingStatePublisher
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] isLoading in
-//                if isLoading {
-//                    self?.homeView.showLoadingAnimation()
-//                    self?.homeView.submitButton.isUserInteractionEnabled = false
-//                    self?.homeView.submitButton.backgroundColor = .milkYellow
-//                } else {
-//                    self?.homeView.hideLoadingAnimation()
-//                    self?.homeView.submitButton.isUserInteractionEnabled = true
-//                    self?.homeView.submitButton.backgroundColor = .pink3.withAlphaComponent(0.8)
-//                }
-//            }
-//            .store(in: &cancellables)
-//
-//        // 訂閱回應資料
-//        viewModel.responsePublisher
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] possibleMeanings, responseMethods in
-//                self?.updateResponseLabels(possibleMeanings: possibleMeanings, responseMethods: responseMethods)
-//            }
-//            .store(in: &cancellables)
-//
-//        // 訂閱錯誤訊息
-//        viewModel.errorPublisher
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] errorMessage in
-//                AlertKitManager.presentErrorAlert(in: self!, title: errorMessage)
-//            }
-//            .store(in: &cancellables)
-//
-//        // 清除 recognizedText
-//        viewModel.recognizedTextClearPublisher
-//            .sink { shouldClear in
-//                if shouldClear {
-//                    self.recognizedText = "" // 清除 recognizedText
-//                }
-//            }
-//            .store(in: &cancellables)
-//    }
-
     @objc private func didTapSubmit(_ sender: UIButton) {
         HapticFeedbackManager.lightFeedback()
         homeView.promptTextField.resignFirstResponder()
@@ -233,6 +190,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
             }
         }
     }
+    
     // MARK: - View Configuration
 
     @objc private func buttonTapped(_ sender: UIButton) {

@@ -415,22 +415,6 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
         }
     }
 
-//    private func configureBatchOperation(_ batch: WriteBatch, isLiked: Bool, userId: String, postId: String) {
-//
-//        let postRef = Firestore.firestore().collection("posts").document(postId)
-//        let userRef = Firestore.firestore().collection("Users").document(userId)
-//        
-//        if isLiked {
-//            // 移除愛心
-//            batch.updateData(["like": FieldValue.arrayRemove([userId])], forDocument: postRef)
-//            batch.updateData(["likePosts": FieldValue.arrayRemove([postId])], forDocument: userRef)
-//        } else {
-//            // 添加愛心
-//            batch.updateData(["like": FieldValue.arrayUnion([userId])], forDocument: postRef)
-//            batch.updateData(["likePosts": FieldValue.arrayUnion([postId])], forDocument: userRef)
-//        }
-//    }
-
     private func updateLocalData(for postId: String, isLiked: Bool) {
         post?.like += isLiked ? -1 : 1
 
@@ -446,30 +430,6 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
         cell.heartButton.setImage(UIImage(systemName: heartImage), for: .normal)
         cell.heartCount.text = String(post!.like)
     }
-
-//    func updateHeartBtn(at indexPath: IndexPath) {
-//        let cell = tableView.cellForRow(at: indexPath) as? PostCell
-//
-//        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-//            print("User ID is nil")
-//            return
-//        }
-//
-//        Task {
-//            do {
-//                // 切換愛心狀態
-//                let isLiked = try await LikeManager.shared.toggleLike(postId: postId, userId: userId)
-//
-//                // 更新本地 UI
-//                post?.like += isLiked ? 1 : -1
-//                cell?.heartButton.setImage(UIImage(systemName: isLiked ? "heart.fill" : "heart"), for: .normal)
-//                cell?.heartCount.text = String(post!.like)
-//
-//            } catch {
-//                print("Error updating likes: \(error.localizedDescription)")
-//            }
-//        }
-//    }
 
     @objc private func handleCommentCountUpdate(_ notification: Notification) {
         // 獲取通知中的 postId 和新的留言數量

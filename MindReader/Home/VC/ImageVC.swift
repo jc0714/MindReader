@@ -68,15 +68,12 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
             stackView.centerXAnchor.constraint(equalTo: finalImageView.centerXAnchor),
             stackView.heightAnchor.constraint(equalToConstant: 30),
 
-            // shareButton constraints
             shareButton.centerXAnchor.constraint(equalTo: finalImageView.centerXAnchor),
             shareButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
 
-            // saveButton constraints
             saveButton.trailingAnchor.constraint(equalTo: shareButton.leadingAnchor, constant: -20),
             saveButton.bottomAnchor.constraint(equalTo: shareButton.bottomAnchor),
 
-            // saveToFireBaseButton constraints
             saveToFireBaseButton.leadingAnchor.constraint(equalTo: shareButton.trailingAnchor, constant: 20),
             saveToFireBaseButton.bottomAnchor.constraint(equalTo: shareButton.bottomAnchor)
         ])
@@ -86,6 +83,7 @@ class ImageVC: UIViewController, ImageCollectionViewDelegate {
         guard let selectedImage = UIImage(named: imageName) else { return }
         generateImage(with: selectedImage)
     }
+
     private func setupViews() {
         finalImageView.contentMode = .scaleAspectFit
         view.addSubview(imageCollectionView)

@@ -212,22 +212,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
 
-//    private func configureBatchOperation(_ batch: WriteBatch, isLiked: Bool, userId: String, postId: String) {
-//
-//        let postRef = Firestore.firestore().collection("posts").document(postId)
-//        let userRef = Firestore.firestore().collection("Users").document(userId)
-//
-//        if isLiked {
-//            // 移除愛心
-//            batch.updateData(["like": FieldValue.arrayRemove([userId])], forDocument: postRef)
-//            batch.updateData(["likePosts": FieldValue.arrayRemove([postId])], forDocument: userRef)
-//        } else {
-//            // 添加愛心
-//            batch.updateData(["like": FieldValue.arrayUnion([userId])], forDocument: postRef)
-//            batch.updateData(["likePosts": FieldValue.arrayUnion([postId])], forDocument: userRef)
-//        }
-//    }
-
     private func updateLocalData(for postId: String, isLiked: Bool) {
         if let originalIndex = posts.firstIndex(where: { $0.id == postId }) {
             posts[originalIndex].like += isLiked ? -1 : 1
@@ -245,36 +229,6 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         cell.heartButton.setImage(UIImage(systemName: heartImage), for: .normal)
         cell.heartCount.text = String(currentPosts[indexPath.row].like)
     }
-
-//    func updateHeartBtn(at indexPath: IndexPath) async {
-//        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-//            print("User ID is nil")
-//            return
-//        }
-//
-//        let postId = currentPosts[indexPath.row].id
-//
-//        do {
-//            let isLiked = try await LikeManager.shared.toggleLike(postId: postId, userId: userId)
-//
-//            if let originalIndex = posts.firstIndex(where: { $0.id == postId }) {
-//                posts[originalIndex].like += isLiked ? 1 : -1
-//            }
-//
-//            updateUI(at: indexPath, isLiked: isLiked)
-//
-//        } catch {
-//            print("Error updating likes: \(error.localizedDescription)")
-//        }
-//    }
-
-    // 更新指定 indexPath 對應的 UI
-//    private func updateUI(at indexPath: IndexPath, isLiked: Bool) {
-//        guard let cell = tableView.cellForRow(at: indexPath) as? PostCell else { return }
-//
-//        cell.heartButton.setImage(UIImage(systemName: isLiked ? "heart.fill" : "heart"), for: .normal)
-//        cell.heartCount.text = String(currentPosts[indexPath.row].like)
-//    }
 
     // 連結到留言 VC
     func showCommentsForPost(at indexPath: IndexPath) {
