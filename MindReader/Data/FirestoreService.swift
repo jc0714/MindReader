@@ -225,7 +225,7 @@ class FirestoreService {
 
     // 監聽留言
     func setupFirestoreListener(for postId: String, completion: @escaping ([Comment]) -> Void) -> ListenerRegistration {
-        let blockedList = UserDefaults.standard.stringArray(forKey: "BlockedList") ?? []
+        let blockedList = UserDefaults.standard.dictionary(forKey: "BlockedList") as? [String: String] ?? [:]
         let reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
 
         let commentsRef = db.collection("posts").document(postId).collection("Comments").order(by: "timestamp", descending: true)
@@ -245,7 +245,7 @@ class FirestoreService {
                     return nil
                 }
 
-                if blockedList.contains(authorId) || reportedList.contains(document.documentID) {
+                if blockedList.keys.contains(authorId) || reportedList.contains(document.documentID) {
                     return nil
                 }
 
@@ -261,8 +261,7 @@ class FirestoreService {
         }
         return listener
     }
-
-    // MARK: -刪除帳號
+    // MARK: 刪除帳號
     func deleteAccount() {
         guard let userId = UserDefaults.standard.string(forKey: "userID") else { return }
         let usersCollection = Firestore.firestore().collection("Users")

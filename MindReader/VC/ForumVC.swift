@@ -50,6 +50,7 @@ class ForumVC: BasePostVC {
     }
 
     @objc private func fetchPosts() {
+
         posts.removeAll()
         let dispatchGroup = DispatchGroup()
         var commentCounts = [String: Int]() // 用來儲存每篇貼文的評論數量

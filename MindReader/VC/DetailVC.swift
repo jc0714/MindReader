@@ -247,12 +247,18 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
     }
 
     func handleOptionSelection(action: String, at indexPath: IndexPath) {
+        let currentUserId = UserDefaults.standard.string(forKey: "userID")
         if indexPath.row == 0 {
             // 第一個 cell 是貼文
             guard let post = post else { return }
             let authorId = post.author.id
             let authorName = post.author.name
             let postId = post.id
+
+            if authorId == currentUserId {
+                AlertKitManager.presentErrorAlert(in: self, title: "不要檢舉/封鎖自己啦")
+                return
+            }
 
             switch action {
             case "檢舉":
@@ -268,6 +274,11 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
             let authorId = comment.authorId
             let authorName = comment.author
             let commentId = comment.id
+
+            if authorId == currentUserId {
+                AlertKitManager.presentErrorAlert(in: self, title: "不要檢舉/封鎖自己啦")
+                return
+            }
 
             switch action {
             case "檢舉":
