@@ -21,9 +21,9 @@ class FirestoreService {
 
         let userData: [String: Any] = [
             "appleUserIdentifier": appleUserIdentifier,
-            "appleUserFullName": appleUserFullName,
-            "userFullName": userFullName,
-            "email": email,
+            "appleUserFullName": appleUserFullName ?? "noAappleUserFullName",
+            "userFullName": userFullName ?? "noUserFullName",
+            "email": email ?? "noEmail",
             "realUserStatus": realUserStatus,
             "likePosts": [String](),
             "postIds": [String](),
@@ -38,8 +38,6 @@ class FirestoreService {
             if let error = error {
                 print("Error saving user data to Firestore: \(error.localizedDescription)")
             } else {
-                print("User data successfully saved to Firestore!")
-
                 UserDefaults.standard.set(documentID, forKey: "userID")
                 UserDefaults.standard.set(chatRoomId, forKey: "chatRoomId")
                 UserDefaults.standard.synchronize()
@@ -62,8 +60,6 @@ class FirestoreService {
         messageRef.addDocument(data: chatData) { chatError in
             if let chatError = chatError {
                 print("Error creating chat message document: \(chatError.localizedDescription)")
-            } else {
-                print("Chat message document created successfully!")
             }
         }
     }
@@ -71,13 +67,23 @@ class FirestoreService {
     // MARK: HomeVC
 
     // 批次打翻譯紀錄進去
-    func batchUploadData(for dataToUpload: [[String: Any]]) async {
+    func batchUploadData(for dataToUpload: [String: [String]]) async {
         let batch = db.batch()
 
-        for data in dataToUpload {
-            let documentRef = db.collection("TranslateDB").document() // 這裡自動生成新的 document ID
+        for (day, messages) in dataToUpload {
+            let documentRef = db.collection("WidgetDB").document() // 這裡自動生成新的 document ID
+
+            let data: [String: Any] = [
+                "day": day,  // 將 key 放入字串作為 "day"
+                "messages": messages // 這裡是 [String]
+            ]
+
             batch.setData(data, forDocument: documentRef)
         }
+//        for data in dataToUpload {
+//            let documentRef = db.collection("TranslateDB").document() // 這裡自動生成新的 document ID
+//            batch.setData(data, forDocument: documentRef)
+//        }
 
         do {
             try await batch.commit()
@@ -91,7 +97,6 @@ class FirestoreService {
         let querySnapshot = try await db.collection("TranslateDB").whereField("prompt", isEqualTo: prompt).getDocuments()
 
         if let document = querySnapshot.documents.first {
-            print(document.data())
             return document.data()
         } else {
             return nil
@@ -101,10 +106,8 @@ class FirestoreService {
     func saveToFirestore(prompt: String, response: String, imageURL: String?) async throws {
 
         guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-            print("User ID is nil")
             return
         }
-        
         let translateRef = db.collection("Translate")
 
         var data: [String: Any] = [
@@ -131,7 +134,6 @@ class FirestoreService {
     func uploadImage(imageData: Data) async throws -> String {
 
         guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-            print("User ID is nil")
             return ""
         }
 
@@ -145,7 +147,6 @@ class FirestoreService {
     func uploadMorningImage(imageData: Data) async throws -> String {
 
         guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-            print("User ID is nil")
             return ""
         }
 
@@ -158,7 +159,6 @@ class FirestoreService {
     func saveToMorningImageToDatabase(imageURL: String) async throws {
 
         guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-            print("User ID is nil")
             return
         }
 
@@ -174,7 +174,6 @@ class FirestoreService {
     func saveMessage(message: String, sender: String, completion: @escaping (Error?) -> Void) {
 
         guard let userId = UserDefaults.standard.string(forKey: "userID"), let chatId = UserDefaults.standard.string(forKey: "chatRoomId") else {
-            print("User ID is nil")
             return
         }
 
@@ -194,7 +193,6 @@ class FirestoreService {
     func listenForMessages(completion: @escaping ([Message]) -> Void) {
 
         guard let userId = UserDefaults.standard.string(forKey: "userID"), let chatId = UserDefaults.standard.string(forKey: "chatRoomId") else {
-            print("User ID is nil")
             return
         }
 
@@ -225,7 +223,7 @@ class FirestoreService {
 
     // 監聽留言
     func setupFirestoreListener(for postId: String, completion: @escaping ([Comment]) -> Void) -> ListenerRegistration {
-        let blockedList = UserDefaults.standard.stringArray(forKey: "BlockedList") ?? []
+        let blockedList = UserDefaults.standard.dictionary(forKey: "BlockedList") as? [String: String] ?? [:]
         let reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
 
         let commentsRef = db.collection("posts").document(postId).collection("Comments").order(by: "timestamp", descending: true)
@@ -245,7 +243,7 @@ class FirestoreService {
                     return nil
                 }
 
-                if blockedList.contains(authorId) || reportedList.contains(document.documentID) {
+                if blockedList.keys.contains(authorId) || reportedList.contains(document.documentID) {
                     return nil
                 }
 
@@ -261,20 +259,17 @@ class FirestoreService {
         }
         return listener
     }
-
-    // MARK: -刪除帳號
+    // MARK: 刪除帳號
     func deleteAccount() {
         guard let userId = UserDefaults.standard.string(forKey: "userID") else { return }
         let usersCollection = Firestore.firestore().collection("Users")
 
         usersCollection.document(userId).updateData(["isDeleted": true]) { error in
             if error == nil {
-                print("帳號標記為刪除")
                 UserDefaults.standard.removeObject(forKey: "userID")
                 UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
-//                UserDefaults.standard.removeObject(forKey: "userLastName")
             } else {
-                print("刪除出錯了啊啊啊: \(error!.localizedDescription)")
+                print("刪除出錯: \(error!.localizedDescription)")
             }
         }
     }
