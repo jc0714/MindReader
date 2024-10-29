@@ -244,10 +244,9 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
 
     func handleOptionSelection(action: String, forPostAt indexPath: IndexPath) {
+        let currentUserId = UserDefaults.standard.string(forKey: "userID")
+
         let post = currentPosts[indexPath.row]
-//        let currentUserId = UserDefaults.standard.string(forKey: "userID")
-//
-//        let post = posts[indexPath.row]
         let authorId = post.author.id
         let authorName = post.author.name
         let postId = post.id
