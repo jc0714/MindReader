@@ -10,7 +10,7 @@ import FirebaseFirestore
 
 class BlockManager {
 
-    static let shared = BlockManager() // 使用單例模式讓多個 VC 可以共用
+    static let shared = BlockManager()
 
     private init() {}
 
@@ -22,7 +22,6 @@ class BlockManager {
     func addToBlockedList(authorID: String, authorName: String) {
         var blockedList = UserDefaults.standard.dictionary(forKey: "BlockedList") as? [String: String] ?? [:]
 
-        // 檢查列表中是否已經包含該 authorID
         if blockedList[authorID] == nil {
             blockedList[authorID] = authorName
             UserDefaults.standard.set(blockedList, forKey: "BlockedList")

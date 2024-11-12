@@ -23,7 +23,6 @@ class AlbumFullScreenVC: UIViewController, UICollectionViewDelegate, UICollectio
         setupCloseButton()
         setupToolbar()
 
-        // 滑動到當前選中的圖片
         let indexPath = IndexPath(item: currentIndex, section: 0)
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
     }
@@ -80,15 +79,12 @@ class AlbumFullScreenVC: UIViewController, UICollectionViewDelegate, UICollectio
         deleteButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            // shareButton constraints
             shareButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             shareButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
 
-            // saveButton constraints
             saveButton.trailingAnchor.constraint(equalTo: shareButton.leadingAnchor, constant: -20),
             saveButton.bottomAnchor.constraint(equalTo: shareButton.bottomAnchor),
 
-            // saveToFireBaseButton constraints
             deleteButton.leadingAnchor.constraint(equalTo: shareButton.trailingAnchor, constant: 20),
             deleteButton.bottomAnchor.constraint(equalTo: shareButton.bottomAnchor)
         ])

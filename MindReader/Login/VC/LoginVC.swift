@@ -23,7 +23,6 @@ class LoginVC: UIViewController, ASAuthorizationControllerPresentationContextPro
 
     private func setupView() {
         setupUI()
-        // 配置蘋果登入按鈕
         configureAppleSignInButton()
     }
 
@@ -75,6 +74,7 @@ class LoginVC: UIViewController, ASAuthorizationControllerPresentationContextPro
 }
 
 // MARK: - ASAuthorizationControllerDelegate
+
 extension LoginVC: ASAuthorizationControllerDelegate {
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
@@ -132,7 +132,6 @@ extension LoginVC: ASAuthorizationControllerDelegate {
                             UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
                             UserDefaults.standard.synchronize()
 
-                            // 跳轉到 TabBarController
                             self.navigateToMainTabBarController()
                         }
                     }
@@ -155,7 +154,6 @@ extension LoginVC: ASAuthorizationControllerDelegate {
             self.navigateToMainTabBarController()
         }
         nameInputVC.modalPresentationStyle = .fullScreen
-        // 顯示名稱輸入頁面
         self.present(nameInputVC, animated: true, completion: nil)
 
     }
@@ -171,8 +169,6 @@ extension LoginVC: ASAuthorizationControllerDelegate {
             window.rootViewController = tabBarController
             window.makeKeyAndVisible()
         }
-//        UIApplication.shared.windows.first?.rootViewController = tabBarController
-//        UIApplication.shared.windows.first?.makeKeyAndVisible()
     }
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {

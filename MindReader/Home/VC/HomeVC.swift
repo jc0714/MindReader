@@ -11,8 +11,6 @@ import FirebaseCrashlytics
 
 class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
 
-//    let dataToUpload: [[String: Any]] = []
-
     // MARK: - Properties
 
     private let homeView = HomeView()
@@ -46,10 +44,6 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
 
         viewModel = HomeViewModel(apiService: APIService(), firestoreService: FirestoreService())
         setupViewModelBindings()
-
-        //        Task {
-//            await firestoreService.batchUploadData(for: dataToUpload)
-//        }
     }
 
     // MARK: - Setup Actions
@@ -190,7 +184,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
             }
         }
     }
-    
+
     // MARK: - View Configuration
 
     @objc private func buttonTapped(_ sender: UIButton) {

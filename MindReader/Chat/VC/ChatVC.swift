@@ -160,7 +160,6 @@ class ChatVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITe
                         }
                         print(response)
 
-                        let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
                         let numberOfRows = self.chatView.tableView.numberOfRows(inSection: 0)
 
                         if numberOfRows > 0 {

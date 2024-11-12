@@ -54,5 +54,4 @@ extension DateFormatter {
 
         return chatFormatter.string(from: date)
     }
-
 }

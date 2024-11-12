@@ -19,11 +19,9 @@ class PostLikeManager {
         let userRef = Firestore.firestore().collection("Users").document(userId)
 
         if isLiked {
-            // 移除愛心
             batch.updateData(["like": FieldValue.arrayRemove([userId])], forDocument: postRef)
             batch.updateData(["likePosts": FieldValue.arrayRemove([postId])], forDocument: userRef)
         } else {
-            // 添加愛心
             batch.updateData(["like": FieldValue.arrayUnion([userId])], forDocument: postRef)
             batch.updateData(["likePosts": FieldValue.arrayUnion([postId])], forDocument: userRef)
         }

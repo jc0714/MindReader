@@ -33,9 +33,7 @@ class AnimationUtility {
 
         superview.insertSubview(animationView, belowSubview: view)
 
-        // 播放動畫
         animationView.play { (finished) in
-            // 動畫結束後移除動畫視圖
             animationView.removeFromSuperview()
         }
     }

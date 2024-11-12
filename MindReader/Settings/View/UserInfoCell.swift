@@ -188,12 +188,12 @@ class UserInfoCell: UITableViewCell {
 
     private func showAndHideRandomAvatarLabel() {
         UIView.animate(withDuration: 1.0, animations: {
-            self.randomAvatarLabel.alpha = 1.0 // 顯示 Label
+            self.randomAvatarLabel.alpha = 1.0
         }, completion: { _ in
             UIView.animate(withDuration: 1.0, delay: 5.0, options: [], animations: {
-                self.randomAvatarLabel.alpha = 0.0 // 隱藏 Label
+                self.randomAvatarLabel.alpha = 0.0
             }, completion: { _ in
-                self.randomAvatarLabel.removeFromSuperview() // 移除 Label
+                self.randomAvatarLabel.removeFromSuperview() 
             })
         })
     }

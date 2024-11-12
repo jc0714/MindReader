@@ -106,6 +106,7 @@ class RecordVC: UIViewController, UIPageViewControllerDataSource, UIPageViewCont
     }
 
     // MARK: - UIPageViewControllerDelegate
+
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         if completed, let currentVC = pageViewController.viewControllers?.first, let index = viewControllers.firstIndex(of: currentVC) {
             RView.updateIndicator(forIndex: index)
@@ -114,7 +115,6 @@ class RecordVC: UIViewController, UIPageViewControllerDataSource, UIPageViewCont
         }
     }
 
-    // MARK: - UIGestureRecognizerDelegate
     private func updateScrollViewInteraction(forIndex index: Int) {
         for view in pageViewController.view.subviews {
             if let scrollView = view as? UIScrollView {

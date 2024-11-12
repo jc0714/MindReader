@@ -67,17 +67,15 @@ struct MorningWidgetEntryView: View {
 
     var body: some View {
         ZStack {
-            // 每日隨機背景圖
             Image(dailyBackgroundImage(for: entry.date))
                 .resizable()
                 .scaledToFill()
-                .frame(width: widgetFamily == .systemSmall ? 158 : 340, height: widgetFamily == .systemSmall ? 158 : 158) // 放大一點圖片
+                .frame(width: widgetFamily == .systemSmall ? 158 : 340, height: widgetFamily == .systemSmall ? 158 : 158)
                 .clipped()
                 .ignoresSafeArea()
                 .overlay(Color.black.opacity(0.2))
 
             VStack(spacing: 8) {
-                // 顯示「星期幾」
                 Text(weekdayInChinese(from: entry.date))
                     .font(.system(size: widgetFamily == .systemSmall ? 30 : 30, weight: .bold))
                     .lineLimit(1)
@@ -85,7 +83,6 @@ struct MorningWidgetEntryView: View {
                     .frame(maxWidth: .infinity)
                     .foregroundColor(.white)
 
-                // 顯示本日鼓勵語
                 Text(entry.encouragement)
                     .font(.system(size: widgetFamily == .systemSmall ? 20 : 22, weight: .bold))
                     .foregroundColor(.white)
@@ -96,10 +93,9 @@ struct MorningWidgetEntryView: View {
             }
             .padding(0)
         }
-        .containerBackground(Color.white, for: .widget) // 使用背景 API
+        .containerBackground(Color.white, for: .widget)
     }
 
-    // 自定義方法來顯示中文的星期幾
     private func weekdayInChinese(from date: Date) -> String {
         let calendar = Calendar.current
         let dayOfWeek = calendar.component(.weekday, from: date)
@@ -107,7 +103,6 @@ struct MorningWidgetEntryView: View {
         return weekdays[dayOfWeek - 1]
     }
 
-    // 每日隨機圖片
     private func dailyBackgroundImage(for date: Date) -> String {
         let imageNames: [String] = [
             "photo1", "photo2", "photo3", "photo4",

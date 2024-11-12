@@ -72,6 +72,7 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     }
 
     // MARK: - UITableViewDataSource 方法
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return settingsItems.count
     }
@@ -105,7 +106,6 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
             for (index, item) in settingsItems[indexPath.section].enumerated() {
                 let button = createButton(withTitle: item, section: indexPath.section, row: index)
 
-                // 檢查是否是 "淺色/深色模式"，是的話添加動畫
                 if item == "  淺色/深色模式" {
                     button.isUserInteractionEnabled = false
                     let horizontalStack = createHorizontalStackView(with: button)
@@ -126,7 +126,6 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         }
     }
 
-    // MARK: - 輔助方法
     private func createStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -252,7 +251,8 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         return 0
     }
 
-    // MARK: 淺色/深色模式
+    // MARK: Dark mode
+
     // 更新模式的通用邏輯
     private func updateAppearance(to mode: UIUserInterfaceStyle, isAnimated: Bool = false) {
         if mode == .dark {
@@ -297,7 +297,8 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         }
     }
 
-    // MARK: 回報問題
+    // MARK: Report issue
+
     private func showReportIssueVC() {
         let reportVC = ReportIssueViewController()
         reportVC.modalPresentationStyle = .formSheet
@@ -310,7 +311,8 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         navigationController?.pushViewController(privacyPolicyVC, animated: true)
     }
 
-    // MARK: 刪除帳號
+    // MARK: Delete Account
+
     private func showDeleteAccountAlert() {
         let alert = UIAlertController(title: "刪除帳號", message: "這將無法復原您的資料，您確定要繼續嗎？", preferredStyle: .alert)
 
@@ -328,7 +330,8 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         present(alert, animated: true, completion: nil)
     }
 
-    // MARK: 登出
+    // MARK: Log out
+
     private func showLogoutAlert() {
         let alert = UIAlertController(title: "登出", message: "確定要登出嗎？期待你下次再登入。", preferredStyle: .alert)
 

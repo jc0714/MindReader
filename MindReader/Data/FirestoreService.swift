@@ -17,7 +17,7 @@ class FirestoreService {
 
     func saveUserInfoToFirestore(appleUserIdentifier: String, appleUserFullName: String?, userFullName: String?, email: String?, realUserStatus: Int) {
         let documentID = UUID().uuidString
-        let chatRoomId = UUID().uuidString // 固定 chatRoomId
+        let chatRoomId = UUID().uuidString
 
         let userData: [String: Any] = [
             "appleUserIdentifier": appleUserIdentifier,
@@ -28,12 +28,11 @@ class FirestoreService {
             "likePosts": [String](),
             "postIds": [String](),
             "translate": [String](),
-            "chatRoomId": chatRoomId, // 將 chatRoomId 儲存在 user 資料中
+            "chatRoomId": chatRoomId,
             "createdAt": FieldValue.serverTimestamp(),
             "isDeleted": false
         ]
 
-        // 儲存用戶資料到 Firestore
         db.collection("Users").document(documentID).setData(userData) { error in
             if let error = error {
                 print("Error saving user data to Firestore: \(error.localizedDescription)")
@@ -42,14 +41,12 @@ class FirestoreService {
                 UserDefaults.standard.set(chatRoomId, forKey: "chatRoomId")
                 UserDefaults.standard.synchronize()
 
-                // 其他初始化代碼（如 photos 和 chat 開場訊息）
                 self.initializeChatRoom(userId: documentID, chatRoomId: chatRoomId)
             }
         }
     }
 
     func initializeChatRoom(userId: String, chatRoomId: String) {
-        // 新增 msg collection 並存入一筆開場訊息文件
         let chatRef = self.db.collection("Users").document(userId).collection("Chat").document(chatRoomId)
         let messageRef = chatRef.collection("msg")
         let chatData: [String: Any] = [
@@ -66,24 +63,19 @@ class FirestoreService {
 
     // MARK: HomeVC
 
-    // 批次打翻譯紀錄進去
     func batchUploadData(for dataToUpload: [String: [String]]) async {
         let batch = db.batch()
 
         for (day, messages) in dataToUpload {
-            let documentRef = db.collection("WidgetDB").document() // 這裡自動生成新的 document ID
+            let documentRef = db.collection("WidgetDB").document()
 
             let data: [String: Any] = [
-                "day": day,  // 將 key 放入字串作為 "day"
-                "messages": messages // 這裡是 [String]
+                "day": day,
+                "messages": messages
             ]
 
             batch.setData(data, forDocument: documentRef)
         }
-//        for data in dataToUpload {
-//            let documentRef = db.collection("TranslateDB").document() // 這裡自動生成新的 document ID
-//            batch.setData(data, forDocument: documentRef)
-//        }
 
         do {
             try await batch.commit()
@@ -108,6 +100,7 @@ class FirestoreService {
         guard let userId = UserDefaults.standard.string(forKey: "userID") else {
             return
         }
+
         let translateRef = db.collection("Translate")
 
         var data: [String: Any] = [
@@ -143,7 +136,8 @@ class FirestoreService {
         return downloadURL.absoluteString
     }
 
-    // MARK: 早安圖
+    // MARK: Morning Images
+
     func uploadMorningImage(imageData: Data) async throws -> String {
 
         guard let userId = UserDefaults.standard.string(forKey: "userID") else {
@@ -221,7 +215,6 @@ class FirestoreService {
         }
     }
 
-    // 監聽留言
     func setupFirestoreListener(for postId: String, completion: @escaping ([Comment]) -> Void) -> ListenerRegistration {
         let blockedList = UserDefaults.standard.dictionary(forKey: "BlockedList") as? [String: String] ?? [:]
         let reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
@@ -259,7 +252,9 @@ class FirestoreService {
         }
         return listener
     }
-    // MARK: 刪除帳號
+
+    // MARK: Delete Account
+
     func deleteAccount() {
         guard let userId = UserDefaults.standard.string(forKey: "userID") else { return }
         let usersCollection = Firestore.firestore().collection("Users")

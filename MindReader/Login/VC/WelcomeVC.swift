@@ -29,7 +29,6 @@ class WelcomeVC: UIViewController {
         return label
     }()
 
-    // 使用自定義的 NameInputView
     private let nameInputView = WelcomeView()
 
     override func viewDidLoad() {
@@ -95,18 +94,16 @@ class WelcomeVC: UIViewController {
         }
     }
 
-    // 小雲朵的 UIImageView，使用 SF Symbols
     private func createCloudImageView(systemName: String, size: CGSize) -> UIImageView {
         let cloudImage = UIImage(systemName: systemName)
         let cloudImageView = UIImageView(image: cloudImage)
         cloudImageView.tintColor = UIColor.white
-        cloudImageView.alpha = 0.8 // 設置透明度
+        cloudImageView.alpha = 0.8
         cloudImageView.frame.size = size
-        cloudImageView.center = randomCloudPosition(in: view.bounds) // 初始位置隨機
+        cloudImageView.center = randomCloudPosition(in: view.bounds)
         return cloudImageView
     }
 
-    // 隨機生成雲朵的初始位置
     private func randomCloudPosition(in bounds: CGRect) -> CGPoint {
         return CGPoint(
             x: CGFloat.random(in: bounds.minX...bounds.maxX),
@@ -114,7 +111,6 @@ class WelcomeVC: UIViewController {
         )
     }
 
-    // 雲朵自由飄動動畫
     private func animateCloud(_ cloud: UIImageView, in bounds: CGRect, duration: TimeInterval) {
         let randomX = CGFloat.random(in: bounds.minX...bounds.maxX)
         let randomY = CGFloat.random(in: bounds.minY...bounds.maxY)

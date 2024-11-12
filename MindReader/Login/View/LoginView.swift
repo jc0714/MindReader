@@ -52,7 +52,6 @@ class MindReaderAnimationView: UIView {
             animationView.widthAnchor.constraint(equalToConstant: 300),
             animationView.heightAnchor.constraint(equalToConstant: 300)
         ])
-
         animationView.play()
     }
 }

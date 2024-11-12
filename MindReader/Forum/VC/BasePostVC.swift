@@ -142,7 +142,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
         cell.heartButtonTappedClosure = { [weak self] in
             Task {
-                await self?.updateHeartBtn(at: indexPath)
+                self?.updateHeartBtn(at: indexPath)
             }
         }
 
@@ -193,8 +193,8 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
         let postId = currentPosts[indexPath.row].id
 
-        let userRef = Firestore.firestore().collection("Users").document(userId)
-        let postRef = Firestore.firestore().collection("posts").document(postId)
+//        let userRef = Firestore.firestore().collection("Users").document(userId)
+//        let postRef = Firestore.firestore().collection("posts").document(postId)
 
         let batch = Firestore.firestore().batch()
         let isLiked = BasePostVC.likedPosts.contains(postId)
