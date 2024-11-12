@@ -120,17 +120,10 @@ extension LoginVC: ASAuthorizationControllerDelegate {
                             // 用戶已經存在，使用現有帳號
                             let existingUserId = document.documentID
                             let chatRoomId = document.data()["chatRoomId"] as? String ?? ""
-                            // 自行定義可改的名字
                             let userName = document.data()["userFullName"] as? String ?? ""
                             let appleUserIdentifier = document.data()["user"] as? String ?? ""
-                            UserDefaults.standard.set(existingUserId, forKey: "userID")
-                            UserDefaults.standard.set(chatRoomId, forKey: "chatRoomId")
-                            UserDefaults.standard.set(userName, forKey: "userLastName")
-                            UserDefaults.standard.set(appleUserIdentifier, forKey: "appleUserIdentifier")
-                            print("User already exists in Firestore. UserId and chatRoomId saved to UserDefaults.")
 
-                            UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
-                            UserDefaults.standard.synchronize()
+                            self.saveUserSession(userId: existingUserId, chatRoomId: chatRoomId, name: userName)
 
                             self.navigateToMainTabBarController()
                         }
@@ -144,18 +137,24 @@ extension LoginVC: ASAuthorizationControllerDelegate {
         let nameInputVC = WelcomeVC()
         nameInputVC.onNameEntered = { [weak self] name in
             guard let self = self else { return }
-            self.firebaseService.saveUserInfoToFirestore(appleUserIdentifier: userIdentifier, appleUserFullName: userFullName, userFullName: name, email: email, realUserStatus: realUserStatus)
-            UserDefaults.standard.set(name, forKey: "userLastName")
-            UserDefaults.standard.set(userIdentifier, forKey: "appleUserIdentifier")
+            self.firebaseService.saveUserInfoToFirestore(appleUserIdentifier: userIdentifier, appleUserFullName: userFullName, userFullName: name, email: email, realUserStatus: realUserStatus){ [weak self] documentID, chatRoomId in
+                guard let self = self else { return }
 
-            UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
-            UserDefaults.standard.synchronize()
+                saveUserSession(userId: documentID ?? "" , chatRoomId: chatRoomId ?? "", name: name)
 
-            self.navigateToMainTabBarController()
+                self.navigateToMainTabBarController()
+            }
+            nameInputVC.modalPresentationStyle = .fullScreen
+            self.present(nameInputVC, animated: true, completion: nil)
+
         }
-        nameInputVC.modalPresentationStyle = .fullScreen
-        self.present(nameInputVC, animated: true, completion: nil)
+    }
 
+    private func saveUserSession(userId: String, chatRoomId: String, name: String) {
+        UserSession.shared.userID = userId
+        UserSession.shared.chatRoomId = chatRoomId
+        UserSession.shared.userLastName = name
+        UserSession.shared.isUserLoggedIn = true
     }
 
     private func navigateToMainTabBarController() {
@@ -175,3 +174,4 @@ extension LoginVC: ASAuthorizationControllerDelegate {
         print("didCompleteWithError: \(error.localizedDescription)")
     }
 }
+

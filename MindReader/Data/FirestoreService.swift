@@ -15,7 +15,7 @@ class FirestoreService {
 
     // MARK: Login
 
-    func saveUserInfoToFirestore(appleUserIdentifier: String, appleUserFullName: String?, userFullName: String?, email: String?, realUserStatus: Int) {
+    func saveUserInfoToFirestore(appleUserIdentifier: String, appleUserFullName: String?, userFullName: String?, email: String?, realUserStatus: Int, completion: @escaping (String?, String?) -> Void) {
         let documentID = UUID().uuidString
         let chatRoomId = UUID().uuidString
 
@@ -36,11 +36,9 @@ class FirestoreService {
         db.collection("Users").document(documentID).setData(userData) { error in
             if let error = error {
                 print("Error saving user data to Firestore: \(error.localizedDescription)")
+                completion(nil, nil)
             } else {
-                UserDefaults.standard.set(documentID, forKey: "userID")
-                UserDefaults.standard.set(chatRoomId, forKey: "chatRoomId")
-                UserDefaults.standard.synchronize()
-
+                completion(documentID, chatRoomId)
                 self.initializeChatRoom(userId: documentID, chatRoomId: chatRoomId)
             }
         }
@@ -97,9 +95,7 @@ class FirestoreService {
 
     func saveToFirestore(prompt: String, response: String, imageURL: String?) async throws {
 
-        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-            return
-        }
+        guard let userId = UserSession.shared.userID else { return }
 
         let translateRef = db.collection("Translate")
 
@@ -126,9 +122,7 @@ class FirestoreService {
 
     func uploadImage(imageData: Data) async throws -> String {
 
-        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-            return ""
-        }
+        guard let userId = UserSession.shared.userID else { return "" }
 
         let uploadRef = Storage.storage().reference(withPath: "images/\(userId)/\(UUID().uuidString).jpg")
         _ = try await uploadRef.putDataAsync(imageData, metadata: StorageMetadata())
@@ -140,9 +134,7 @@ class FirestoreService {
 
     func uploadMorningImage(imageData: Data) async throws -> String {
 
-        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-            return ""
-        }
+        guard let userId = UserSession.shared.userID else { return ""}
 
         let uploadRef = Storage.storage().reference(withPath: "MorningImages/\(userId)/\(UUID().uuidString).jpg")
         _ = try await uploadRef.putDataAsync(imageData, metadata: StorageMetadata())
@@ -152,9 +144,7 @@ class FirestoreService {
 
     func saveToMorningImageToDatabase(imageURL: String) async throws {
 
-        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-            return
-        }
+        guard let userId = UserSession.shared.userID else { return }
 
         let translateRef = db.collection("Users") .document(userId).collection("MorningImage")
 
@@ -167,9 +157,7 @@ class FirestoreService {
 
     func saveMessage(message: String, sender: String, completion: @escaping (Error?) -> Void) {
 
-        guard let userId = UserDefaults.standard.string(forKey: "userID"), let chatId = UserDefaults.standard.string(forKey: "chatRoomId") else {
-            return
-        }
+        guard let userId = UserSession.shared.userID , let chatId = UserSession.shared.chatRoomId else { return }
 
         let messageRef = db.collection("Users") .document(userId).collection("Chat").document(chatId).collection("msg")
 
@@ -186,9 +174,7 @@ class FirestoreService {
 
     func listenForMessages(completion: @escaping ([Message]) -> Void) {
 
-        guard let userId = UserDefaults.standard.string(forKey: "userID"), let chatId = UserDefaults.standard.string(forKey: "chatRoomId") else {
-            return
-        }
+        guard let userId = UserSession.shared.userID , let chatId = UserSession.shared.chatRoomId else { return }
 
         let messageRef = db.collection("Users") .document(userId).collection("Chat").document(chatId).collection("msg").order(by: "createdTime", descending: false)
 
@@ -216,8 +202,8 @@ class FirestoreService {
     }
 
     func setupFirestoreListener(for postId: String, completion: @escaping ([Comment]) -> Void) -> ListenerRegistration {
-        let blockedList = UserDefaults.standard.dictionary(forKey: "BlockedList") as? [String: String] ?? [:]
-        let reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
+        let blockedList = UserSession.shared.blockedList
+        let reportedList = UserSession.shared.reportedList
 
         let commentsRef = db.collection("posts").document(postId).collection("Comments").order(by: "timestamp", descending: true)
 
@@ -256,13 +242,13 @@ class FirestoreService {
     // MARK: Delete Account
 
     func deleteAccount() {
-        guard let userId = UserDefaults.standard.string(forKey: "userID") else { return }
+        guard let userId = UserSession.shared.userID else { return }
         let usersCollection = Firestore.firestore().collection("Users")
 
         usersCollection.document(userId).updateData(["isDeleted": true]) { error in
             if error == nil {
-                UserDefaults.standard.removeObject(forKey: "userID")
-                UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
+                UserSession.shared.clearUserID()
+                UserSession.shared.isUserLoggedIn = false
             } else {
                 print("刪除出錯: \(error!.localizedDescription)")
             }

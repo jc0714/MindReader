@@ -95,7 +95,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     // 初始化的時候把按過讚的愛心填滿
     private func loadLikedPosts() {
-        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
+        guard let userId = UserSession.shared.userID else {
             print("User ID is nil")
             return
         }
@@ -180,7 +180,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     // 更新愛心實心空心狀態
 
     func updateHeartBtn(at indexPath: IndexPath) {
-        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
+        guard let userId = UserSession.shared.userID else {
             print("User ID is nil")
             return
         }
@@ -189,12 +189,8 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             print("Unable to retrieve cell at \(indexPath)")
             return
         }
-//        let cell = tableView.cellForRow(at: indexPath) as? PostCell
 
         let postId = currentPosts[indexPath.row].id
-
-//        let userRef = Firestore.firestore().collection("Users").document(userId)
-//        let postRef = Firestore.firestore().collection("posts").document(postId)
 
         let batch = Firestore.firestore().batch()
         let isLiked = BasePostVC.likedPosts.contains(postId)
@@ -245,7 +241,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
 
     func handleOptionSelection(action: String, forPostAt indexPath: IndexPath) {
-        let currentUserId = UserDefaults.standard.string(forKey: "userID")
+        let currentUserId = UserSession.shared.userID
 
         let post = currentPosts[indexPath.row]
         let authorId = post.author.id
@@ -324,56 +320,3 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
 }
-//
-//func updateHeartBtn(at indexPath: IndexPath) {
-//    guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-//        print("User ID is nil")
-//        return
-//    }
-//
-//    let cell = tableView.cellForRow(at: indexPath) as? PostCell
-//    let postId = currentPosts[indexPath.row].id
-//
-//    let userRef = Firestore.firestore().collection("Users").document(userId)
-//    let postRef = Firestore.firestore().collection("posts").document(postId)
-//
-//    // 批次寫入操作
-//    let batch = Firestore.firestore().batch()
-//    var isLiked = false
-//
-//    if BasePostVC.likedPosts.contains(postId) {
-//        // 移除愛心
-//        batch.updateData(["like": FieldValue.arrayRemove([userId])], forDocument: postRef)
-//        batch.updateData(["likePosts": FieldValue.arrayRemove([postId])], forDocument: userRef)
-//        isLiked = false
-//    } else {
-//        // 添加愛心
-//        batch.updateData(["like": FieldValue.arrayUnion([userId])], forDocument: postRef)
-//        batch.updateData(["likePosts": FieldValue.arrayUnion([postId])], forDocument: userRef)
-//        isLiked = true
-//    }
-//
-//    // 提交批次寫入操作
-//    Task {
-//        do {
-//            try await batch.commit()
-//
-//            if let originalIndex = posts.firstIndex(where: { $0.id == postId }) {
-//                posts[originalIndex].like += isLiked ? 1 : -1
-//            }
-//
-//            // 更新本地數據和 UI
-//            if isLiked {
-//                BasePostVC.likedPosts.insert(postId)
-//                cell?.heartButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
-//            } else {
-//                BasePostVC.likedPosts.remove(postId)
-//                cell?.heartButton.setImage(UIImage(systemName: "heart"), for: .normal)
-//            }
-//            cell?.heartCount.text = String(currentPosts[indexPath.row].like)
-//
-//        } catch {
-//            print("Error updating likes: \(error.localizedDescription)")
-//        }
-//    }
-//}

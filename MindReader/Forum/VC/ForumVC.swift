@@ -57,8 +57,8 @@ class ForumVC: BasePostVC {
         let dispatchGroup = DispatchGroup()
         var commentCounts = [String: Int]() // 用來儲存每篇貼文的評論數量
 
-        let blockedList = UserDefaults.standard.dictionary(forKey: "BlockedList") as? [String: String] ?? [:]
-        let reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
+        let blockedList = UserSession.shared.blockedList
+        let reportedList = UserSession.shared.reportedList
 
         Firestore.firestore().collection("posts")
             .order(by: "createdTime", descending: true)

@@ -115,7 +115,7 @@ class CommentsVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @objc private func sendComment() {
         guard let commentText = commentTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !commentText.isEmpty else { return }
 
-        guard let userId = UserDefaults.standard.string(forKey: "userID"), let userName =                 UserDefaults.standard.string(forKey: "userLastName") else {
+        guard let userId = UserSession.shared.userID , let userName =                 UserSession.shared.userLastName else {
             print("User ID is nil")
             return
         }

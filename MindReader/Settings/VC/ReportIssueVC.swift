@@ -104,7 +104,7 @@ class ReportIssueViewController: UIViewController {
             return
         }
 
-        guard let userId = UserDefaults.standard.string(forKey: "userID") else { return }
+        guard let userId = UserSession.shared.userID else { return }
 
         let categoryIndex = categorySegmentedControl.selectedSegmentIndex
         let category = categorySegmentedControl.titleForSegment(at: categoryIndex) ?? "其他"

@@ -21,9 +21,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         window?.tintColor = UIColor.pink3
 
-//        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
         // 檢查用戶登入狀態
-        let isLoggedIn = UserDefaults.standard.bool(forKey: "isUserLoggedIn")
+        let isLoggedIn = UserSession.shared.isUserLoggedIn
 
         let rootViewController: UIViewController
         if isLoggedIn {

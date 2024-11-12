@@ -10,23 +10,21 @@ import FirebaseFirestore
 
 class ReportPostManager {
 
-    static let shared = ReportPostManager() // 使用單例模式讓多個 VC 可以共用
+    static let shared = ReportPostManager()
 
     private init() {}
 
-    // 新增到本地檢舉列表
     func addToReportedPostList(postID: String) {
-        var reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
+        var reportedList = UserSession.shared.reportedList
 
         if !reportedList.contains(postID) {
             reportedList.append(postID)
-            UserDefaults.standard.set(reportedList, forKey: "ReportedList")
+            UserSession.shared.reportedList = reportedList
         }
     }
 
-    // 更新 Firebase 中的檢舉列表
     func updateReportedPostListInFirebase(postID: String, reason: String) {
-        guard let currentUserID = UserDefaults.standard.string(forKey: "userID") else { return }
+        guard let currentUserID = UserSession.shared.userID else { return }
 
         let userRef = Firestore.firestore().collection("Users").document(currentUserID)
 

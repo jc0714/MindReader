@@ -22,16 +22,16 @@ class ReportCommentManager {
 
     // MARK: - Private Methods
     func addToReportedCommentList(commentID: String) {
-        var reportedList = UserDefaults.standard.stringArray(forKey: "ReportedList") ?? []
+        var reportedList = UserSession.shared.reportedList
 
         guard !reportedList.contains(commentID) else { return }
 
         reportedList.append(commentID)
-        UserDefaults.standard.set(reportedList, forKey: "ReportedList")
+        UserSession.shared.reportedList = reportedList
     }
 
     func updateReportedCommentListInFirebase(commentID: String, reason: String) {
-        guard let currentUserID = UserDefaults.standard.string(forKey: "userID") else { return }
+        guard let currentUserID = UserSession.shared.userID else { return }
 
         let userRef = Firestore.firestore().collection("Users").document(currentUserID)
 

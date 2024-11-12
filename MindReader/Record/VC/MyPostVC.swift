@@ -67,10 +67,7 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
         let dispatchGroup = DispatchGroup()
         var commentCounts = [String: Int]()
 
-        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-            print("User ID is nil")
-            return
-        }
+        guard let userId = UserSession.shared.userID else { return }
 
         listener = Firestore.firestore().collection("Users").document(userId).addSnapshotListener { [weak self] (documentSnapshot, error) in
             guard let self = self else { return }
@@ -187,10 +184,7 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
     }
 
     func deletePost(at indexPath: IndexPath) {
-        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-            print("User ID is nil")
-            return
-        }
+        guard let userId = UserSession.shared.userID else { return }
 
         let selectedPost = currentPosts[indexPath.row]
         let postId = selectedPost.id
@@ -205,22 +199,6 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
             }
         }
     }
-
-//    func deletePost(at indexPath: IndexPath) {
-//
-//        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-//            print("User ID is nil")
-//            return
-//        }
-//
-//        let postId = posts[indexPath.row].id
-//
-//        Firestore.firestore().collection("posts").document(postId).delete()
-//
-//        Firestore.firestore().collection("Users").document(userId).updateData([
-//            "postIds": FieldValue.arrayRemove([postId])
-//        ])
-//    }
 
     // 分享操作
     func sharePost(at indexPath: IndexPath) {

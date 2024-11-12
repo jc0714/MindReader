@@ -65,10 +65,7 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
 
     func handleClick() async {
 
-        guard let userId = UserDefaults.standard.string(forKey: "userID"), let userName =                 UserDefaults.standard.string(forKey: "userLastName") else {
-            print("User ID is nil")
-            return
-        }
+        guard let userId = UserSession.shared.userID, let userName =                 UserSession.shared.userLastName else { return }
 
         if let title = editView.titleTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !title.isEmpty,
            let content = editView.contentTextView.text?.trimmingCharacters(in: .whitespacesAndNewlines), !content.isEmpty,
@@ -105,10 +102,7 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
 
                 try await document.setData(data)
 
-                guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-                    print("User ID is nil")
-                    return
-                }
+                guard let userId = UserSession.shared.userID else { return }
 
                 let authorCollection = Firestore.firestore().collection("Users").document(userId)
                 try await authorCollection.updateData([

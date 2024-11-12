@@ -170,9 +170,7 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
     @objc private func sendComment() {
         guard let commentText = commentTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !commentText.isEmpty else { return }
 
-        guard let userId = UserDefaults.standard.string(forKey: "userID"), let userName =                 UserDefaults.standard.string(forKey: "userLastName") else {
-            return
-        }
+        guard let userId = UserSession.shared.userID, let userName =                 UserSession.shared.userLastName else { return }
 
         let documentID = UUID().uuidString
 
@@ -247,7 +245,8 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
     }
 
     func handleOptionSelection(action: String, at indexPath: IndexPath) {
-        let currentUserId = UserDefaults.standard.string(forKey: "userID")
+        let currentUserId = UserSession.shared.userID
+
         if indexPath.row == 0 {
             // 第一個 cell 是貼文
             guard let post = post else { return }
@@ -344,7 +343,7 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
 
         let comment = comments[indexPath.row - 1]
 
-        if let userId = UserDefaults.standard.string(forKey: "userID") {
+        if let userId = UserSession.shared.userID {
             return comment.authorId == userId
         }
 
@@ -386,10 +385,7 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
     }
 
     func updateHeartBtn(at indexPath: IndexPath) {
-        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-            print("User ID is nil")
-            return
-        }
+        guard let userId = UserSession.shared.userID else { return }
 
         guard let cell = tableView.cellForRow(at: indexPath) as? PostCell else {
             print("Unable to retrieve cell at \(indexPath)")
@@ -451,48 +447,3 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Ke
         }
     }
 }
-
-//func updateHeartBtn(at indexPath: IndexPath) {
-//        guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-//            print("User ID is nil")
-//            return
-//        }
-//
-//        let cell = tableView.cellForRow(at: indexPath) as? PostCell
-//
-//        let batch = Firestore.firestore().batch()
-//        let postRef = Firestore.firestore().collection("posts").document(postId)
-//        let userRef = Firestore.firestore().collection("Users").document(userId)
-//
-//        if BasePostVC.likedPosts.contains(postId) {
-//            // 如果用戶已經按了讚，則移除讚
-//            batch.updateData(["like": FieldValue.arrayRemove([userId])], forDocument: postRef)
-//            batch.updateData(["likePosts": FieldValue.arrayRemove([postId])], forDocument: userRef)
-//
-//            // 更新本地數據，移除已按讚的文章
-//            BasePostVC.likedPosts.remove(postId)
-//            post?.like -= 1
-//            cell?.heartButton.setImage(UIImage(systemName: "heart"), for: .normal)
-//        } else {
-//            // 如果用戶還未按讚，則添加讚
-//            batch.updateData(["like": FieldValue.arrayUnion([userId])], forDocument: postRef)
-//            batch.updateData(["likePosts": FieldValue.arrayUnion([postId])], forDocument: userRef)
-//
-//            // 更新本地數據，添加已按讚的文章
-//            BasePostVC.likedPosts.insert(postId)
-//            post?.like += 1
-//            cell?.heartButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
-//        }
-//
-//        // 更新愛心數量顯示
-//        cell?.heartCount.text = String(post!.like)
-//
-//        // 提交批次寫入操作
-//        Task {
-//            do {
-//                try await batch.commit()
-//            } catch {
-//                print("Error updating likes: \(error.localizedDescription)")
-//            }
-//        }
-//    }

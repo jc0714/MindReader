@@ -60,7 +60,7 @@ class BlockedListVC: UIViewController, UITableViewDataSource, UITableViewDelegat
     }
 
     private func loadBlockedList() {
-        blockedList = UserDefaults.standard.dictionary(forKey: "BlockedList") as? [String: String] ?? [:]
+        blockedList = UserSession.shared.blockedList
         tableView.reloadData()
     }
 
@@ -97,7 +97,7 @@ class BlockedListVC: UIViewController, UITableViewDataSource, UITableViewDelegat
 
         blockedList.removeValue(forKey: userId)
 
-        UserDefaults.standard.set(blockedList, forKey: "BlockedList")
+        UserSession.shared.blockedList = blockedList
 
         updateBlockedListInFirebase(userId: userId)
 
@@ -105,7 +105,7 @@ class BlockedListVC: UIViewController, UITableViewDataSource, UITableViewDelegat
     }
 
     private func updateBlockedListInFirebase(userId: String) {
-        guard let currentUserID = UserDefaults.standard.string(forKey: "userID") else { return }
+        guard let currentUserID = UserSession.shared.userID  else { return }
 
         let userRef = Firestore.firestore().collection("Users").document(currentUserID)
 

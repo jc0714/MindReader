@@ -68,7 +68,7 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     }
 
     private func loadUserName() {
-        userName = UserDefaults.standard.string(forKey: "userLastName") ?? "UUUU"
+        userName = UserSession.shared.userLastName ?? "UUUU"
     }
 
     // MARK: - UITableViewDataSource 方法
@@ -336,8 +336,8 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         let alert = UIAlertController(title: "登出", message: "確定要登出嗎？期待你下次再登入。", preferredStyle: .alert)
 
         let confirmAction = UIAlertAction(title: "確認", style: .destructive) { _ in
-            UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
-            UserDefaults.standard.set(nil, forKey: "userID")
+            UserSession.shared.isUserLoggedIn = false
+            UserSession.shared.userID = nil
 
             self.showLoginVC()
         }
@@ -362,12 +362,13 @@ class SettingVC: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     }
 
     func didTapSubmitButton(newName: String, in cell: UserInfoCell) {
-        guard let userId = UserDefaults.standard.string(forKey: "userID") else { return }
+        guard let userId = UserSession.shared.userID else { return }
 
         let usersCollection = Firestore.firestore().collection("Users")
         usersCollection.document(userId).updateData(["userFullName": newName]) { error in
             if error == nil {
-                UserDefaults.standard.set(newName, forKey: "userLastName")
+                UserSession.shared.userLastName = newName
+                
                 self.userName = newName
                 DispatchQueue.main.async {
                     self.tableView.reloadData()

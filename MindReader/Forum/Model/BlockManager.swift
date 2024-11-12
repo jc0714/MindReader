@@ -20,16 +20,16 @@ class BlockManager {
     }
 
     func addToBlockedList(authorID: String, authorName: String) {
-        var blockedList = UserDefaults.standard.dictionary(forKey: "BlockedList") as? [String: String] ?? [:]
+        var blockedList = UserSession.shared.blockedList
 
         if blockedList[authorID] == nil {
             blockedList[authorID] = authorName
-            UserDefaults.standard.set(blockedList, forKey: "BlockedList")
+            UserSession.shared.blockedList = blockedList
         }
     }
 
     func updateBlockedListInFirebase(userId: String) {
-        guard let currentUserID = UserDefaults.standard.string(forKey: "userID") else { return }
+        guard let currentUserID = UserSession.shared.userID else { return }
 
         let userRef = Firestore.firestore().collection("Users").document(currentUserID)
 

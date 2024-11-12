@@ -131,10 +131,7 @@ class AlbumFullScreenVC: UIViewController, UICollectionViewDelegate, UICollectio
                     return
                 }
 
-                guard let userId = UserDefaults.standard.string(forKey: "userID") else {
-                    print("User ID is nil")
-                    return
-                }
+                guard let userId = UserSession.shared.userID else { return }
 
                 let db = Firestore.firestore()
                 let morningImageRef = db.collection("Users").document(userId).collection("MorningImage")
