@@ -20,9 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IQKeyboardManager.shared.resignOnTouchOutside = true
 
         DispatchQueue.global(qos: .background).async {
-            UserDefaults.standard.removeObject(forKey: "ForumVC_selectedTag")
-            UserDefaults.standard.removeObject(forKey: "MyPostVC_selectedTag")
+            UserSession.shared.clearSelectedTags(forVCs: ["ForumVC", "MyPostVC"])
         }
+
         return true
     }
 

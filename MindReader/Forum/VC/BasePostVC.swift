@@ -42,13 +42,14 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
         tableView.separatorStyle = .none
 
-        if let savedTag = UserDefaults.standard.string(forKey: "\(VCid)_selectedTag") {
+        if let savedTag = UserSession.shared.selectedTag(forVC: VCid) {
             selectedTag = savedTag
         }
 
         tagFilterView.tagSelectedClosure = { [weak self] selectedTag in
             self?.selectedTag = selectedTag
-            UserDefaults.standard.set(selectedTag, forKey: "\(self?.VCid ?? "")_selectedTag")
+            UserSession.shared.setSelectedTag(selectedTag, forVC: self?.VCid ?? "")
+
             self?.tableView.reloadData()
         }
 
@@ -60,7 +61,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
         navigationController?.setNavigationBarHidden(true, animated: false)
 
-        if let savedTag = UserDefaults.standard.string(forKey: "\(self.VCid)_selectedTag") {
+        if let savedTag = UserSession.shared.selectedTag(forVC: VCid) {
             selectedTag = savedTag
             tableView.reloadData()
         }

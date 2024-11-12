@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class UserSession {
     static let shared = UserSession()
@@ -57,9 +58,23 @@ class UserSession {
         set { UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.reportedList) }
     }
 
+    func selectedTag(forVC vcid: String) -> String? {
+        return UserDefaults.standard.string(forKey: "\(vcid)_selectedTag")
+    }
+
+    func setSelectedTag(_ tag: String, forVC vcid: String) {
+        UserDefaults.standard.set(tag, forKey: "\(vcid)_selectedTag")
+    }
+
     func clearUserID() {
         userID = nil
         UserDefaults.standard.removeObject(forKey: UserDefaultsKeys.userID)
+    }
+
+    func clearSelectedTags(forVCs vcids: [String]) {
+        vcids.forEach { vcid in
+            UserDefaults.standard.removeObject(forKey: "\(vcid)_selectedTag")
+        }
     }
 }
 
