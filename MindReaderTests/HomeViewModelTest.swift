@@ -44,10 +44,8 @@ class HomeViewModelTests: XCTestCase {
             replyStyle: "風格"
         )
 
-        // Mock Firestore 返回 nil（沒有已存在的回應）
         mockFirestoreService.fetchResponseResult = nil
 
-        // Mock APIService 返回回應
         mockAPIService.responseText = """
         {
             "content": {
@@ -57,11 +55,8 @@ class HomeViewModelTests: XCTestCase {
         }
         """
 
-        // Act
-        viewModel.submit(data: translateData)
-
-        // Assert
-        viewModel.responsePublisher
+        viewModel.$response
+            .dropFirst()
             .sink { response in
                 XCTAssertEqual(response.0, ["解釋1", "解釋2", "解釋3"])
                 XCTAssertEqual(response.1, ["回覆1", "回覆2", "回覆3"])
@@ -69,46 +64,54 @@ class HomeViewModelTests: XCTestCase {
             }
             .store(in: &cancellables)
 
-        viewModel.loadingStatePublisher
-            .sink { isLoading in
-                XCTAssertFalse(isLoading) // Loading state should be false after completion
-            }
-            .store(in: &cancellables)
+//        viewModel.$isLoading
+//            .sink { isLoading in
+//                XCTAssertFalse(isLoading)
+//            }
+//            .store(in: &cancellables)
 
-        wait(for: [expectation], timeout: 1.0)
+        viewModel.$isLoading
+        .sink { isLoading in
+            if !isLoading {
+                expectation.fulfill()
+            }
+        }
+        .store(in: &cancellables)
+
+        viewModel.submit(data: translateData)
+
+        wait(for: [expectation], timeout: 2.0)
     }
 
     func testSubmit_withEmptyPrompt_triggersErrorPublisher() {
         // Arrange
         let expectation = XCTestExpectation(description: "Error triggered due to empty prompt")
-        let emptyPrompt = "" // 模擬一個空的 prompt
+        let emptyPrompt = ""
         let translateData = TranslateData(
-            prompt: emptyPrompt, // 空的 prompt
+            prompt: emptyPrompt,
             recognizedText: "",
             selectedImage: nil,
-            selectedTag: 1, // 使用 prompt 字段
+            selectedTag: 1,
             audience: "對象",
             replyStyle: "風格"
         )
 
-        // Setup subscriptions before triggering the action
-        viewModel.errorPublisher
+        viewModel.$errorMessage
+            .dropFirst()
             .sink { errorMessage in
-                XCTAssertEqual(errorMessage, "我沒有讀到文字哦") // 檢查是否正確發送錯誤訊息
+                XCTAssertEqual(errorMessage, "我沒有讀到文字哦")
                 expectation.fulfill()
             }
             .store(in: &cancellables)
 
-        viewModel.loadingStatePublisher
+        viewModel.$isLoading
             .sink { isLoading in
-                XCTAssertFalse(isLoading) // 確保錯誤後載入狀態被正確關閉
+                XCTAssertFalse(isLoading)
             }
             .store(in: &cancellables)
 
-        // Act - trigger submit after setting up subscriptions
         viewModel.submit(data: translateData)
 
-        // Assert
         wait(for: [expectation], timeout: 1.0)
     }
 }

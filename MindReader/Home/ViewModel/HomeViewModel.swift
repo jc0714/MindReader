@@ -33,6 +33,7 @@ class HomeViewModel {
         }
 
         isLoading = true
+
         let formattedPrompt = formatPrompt(promptText, audience: data.audience, replyStyle: data.replyStyle)
 
         Task {
@@ -42,7 +43,6 @@ class HomeViewModel {
                     self.response = (meanings, methods)
                     shouldClearRecognizedText = true
                 } else {
-                    // 向 API 請求資料並處理 JSON 回應
                     let apiResponse = try await apiService.generateTextResponse(for: formattedPrompt)
                     if let responseData = apiResponse.data(using: .utf8),
                        let json = try JSONSerialization.jsonObject(with: responseData, options: []) as? [String: Any],
@@ -51,7 +51,6 @@ class HomeViewModel {
                        let methods = content["response_methods"] as? [String] {
                         self.response = (meanings, methods)
                     }
-                    // 上傳圖片或保存文字回應
                     if let imageData = data.selectedImage?.jpegData(compressionQuality: 0.75) {
                         let imageURL = try await firestoreService.uploadImage(imageData: imageData)
                         try await firestoreService.saveToFirestore(prompt: promptText, response: apiResponse, imageURL: imageURL)
