@@ -166,16 +166,9 @@ class PostCell: UITableViewCell {
     }
 
     private func setupReportMenu() {
-        let reportAction = UIAction(title: "檢舉", image: UIImage(systemName: "exclamationmark.bubble")) { _ in
-            self.reportButtonTappedClosure?("檢舉")
+        reportButton.menu = PostManager.createReportMenu { [weak self] action in
+            self?.reportButtonTappedClosure?(action)
         }
-
-        let blockAction = UIAction(title: "封鎖", image: UIImage(systemName: "hand.raised")) { _ in
-            self.reportButtonTappedClosure?("封鎖")
-        }
-
-        let menu = UIMenu(title: "", children: [reportAction, blockAction])
-        reportButton.menu = menu
         reportButton.showsMenuAsPrimaryAction = true
     }
 

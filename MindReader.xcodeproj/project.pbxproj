@@ -83,6 +83,7 @@
 		E9BC29D92CE3010400DA789E /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BC29D82CE3010300DA789E /* UserSession.swift */; };
 		E9BC29DB2CE5C3E400DA789E /* MorningImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BC29DA2CE5C3E400DA789E /* MorningImageView.swift */; };
 		E9BC29DD2CE5E09D00DA789E /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BC29DC2CE5E09D00DA789E /* AppConstants.swift */; };
+		E9BC29DF2CE618DE00DA789E /* PostManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BC29DE2CE618DE00DA789E /* PostManager.swift */; };
 		E9C668B42CA5407400C0EE1D /* SettingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C668B32CA5407400C0EE1D /* SettingVC.swift */; };
 		E9C668BD2CA5A06300C0EE1D /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */; };
 		E9F6B67E2C95800F008E9FBF /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B67D2C95800F008E9FBF /* ChatView.swift */; };
@@ -197,6 +198,7 @@
 		E9BC29D82CE3010300DA789E /* UserSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSession.swift; sourceTree = "<group>"; };
 		E9BC29DA2CE5C3E400DA789E /* MorningImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorningImageView.swift; sourceTree = "<group>"; };
 		E9BC29DC2CE5E09D00DA789E /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
+		E9BC29DE2CE618DE00DA789E /* PostManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostManager.swift; sourceTree = "<group>"; };
 		E9C668B32CA5407400C0EE1D /* SettingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVC.swift; sourceTree = "<group>"; };
 		E9C668B52CA5444C00C0EE1D /* MindReader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MindReader.entitlements; sourceTree = "<group>"; };
 		E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
@@ -422,6 +424,7 @@
 				E912190B2CB78DF3000521ED /* BlockManager.swift */,
 				E912190D2CB79133000521ED /* ReportCommentManager.swift */,
 				E912190F2CB79617000521ED /* ReportPostManager.swift */,
+				E9BC29DE2CE618DE00DA789E /* PostManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -840,6 +843,7 @@
 				E97C16082C92BC88002B437C /* APIKeys.swift in Sources */,
 				E99142582CA2D03500016C90 /* DateFormatterExtension.swift in Sources */,
 				E9521C2B2CAE486700BFCAEF /* BlockedListCell.swift in Sources */,
+				E9BC29DF2CE618DE00DA789E /* PostManager.swift in Sources */,
 				E99142342CA0042200016C90 /* ImageCell.swift in Sources */,
 				E9BC29DD2CE5E09D00DA789E /* AppConstants.swift in Sources */,
 				E9F6B6862C96EB14008E9FBF /* ForumVC.swift in Sources */,
