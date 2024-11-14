@@ -11,7 +11,8 @@ import Kingfisher
 
 class PostCell: UITableViewCell {
 
-    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7", "avatar8"]
+    private let imageNames = AppConstants.avatarNames
+
     private var isHeartSelected: Bool = false
 
     var heartButtonTappedClosure: (() -> Void)?
@@ -352,8 +353,8 @@ extension PostCell: UIScrollViewDelegate {
         let closeButton = UIButton(frame: CGRect(x: fullScreenView.bounds.width - 50, y: 50, width: 30, height: 30))
         closeButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
         closeButton.tintColor = .white
-        closeButton.backgroundColor = UIColor.black.withAlphaComponent(0.5) // 半透明黑色背景
-        closeButton.layer.cornerRadius = 15 // 圓角，與按鈕寬高一致
+        closeButton.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        closeButton.layer.cornerRadius = 15
         closeButton.addTarget(self, action: #selector(dismissFullScreenView(_:)), for: .touchUpInside)
 
         fullScreenView.addSubview(scrollView)
@@ -363,7 +364,6 @@ extension PostCell: UIScrollViewDelegate {
         swipeGesture.direction = .down
         fullScreenView.addGestureRecognizer(swipeGesture)
 
-        // 加到視圖上
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let window = windowScene.windows.first {
             window.addSubview(fullScreenView)

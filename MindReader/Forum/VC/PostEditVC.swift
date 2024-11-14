@@ -18,7 +18,7 @@ class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
 
     var isPlaceholderImage = true
 
-    private let imageNames = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6", "avatar7", "avatar8"]
+    private let imageNames = AppConstants.avatarNames
     var selectedAvatarIndex = 0
 
     override func loadView() {

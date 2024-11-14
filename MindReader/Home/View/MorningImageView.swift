@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class ImageView: UIView {
+class MorningImageView: UIView {
 
     let imageCollectionView = ImageCollectionView()
     let finalImageView = UIImageView()
@@ -48,9 +48,6 @@ class ImageView: UIView {
         colorButtons.forEach { stackView.addArrangedSubview($0) }
         addSubview(stackView)
 
-//        saveButton = createButton(title: "存到相簿去！", backgroundColor: .pink3)
-//        shareButton = createButton(title: "分享", backgroundColor: .pink3)
-//        saveToFireBaseButton = createButton(title: "貼到相片牆", backgroundColor: .pink3)
         addSubview(saveButton)
         addSubview(shareButton)
         addSubview(saveToFireBaseButton)

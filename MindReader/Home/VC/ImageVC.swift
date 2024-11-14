@@ -12,7 +12,7 @@ import UIKit
 class ImageVC: UIViewController, ImageCollectionViewDelegate {
 
     private let firestoreService = FirestoreService()
-    private let morningImageView = ImageView() // 直接初始化 MorningImageView
+    private let morningImageView = MorningImageView() // 直接初始化 MorningImageView
     var copiedText: String?
     private var textColor: UIColor = .white
 

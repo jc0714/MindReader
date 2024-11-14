@@ -82,6 +82,7 @@
 		E99142582CA2D03500016C90 /* DateFormatterExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99142572CA2D03500016C90 /* DateFormatterExtension.swift */; };
 		E9BC29D92CE3010400DA789E /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BC29D82CE3010300DA789E /* UserSession.swift */; };
 		E9BC29DB2CE5C3E400DA789E /* MorningImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BC29DA2CE5C3E400DA789E /* MorningImageView.swift */; };
+		E9BC29DD2CE5E09D00DA789E /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BC29DC2CE5E09D00DA789E /* AppConstants.swift */; };
 		E9C668B42CA5407400C0EE1D /* SettingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C668B32CA5407400C0EE1D /* SettingVC.swift */; };
 		E9C668BD2CA5A06300C0EE1D /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */; };
 		E9F6B67E2C95800F008E9FBF /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B67D2C95800F008E9FBF /* ChatView.swift */; };
@@ -195,6 +196,7 @@
 		E99142572CA2D03500016C90 /* DateFormatterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterExtension.swift; sourceTree = "<group>"; };
 		E9BC29D82CE3010300DA789E /* UserSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSession.swift; sourceTree = "<group>"; };
 		E9BC29DA2CE5C3E400DA789E /* MorningImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorningImageView.swift; sourceTree = "<group>"; };
+		E9BC29DC2CE5E09D00DA789E /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		E9C668B32CA5407400C0EE1D /* SettingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVC.swift; sourceTree = "<group>"; };
 		E9C668B52CA5444C00C0EE1D /* MindReader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MindReader.entitlements; sourceTree = "<group>"; };
 		E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
@@ -292,6 +294,7 @@
 				E97C15F62C91812F002B437C /* APIService.swift */,
 				E97C16162C955CBB002B437C /* FirestoreService.swift */,
 				E90ADEE12CC3F96D001745C1 /* PostLikeManager.swift */,
+				E9BC29DC2CE5E09D00DA789E /* AppConstants.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -838,6 +841,7 @@
 				E99142582CA2D03500016C90 /* DateFormatterExtension.swift in Sources */,
 				E9521C2B2CAE486700BFCAEF /* BlockedListCell.swift in Sources */,
 				E99142342CA0042200016C90 /* ImageCell.swift in Sources */,
+				E9BC29DD2CE5E09D00DA789E /* AppConstants.swift in Sources */,
 				E9F6B6862C96EB14008E9FBF /* ForumVC.swift in Sources */,
 				E91218E12CB4CCB4000521ED /* KeyboardHandler.swift in Sources */,
 				E9638CD92CBE162B0004A728 /* WelcomeView.swift in Sources */,
