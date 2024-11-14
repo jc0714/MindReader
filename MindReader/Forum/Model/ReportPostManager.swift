@@ -40,13 +40,12 @@ class ReportPostManager {
         }
     }
 
-    // 儲存檢舉資訊到 Firestore 中的 ReportedPosts 集合
     private func saveReportedPostToCollection(postID: String, reporterID: String, reason: String) {
         let reportData: [String: Any] = [
             "postID": postID,
             "reporter": reporterID,
             "reason": reason,
-            "timestamp": Timestamp() // 加入檢舉的時間
+            "timestamp": Timestamp()
         ]
 
         Firestore.firestore().collection("ReportedPosts").addDocument(data: reportData) { error in
@@ -59,10 +58,8 @@ class ReportPostManager {
     }
 
     func reportPost(postID: String, reason: String) {
-        // 更新本地檢舉列表
         addToReportedPostList(postID: postID)
 
-        // 更新 Firebase 檢舉列表
         updateReportedPostListInFirebase(postID: postID, reason: reason)
     }
 }

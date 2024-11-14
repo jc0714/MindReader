@@ -16,15 +16,15 @@ class TextAdjustmentVC: UIViewController {
         let label = UILabel()
         label.text = "早安圖文字"
         label.font = UIFont.boldSystemFont(ofSize: 24)
-        label.textColor = UIColor(red: 0.6, green: 0.4, blue: 0.2, alpha: 1) // 類似附圖的棕色
+        label.textColor = UIColor(red: 0.6, green: 0.4, blue: 0.2, alpha: 1)
         return label
     }()
 
     private let textView: UITextView = {
         let textView = UITextView()
-        textView.font = UIFont.systemFont(ofSize: 18) // 調整字體大小
-        textView.textColor = UIColor(red: 0.4, green: 0.3, blue: 0.2, alpha: 1) // 類似附圖的顏色
-        textView.backgroundColor = UIColor(red: 1, green: 0.95, blue: 0.85, alpha: 1) // 輕微米黃色背景
+        textView.font = UIFont.systemFont(ofSize: 18)
+        textView.textColor = UIColor(red: 0.4, green: 0.3, blue: 0.2, alpha: 1)
+        textView.backgroundColor = UIColor(red: 1, green: 0.95, blue: 0.85, alpha: 1) 
         textView.layer.cornerRadius = 8
         textView.layer.borderWidth = 1
         textView.layer.borderColor = UIColor.brown.cgColor

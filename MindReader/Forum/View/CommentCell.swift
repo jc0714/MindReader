@@ -12,6 +12,7 @@ class CommentCell: UITableViewCell {
     var reportButtonTappedClosure: ((String) -> Void)?
 
     // MARK: - Properties
+
     private let authorLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
@@ -24,7 +25,7 @@ class CommentCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .darkGray
-        label.numberOfLines = 0 // 可以換行
+        label.numberOfLines = 0
         return label
     }()
 
@@ -54,6 +55,7 @@ class CommentCell: UITableViewCell {
     }()
 
     // MARK: - Initializer
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
@@ -64,6 +66,7 @@ class CommentCell: UITableViewCell {
     }
 
     // MARK: - Setup
+
     private func setupViews() {
         contentView.backgroundColor = .clear
         backgroundColor = .clear
@@ -116,28 +119,6 @@ class CommentCell: UITableViewCell {
     func configure(author: String, content: String, timestamp: Date) {
         authorLabel.text = author
         contentLabel.text = content
-        timestampLabel.text = timeAgoDisplay(from: timestamp)
-    }
-
-    private func timeAgoDisplay(from timestamp: Date) -> String {
-        let calendar = Calendar.current
-        let now = Date()
-        let components = calendar.dateComponents([.minute, .hour, .day, .weekOfYear, .month, .year], from: timestamp, to: now)
-
-        if let year = components.year, year >= 1 {
-            return "\(year) 年前"
-        } else if let month = components.month, month >= 1 {
-            return "\(month) 個月前"
-        } else if let week = components.weekOfYear, week >= 1 {
-            return "\(week) 週前"
-        } else if let day = components.day, day >= 1 {
-            return "\(day) 天前"
-        } else if let hour = components.hour, hour >= 1 {
-            return "\(hour) 小時前"
-        } else if let minute = components.minute, minute >= 1 {
-            return "\(minute) 分鐘前"
-        } else {
-            return "剛剛"
-        }
+        timestampLabel.text = timestamp.timeAgoDisplay()
     }
 }

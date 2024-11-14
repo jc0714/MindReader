@@ -275,23 +275,7 @@ class PostCell: UITableViewCell {
     }
 
     private func loadImage(from url: String) {
-        guard let imageURL = URL(string: url) else {
-            print("Invalid URL string")
-            return
-        }
-
-        postImageView.kf.setImage(with: imageURL, options: [
-            .transition(.fade(0.2)),
-            .cacheOriginalImage
-        ]) { [weak self] result in
-            switch result {
-            case .success(_):
-                self?.setNeedsLayout()
-                self?.layoutIfNeeded()
-            case .failure(let error):
-                print("Image load failed: \(error)")
-            }
-        }
+        postImageView.setImage(from: url)
     }
 
     @objc private func heartButtonTapped() {

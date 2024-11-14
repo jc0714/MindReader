@@ -70,8 +70,8 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     }
 
     // MARK: - ViewModel Bindings
+
     private func setupViewModelBindings() {
-        // 訂閱 loading 狀態
         viewModel.$isLoading
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in

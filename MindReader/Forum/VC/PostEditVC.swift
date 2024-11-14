@@ -12,7 +12,7 @@ import FirebaseFirestore
 
 class PostEditVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
-    private var editView: PostEditView!
+    private var editView = PostEditView()
 
     private let firestoreService = FirestoreService()
 

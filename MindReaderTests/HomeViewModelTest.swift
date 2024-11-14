@@ -64,12 +64,6 @@ class HomeViewModelTests: XCTestCase {
             }
             .store(in: &cancellables)
 
-//        viewModel.$isLoading
-//            .sink { isLoading in
-//                XCTAssertFalse(isLoading)
-//            }
-//            .store(in: &cancellables)
-
         viewModel.$isLoading
         .sink { isLoading in
             if !isLoading {

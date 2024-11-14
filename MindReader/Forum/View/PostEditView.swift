@@ -79,7 +79,7 @@ class PostEditView: UIView {
         button.backgroundColor = .white
         button.layer.cornerRadius = 10
         button.layer.masksToBounds = true
-        button.isHidden = true // 預設隱藏
+        button.isHidden = true
         return button
     }()
 
@@ -93,7 +93,6 @@ class PostEditView: UIView {
         return button
     }()
 
-    // Buttons for categories
     let categoryButton1 = UIButton(type: .system)
     let categoryButton2 = UIButton(type: .system)
     let categoryButton3 = UIButton(type: .system)
@@ -112,7 +111,6 @@ class PostEditView: UIView {
     }
 
     private func setupUI() {
-        // Add subviews
         addSubview(avatarHintLabel)
         addSubview(avatarImage)
         addSubview(titleTextField)
@@ -123,7 +121,6 @@ class PostEditView: UIView {
         imageView.addSubview(deleteButton)
         addSubview(publishButton)
 
-        // Constraints
         avatarHintLabel.translatesAutoresizingMaskIntoConstraints = false
         avatarImage.translatesAutoresizingMaskIntoConstraints = false
         titleTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -178,16 +175,7 @@ class PostEditView: UIView {
             publishButton.widthAnchor.constraint(equalToConstant: 150),
             publishButton.heightAnchor.constraint(equalToConstant: 40)
         ])
-
-        UIView.animate(withDuration: 1.0, animations: {
-            self.avatarHintLabel.alpha = 1.0 // 顯示 Label
-        }, completion: { (completed) in
-            UIView.animate(withDuration: 1.0, delay: 5.0, options: [], animations: {
-                self.avatarHintLabel.alpha = 0.0
-            }, completion: { (completed) in
-                self.avatarHintLabel.removeFromSuperview()
-            })
-        })
+        animateAvatarHintLabel()
 
         deleteButton.addTarget(self, action: #selector(deleteImage), for: .touchUpInside)
     }
@@ -205,13 +193,24 @@ class PostEditView: UIView {
         }
     }
 
+    private func animateAvatarHintLabel() {
+        UIView.animate(withDuration: 1.0, animations: {
+            self.avatarHintLabel.alpha = 1.0
+        }, completion: { _ in
+            UIView.animate(withDuration: 1.0, delay: 5.0, options: [], animations: {
+                self.avatarHintLabel.alpha = 0.0
+            }, completion: { _ in
+                self.avatarHintLabel.removeFromSuperview()
+            })
+        })
+    }
+
     @objc private func selectCategory(_ sender: UIButton) {
         HapticFeedbackManager.lightFeedback()
 
         selectedCategoryButton?.transform = CGAffineTransform.identity
         selectedCategoryButton?.backgroundColor = .pink1
 
-        // 新選的變樣式
         selectedCategoryButton = sender
         sender.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
         sender.backgroundColor = .pink3

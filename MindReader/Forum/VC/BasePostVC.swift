@@ -153,7 +153,7 @@ class BasePostVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
         cell.reportButtonTappedClosure = { [weak self] action in
             self?.handleOptionSelection(action: action, forPostAt: indexPath)
-    }
+        }
 
         cell.setNeedsLayout()
         cell.layoutIfNeeded()

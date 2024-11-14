@@ -10,17 +10,15 @@ import FirebaseFirestore
 
 class ReportCommentManager {
 
-    static let shared = ReportCommentManager() // 使用單例模式讓多個 VC 可以共用
+    static let shared = ReportCommentManager()
 
-    private init() {} // 禁止外部實例化，強制使用單例
+    private init() {}
 
-    // MARK: - Public Methods
     func reportComment(commentID: String, reason: String) {
         addToReportedCommentList(commentID: commentID)
         updateReportedCommentListInFirebase(commentID: commentID, reason: reason)
     }
 
-    // MARK: - Private Methods
     func addToReportedCommentList(commentID: String) {
         var reportedList = UserSession.shared.reportedList
 
@@ -42,7 +40,6 @@ class ReportCommentManager {
                 print("Error updating reported comment list in Firebase: \(String(describing: error))")
                 return
             }
-            print("檢舉留言已成功更新到 User 的 Firebase")
             self?.saveReportedCommentToCollection(commentID: commentID, reporterID: currentUserID, reason: reason)
         }
     }
@@ -60,7 +57,6 @@ class ReportCommentManager {
                 print("Error saving reported comment: \(error!)")
                 return
             }
-            print("檢舉資訊已成功存入 ReportedComments collection")
         }
     }
 }

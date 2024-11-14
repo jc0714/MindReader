@@ -32,7 +32,6 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
 
         refreshControl.addTarget(self, action: #selector(fetchPosts), for: UIControl.Event.valueChanged)
 
-        // 讓 PageViewController 的手勢也能被監測
         if let pageViewController = parent as? UIPageViewController {
             pageViewController.view.gestureRecognizers?.forEach { gesture in
                 if let panGesture = gesture as? UIPanGestureRecognizer {
@@ -77,9 +76,7 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
                 return
             }
 
-            // 該用戶的文章
             if let postIds = document.data()?["postIds"] as? [String], !postIds.isEmpty {
-                // 從 posts collection 撈文章
                 Firestore.firestore().collection("posts")
                     .whereField(FieldPath.documentID(), in: postIds)
                     .order(by: "createdTime", descending: true)
@@ -148,12 +145,10 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 
-        // 刪除動作
         let deleteAction = UIContextualAction(style: .destructive, title: "刪除") { (action, view, completionHandler) in
             let alertController = UIAlertController(title: "確定刪除？", message: "此動作無法復原", preferredStyle: .alert)
 
             let confirmAction = UIAlertAction(title: "確定", style: .destructive) { _ in
-                // 執行刪除操作
                 self.deletePost(at: indexPath)
                 completionHandler(true)
                 self.fetchPosts()
@@ -170,15 +165,12 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
 
         deleteAction.backgroundColor = .delete
 
-        // 分享動作
         let shareAction = UIContextualAction(style: .normal, title: "分享") { (action, view, completionHandler) in
-            // 執行分享操作
             self.sharePost(at: indexPath)
             completionHandler(true)
         }
         shareAction.backgroundColor = .pink1
 
-        // 將兩個動作加到 swipe action configuration 中
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction, shareAction])
         return configuration
     }
@@ -200,7 +192,6 @@ class MyPostVC: BasePostVC, UIGestureRecognizerDelegate {
         }
     }
 
-    // 分享操作
     func sharePost(at indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
 
