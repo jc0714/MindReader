@@ -333,15 +333,19 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         replyStyleCollectionView.dataSource = self
         replyStyleCollectionView.showsHorizontalScrollIndicator = false
     }
+}
+
+// MARK: - Loading Animation Control
+
+extension HomeView {
 
     // MARK: - Helper Methods to Configure Cells
+
     private func configureCell(_ cell: UICollectionViewCell, withText text: String, isSelected: Bool, at indexPath: IndexPath) {
 
-        // 設置背景顏色
         cell.contentView.layer.cornerRadius = 10
         cell.contentView.backgroundColor = isSelected ? .pink3.withAlphaComponent(0.8) : .pink1
 
-        // 移除現有的 label 再添加新的
         cell.contentView.subviews.forEach { $0.removeFromSuperview() }
 
         let label = UILabel()
@@ -356,10 +360,8 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             label.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor)
         ])
 
-        // 點按放大效果
         cell.contentView.transform = isSelected ? CGAffineTransform(scaleX: 1.1, y: 1.1) : .identity
 
-        // 添加動畫
         if isSelected {
             UIView.animate(withDuration: 0.3, animations: {
                 cell.contentView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
@@ -370,11 +372,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             })
         }
     }
-}
 
-// MARK: - Loading Animation Control
-
-extension HomeView {
     func showLoadingAnimation() {
         self.bringSubviewToFront(self.waitingAnimationView)
         waitingAnimationView.isHidden = false
@@ -396,8 +394,7 @@ extension HomeView {
     }
 }
 
-
-extension HomeView: UICollectionViewDelegate, UICollectionViewDataSource {
+extension HomeView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return collectionView == audienceCollectionView ? audienceOptions.count : replyStyleOptions.count
     }
@@ -407,12 +404,14 @@ extension HomeView: UICollectionViewDelegate, UICollectionViewDataSource {
 
         let text = collectionView == audienceCollectionView ? audienceOptions[indexPath.item] : replyStyleOptions[indexPath.item]
         let isSelected = (collectionView == audienceCollectionView && selectedAudienceIndex == indexPath) ||
-                         (collectionView == replyStyleCollectionView && selectedReplyStyleIndex == indexPath)
+        (collectionView == replyStyleCollectionView && selectedReplyStyleIndex == indexPath)
         configureCell(cell, withText: text, isSelected: isSelected, at: indexPath)
 
         return cell
     }
+}
 
+extension HomeView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         HapticFeedbackManager.lightFeedback()
         if collectionView == audienceCollectionView {
@@ -426,12 +425,12 @@ extension HomeView: UICollectionViewDelegate, UICollectionViewDataSource {
             }
             selectedReplyStyleIndex = indexPath
         }
-
         collectionView.reloadData()
     }
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
+
 extension HomeView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 70, height: 40)

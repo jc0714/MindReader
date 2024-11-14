@@ -91,7 +91,6 @@ class ImageCollectionView: UIView, UICollectionViewDelegate, UICollectionViewDat
     // MARK: - ScrollView Delegate
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        // 處理滑動時的卡片縮放效果
         for cell in collectionView.visibleCells {
             let cellCenter = collectionView.convert(cell.center, to: nil)
             let screenCenter = collectionView.superview!.center

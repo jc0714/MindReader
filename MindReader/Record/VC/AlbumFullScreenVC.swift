@@ -66,9 +66,13 @@ class AlbumFullScreenVC: UIViewController, UICollectionViewDelegate, UICollectio
     }
 
     func setupToolbar() {
-        let saveButton = createButton(title: "儲存", backgroundColor: .pink3, action: #selector(saveImage))
-        let shareButton = createButton(title: "分享", backgroundColor: .pink3, action: #selector(shareImage))
-        let deleteButton = createButton(title: "刪除", backgroundColor: .pink3, action: #selector(deleteImage))
+        let saveButton = UIButton.styledButton(title: "儲存", backgroundColor: .pink3)
+        let shareButton = UIButton.styledButton(title: "分享", backgroundColor: .pink3)
+        let deleteButton = UIButton.styledButton(title: "刪除", backgroundColor: .pink3)
+
+        saveButton.addTarget(self, action: #selector(saveImage), for: .touchUpInside)
+        shareButton.addTarget(self, action: #selector(shareImage), for: .touchUpInside)
+        deleteButton.addTarget(self, action: #selector(deleteImage), for: .touchUpInside)
 
         view.addSubview(saveButton)
         view.addSubview(shareButton)
@@ -106,6 +110,7 @@ class AlbumFullScreenVC: UIViewController, UICollectionViewDelegate, UICollectio
     // MARK: - Toolbar Actions
 
     @objc func saveImage() {
+        AlertKitManager.presentSuccessAlert(in: self, title: "儲存成功")
         if let visibleCell = collectionView.visibleCells.first as? ImageCell, let image = visibleCell.imageView.image {
             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
         }

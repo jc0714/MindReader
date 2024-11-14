@@ -87,29 +87,26 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
             }
             .store(in: &cancellables)
 
-        // 訂閱回應資料
         viewModel.$response
-            .dropFirst() // 忽略初始值
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] possibleMeanings, responseMethods in
                 self?.updateResponseLabels(possibleMeanings: possibleMeanings, responseMethods: responseMethods)
             }
             .store(in: &cancellables)
 
-        // 訂閱錯誤訊息
         viewModel.$errorMessage
-            .compactMap { $0 }  // 過濾掉 nil
+            .compactMap { $0 }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] errorMessage in
                 AlertKitManager.presentErrorAlert(in: self!, title: errorMessage)
             }
             .store(in: &cancellables)
 
-        // 清除 recognizedText
         viewModel.$shouldClearRecognizedText
             .filter { $0 }
             .sink { [weak self] _ in
-                self?.recognizedText = ""  // 清除 recognizedText
+                self?.recognizedText = ""
             }
             .store(in: &cancellables)
     }
@@ -246,7 +243,7 @@ class HomeVC: UIViewController, UITextFieldDelegate, UIImagePickerControllerDele
     @objc func toGenerateButtonTapped(_ sender: UIButton) {
         let textAdjustmentVC = TextAdjustmentVC()
         textAdjustmentVC.copiedText = copiedText
-        textAdjustmentVC.modalPresentationStyle = .fullScreen // 設置全螢幕顯示
+        textAdjustmentVC.modalPresentationStyle = .fullScreen
 
         textAdjustmentVC.onConfirm = { [weak self] updatedText in
             self?.performSegue(withIdentifier: "toGenerateImage", sender: updatedText)
