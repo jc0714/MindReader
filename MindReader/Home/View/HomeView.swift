@@ -333,6 +333,53 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         replyStyleCollectionView.dataSource = self
         replyStyleCollectionView.showsHorizontalScrollIndicator = false
     }
+
+    private func addFadeToCollectionView(_ collectionView: UICollectionView) {
+        let leftFadeView = UIView()
+        leftFadeView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.superview?.addSubview(leftFadeView)
+
+        NSLayoutConstraint.activate([
+            leftFadeView.leadingAnchor.constraint(equalTo: collectionView.leadingAnchor),
+            leftFadeView.topAnchor.constraint(equalTo: collectionView.topAnchor),
+            leftFadeView.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor),
+            leftFadeView.widthAnchor.constraint(equalToConstant: 20)
+        ])
+
+        let leftGradient = CAGradientLayer()
+        leftGradient.colors = [UIColor.white.withAlphaComponent(1.0).cgColor, UIColor.white.withAlphaComponent(0.0).cgColor]
+        leftGradient.startPoint = CGPoint(x: 0.0, y: 0.5)
+        leftGradient.endPoint = CGPoint(x: 1.0, y: 0.5)
+        leftFadeView.layer.insertSublayer(leftGradient, at: 0)
+
+        let rightFadeView = UIView()
+        rightFadeView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.superview?.addSubview(rightFadeView)
+
+        NSLayoutConstraint.activate([
+            rightFadeView.trailingAnchor.constraint(equalTo: collectionView.trailingAnchor),
+            rightFadeView.topAnchor.constraint(equalTo: collectionView.topAnchor),
+            rightFadeView.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor),
+            rightFadeView.widthAnchor.constraint(equalToConstant: 20)
+        ])
+
+        let rightGradient = CAGradientLayer()
+        rightGradient.colors = [UIColor.white.withAlphaComponent(0.0).cgColor, UIColor.white.withAlphaComponent(1.0).cgColor]
+        rightGradient.startPoint = CGPoint(x: 0.0, y: 0.5)
+        rightGradient.endPoint = CGPoint(x: 1.0, y: 0.5)
+        rightFadeView.layer.insertSublayer(rightGradient, at: 0)
+
+        leftFadeView.layoutIfNeeded()
+        rightFadeView.layoutIfNeeded()
+        leftGradient.frame = leftFadeView.bounds
+        rightGradient.frame = rightFadeView.bounds
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        addFadeToCollectionView(audienceCollectionView)
+        addFadeToCollectionView(replyStyleCollectionView)
+    }
 }
 
 // MARK: - Loading Animation Control
