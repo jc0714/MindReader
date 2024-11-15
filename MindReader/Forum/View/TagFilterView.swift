@@ -17,14 +17,16 @@ class TagFilterView: UIView {
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 16
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        layout.minimumInteritemSpacing = 10
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 16)
 
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.backgroundColor = .clear
+        collectionView.isScrollEnabled = false
+
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(TagCell.self, forCellWithReuseIdentifier: "TagCell")
         return collectionView
@@ -93,7 +95,7 @@ class TagCell: UICollectionViewCell {
 
     private let background: UIView = {
         let view = UIView()
-        view.layer.cornerRadius = 15
+        view.layer.cornerRadius = 13
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
