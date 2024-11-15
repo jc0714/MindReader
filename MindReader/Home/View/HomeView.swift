@@ -288,7 +288,8 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
             audienceCollectionView.topAnchor.constraint(equalTo: audianceLabel.bottomAnchor, constant: 10),
             audienceCollectionView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            audienceCollectionView.widthAnchor.constraint(equalToConstant: 300),
+//            audienceCollectionView.widthAnchor.constraint(equalToConstant: 300),
+            audienceCollectionView.widthAnchor.constraint(equalTo: audianceCardView.widthAnchor, constant: -10),
             audienceCollectionView.heightAnchor.constraint(equalToConstant: 50),
 
             replyStyleCardView.topAnchor.constraint(equalTo: audianceCardView.bottomAnchor, constant: 10),
@@ -302,7 +303,8 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
             replyStyleCollectionView.topAnchor.constraint(equalTo: replyStyleLabel.bottomAnchor, constant: 10),
             replyStyleCollectionView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            replyStyleCollectionView.widthAnchor.constraint(equalToConstant: 300),
+//            replyStyleCollectionView.widthAnchor.constraint(equalToConstant: 300),
+            replyStyleCollectionView.widthAnchor.constraint(equalTo: audianceCardView.widthAnchor, constant: -10),
             replyStyleCollectionView.heightAnchor.constraint(equalToConstant: 50),
 
             submitButton.topAnchor.constraint(equalTo: replyStyleCardView.bottomAnchor, constant: 20),
@@ -327,10 +329,12 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         audienceCollectionView.delegate = self
         audienceCollectionView.dataSource = self
+        audienceCollectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         audienceCollectionView.showsHorizontalScrollIndicator = false
 
         replyStyleCollectionView.delegate = self
         replyStyleCollectionView.dataSource = self
+        replyStyleCollectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         replyStyleCollectionView.showsHorizontalScrollIndicator = false
     }
 
