@@ -85,6 +85,8 @@
 		E9BC29DD2CE5E09D00DA789E /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BC29DC2CE5E09D00DA789E /* AppConstants.swift */; };
 		E9BC29DF2CE618DE00DA789E /* PostManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BC29DE2CE618DE00DA789E /* PostManager.swift */; };
 		E9BC29E12CE6513600DA789E /* UIImageViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BC29E02CE6513600DA789E /* UIImageViewExtension.swift */; };
+		E9BC29E32CE879E600DA789E /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BC29E22CE879E600DA789E /* GradientView.swift */; };
+		E9BC29E52CE887B900DA789E /* HomeViewLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BC29E42CE887B900DA789E /* HomeViewLabel.swift */; };
 		E9C668B42CA5407400C0EE1D /* SettingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C668B32CA5407400C0EE1D /* SettingVC.swift */; };
 		E9C668BD2CA5A06300C0EE1D /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */; };
 		E9F6B67E2C95800F008E9FBF /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F6B67D2C95800F008E9FBF /* ChatView.swift */; };
@@ -201,6 +203,8 @@
 		E9BC29DC2CE5E09D00DA789E /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		E9BC29DE2CE618DE00DA789E /* PostManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostManager.swift; sourceTree = "<group>"; };
 		E9BC29E02CE6513600DA789E /* UIImageViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageViewExtension.swift; sourceTree = "<group>"; };
+		E9BC29E22CE879E600DA789E /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
+		E9BC29E42CE887B900DA789E /* HomeViewLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewLabel.swift; sourceTree = "<group>"; };
 		E9C668B32CA5407400C0EE1D /* SettingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVC.swift; sourceTree = "<group>"; };
 		E9C668B52CA5444C00C0EE1D /* MindReader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MindReader.entitlements; sourceTree = "<group>"; };
 		E9C668BC2CA5A06300C0EE1D /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
@@ -377,6 +381,8 @@
 				E9521C2C2CAE507000BFCAEF /* ToastView.swift */,
 				E9521C2E2CAE91C000BFCAEF /* ResponseCopyCell.swift */,
 				E9BC29DA2CE5C3E400DA789E /* MorningImageView.swift */,
+				E9BC29E22CE879E600DA789E /* GradientView.swift */,
+				E9BC29E42CE887B900DA789E /* HomeViewLabel.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -832,6 +838,7 @@
 				E9F6B68A2C971788008E9FBF /* PostEditVC.swift in Sources */,
 				E9521C252CAD43C000BFCAEF /* Haptic.swift in Sources */,
 				E97C15F52C91810A002B437C /* HomeView.swift in Sources */,
+				E9BC29E52CE887B900DA789E /* HomeViewLabel.swift in Sources */,
 				E9240ACF2C9D209F00A47944 /* AlbumCell.swift in Sources */,
 				E97C16062C91A0DF002B437C /* ChatCell.swift in Sources */,
 				E99142322C9FFABA00016C90 /* AlbumFullScreenVC.swift in Sources */,
@@ -876,6 +883,7 @@
 				E9240AD12C9D216A00A47944 /* MyPostVC.swift in Sources */,
 				E9638CDB2CBE170A0004A728 /* UITextField+Padding.swift in Sources */,
 				E9C668BD2CA5A06300C0EE1D /* LoginVC.swift in Sources */,
+				E9BC29E32CE879E600DA789E /* GradientView.swift in Sources */,
 				E90ADED12CC24399001745C1 /* HomeViewModel.swift in Sources */,
 				E9F6B6C52C9C694D008E9FBF /* RecordVC.swift in Sources */,
 			);

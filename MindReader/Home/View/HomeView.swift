@@ -11,74 +11,17 @@ import Lottie
 
 class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
-    private var waitingAnimationView: LottieAnimationView = {
-        let configuration = LottieConfiguration(renderingEngine: .mainThread)
-        let animationView = LottieAnimationView(
-            name: "runningDoggy",
-            configuration: configuration
-        )
-        return animationView
-    }()
+    private let titleLabel = HomeViewLabel(text: "人性翻譯機", fontSize: 24, textColor: .pink3, fontWeight: .bold)
+    private let messageLabel = HomeViewLabel(text: "訊息內容", fontSize: 20, textColor: .pink3, fontWeight: .medium)
+    private let audianceLabel = HomeViewLabel(text: "這封訊息來自...", fontSize: 20, textColor: .pink3, fontWeight: .medium)
+    private let replyStyleLabel = HomeViewLabel(text: "你想要的回覆風格", fontSize: 20, textColor: .pink3, fontWeight: .medium)
 
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "人性翻譯機"
-        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        label.textColor = .pink3
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    private let messageCardView = CardView(cornerRadius: 12)
+    private let audianceCardView = CardView(cornerRadius: 12)
+    private let replyStyleCardView = CardView(cornerRadius: 12)
 
-    private let messageLabel: UILabel = {
-        let label = UILabel()
-        label.text = "訊息內容"
-        label.font = UIFont.systemFont(ofSize: 20)
-        label.textColor = .pink3
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-
-    private let messageCardView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 12
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private let audianceCardView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 12
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    let audianceLabel: UILabel = {
-        let label = UILabel()
-        label.text = "這封訊息來自..."
-        label.font = UIFont.systemFont(ofSize: 20)
-        label.textColor = .pink3
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-
-    private let replyStyleCardView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 12
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    let replyStyleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "你想要的回覆風格"
-        label.font = UIFont.systemFont(ofSize: 20)
-        label.textColor = .pink3
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    let imageButton = HomeViewButton(title: "截圖", backgroundColor: .pink1, cornerRadius: 10)
+    let textButton = HomeViewButton(title: "文字", backgroundColor: .pink1, cornerRadius: 10)
 
     let chatButton: UIButton = {
         let button = UIButton()
@@ -89,24 +32,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         button.backgroundColor = .pink1
         button.widthAnchor.constraint(equalToConstant: 40).isActive = true
         button.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        return button
-    }()
-
-    let imageButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("截圖", for: .normal)
-        button.backgroundColor = .pink1
-        button.layer.cornerRadius = 10
-        return button
-    }()
-
-    let textButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("文字", for: .normal)
-        button.backgroundColor = .pink1
-        button.layer.cornerRadius = 10
         return button
     }()
 
@@ -152,6 +77,15 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         return button
     }()
 
+    private var waitingAnimationView: LottieAnimationView = {
+        let configuration = LottieConfiguration(renderingEngine: .mainThread)
+        let animationView = LottieAnimationView(
+            name: "runningDoggy",
+            configuration: configuration
+        )
+        return animationView
+    }()
+    
     private let audienceOptions = ["不指定", "朋友", "家人", "伴侶", "同事", "陌生人"]
     private let replyStyleOptions = ["不指定", "直接", "溫和", "幽默", "正式", "婉拒"]
 
@@ -212,6 +146,12 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         replyStyleCollectionView.reloadData()
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        addFadeToCollectionView(audienceCollectionView)
+        addFadeToCollectionView(replyStyleCollectionView)
+    }
+
     private func configureUI() {
         backgroundColor = .systemBackground
 
@@ -219,26 +159,19 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         addSubview(waitingAnimationView)
         addSubview(titleLabel)
-
         addSubview(messageCardView)
-
         addSubview(messageLabel)
-
         addSubview(chatButton)
         addSubview(imageButton)
         addSubview(textButton)
-
         addSubview(promptTextField)
-
         addSubview(imageView)
-
         addSubview(audianceCardView)
         addSubview(audianceLabel)
         addSubview(audienceCollectionView)
         addSubview(replyStyleCardView)
         addSubview(replyStyleLabel)
         addSubview(replyStyleCollectionView)
-
         addSubview(submitButton)
 
         NSLayoutConstraint.activate([
@@ -288,7 +221,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
             audienceCollectionView.topAnchor.constraint(equalTo: audianceLabel.bottomAnchor, constant: 10),
             audienceCollectionView.centerXAnchor.constraint(equalTo: centerXAnchor),
-//            audienceCollectionView.widthAnchor.constraint(equalToConstant: 300),
             audienceCollectionView.widthAnchor.constraint(equalTo: audianceCardView.widthAnchor, constant: -10),
             audienceCollectionView.heightAnchor.constraint(equalToConstant: 50),
 
@@ -303,7 +235,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
             replyStyleCollectionView.topAnchor.constraint(equalTo: replyStyleLabel.bottomAnchor, constant: 10),
             replyStyleCollectionView.centerXAnchor.constraint(equalTo: centerXAnchor),
-//            replyStyleCollectionView.widthAnchor.constraint(equalToConstant: 300),
             replyStyleCollectionView.widthAnchor.constraint(equalTo: audianceCardView.widthAnchor, constant: -10),
             replyStyleCollectionView.heightAnchor.constraint(equalToConstant: 50),
 
@@ -323,25 +254,25 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         bringSubviewToFront(waitingAnimationView)
     }
 
+    private func configureCollectionView(_ collectionView: UICollectionView, withIdentifier identifier: String) {
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: identifier)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        collectionView.showsHorizontalScrollIndicator = false
+    }
+
     private func configureCollectionViews() {
-        audienceCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "AudienceCell")
-        replyStyleCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "ReplyStyleCell")
-
-        audienceCollectionView.delegate = self
-        audienceCollectionView.dataSource = self
-        audienceCollectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        audienceCollectionView.showsHorizontalScrollIndicator = false
-
-        replyStyleCollectionView.delegate = self
-        replyStyleCollectionView.dataSource = self
-        replyStyleCollectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        replyStyleCollectionView.showsHorizontalScrollIndicator = false
+        configureCollectionView(audienceCollectionView, withIdentifier: "AudienceCell")
+        configureCollectionView(replyStyleCollectionView, withIdentifier: "ReplyStyleCell")
     }
 
     private func addFadeToCollectionView(_ collectionView: UICollectionView) {
-        let leftFadeView = UIView()
-        leftFadeView.translatesAutoresizingMaskIntoConstraints = false
+        let leftFadeView = GradientView(startColor: .white.withAlphaComponent(1.0), endColor: .white.withAlphaComponent(0.0))
+        let rightFadeView = GradientView(startColor: .white.withAlphaComponent(0.0), endColor: .white.withAlphaComponent(1.0))
+
         collectionView.superview?.addSubview(leftFadeView)
+        collectionView.superview?.addSubview(rightFadeView)
 
         NSLayoutConstraint.activate([
             leftFadeView.leadingAnchor.constraint(equalTo: collectionView.leadingAnchor),
@@ -350,16 +281,6 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             leftFadeView.widthAnchor.constraint(equalToConstant: 20)
         ])
 
-        let leftGradient = CAGradientLayer()
-        leftGradient.colors = [UIColor.white.withAlphaComponent(1.0).cgColor, UIColor.white.withAlphaComponent(0.0).cgColor]
-        leftGradient.startPoint = CGPoint(x: 0.0, y: 0.5)
-        leftGradient.endPoint = CGPoint(x: 1.0, y: 0.5)
-        leftFadeView.layer.insertSublayer(leftGradient, at: 0)
-
-        let rightFadeView = UIView()
-        rightFadeView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.superview?.addSubview(rightFadeView)
-
         NSLayoutConstraint.activate([
             rightFadeView.trailingAnchor.constraint(equalTo: collectionView.trailingAnchor),
             rightFadeView.topAnchor.constraint(equalTo: collectionView.topAnchor),
@@ -367,30 +288,14 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
             rightFadeView.widthAnchor.constraint(equalToConstant: 20)
         ])
 
-        let rightGradient = CAGradientLayer()
-        rightGradient.colors = [UIColor.white.withAlphaComponent(0.0).cgColor, UIColor.white.withAlphaComponent(1.0).cgColor]
-        rightGradient.startPoint = CGPoint(x: 0.0, y: 0.5)
-        rightGradient.endPoint = CGPoint(x: 1.0, y: 0.5)
-        rightFadeView.layer.insertSublayer(rightGradient, at: 0)
-
         leftFadeView.layoutIfNeeded()
         rightFadeView.layoutIfNeeded()
-        leftGradient.frame = leftFadeView.bounds
-        rightGradient.frame = rightFadeView.bounds
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        addFadeToCollectionView(audienceCollectionView)
-        addFadeToCollectionView(replyStyleCollectionView)
     }
 }
 
 // MARK: - Loading Animation Control
 
 extension HomeView {
-
-    // MARK: - Helper Methods to Configure Cells
 
     private func configureCell(_ cell: UICollectionViewCell, withText text: String, isSelected: Bool, at indexPath: IndexPath) {
 
@@ -446,6 +351,7 @@ extension HomeView {
 }
 
 extension HomeView: UICollectionViewDataSource {
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return collectionView == audienceCollectionView ? audienceOptions.count : replyStyleOptions.count
     }
@@ -463,6 +369,7 @@ extension HomeView: UICollectionViewDataSource {
 }
 
 extension HomeView: UICollectionViewDelegate {
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         HapticFeedbackManager.lightFeedback()
         if collectionView == audienceCollectionView {
