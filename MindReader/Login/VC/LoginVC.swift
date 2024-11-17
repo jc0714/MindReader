@@ -80,9 +80,6 @@ extension LoginVC: ASAuthorizationControllerDelegate {
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
             let userIdentifier = appleIDCredential.user
-            print("user: \(appleIDCredential.user)")
-            print("fullName: \(String(describing: appleIDCredential.fullName))")
-            print("Email: \(String(describing: appleIDCredential.email))")
 
             let fullName = "\(appleIDCredential.fullName?.givenName ?? "") \(appleIDCredential.fullName?.familyName ?? "")"
             let email = appleIDCredential.email
@@ -102,14 +99,11 @@ extension LoginVC: ASAuthorizationControllerDelegate {
                     self.presentNameInputViewController(userIdentifier: userIdentifier, userFullName: fullName, email: email, realUserStatus: realUserStatus)
                     return
                 } else {
-                    // 用戶已經存在
                     if let document = snapshot?.documents.first {
                         let isDeleted = document.data()["isDeleted"] as? Bool ?? false
 
                         if isDeleted {
-                            // 用戶已標記為刪除，創建新帳號
 
-                            // 抓取舊的資料
                             let oldUserIdentifier = document.data()["appleUserIdentifier"] as? String ?? userIdentifier
                             let oldUserFullName = document.data()["appleUserFullName"] as? String ?? userIdentifier
                             let oldEmail = document.data()["email"] as? String ?? email
@@ -117,7 +111,6 @@ extension LoginVC: ASAuthorizationControllerDelegate {
                             self.presentNameInputViewController(userIdentifier: oldUserIdentifier, userFullName: oldUserFullName, email: oldEmail, realUserStatus: realUserStatus)
                             return
                         } else {
-                            // 用戶已經存在，使用現有帳號
                             let existingUserId = document.documentID
                             let chatRoomId = document.data()["chatRoomId"] as? String ?? ""
                             let userName = document.data()["userFullName"] as? String ?? ""
@@ -137,17 +130,19 @@ extension LoginVC: ASAuthorizationControllerDelegate {
         let nameInputVC = WelcomeVC()
         nameInputVC.onNameEntered = { [weak self] name in
             guard let self = self else { return }
+
             self.firebaseService.saveUserInfoToFirestore(appleUserIdentifier: userIdentifier, appleUserFullName: userFullName, userFullName: name, email: email, realUserStatus: realUserStatus){ [weak self] documentID, chatRoomId in
                 guard let self = self else { return }
+                if let documentID = documentID, let chatRoomId = chatRoomId {
 
-                saveUserSession(userId: documentID ?? "" , chatRoomId: chatRoomId ?? "", name: name)
-
-                self.navigateToMainTabBarController()
+                    self.saveUserSession(userId: documentID, chatRoomId: chatRoomId, name: name)
+                    self.navigateToMainTabBarController()
+                }
             }
-            nameInputVC.modalPresentationStyle = .fullScreen
-            self.present(nameInputVC, animated: true, completion: nil)
-
         }
+        nameInputVC.modalPresentationStyle = .fullScreen
+        self.present(nameInputVC, animated: true, completion: nil)
+
     }
 
     private func saveUserSession(userId: String, chatRoomId: String, name: String) {
@@ -157,7 +152,7 @@ extension LoginVC: ASAuthorizationControllerDelegate {
         UserSession.shared.isUserLoggedIn = true
     }
 
-    private func navigateToMainTabBarController() {
+    func navigateToMainTabBarController() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         guard let tabBarController = storyboard.instantiateViewController(withIdentifier: "MainTabBarController") as? UITabBarController else {
             print("找不到 MainTabBarController")
@@ -168,6 +163,7 @@ extension LoginVC: ASAuthorizationControllerDelegate {
             window.rootViewController = tabBarController
             window.makeKeyAndVisible()
         }
+
     }
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
