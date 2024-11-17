@@ -85,7 +85,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
         )
         return animationView
     }()
-    
+
     private let audienceOptions = ["不指定", "朋友", "家人", "伴侶", "同事", "陌生人"]
     private let replyStyleOptions = ["不指定", "直接", "溫和", "幽默", "正式", "婉拒"]
 
@@ -132,6 +132,9 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         audienceCollectionView.reloadData()
         replyStyleCollectionView.reloadData()
+
+        addFadeToCollectionView(audienceCollectionView)
+        addFadeToCollectionView(replyStyleCollectionView)
     }
 
     required init?(coder: NSCoder) {
@@ -144,10 +147,7 @@ class HomeView: UIView, UIImagePickerControllerDelegate, UINavigationControllerD
 
         audienceCollectionView.reloadData()
         replyStyleCollectionView.reloadData()
-    }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
         addFadeToCollectionView(audienceCollectionView)
         addFadeToCollectionView(replyStyleCollectionView)
     }

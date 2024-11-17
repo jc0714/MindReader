@@ -16,6 +16,11 @@ class CustomTabBarController: UITabBarController, UITabBarControllerDelegate {
         self.delegate = self
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tabBar.layer.zPosition = 1
+    }
+
     private func setupTabBar() {
         tabBar.layer.cornerRadius = 20
         tabBar.layer.masksToBounds = true
@@ -26,6 +31,18 @@ class CustomTabBarController: UITabBarController, UITabBarControllerDelegate {
         tabBar.layer.shadowRadius = 10
 
         tabBar.backgroundColor = UIColor.milkYellow
+
+        let borderView = UIView()
+        borderView.backgroundColor = .white
+        borderView.translatesAutoresizingMaskIntoConstraints = false
+        tabBar.addSubview(borderView)
+
+        NSLayoutConstraint.activate([
+            borderView.topAnchor.constraint(equalTo: tabBar.topAnchor),
+            borderView.leadingAnchor.constraint(equalTo: tabBar.leadingAnchor),
+            borderView.trailingAnchor.constraint(equalTo: tabBar.trailingAnchor),
+            borderView.heightAnchor.constraint(equalToConstant: 1) // 邊框的高度
+        ])
 
         var newFrame = tabBar.frame
         newFrame.size.height = 70

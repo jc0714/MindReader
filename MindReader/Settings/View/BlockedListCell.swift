@@ -24,7 +24,7 @@ class BlockedListCell: UITableViewCell {
     private let avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 25
+        imageView.layer.cornerRadius = 30
         imageView.clipsToBounds = true
         imageView.image = UIImage(named: "BlockedAvatar")
         imageView.tintColor = .gray
